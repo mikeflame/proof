@@ -1,6 +1,6 @@
 import { gitGrep } from '../core/git.ts';
 import type { Span, SpanResult } from '../model.ts';
-import { blocked, type CheckContext, clip, notChecked, unconfirmed, verified } from './util.ts';
+import { blocked, type CheckContext, clip, docExclude, notChecked, unconfirmed, verified } from './util.ts';
 
 const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -14,7 +14,7 @@ export function checkEnv(ctx: CheckContext, span: Span): SpanResult {
   const key = span.text.slice(0, eq);
   const value = span.text.slice(eq + 1).replace(/^["']|["']$/g, '');
   if (!key || !value) return notChecked(span, 'not an assignment');
-  const res = gitGrep(ctx.repo.root, key, { word: true, pathspec: ['.', ':(exclude,glob)**/*.md', ...ctx.repo.generatedExcludes, `:(exclude)${ctx.docFile}`], limit: 2000 });
+  const res = gitGrep(ctx.repo.root, key, { word: true, pathspec: ['.', ':(exclude,glob)**/*.md', ...ctx.repo.generatedExcludes, ...docExclude(ctx)], limit: 2000 });
   if (res.status === 'error') return blocked(span, `lookup failed: ${res.message}`);
   if (res.status === 'miss') return unconfirmed(span, `${key} appears nowhere in the repository`);
   const k = esc(key);

@@ -78,6 +78,12 @@ export function listFiles(root: string): string[] {
   return [...new Set(out.split('\0').filter((f) => f && !deleted.has(f)))];
 }
 
+/** Ignored files on disk that match `globs` (a gitignored CLAUDE.local.md still loads). */
+export function ignoredFiles(root: string, globs: string[]): string[] {
+  const res = spawnSync('git', ['ls-files', '-z', '--others', '--ignored', '--exclude-standard', '--', ...globs.map((g) => `:(glob)${g}`)], { cwd: root, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+  return res.status === 0 ? res.stdout.split('\0').filter(Boolean) : [];
+}
+
 /** The deepest symlink at or above `rel`, relative to the root. */
 function symlinkAbove(root: string, rel: string): string | null {
   const parts = rel.replace(/\/$/, '').split('/');

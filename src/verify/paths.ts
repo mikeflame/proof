@@ -2,6 +2,7 @@ import { homedir } from 'node:os';
 import { existsSync } from 'node:fs';
 import { isAbsolute, join as joinFs, posix } from 'node:path';
 import type { Span, SpanResult } from '../model.ts';
+import { matchGlob } from '../core/glob.ts';
 import { stringInCode } from './symbols.ts';
 import { bracketsAsWildcards, type CheckContext, expandAlternatives, globToRegExp, join, notChecked, stale, unconfirmed, verified, workingDirs } from './util.ts';
 
@@ -126,15 +127,26 @@ export function checkImport(ctx: CheckContext, span: Span): SpanResult {
   if (ctx.repo.exists(rel)) return verified(span, 'definition', [{ ref: rel, level: 'definition' }], `imports ${rel}`);
   // `@mui/material` in prose names a package, not a file to import.
   if (/^[\w.-]+\/[\w.-]+$/.test(t) && ctx.repo.packages.some((p) => `@${t}` in p.deps)) return notChecked(span, `names the package @${t}, not a file`);
-  if (!posix.extname(t) && ctx.repo.exists(`${rel}.md`)) return verified(span, 'definition', [{ ref: `${rel}.md`, level: 'definition' }], `imports ${rel}.md`);
+  if (!posix.extname(t) && ctx.repo.exists(`${rel}.md`)) return unconfirmed(span, `no file ${rel}; ${rel}.md exists, but Claude Code imports the path as written`, [{ ref: `${rel}.md`, level: 'reference' }], 'reference');
   return stale(span, `broken import: ${rel} does not exist`);
 }
 
-/** A `paths:` glob of a rule file: relative to the project root; a glob matching nothing is stale. */
+/**
+ * A rule's `paths:` glob, read the way Claude Code reads it, relative to the folder that holds `.claude/`
+ * (or `.cursor/`, `.github/`). A glob matching nothing is stale: the rule never loads.
+ */
 export function checkGlob(ctx: CheckContext, span: Span): SpanResult {
-  const found = expandAlternatives(span.text.replace(/^\.\//, '')).flatMap((p) => {
-    const re = globToRegExp(p);
-    return ctx.repo.files.filter((f) => re.test(f));
-  });
-  return found.length ? verified(span, 'definition', found.slice(0, 3).map((f) => ({ ref: f, level: 'definition' })), `matches ${shown(found)}`) : stale(span, `the glob ${span.text} matches no file, so the rule never loads`);
+  const base = ctx.pathBase;
+  const { files, error } = matchGlob(span.text, ctx.repo.files, base);
+  if (files.length) return verified(span, 'definition', files.slice(0, 3).map((f) => ({ ref: f, level: 'definition' })), `matches ${shown(files)}`);
+  if (error) return stale(span, error);
+  // `pages/[slug]/*.tsx` is a bracket expression: one of s, l, u, g. The folder itself needs `\[slug\]`.
+  if (/\[[^\]]+\]/.test(span.text)) {
+    const literal = matchGlob(span.text.replace(/\[/g, '\\[').replace(/\]/g, '\\]'), ctx.repo.files, base);
+    if (literal.files.length) return stale(span, `matches no file: Claude Code reads ${span.text.match(/\[[^\]]+\]/)?.[0]} as a bracket expression; write it as ${span.text.replace(/\[/g, '\\[').replace(/\]/g, '\\]')} to match ${shown(literal.files)}`);
+  }
+  return stale(span, `${NO_MATCH}${base ? ` under ${base}/` : ''}`);
 }
+
+/** The reason of a glob that is valid but matches no file today. */
+export const NO_MATCH = 'matches no file, so this pattern never loads the rule';

@@ -3,7 +3,7 @@ import { gitGrep, type GrepHit } from '../core/git.ts';
 import { classifyOccurrence, ownerOf } from '../core/syntax.ts';
 import { type Evidence, type EvidenceLevel, LEVEL_RANK, type Span, type SpanResult, VERIFYING_LEVELS } from '../model.ts';
 import { qualifiedName } from '../parse/classify.ts';
-import { blocked, type CheckContext, clip, join, notChecked, stale, unconfirmed, verified } from './util.ts';
+import { blocked, type CheckContext, clip, docExclude, join, notChecked, stale, unconfirmed, verified } from './util.ts';
 
 /** Prose, docs and lockfiles never count as evidence that code defines a name. */
 const NOT_CODE = [':(exclude,glob)**/*.md', ':(exclude,glob)**/*.mdx', ':(exclude,glob)**/*.txt', ':(exclude,glob)**/*.rst', ':(exclude,glob)**/*.lock', ':(exclude,glob)**/package-lock.json', ':(exclude,glob)**/CHANGELOG*', ':(exclude,glob)**/*.proof.json'];
@@ -18,6 +18,9 @@ const SHORT_FLAG = /^-[A-Za-z]$/;
 const HOST = /^(?:[a-z0-9-]+\.)+(?:com|org|net|io|dev|app|ai|co|cloud|sh|gg|me|us|uk|de|xyz|run|page|site|tech|so|gov|edu)$/;
 const TEST_PATH = /^((?:Test|Benchmark|Fuzz|Example)[A-Z_]\w*)\/(.+)$/;
 const KEY = /^[a-z_][a-z0-9_]*$/;
+const SLASH_COMMAND = /^\/([a-z][\w-]*)(?::([\w-]+))?$/;
+/** Claude Code's own commands: nothing in a repository defines them. */
+const BUILTIN_COMMANDS = new Set(['init', 'memory', 'context', 'compact', 'config', 'doctor', 'clear', 'help', 'model', 'review', 'agents', 'mcp', 'plugin', 'permissions', 'hooks', 'status', 'cost', 'login', 'logout', 'resume', 'rewind', 'export', 'add-dir', 'ide', 'vim', 'terminal-setup', 'bug', 'release-notes', 'pr-comments', 'security-review', 'statusline', 'todos', 'usage', 'output-style', 'fast', 'effort', 'loop', 'workflows', 'artifacts', 'import', 'upgrade']);
 const LITERALS = new Set(['true', 'false', 'null', 'nil', 'None', 'True', 'False', 'undefined', 'NaN', 'yes', 'no', 'on', 'off']);
 const esc = (t: string) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -93,7 +96,7 @@ function decide(span: Span, found: Found[], name: string, missing: string): Span
 function scopeDirs(ctx: CheckContext, scope: string): string[] {
   const out = new Set<string>();
   for (const s of [scope, scope.replace(/\./g, '/')]) {
-    for (const base of ['', ctx.docDir, ...ctx.repo.projectDirs]) {
+    for (const base of ['', ctx.pathBase, ...ctx.repo.projectDirs]) {
       const d = join(base, s);
       if (ctx.repo.dirs.has(d)) out.add(d);
     }
@@ -107,7 +110,7 @@ function scopeDirs(ctx: CheckContext, scope: string): string[] {
 type Grep = GrepHit[] | { error: string };
 
 function grep(ctx: CheckContext, needle: string, word: boolean, pathspec: string[] = ['.'], limit = MAX_HITS): Grep {
-  const res = gitGrep(ctx.repo.root, needle, { word, pathspec: [...pathspec, ...NOT_CODE, ...ctx.repo.generatedExcludes, `:(exclude)${ctx.docFile}`], limit });
+  const res = gitGrep(ctx.repo.root, needle, { word, pathspec: [...pathspec, ...NOT_CODE, ...ctx.repo.generatedExcludes, ...docExclude(ctx)], limit });
   if (res.status === 'error') return { error: res.message };
   return res.status === 'miss' ? [] : res.lines;
 }
@@ -125,6 +128,7 @@ export async function checkSymbol(ctx: CheckContext, span: Span): Promise<SpanRe
   const call = span.text.endsWith('()');
   const text = call ? span.text.slice(0, -2) : span.text;
 
+  if (SLASH_COMMAND.test(text)) return checkSlashCommand(ctx, span, text);
   const test = text.match(TEST_PATH);
   if (test) return checkSubtest(ctx, span, test[1] ?? '', test[2] ?? '');
   if (LONG_FLAG.test(text)) return checkFlag(ctx, span, text);
@@ -397,4 +401,27 @@ async function checkPrefix(ctx: CheckContext, span: Span, prefix: string): Promi
   const named = ctx.repo.files.filter((f) => new RegExp(`(^|[^A-Za-z0-9])${esc(prefix)}`).test(posix.basename(f)));
   if (named.length) found.push({ level: 'reference', evidence: named.slice(0, 2).map((f) => ({ ref: f, level: 'reference' })), why: `file names start with it: ${named.slice(0, 2).join(', ')}${named.length > 2 ? ` and ${named.length - 2} more` : ''}` });
   return decide(span, found, prefix, `no name or file in the repository starts with ${prefix}`);
+}
+
+/**
+ * `/deploy` or `/proof:claude-md`: a command file or skill this repository defines (`.claude/commands/`,
+ * `.claude/skills/`, a plugin's `skills/` or `commands/`), with the plugin prefix matched to its manifest.
+ */
+function checkSlashCommand(ctx: CheckContext, span: Span, text: string): SpanResult {
+  const [, first = '', second] = SLASH_COMMAND.exec(text) ?? [];
+  const plugin = second ? first : null;
+  const name = second ?? first;
+  if (!plugin && BUILTIN_COMMANDS.has(name)) return notChecked(span, 'a built-in Claude Code command');
+  const definitions = ctx.repo.files.filter((f) => new RegExp(`(^|/)(skills/${esc(name)}/SKILL\\.md|commands/(.+/)?${esc(name)}\\.md|agents/${esc(name)}\\.md)$`).test(f));
+  const inPlugin = plugin
+    ? definitions.filter((f) => {
+        const root = f.split(/\/(?:skills|commands|agents)\//)[0] ?? '';
+        const manifest = ctx.repo.structured(`${root ? `${root}/` : ''}.claude-plugin/plugin.json`, { quiet: true }) as { name?: string } | null;
+        return manifest?.name === plugin;
+      })
+    : definitions;
+  if (span.expect === 'absent') return inPlugin.length ? stale(span, `said to be gone, but ${inPlugin[0]} still defines it`, [{ ref: inPlugin[0] ?? '', level: 'definition' }]) : verified(span, 'definition', [{ ref: `no command or skill ${name}`, level: 'definition' }], 'absent, as the statement says');
+  if (inPlugin.length) return verified(span, 'definition', inPlugin.slice(0, 2).map((f) => ({ ref: f, level: 'definition' })), `defined by ${inPlugin[0]}${plugin ? ` in plugin ${plugin}` : ''}`);
+  if (plugin && definitions.length) return unconfirmed(span, `${definitions[0]} defines ${name}, but not in a plugin named ${plugin}`, [{ ref: definitions[0] ?? '', level: 'reference' }], 'reference');
+  return unconfirmed(span, `no command, skill or agent in this repository defines ${text}; fine if it comes from a user-level skill or an installed plugin`);
 }

@@ -213,6 +213,13 @@ function readMarker(html: string): { kind: string; reason: string | null } | nul
   return { kind: m[1] ?? 'ignore', reason: text || null };
 }
 
+/** The frontmatter field that scopes a rule to files: `paths` (Claude Code), `globs` (Cursor), `applyTo` (Copilot). */
+export function scopeField(file: string): string {
+  if (/\.mdc$/.test(file)) return 'globs';
+  if (/\.instructions\.md$/.test(file)) return 'applyTo';
+  return 'paths';
+}
+
 /** Split an instruction file into statements with the spans each one claims. */
 export function parseDocument(source: string, file: string): ParsedDocument {
   const tree = fromMarkdown(source, {
@@ -393,12 +400,14 @@ export function parseDocument(source: string, file: string): ParsedDocument {
           break;
         case 'yaml': {
           try {
-            const data = parseYaml(node.value) as { paths?: unknown } | null;
-            const raw = data?.paths;
-            const list = Array.isArray(raw) ? raw.map(String) : typeof raw === 'string' ? raw.split(',').map((s) => s.trim()) : null;
+            const data = parseYaml(node.value) as Record<string, unknown> | null;
+            const field = scopeField(file);
+            const raw = data?.[field];
+            const list = Array.isArray(raw) ? raw.map(String) : typeof raw === 'string' ? raw.split(',').map((s) => s.trim()).filter(Boolean) : null;
             if (list?.length) {
               paths = list;
-              for (const glob of list) push('frontmatter', `paths: ${glob}`, lineOf(node), endOf(node), [{ kind: 'glob', text: glob, expect: 'present' }], false);
+              // One statement: a pattern that matches nothing only kills the rule when its siblings match nothing too.
+              push('frontmatter', `${field}: ${list.join(', ')}`, lineOf(node), endOf(node), list.map((glob): Span => ({ kind: 'glob', text: glob, expect: 'present' })), false);
             }
           } catch (err) {
             frontmatterError = err instanceof Error ? err.message.split('\n')[0] ?? 'invalid YAML' : String(err);

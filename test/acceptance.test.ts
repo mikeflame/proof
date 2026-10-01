@@ -95,6 +95,17 @@ describe.skipIf(!pinned)(`criteria 1 and 5: no-mistakes at ${PINNED}`, () => {
     expect(report.counts.STALE).toBe(0);
   });
 
+  it('follows the @AGENTS.md import of CLAUDE.md and reports its statements (criterion 2)', () => {
+    const run = proof(NO_MISTAKES, 'CLAUDE.md');
+    const [claude, agents] = run.reports;
+    expect(claude?.file).toBe('CLAUDE.md');
+    expect(claude?.imports.find((i) => i.path === 'AGENTS.md')?.followed).toBe(true);
+    expect(agents?.file).toBe('AGENTS.md');
+    expect(agents?.importedBy).toEqual(['CLAUDE.md']);
+    expect(agents?.statements.length).toBe(report.statements.length);
+    expect(claude?.verdict).toBe(agents?.verdict);
+  });
+
   it('never verifies from a comment or a substring, and names the level of every verified span', () => {
     const verifiedSpans = report.statements.flatMap((s) => s.results).filter((r) => r.status === 'VERIFIED');
     expect(verifiedSpans.length).toBeGreaterThan(0);

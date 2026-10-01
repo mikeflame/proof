@@ -135,6 +135,8 @@ export function classifyCode(code: string): Span[] {
     return [{ kind: 'unknown', text: t, expect: 'present' }, ...paths];
   }
   if (/^[A-Z][A-Z0-9_]*=\S+$/.test(t)) return [{ kind: 'env', text: t, expect: 'present' }];
+  // `/proof:claude-md`, `/deploy`: a slash command of an agent, not an absolute path.
+  if (/^\/[a-z][\w-]*(?::[\w-]+)?$/.test(t)) return [{ kind: 'symbol', text: t, expect: 'present' }];
   // `@mui/material/styles`, `@material-ui/*`: an npm package (and a subpath of it), not a folder.
   const scoped = t.match(/^(@[a-z0-9][\w.-]*\/(?:[a-z0-9][\w.-]*|\*))(?:\/[\w./-]*)?$/);
   if (scoped?.[1]) return [{ kind: 'dependency', text: scoped[1], expect: 'present' }];

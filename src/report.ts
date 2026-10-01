@@ -57,6 +57,11 @@ export function toMarkdown(r: FileReport, opts: { verbose?: boolean } = {}): str
     return `${lines.join('\n')}\n`;
   }
   lines.push(countsLine(r), '');
+  lines.push(`loaded: ${r.why}${r.scope === 'managed' || r.scope === 'user' ? ' (outside the repository: proof reports, never edits)' : ''}`);
+  if (r.importedBy.length) lines.push(`imported by: ${r.importedBy.join(', ')}`);
+  for (const i of r.imports) lines.push(`imports: @${i.path} (L${i.line}) — ${i.note || (i.followed ? 'checked' : 'not checked')}`);
+  if (r.verdict !== r.ownVerdict) lines.push(`own statements: ${r.ownVerdict}; with what it imports: ${r.verdict}`);
+  lines.push('');
   for (const d of r.degraded) lines.push(`degraded: ${d.subject} — ${d.reason}`);
   if (r.degraded.length) lines.push('');
   if (r.git) {

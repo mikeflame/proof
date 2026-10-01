@@ -146,6 +146,21 @@ describe('names that live outside identifiers', () => {
   });
 });
 
+describe('slash commands', () => {
+  it('finds a skill, a command and a plugin skill, and leaves built-ins alone', async () => {
+    const r = await checkFiles({
+      'CLAUDE.md': doc('Run `/deploy`.', 'Run `/tools:audit`.', 'Run `/vanished`.', 'Run `/init` first.'),
+      '.claude/commands/deploy.md': '# deploy\n',
+      'plugins/tools/.claude-plugin/plugin.json': JSON.stringify({ name: 'tools' }),
+      'plugins/tools/skills/audit/SKILL.md': '---\nname: audit\n---\n',
+    });
+    expect(spanOf(r, '/deploy')).toMatchObject({ status: 'VERIFIED', level: 'definition' });
+    expect(spanOf(r, '/tools:audit')).toMatchObject({ status: 'VERIFIED', level: 'definition' });
+    expect(spanOf(r, '/vanished').status).toBe('UNCONFIRMED');
+    expect(spanOf(r, '/init').status).toBe('NOT_CHECKED');
+  });
+});
+
 describe('absence checks', () => {
   it('verifies what is gone, flags what is still defined, and doubts what is only used', async () => {
     const r = await checkFiles({

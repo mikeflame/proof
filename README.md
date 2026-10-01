@@ -6,8 +6,9 @@ Instruction files go stale quietly. A folder moves, a script is renamed, the Nod
 up, and every new session starts from the wrong map before the task even begins. An outdated
 CLAUDE.md is worse than a short one.
 
-`/proof:claude-md` checks every statement in `CLAUDE.md`, `AGENTS.md` and the rule files an agent
-loads against the repository, cites the evidence for each with its strength, and proposes the edit.
+`/proof:claude-md` checks every statement in `CLAUDE.md`, `AGENTS.md`, `.claude/rules/`, the files
+they `@import`, and the instruction files of Copilot, Cursor, Gemini, Windsurf, Cline and Aider
+against the repository, cites the evidence for each with its strength, and proposes the edit.
 
 ## What it finds
 
@@ -72,6 +73,8 @@ your repository. It needs Node 22+ and git; the parsers and grammars ship next t
 | `MODE=queue` | a declaration with that value, or code that reads and compares it |
 | "Stripe", `@mui/material` | manifests across ecosystems |
 | "the `x` block was deleted" | absence: stale only if `x` is still defined |
+| `@docs/api.md` imports | the imported file, checked in turn, four hops deep, as Claude Code loads it |
+| a rule's `paths:` (`globs:`, `applyTo:`) | the files each pattern matches, read with Claude Code's glob rules (`[` is a bracket expression) |
 <!-- proof:ignore-end -->
 
 Each statement comes back **stale** (the repository contradicts it), **unconfirmed** (part of it

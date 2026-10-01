@@ -97,10 +97,11 @@ export class RepoContext {
     return out;
   }
 
+  /** A file's text by repository-relative path, or by absolute path for files outside it (user instructions). */
   read(rel: string): string | null {
     if (!this.texts.has(rel)) {
       try {
-        this.texts.set(rel, readFileSync(join(this.root, rel), 'utf8'));
+        this.texts.set(rel, readFileSync(isAbsolute(rel) ? rel : join(this.root, rel), 'utf8'));
       } catch {
         this.texts.set(rel, null);
       }

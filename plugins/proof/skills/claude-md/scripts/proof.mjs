@@ -7469,60 +7469,19 @@ var require_format = __commonJS({
 
 // src/cli.ts
 import { mkdirSync, writeFileSync } from "node:fs";
-import { join as join6 } from "node:path";
+import { join as join7, resolve as resolve3 } from "node:path";
 import { parseArgs } from "node:util";
 
 // src/discover.ts
-import { realpathSync } from "node:fs";
-import { join } from "node:path";
-var PROJECT_FILES = [
-  [/(^|\/)CLAUDE\.md$/, "Claude Code memory"],
-  [/(^|\/)\.claude\/CLAUDE\.md$/, "Claude Code memory"],
-  [/(^|\/)CLAUDE\.local\.md$/, "Claude Code local memory"],
-  [/(^|\/)AGENTS\.md$/, "AGENTS.md (Codex, Claude Code and others)"],
-  [/(^|\/)\.claude\/AGENTS\.md$/, "Claude Code reads it like AGENTS.md"],
-  [/(^|\/)\.claude\/rules\/.+\.md$/, "Claude Code rule"]
-];
-function discover(repo) {
-  const out = [];
-  for (const file of repo.files) {
-    const hit = PROJECT_FILES.find(([re]) => re.test(file));
-    if (hit) out.push({ file, why: hit[1] });
-  }
-  out.sort((a2, b) => a2.file.split("/").length - b.file.split("/").length || a2.file.localeCompare(b.file));
-  const seen = /* @__PURE__ */ new Set();
-  return out.filter((d) => {
-    let real = d.file;
-    try {
-      real = realpathSync(join(repo.root, d.file));
-    } catch {
-    }
-    if (seen.has(real)) return false;
-    seen.add(real);
-    return true;
-  });
-}
-
-// src/model.ts
-var VERIFYING_LEVELS = /* @__PURE__ */ new Set(["definition", "declaration", "reference"]);
-var EXIT_CODE = {
-  PROVEN: 0,
-  "PROVEN WITH OVERRIDES": 0,
-  FIXED: 0,
-  "PARTLY PROVEN": 0,
-  "NOT PROVEN": 1,
-  UNTESTED: 2
-};
-var LEVEL_RANK = { definition: 5, declaration: 4, reference: 3, comment: 2, substring: 1, none: 0 };
-
-// src/pipeline.ts
-import { posix as posix6 } from "node:path";
+import { existsSync as existsSync2, readdirSync, realpathSync, statSync } from "node:fs";
+import { homedir, platform } from "node:os";
+import { join as join2, posix } from "node:path";
 
 // src/core/git.ts
 import { execFileSync, spawnSync } from "node:child_process";
 import { copyFileSync, existsSync, lstatSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join as join2 } from "node:path";
+import { join } from "node:path";
 var run = (cwd, args, env) => execFileSync("git", args, { cwd, env: env ?? process.env, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], maxBuffer: 256 * 1024 * 1024 }).trim();
 var safe = (cwd, args) => {
   try {
@@ -7539,10 +7498,10 @@ function repoRoot(cwd) {
 }
 function workingTreeHash(root) {
   const gitDir = run(root, ["rev-parse", "--absolute-git-dir"]);
-  const tmp = mkdtempSync(join2(tmpdir(), "proof-index-"));
-  const index2 = join2(tmp, "index");
+  const tmp = mkdtempSync(join(tmpdir(), "proof-index-"));
+  const index2 = join(tmp, "index");
   try {
-    const realIndex = join2(gitDir, "index");
+    const realIndex = join(gitDir, "index");
     if (existsSync(realIndex)) copyFileSync(realIndex, index2);
     const env = { ...process.env, GIT_INDEX_FILE: index2 };
     run(root, ["add", "--all", "--", "."], env);
@@ -7571,12 +7530,16 @@ function listFiles(root) {
   const deleted = new Set(run(root, ["ls-files", "-z", "--deleted"]).split("\0").filter(Boolean));
   return [...new Set(out.split("\0").filter((f) => f && !deleted.has(f)))];
 }
+function ignoredFiles(root, globs) {
+  const res = spawnSync("git", ["ls-files", "-z", "--others", "--ignored", "--exclude-standard", "--", ...globs.map((g) => `:(glob)${g}`)], { cwd: root, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+  return res.status === 0 ? res.stdout.split("\0").filter(Boolean) : [];
+}
 function symlinkAbove(root, rel) {
   const parts = rel.replace(/\/$/, "").split("/");
   for (let i = parts.length; i > 0; i--) {
     const p = parts.slice(0, i).join("/");
     try {
-      if (lstatSync(join2(root, p)).isSymbolicLink()) return p;
+      if (lstatSync(join(root, p)).isSymbolicLink()) return p;
     } catch {
     }
   }
@@ -7620,10 +7583,116 @@ function gitGrep(root, needle, opts = {}) {
   return { status: "match", lines };
 }
 
+// src/discover.ts
+var CLAUDE_AGENTS = "Claude Code reads it only when no CLAUDE.md, .claude/CLAUDE.md or CLAUDE.local.md is in the folder or above it, and Codex, Cursor and others read it always";
+var PROJECT_FILES = [
+  [/(^|\/)CLAUDE\.md$/, "Claude Code project instructions (at launch for this folder and above, on demand below)", "project"],
+  [/(^|\/)CLAUDE\.local\.md$/, "Claude Code local instructions, loaded after CLAUDE.md in the same folder", "local"],
+  [/(^|\/)\.claude\/AGENTS\.md$/, CLAUDE_AGENTS, "project"],
+  [/(^|\/)AGENTS\.md$/, CLAUDE_AGENTS, "project"],
+  [/(^|\/)\.claude\/rules\/.+\.md$/, "Claude Code rule: at launch, or when a file matching its paths: is read", "project"],
+  [/^\.github\/copilot-instructions\.md$/, "GitHub Copilot repository instructions", "project"],
+  [/^\.github\/instructions\/.+\.instructions\.md$/, "GitHub Copilot path instructions (applyTo:)", "project"],
+  [/(^|\/)GEMINI\.md$/, "Gemini CLI instructions", "project"],
+  [/(^|\/)\.cursor\/rules\/.+\.mdc?$/, "Cursor rule", "project"],
+  [/(^|\/)\.cursorrules$/, "Cursor rules (legacy file)", "project"],
+  [/(^|\/)\.windsurfrules$/, "Windsurf rules", "project"],
+  [/(^|\/)\.windsurf\/rules\/.+\.md$/, "Windsurf rule", "project"],
+  [/(^|\/)\.clinerules(\/.+\.md)?$/, "Cline rules", "project"],
+  [/(^|\/)CONVENTIONS\.md$/, "Aider conventions", "project"]
+];
+var NOT_LOADED = /(^|\/)(AGENTS\.local\.md|AGENTS\.override\.md)$|(^|\/)\.agents\//;
+var FIXTURES = /(^|\/)(fixtures?|__fixtures__|testdata|test-data|__snapshots__|examples?)\//;
+var MANAGED_PATHS = {
+  linux: "/etc/claude-code/CLAUDE.md",
+  darwin: "/Library/Application Support/ClaudeCode/CLAUDE.md",
+  win32: "C:\\Program Files\\ClaudeCode\\CLAUDE.md"
+};
+function classify(file) {
+  for (const [re, why, scope] of PROJECT_FILES) if (re.test(file)) return { file, why, scope };
+  return null;
+}
+function walkMarkdown(dir) {
+  const out = [];
+  let entries = [];
+  try {
+    entries = readdirSync(dir);
+  } catch {
+    return out;
+  }
+  for (const name of entries) {
+    const full = join2(dir, name);
+    try {
+      if (statSync(full).isDirectory()) out.push(...walkMarkdown(full));
+      else if (name.endsWith(".md")) out.push(full);
+    } catch {
+    }
+  }
+  return out;
+}
+function discover(repo, opts = {}) {
+  const found = [];
+  const skipped = [];
+  const candidates = [...repo.files];
+  if (repo.isGit) {
+    for (const f of ignoredFiles(repo.root, ["**/CLAUDE.local.md", "CLAUDE.local.md"])) if (!candidates.includes(f)) candidates.push(f);
+  }
+  for (const file of candidates) {
+    const hit = classify(file);
+    if (!hit) continue;
+    if (NOT_LOADED.test(file)) {
+      skipped.push({ file, reason: "no agent loads it (Claude Code skips AGENTS.local.md, AGENTS.override.md and anything under .agents/)" });
+      continue;
+    }
+    if (FIXTURES.test(file)) {
+      skipped.push({ file, reason: "inside a test-data or examples folder; pass it by name to check it" });
+      continue;
+    }
+    found.push(hit);
+  }
+  found.sort((a2, b) => a2.file.split("/").length - b.file.split("/").length || a2.file.localeCompare(b.file));
+  if (opts.user) {
+    const home = join2(homedir(), ".claude");
+    const managed = MANAGED_PATHS[platform()];
+    if (managed && existsSync2(managed)) found.push({ file: managed, why: "managed policy instructions for every user of this machine; listed and checked, never edited", scope: "managed" });
+    if (existsSync2(join2(home, "CLAUDE.md"))) found.push({ file: join2(home, "CLAUDE.md"), why: "your user instructions, loaded in every project", scope: "user" });
+    for (const f of walkMarkdown(join2(home, "rules")).sort()) found.push({ file: f, why: "your user rule, loaded in every project", scope: "user" });
+  }
+  const seen = /* @__PURE__ */ new Set();
+  const files = found.filter((d) => {
+    let real = d.file;
+    try {
+      real = realpathSync(posix.isAbsolute(d.file) ? d.file : join2(repo.root, d.file));
+    } catch {
+    }
+    if (seen.has(real)) return false;
+    seen.add(real);
+    return true;
+  });
+  return { files, skipped };
+}
+
+// src/model.ts
+var VERIFYING_LEVELS = /* @__PURE__ */ new Set(["definition", "declaration", "reference"]);
+var EXIT_CODE = {
+  PROVEN: 0,
+  "PROVEN WITH OVERRIDES": 0,
+  FIXED: 0,
+  "PARTLY PROVEN": 0,
+  "NOT PROVEN": 1,
+  UNTESTED: 2
+};
+var LEVEL_RANK = { definition: 5, declaration: 4, reference: 3, comment: 2, substring: 1, none: 0 };
+
+// src/pipeline.ts
+import { existsSync as existsSync6, realpathSync as realpathSync2 } from "node:fs";
+import { homedir as homedir4 } from "node:os";
+import { isAbsolute as isAbsolute3, join as join6, posix as posix7, resolve as resolve2 } from "node:path";
+
 // src/core/repo.ts
-import { existsSync as existsSync2, readdirSync, readFileSync, statSync } from "node:fs";
-import { homedir } from "node:os";
-import { isAbsolute, join as join3, posix, relative, resolve } from "node:path";
+import { existsSync as existsSync3, readdirSync as readdirSync2, readFileSync, statSync as statSync2 } from "node:fs";
+import { homedir as homedir2 } from "node:os";
+import { isAbsolute, join as join3, posix as posix2, relative, resolve } from "node:path";
 
 // node_modules/smol-toml/dist/error.js
 function getLineColFromPtr(string3, ptr) {
@@ -8418,24 +8487,24 @@ var RepoContext = class {
   get dirs() {
     if (!this.dirList) {
       const dirs = /* @__PURE__ */ new Set();
-      for (const f of this.files) for (let d = posix.dirname(f); d !== "." && !dirs.has(d); d = posix.dirname(d)) dirs.add(d);
+      for (const f of this.files) for (let d = posix2.dirname(f); d !== "." && !dirs.has(d); d = posix2.dirname(d)) dirs.add(d);
       this.dirList = dirs;
     }
     return this.dirList;
   }
   /** Repository-relative path, or null when it leaves the repository. */
   rel(path2, base = "") {
-    const abs = path2.startsWith("~/") ? join3(homedir(), path2.slice(2)) : isAbsolute(path2) ? path2 : resolve(this.root, base, path2);
+    const abs = path2.startsWith("~/") ? join3(homedir2(), path2.slice(2)) : isAbsolute(path2) ? path2 : resolve(this.root, base, path2);
     const r = relative(this.root, abs).split("\\").join("/");
     if (r.startsWith("..") || isAbsolute(r)) return null;
     return r;
   }
   exists(rel) {
-    return existsSync2(join3(this.root, rel));
+    return existsSync3(join3(this.root, rel));
   }
   isDir(rel) {
     try {
-      return statSync(join3(this.root, rel)).isDirectory();
+      return statSync2(join3(this.root, rel)).isDirectory();
     } catch {
       return false;
     }
@@ -8449,10 +8518,11 @@ var RepoContext = class {
     }
     return out;
   }
+  /** A file's text by repository-relative path, or by absolute path for files outside it (user instructions). */
   read(rel) {
     if (!this.texts.has(rel)) {
       try {
-        this.texts.set(rel, readFileSync(join3(this.root, rel), "utf8"));
+        this.texts.set(rel, readFileSync(isAbsolute(rel) ? rel : join3(this.root, rel), "utf8"));
       } catch {
         this.texts.set(rel, null);
       }
@@ -8487,7 +8557,7 @@ var RepoContext = class {
   }
   lookupIgnored(all2) {
     const queries = all2.filter((q) => {
-      const n = posix.normalize(q);
+      const n = posix2.normalize(q);
       const inside = q !== "" && !isAbsolute(q) && !q.startsWith("~") && n !== ".." && !n.startsWith("../");
       if (!inside) this.ignoreCache.set(q, false);
       return inside;
@@ -8509,7 +8579,7 @@ var RepoContext = class {
           const rec = (v) => v && typeof v === "object" && !Array.isArray(v) ? v : {};
           const ws = json.workspaces;
           this.pkgs.push({
-            dir: posix.dirname(file) === "." ? "" : posix.dirname(file),
+            dir: posix2.dirname(file) === "." ? "" : posix2.dirname(file),
             file,
             name: typeof json.name === "string" ? json.name : null,
             scripts: rec(json.scripts),
@@ -8535,13 +8605,13 @@ var RepoContext = class {
   get projectDirs() {
     const manifests = /(^|\/)(package\.json|pyproject\.toml|go\.mod|Cargo\.toml|Gemfile|composer\.json|pom\.xml|build\.gradle(\.kts)?|setup\.py|requirements\.txt|mix\.exs|deno\.json)$/;
     const dirs = /* @__PURE__ */ new Set();
-    for (const f of this.files) if (manifests.test(f) && !SKIP_DIRS.test(f) && f.includes("/")) dirs.add(posix.dirname(f));
+    for (const f of this.files) if (manifests.test(f) && !SKIP_DIRS.test(f) && f.includes("/")) dirs.add(posix2.dirname(f));
     for (const f of this.badManifestDirs()) dirs.add(f);
     return [...dirs].sort((a2, b) => a2.split("/").length - b.split("/").length || a2.localeCompare(b));
   }
   badManifestDirs() {
     void this.packages;
-    return [...this.broken.keys()].map((f) => posix.dirname(f)).filter((d) => d !== ".");
+    return [...this.broken.keys()].map((f) => posix2.dirname(f)).filter((d) => d !== ".");
   }
   /**
    * A TOML or YAML or JSON file parsed once; a parse failure is recorded as a degradation and returns null.
@@ -8572,7 +8642,7 @@ var RepoContext = class {
     if (!this.generated) {
       const patterns = ["**/*.min.js", "**/*.min.css", "**/*.map", "vendor/**", "**/vendor/**", "third_party/**"];
       for (const file of this.files.filter((f) => /(^|\/)\.gitattributes$/.test(f))) {
-        const base = posix.dirname(file) === "." ? "" : `${posix.dirname(file)}/`;
+        const base = posix2.dirname(file) === "." ? "" : `${posix2.dirname(file)}/`;
         for (const line of (this.read(file) ?? "").split("\n")) {
           const [pattern, ...attrs] = line.trim().split(/\s+/);
           if (!pattern || pattern.startsWith("#") || !attrs.some((a2) => /^linguist-(generated|vendored)(=true)?$/.test(a2))) continue;
@@ -8590,14 +8660,14 @@ var RepoContext = class {
   }
   /** Path of `rel` as seen from the folder of `fromFile`. */
   static near(fromFile, rel) {
-    return posix.normalize(posix.join(posix.dirname(fromFile), rel));
+    return posix2.normalize(posix2.join(posix2.dirname(fromFile), rel));
   }
 };
 function walk(root, base = "") {
   const out = [];
   let entries = [];
   try {
-    entries = readdirSync(join3(root, base), { withFileTypes: true });
+    entries = readdirSync2(join3(root, base), { withFileTypes: true });
   } catch {
     return out;
   }
@@ -8611,7 +8681,7 @@ function walk(root, base = "") {
 }
 
 // src/core/syntax.ts
-import { existsSync as existsSync3 } from "node:fs";
+import { existsSync as existsSync4 } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join as join4 } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -8648,7 +8718,7 @@ function grammarFor(file, text4) {
   return null;
 }
 function runtimeIn(dir) {
-  for (const name of ["tree-sitter.cjs", "tree-sitter.js"]) if (existsSync3(join4(dir, name))) return join4(dir, name);
+  for (const name of ["tree-sitter.cjs", "tree-sitter.js"]) if (existsSync4(join4(dir, name))) return join4(dir, name);
   return null;
 }
 function grammarDir() {
@@ -11624,10 +11694,10 @@ function resolveAll(constructs2, events, context) {
   const called = [];
   let index2 = -1;
   while (++index2 < constructs2.length) {
-    const resolve2 = constructs2[index2].resolveAll;
-    if (resolve2 && !called.includes(resolve2)) {
-      events = resolve2(events, context);
-      called.push(resolve2);
+    const resolve4 = constructs2[index2].resolveAll;
+    if (resolve4 && !called.includes(resolve4)) {
+      events = resolve4(events, context);
+      called.push(resolve4);
     }
   }
   return events;
@@ -18346,7 +18416,7 @@ var DEPENDENCY_ALIASES = [
 ];
 
 // src/parse/shell.ts
-import { posix as posix2 } from "node:path";
+import { posix as posix3 } from "node:path";
 var OPERATORS = ["2>&", "&>>", "2>>", "&&", "||", "|&", ";;", ">>", ">&", "&>", "2>", "|", ";", "&", "(", ")", ">", "<"];
 var WRAPPERS = /* @__PURE__ */ new Set(["sudo", "time", "nohup", "exec", "command", "builtin", "env", "nice", "doas"]);
 var WRAPPER_FLAGS_WITH_VALUE = { sudo: /* @__PURE__ */ new Set(["-u", "-g", "-C", "-D"]), nice: /* @__PURE__ */ new Set(["-n"]) };
@@ -18477,7 +18547,7 @@ function splitShell(line, startCwd = "") {
         cwd = void 0;
         cwdUnknown = true;
       } else if (cwd !== void 0) {
-        cwd = posix2.normalize(posix2.join(cwd, target)).replace(/^\.$/, "").replace(/\/$/, "");
+        cwd = posix3.normalize(posix3.join(cwd, target)).replace(/^\.$/, "").replace(/\/$/, "");
       }
     }
   };
@@ -18734,6 +18804,7 @@ function classifyCode(code2) {
     return [{ kind: "unknown", text: t, expect: "present" }, ...paths];
   }
   if (/^[A-Z][A-Z0-9_]*=\S+$/.test(t)) return [{ kind: "env", text: t, expect: "present" }];
+  if (/^\/[a-z][\w-]*(?::[\w-]+)?$/.test(t)) return [{ kind: "symbol", text: t, expect: "present" }];
   const scoped = t.match(/^(@[a-z0-9][\w.-]*\/(?:[a-z0-9][\w.-]*|\*))(?:\/[\w./-]*)?$/);
   if (scoped?.[1]) return [{ kind: "dependency", text: scoped[1], expect: "present" }];
   if (qualifiedName(t) && (t.includes("/") || /^[a-z]/.test(t))) return [{ kind: "symbol", text: t, expect: "present" }];
@@ -18893,6 +18964,11 @@ function readMarker(html) {
   const reason = (m[2] ?? "").match(/reason\s*=\s*"([^"]*)"|reason\s*=\s*'([^']*)'/);
   const text4 = (reason?.[1] ?? reason?.[2] ?? "").trim();
   return { kind: m[1] ?? "ignore", reason: text4 || null };
+}
+function scopeField(file) {
+  if (/\.mdc$/.test(file)) return "globs";
+  if (/\.instructions\.md$/.test(file)) return "applyTo";
+  return "paths";
 }
 function parseDocument(source, file) {
   const tree = fromMarkdown(source, {
@@ -19058,11 +19134,12 @@ function parseDocument(source, file) {
         case "yaml": {
           try {
             const data = (0, import_yaml2.parse)(node2.value);
-            const raw = data?.paths;
-            const list3 = Array.isArray(raw) ? raw.map(String) : typeof raw === "string" ? raw.split(",").map((s) => s.trim()) : null;
+            const field = scopeField(file);
+            const raw = data?.[field];
+            const list3 = Array.isArray(raw) ? raw.map(String) : typeof raw === "string" ? raw.split(",").map((s) => s.trim()).filter(Boolean) : null;
             if (list3?.length) {
               paths = list3;
-              for (const glob of list3) push2("frontmatter", `paths: ${glob}`, lineOf(node2), endOf(node2), [{ kind: "glob", text: glob, expect: "present" }], false);
+              push2("frontmatter", `${field}: ${list3.join(", ")}`, lineOf(node2), endOf(node2), list3.map((glob) => ({ kind: "glob", text: glob, expect: "present" })), false);
             }
           } catch (err) {
             frontmatterError = err instanceof Error ? err.message.split("\n")[0] ?? "invalid YAML" : String(err);
@@ -19079,12 +19156,17 @@ function parseDocument(source, file) {
 }
 
 // src/verify/commands.ts
-import { posix as posix4 } from "node:path";
+import { posix as posix5 } from "node:path";
 
 // src/verify/symbols.ts
-import { posix as posix3 } from "node:path";
+import { posix as posix4 } from "node:path";
 
 // src/verify/util.ts
+function pathBaseOf(docFile, docDir) {
+  const cfg = /^(.*?)(?:^|\/)\.(?:claude|cursor|windsurf|github|clinerules)\//.exec(docFile);
+  return cfg ? cfg[1] ?? "" : docDir;
+}
+var docExclude = (ctx) => ctx.docFile.startsWith("/") || /^[A-Za-z]:[\\/]/.test(ctx.docFile) ? [] : [`:(exclude)${ctx.docFile}`];
 var verified = (span, level, evidence, reason) => ({ ...span, status: "VERIFIED", level, evidence, reason });
 var stale = (span, reason, evidence = []) => ({ ...span, status: "STALE", level: "none", evidence, reason });
 var unconfirmed = (span, reason, evidence = [], level = "none") => ({ ...span, status: "UNCONFIRMED", level, evidence, reason });
@@ -19093,9 +19175,9 @@ var blocked = (span, reason) => ({ ...span, status: "NOT_CHECKED", level: "none"
 var join5 = (...parts) => parts.filter((p) => Boolean(p)).join("/").replace(/\/+/g, "/").replace(/(^|\/)\.\//g, "$1").replace(/\/$/, "");
 function workingDirs(ctx, span) {
   const out = [];
-  if (span.cwd !== void 0) out.push(join5(ctx.docDir, span.cwd));
-  for (const h of span.hintDirs ?? []) out.push(join5(ctx.docDir, h));
-  out.push(ctx.docDir, "");
+  if (span.cwd !== void 0) out.push(join5(ctx.pathBase, span.cwd));
+  for (const h of span.hintDirs ?? []) out.push(join5(ctx.pathBase, h));
+  out.push(ctx.pathBase, ctx.docDir, "");
   return [...new Set(out.map((d) => d.replace(/^\.$/, "")))];
 }
 var clip = (s, n = 120) => {
@@ -19136,6 +19218,8 @@ var SHORT_FLAG = /^-[A-Za-z]$/;
 var HOST = /^(?:[a-z0-9-]+\.)+(?:com|org|net|io|dev|app|ai|co|cloud|sh|gg|me|us|uk|de|xyz|run|page|site|tech|so|gov|edu)$/;
 var TEST_PATH = /^((?:Test|Benchmark|Fuzz|Example)[A-Z_]\w*)\/(.+)$/;
 var KEY = /^[a-z_][a-z0-9_]*$/;
+var SLASH_COMMAND = /^\/([a-z][\w-]*)(?::([\w-]+))?$/;
+var BUILTIN_COMMANDS = /* @__PURE__ */ new Set(["init", "memory", "context", "compact", "config", "doctor", "clear", "help", "model", "review", "agents", "mcp", "plugin", "permissions", "hooks", "status", "cost", "login", "logout", "resume", "rewind", "export", "add-dir", "ide", "vim", "terminal-setup", "bug", "release-notes", "pr-comments", "security-review", "statusline", "todos", "usage", "output-style", "fast", "effort", "loop", "workflows", "artifacts", "import", "upgrade"]);
 var LITERALS = /* @__PURE__ */ new Set(["true", "false", "null", "nil", "None", "True", "False", "undefined", "NaN", "yes", "no", "on", "off"]);
 var esc2 = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 function bounded(hit, needle, tokenChars = /[\w$]/) {
@@ -19184,13 +19268,13 @@ function decide(span, found, name, missing) {
 function scopeDirs(ctx, scope) {
   const out = /* @__PURE__ */ new Set();
   for (const s of [scope, scope.replace(/\./g, "/")]) {
-    for (const base of ["", ctx.docDir, ...ctx.repo.projectDirs]) {
+    for (const base of ["", ctx.pathBase, ...ctx.repo.projectDirs]) {
       const d = join5(base, s);
       if (ctx.repo.dirs.has(d)) out.add(d);
     }
   }
   if (!scope.includes("/") && !scope.includes(".")) {
-    for (const d of ctx.repo.dirs) if (posix3.basename(d) === scope) out.add(d);
+    for (const d of ctx.repo.dirs) if (posix4.basename(d) === scope) out.add(d);
   }
   if (scope.includes("/") && !out.size) {
     for (const d of ctx.repo.dirs) if (scope.endsWith(`/${d}`)) out.add(d);
@@ -19198,7 +19282,7 @@ function scopeDirs(ctx, scope) {
   return [...out];
 }
 function grep(ctx, needle, word, pathspec = ["."], limit = MAX_HITS) {
-  const res = gitGrep(ctx.repo.root, needle, { word, pathspec: [...pathspec, ...NOT_CODE, ...ctx.repo.generatedExcludes, `:(exclude)${ctx.docFile}`], limit });
+  const res = gitGrep(ctx.repo.root, needle, { word, pathspec: [...pathspec, ...NOT_CODE, ...ctx.repo.generatedExcludes, ...docExclude(ctx)], limit });
   if (res.status === "error") return { error: res.message };
   return res.status === "miss" ? [] : res.lines;
 }
@@ -19212,6 +19296,7 @@ async function checkSymbol(ctx, span) {
   if (!ctx.repo.isGit) return blocked(span, "identifier lookups need a git repository");
   const call = span.text.endsWith("()");
   const text4 = call ? span.text.slice(0, -2) : span.text;
+  if (SLASH_COMMAND.test(text4)) return checkSlashCommand(ctx, span, text4);
   const test = text4.match(TEST_PATH);
   if (test) return checkSubtest(ctx, span, test[1] ?? "", test[2] ?? "");
   if (LONG_FLAG.test(text4)) return checkFlag(ctx, span, text4);
@@ -19234,7 +19319,7 @@ async function checkSymbol(ctx, span) {
   const list2 = await grepClassified(ctx, call ? `${text4}(` : text4, !call, ["."], { name: text4 });
   if ("error" in list2) return blocked(span, `lookup failed: ${list2.error}`);
   if (list2.length || span.expect === "absent") return decide(span, asFound(list2), text4, `${text4} appears in no code file`);
-  const named = ctx.repo.files.filter((f) => posix3.basename(f).includes(text4));
+  const named = ctx.repo.files.filter((f) => posix4.basename(f).includes(text4));
   if (named.length) return verified(span, "reference", named.slice(0, 2).map((f) => ({ ref: f, level: "reference" })), `used in file names: ${named.slice(0, 2).join(", ")}${named.length > 2 ? ` and ${named.length - 2} more` : ""}`);
   return unconfirmed(span, `${text4} appears in no code file or file name`);
 }
@@ -19381,7 +19466,7 @@ async function checkLiteral(ctx, span, text4) {
   const literal = template ? text4.slice(0, text4.indexOf("<")) : text4;
   if (literal.length < 3) return blocked(span, "a template with too little literal text to look up");
   if (!template && KEBAB.test(text4)) {
-    const named = [...ctx.repo.dirs, ...ctx.repo.files].filter((f) => posix3.basename(f).replace(/\.\w+$/, "") === text4);
+    const named = [...ctx.repo.dirs, ...ctx.repo.files].filter((f) => posix4.basename(f).replace(/\.\w+$/, "") === text4);
     if (named.length && span.expect !== "absent") return verified(span, "definition", named.slice(0, 2).map((f) => ({ ref: f, level: "definition" })), `named ${named.slice(0, 2).join(", ")}`);
   }
   const hits = grep(ctx, literal, false);
@@ -19426,9 +19511,25 @@ async function checkPrefix(ctx, span, prefix) {
     found.push({ level, evidence: [{ ref: `${h.file}:${h.line}`, excerpt: clip(h.text), level }], why: `${token} at ${h.file}:${h.line}` });
     if (VERIFYING_LEVELS.has(level)) break;
   }
-  const named = ctx.repo.files.filter((f) => new RegExp(`(^|[^A-Za-z0-9])${esc2(prefix)}`).test(posix3.basename(f)));
+  const named = ctx.repo.files.filter((f) => new RegExp(`(^|[^A-Za-z0-9])${esc2(prefix)}`).test(posix4.basename(f)));
   if (named.length) found.push({ level: "reference", evidence: named.slice(0, 2).map((f) => ({ ref: f, level: "reference" })), why: `file names start with it: ${named.slice(0, 2).join(", ")}${named.length > 2 ? ` and ${named.length - 2} more` : ""}` });
   return decide(span, found, prefix, `no name or file in the repository starts with ${prefix}`);
+}
+function checkSlashCommand(ctx, span, text4) {
+  const [, first = "", second] = SLASH_COMMAND.exec(text4) ?? [];
+  const plugin = second ? first : null;
+  const name = second ?? first;
+  if (!plugin && BUILTIN_COMMANDS.has(name)) return notChecked(span, "a built-in Claude Code command");
+  const definitions = ctx.repo.files.filter((f) => new RegExp(`(^|/)(skills/${esc2(name)}/SKILL\\.md|commands/(.+/)?${esc2(name)}\\.md|agents/${esc2(name)}\\.md)$`).test(f));
+  const inPlugin = plugin ? definitions.filter((f) => {
+    const root = f.split(/\/(?:skills|commands|agents)\//)[0] ?? "";
+    const manifest = ctx.repo.structured(`${root ? `${root}/` : ""}.claude-plugin/plugin.json`, { quiet: true });
+    return manifest?.name === plugin;
+  }) : definitions;
+  if (span.expect === "absent") return inPlugin.length ? stale(span, `said to be gone, but ${inPlugin[0]} still defines it`, [{ ref: inPlugin[0] ?? "", level: "definition" }]) : verified(span, "definition", [{ ref: `no command or skill ${name}`, level: "definition" }], "absent, as the statement says");
+  if (inPlugin.length) return verified(span, "definition", inPlugin.slice(0, 2).map((f) => ({ ref: f, level: "definition" })), `defined by ${inPlugin[0]}${plugin ? ` in plugin ${plugin}` : ""}`);
+  if (plugin && definitions.length) return unconfirmed(span, `${definitions[0]} defines ${name}, but not in a plugin named ${plugin}`, [{ ref: definitions[0] ?? "", level: "reference" }], "reference");
+  return unconfirmed(span, `no command, skill or agent in this repository defines ${text4}; fine if it comes from a user-level skill or an installed plugin`);
 }
 
 // src/verify/commands.ts
@@ -19713,7 +19814,7 @@ function composer(ctx, span, argv, dirs) {
 }
 function localBin(ctx, name) {
   for (const p of ctx.repo.packages) if (p.name === name) return p.file;
-  return ctx.repo.files.find((f) => /^(bin|scripts|tools)\/[^/]+$/.test(f) && posix4.basename(f).replace(/\.\w+$/, "") === name) ?? null;
+  return ctx.repo.files.find((f) => /^(bin|scripts|tools)\/[^/]+$/.test(f) && posix5.basename(f).replace(/\.\w+$/, "") === name) ?? null;
 }
 var binCache = /* @__PURE__ */ new WeakMap();
 function projectBinaries(ctx) {
@@ -19736,7 +19837,7 @@ function projectBinaries(ctx) {
   for (const f of ctx.repo.find(/(^|\/)Cargo\.toml$/)) {
     const cargo2 = ctx.repo.structured(f, { quiet: true });
     for (const b of cargo2?.bin ?? []) if (b.name) out.set(b.name, f);
-    const dir = posix4.dirname(f) === "." ? "" : posix4.dirname(f);
+    const dir = posix5.dirname(f) === "." ? "" : posix5.dirname(f);
     if (cargo2?.package?.name && ctx.repo.exists(join5(dir, "src/main.rs"))) out.set(cargo2.package.name, f);
   }
   binCache.set(ctx.repo, out);
@@ -19750,7 +19851,7 @@ function projectCommand(ctx, span, argv, source) {
   const subcommands = tokens.slice(0, tokens.findIndex((a2) => a2.startsWith("-")) >>> 0).filter((a2) => /^[a-z][\w-]*$/.test(a2)).slice(0, 3);
   const flags = tokens.filter((a2) => /^--[a-z][\w-]*$/.test(a2)).map((a2) => a2.replace(/=.*$/, ""));
   const evidence = [{ ref: source, level: "definition" }];
-  const home = /\.(json|toml)$/.test(source) ? posix4.dirname(source) : source;
+  const home = /\.(json|toml)$/.test(source) ? posix5.dirname(source) : source;
   const cliDirs = [.../* @__PURE__ */ new Set([home === "." ? "" : home, ...[...ctx.repo.dirs].filter((d) => /(^|\/)(cli|cmd|cmds|commands?)$/.test(d))])].filter(Boolean);
   const pathspec = cliDirs.length ? cliDirs : ["."];
   for (const word of [...subcommands, ...flags]) {
@@ -19987,7 +20088,7 @@ function checkEnv(ctx, span) {
   const key = span.text.slice(0, eq);
   const value2 = span.text.slice(eq + 1).replace(/^["']|["']$/g, "");
   if (!key || !value2) return notChecked(span, "not an assignment");
-  const res = gitGrep(ctx.repo.root, key, { word: true, pathspec: [".", ":(exclude,glob)**/*.md", ...ctx.repo.generatedExcludes, `:(exclude)${ctx.docFile}`], limit: 2e3 });
+  const res = gitGrep(ctx.repo.root, key, { word: true, pathspec: [".", ":(exclude,glob)**/*.md", ...ctx.repo.generatedExcludes, ...docExclude(ctx)], limit: 2e3 });
   if (res.status === "error") return blocked(span, `lookup failed: ${res.message}`);
   if (res.status === "miss") return unconfirmed(span, `${key} appears nowhere in the repository`);
   const k = esc3(key);
@@ -20012,9 +20113,72 @@ function checkEnv(ctx, span) {
 }
 
 // src/verify/paths.ts
-import { homedir as homedir2 } from "node:os";
-import { existsSync as existsSync4 } from "node:fs";
-import { isAbsolute as isAbsolute2, join as joinFs, posix as posix5 } from "node:path";
+import { homedir as homedir3 } from "node:os";
+import { existsSync as existsSync5 } from "node:fs";
+import { isAbsolute as isAbsolute2, join as joinFs, posix as posix6 } from "node:path";
+
+// src/core/glob.ts
+var BRACE_BUDGET = 1e3;
+function expandBraces(pattern) {
+  let out = [pattern];
+  for (let guard = 0; guard < 32; guard++) {
+    let changed = false;
+    const next = [];
+    for (const p of out) {
+      const m = /\{([^{}]*,[^{}]*)\}/.exec(p);
+      if (!m) {
+        next.push(p);
+        continue;
+      }
+      changed = true;
+      for (const alt of (m[1] ?? "").split(",")) next.push(p.slice(0, m.index) + alt + p.slice(m.index + m[0].length));
+    }
+    if (next.length > BRACE_BUDGET) return [pattern];
+    out = next;
+    if (!changed) break;
+  }
+  return out;
+}
+function compileGlob(pattern) {
+  let re = "";
+  for (let i = 0; i < pattern.length; i++) {
+    const c = pattern[i] ?? "";
+    if (c === "\\" && i + 1 < pattern.length) {
+      re += (pattern[i + 1] ?? "").replace(/[.*+?^${}()|[\]\\/]/g, "\\$&");
+      i++;
+    } else if (c === "*") {
+      if (pattern[i + 1] === "*") {
+        const slash = pattern[i + 2] === "/";
+        re += slash ? "(?:[^/]+/)*" : ".*";
+        i += slash ? 2 : 1;
+      } else re += "[^/]*";
+    } else if (c === "?") re += "[^/]";
+    else if (c === "[") {
+      const end = pattern.indexOf("]", i + 2);
+      if (end < 0) return { error: `"${pattern}" has a [ that starts no bracket expression; Claude Code matches no file with it (write \\[ for a literal bracket)` };
+      const body = pattern.slice(i + 1, end).replace(/^!/, "^").replace(/\\/g, "\\\\");
+      re += `[${body}]`;
+      i = end;
+    } else re += c.replace(/[.+^${}()|\\/]/g, "\\$&");
+  }
+  return { re: new RegExp(`^${re}$`) };
+}
+function matchGlob(pattern, files, base = "") {
+  const prefix = base ? `${base}/` : "";
+  const out = /* @__PURE__ */ new Set();
+  let error = null;
+  for (const p of expandBraces(pattern.replace(/^\.\//, ""))) {
+    const compiled = compileGlob(p);
+    if ("error" in compiled) {
+      error = compiled.error;
+      continue;
+    }
+    for (const f of files) if (f.startsWith(prefix) && compiled.re.test(f.slice(prefix.length))) out.add(f);
+  }
+  return { files: [...out].sort(), error };
+}
+
+// src/verify/paths.ts
 function matches(ctx, base, pattern) {
   const wantDir = pattern.endsWith("/");
   const clean = join5(base, pattern.replace(/^\.\//, "").replace(/\/$/, ""));
@@ -20089,7 +20253,7 @@ function checkPath(ctx, span) {
   if (pkg) return verified(span, "declaration", [{ ref: `${pkg.file} ${first}`, level: "declaration" }], `an import path into ${first}, which ${pkg.file} declares`);
   const anchored = segments.length === 1 || candidates.some((b) => ctx.repo.exists(join5(b, first)));
   if (anchored) return stale(span, `not found: ${join5(primary, t)}`);
-  const homes = /^[\w-]+$/.test(first) ? [...ctx.repo.dirs].filter((d) => posix5.basename(d) === first) : [];
+  const homes = /^[\w-]+$/.test(first) ? [...ctx.repo.dirs].filter((d) => posix6.basename(d) === first) : [];
   if (homes.length) return stale(span, `not found: no ${segments.slice(1).join("/")} under any ${first}/ folder (${shown(homes)})`);
   if (/^@?[a-z][\w-]*\/[a-z][\w-]*$/.test(t)) return notChecked(span, `reads as "${t.replace("/", " or ")}" or a rule id, not a path`);
   return unconfirmed(span, `no ${first}/ in this repository; fine if it names a folder somewhere else`);
@@ -20106,22 +20270,27 @@ function checkLink(ctx, span) {
 }
 function checkImport(ctx, span) {
   const t = span.text.trim();
-  const abs = t.startsWith("~/") ? joinFs(homedir2(), t.slice(2)) : isAbsolute2(t) ? t : null;
-  if (abs) return notChecked(span, existsSync4(abs) ? "imports a file outside the repository (exists on this machine)" : "imports a file outside the repository (not on this machine)");
+  const abs = t.startsWith("~/") ? joinFs(homedir3(), t.slice(2)) : isAbsolute2(t) ? t : null;
+  if (abs) return notChecked(span, existsSync5(abs) ? "imports a file outside the repository (exists on this machine)" : "imports a file outside the repository (not on this machine)");
   const rel = ctx.repo.rel(t, ctx.docDir);
   if (rel === null) return notChecked(span, "imports a file outside the repository");
   if (ctx.repo.exists(rel)) return verified(span, "definition", [{ ref: rel, level: "definition" }], `imports ${rel}`);
   if (/^[\w.-]+\/[\w.-]+$/.test(t) && ctx.repo.packages.some((p) => `@${t}` in p.deps)) return notChecked(span, `names the package @${t}, not a file`);
-  if (!posix5.extname(t) && ctx.repo.exists(`${rel}.md`)) return verified(span, "definition", [{ ref: `${rel}.md`, level: "definition" }], `imports ${rel}.md`);
+  if (!posix6.extname(t) && ctx.repo.exists(`${rel}.md`)) return unconfirmed(span, `no file ${rel}; ${rel}.md exists, but Claude Code imports the path as written`, [{ ref: `${rel}.md`, level: "reference" }], "reference");
   return stale(span, `broken import: ${rel} does not exist`);
 }
 function checkGlob(ctx, span) {
-  const found = expandAlternatives(span.text.replace(/^\.\//, "")).flatMap((p) => {
-    const re = globToRegExp(p);
-    return ctx.repo.files.filter((f) => re.test(f));
-  });
-  return found.length ? verified(span, "definition", found.slice(0, 3).map((f) => ({ ref: f, level: "definition" })), `matches ${shown(found)}`) : stale(span, `the glob ${span.text} matches no file, so the rule never loads`);
+  const base = ctx.pathBase;
+  const { files, error } = matchGlob(span.text, ctx.repo.files, base);
+  if (files.length) return verified(span, "definition", files.slice(0, 3).map((f) => ({ ref: f, level: "definition" })), `matches ${shown(files)}`);
+  if (error) return stale(span, error);
+  if (/\[[^\]]+\]/.test(span.text)) {
+    const literal = matchGlob(span.text.replace(/\[/g, "\\[").replace(/\]/g, "\\]"), ctx.repo.files, base);
+    if (literal.files.length) return stale(span, `matches no file: Claude Code reads ${span.text.match(/\[[^\]]+\]/)?.[0]} as a bracket expression; write it as ${span.text.replace(/\[/g, "\\[").replace(/\]/g, "\\]")} to match ${shown(literal.files)}`);
+  }
+  return stale(span, `${NO_MATCH}${base ? ` under ${base}/` : ""}`);
 }
+var NO_MATCH = "matches no file, so this pattern never loads the rule";
 
 // src/verify/versions.ts
 function lowerBound(range) {
@@ -20382,7 +20551,7 @@ function mentionedProjects(ctx, st) {
   const out = /* @__PURE__ */ new Set();
   for (const s of st.spans) {
     if (s.kind !== "path" && s.kind !== "link") continue;
-    const p = ctx.repo.rel(s.text.replace(/\/$/, ""), ctx.docDir);
+    const p = ctx.repo.rel(s.text.replace(/\/$/, ""), ctx.pathBase);
     if (!p) continue;
     const owner = projects.filter((d) => p === d || p.startsWith(`${d}/`)).sort((a2, b) => b.length - a2.length)[0];
     if (owner) out.add(owner);
@@ -20391,10 +20560,13 @@ function mentionedProjects(ctx, st) {
 }
 async function checkStatement(ctx, st) {
   const projects = mentionedProjects(ctx, st);
-  const withHints = projects.length ? st.spans.map((s) => s.kind === "command" && s.cwd === void 0 ? { ...s, hintDirs: [...s.hintDirs ?? [], ...projects.map((d) => ctx.docDir && d.startsWith(`${ctx.docDir}/`) ? d.slice(ctx.docDir.length + 1) : d)] } : s) : st.spans;
+  const withHints = projects.length ? st.spans.map((s) => s.kind === "command" && s.cwd === void 0 ? { ...s, hintDirs: [...s.hintDirs ?? [], ...projects.map((d) => ctx.pathBase && d.startsWith(`${ctx.pathBase}/`) ? d.slice(ctx.pathBase.length + 1) : d)] } : s) : st.spans;
   const spans = withHints.length ? withHints : [{ kind: "prose", text: "(statement)", expect: "present" }];
   const results = [];
   for (const span of spans) results.push(await checkSpan(ctx, span));
+  if (st.kind === "frontmatter" && results.some((r) => r.kind === "glob" && r.status === "VERIFIED")) {
+    for (const [i, r] of results.entries()) if (r.kind === "glob" && r.status === "STALE" && r.reason.startsWith(NO_MATCH)) results[i] = { ...r, status: "UNCONFIRMED", reason: `${r.reason}; the rule's other patterns still load it` };
+  }
   return aggregate(st, results);
 }
 
@@ -20402,9 +20574,11 @@ async function checkStatement(ctx, st) {
 var VERSION = "0.1.0";
 
 // src/pipeline.ts
+var MAX_IMPORT_HOPS = 4;
 var emptyCounts = () => ({ VERIFIED: 0, STALE: 0, UNCONFIRMED: 0, UNVERIFIED_WITH_REASON: 0, DECIDED: 0, OVERRIDDEN: 0, NOT_CHECKED: 0, FIXED: 0, FIX_REJECTED: 0 });
 var emptyLevels = () => ({ definition: 0, declaration: 0, reference: 0, comment: 0, substring: 0, none: 0 });
 function verdictOf(statements) {
+  if (!statements.length) return "PROVEN";
   const has = (s) => statements.some((x) => x.status === s);
   if (has("STALE") || has("FIX_REJECTED")) return "NOT PROVEN";
   if (has("UNCONFIRMED") || has("UNVERIFIED_WITH_REASON")) return "PARTLY PROVEN";
@@ -20414,6 +20588,9 @@ function verdictOf(statements) {
   if (has("OVERRIDDEN") || referenceOnly) return "PROVEN WITH OVERRIDES";
   return "PROVEN";
 }
+var SEVERITY = { PROVEN: 0, FIXED: 1, "PROVEN WITH OVERRIDES": 2, "PARTLY PROVEN": 3, "NOT PROVEN": 4, UNTESTED: 5 };
+var worst = (a2, b) => SEVERITY[b] > SEVERITY[a2] ? b : a2;
+var INSTRUCTION_EXT = /\.(md|mdc|markdown|txt)$/i;
 var Run = class {
   repo;
   syntax;
@@ -20433,19 +20610,80 @@ var Run = class {
       if (n) this.repo.degrade(`grammar ${lang}`, `no tree-sitter grammar for ${lang} (${n} file${n === 1 ? "" : "s"}): definitions there are matched by line patterns`);
     }
   }
+  /** A path as the report names it: repository-relative inside the repository, absolute outside. */
+  key(file, base = "") {
+    const abs = file.startsWith("~/") ? join6(homedir4(), file.slice(2)) : isAbsolute3(file) ? file : resolve2(this.repo.root, base, file);
+    return this.repo.rel(abs) ?? abs;
+  }
+  real(key) {
+    try {
+      return realpathSync2(isAbsolute3(key) ? key : join6(this.repo.root, key));
+    } catch {
+      return key;
+    }
+  }
+  /**
+   * Check the targets and every instruction file they import, depth first, so each importer's verdict
+   * includes what it pulls in. Each real file is checked once. Spec 3.1.
+   */
+  async checkTargets(targets, opts = {}) {
+    const reports = /* @__PURE__ */ new Map();
+    const order = [];
+    const visit = async (target, hops, importer) => {
+      const key = this.key(target.file);
+      const real = this.real(key);
+      const existing = reports.get(real);
+      if (existing) {
+        if (importer && !existing.importedBy.includes(importer)) existing.importedBy.push(importer);
+        return existing;
+      }
+      const report = await this.checkFile(key, target);
+      reports.set(real, report);
+      order.push(real);
+      if (importer) report.importedBy.push(importer);
+      for (const imp of report.imports) {
+        if (!imp.resolved) continue;
+        const outside = isAbsolute3(imp.resolved);
+        if (!INSTRUCTION_EXT.test(imp.resolved)) imp.note = "loaded as is; not an instruction file to check";
+        else if (outside && !opts.user) imp.note = "outside the repository: pass --user to check it";
+        else if (hops + 1 > MAX_IMPORT_HOPS) imp.note = `beyond ${MAX_IMPORT_HOPS} hops: Claude Code does not load it from here`;
+        else {
+          const child = await visit({ file: imp.resolved, why: `imported by ${report.file}`, scope: outside ? "user" : "import" }, hops + 1, report.file);
+          imp.followed = true;
+          imp.note = child === report ? "imports itself" : `checked: ${child.ownVerdict}`;
+          report.verdict = worst(report.verdict, child.verdict);
+        }
+      }
+      return report;
+    };
+    for (const t of targets) await visit(t, 0, null);
+    return order.map((r) => reports.get(r)).filter((r) => Boolean(r));
+  }
   /** Check one instruction file, given relative to the repository root or as an absolute path. */
-  async checkFile(file) {
+  async checkFile(file, target) {
     const started = (/* @__PURE__ */ new Date()).toISOString();
     this.noteGrammars();
-    const rel = this.repo.rel(file) ?? file;
+    const rel = this.key(file);
     const counts = emptyCounts();
     const evidenceLevels = emptyLevels();
-    const base = { file: rel, counts, evidenceLevels, git: this.git, run: { started, finished: started, version: VERSION } };
+    const base = {
+      file: rel,
+      scope: target?.scope ?? "project",
+      why: target?.why ?? "named on the command line",
+      imports: [],
+      importedBy: [],
+      counts,
+      evidenceLevels,
+      git: this.git,
+      run: { started, finished: started, version: VERSION }
+    };
     const text4 = this.repo.read(rel);
-    if (text4 === null) return { ...base, verdict: "UNTESTED", reason: `${rel} cannot be read`, coverage: { statements: 0, withResult: 0 }, degraded: [...this.repo.degraded], statements: [] };
+    if (text4 === null) return { ...base, verdict: "UNTESTED", ownVerdict: "UNTESTED", reason: `${rel} cannot be read`, coverage: { statements: 0, withResult: 0 }, degraded: [...this.repo.degraded], statements: [] };
     const doc = parseDocument(text4, rel);
     if (doc.frontmatterError) this.repo.degrade(rel, `frontmatter does not parse (${doc.frontmatterError}); Claude Code loads this rule as if it had no paths`);
-    const ctx = { repo: this.repo, syntax: this.syntax, docFile: rel, docDir: posix6.dirname(rel) === "." ? "" : posix6.dirname(rel) };
+    const dir = posix7.dirname(rel);
+    const docDir = dir === "." ? "" : dir;
+    const ctx = { repo: this.repo, syntax: this.syntax, docFile: rel, docDir, pathBase: isAbsolute3(rel) ? "" : pathBaseOf(rel, docDir) };
     this.repo.primeIgnored(doc.statements.flatMap((s) => s.spans.filter((sp) => sp.kind === "path" || sp.kind === "link").map((sp) => sp.text.replace(/^\.\//, ""))));
     const statements = [];
     for (const st of doc.statements) statements.push(await checkStatement(ctx, st));
@@ -20453,9 +20691,17 @@ var Run = class {
       counts[s.status] += 1;
       for (const r of s.results) if (r.status === "VERIFIED" || r.status === "UNCONFIRMED") evidenceLevels[r.level] += 1;
     }
+    const imports = doc.imports.map((imp) => {
+      const key = this.key(imp.path, isAbsolute3(rel) ? dir : ctx.docDir);
+      const exists = existsSync6(isAbsolute3(key) ? key : join6(this.repo.root, key));
+      return { path: imp.path, line: imp.line, resolved: exists ? key : null, followed: false, note: exists ? "" : "does not resolve to a file" };
+    });
+    const ownVerdict = verdictOf(statements);
     return {
       ...base,
-      verdict: verdictOf(statements),
+      imports,
+      verdict: ownVerdict,
+      ownVerdict,
       coverage: { statements: statements.length, withResult: statements.filter((s) => s.results.length > 0).length },
       degraded: [...this.repo.degraded],
       run: { ...base.run, finished: (/* @__PURE__ */ new Date()).toISOString() },
@@ -20515,6 +20761,11 @@ function toMarkdown(r, opts = {}) {
 `;
   }
   lines.push(countsLine(r), "");
+  lines.push(`loaded: ${r.why}${r.scope === "managed" || r.scope === "user" ? " (outside the repository: proof reports, never edits)" : ""}`);
+  if (r.importedBy.length) lines.push(`imported by: ${r.importedBy.join(", ")}`);
+  for (const i of r.imports) lines.push(`imports: @${i.path} (L${i.line}) \u2014 ${i.note || (i.followed ? "checked" : "not checked")}`);
+  if (r.verdict !== r.ownVerdict) lines.push(`own statements: ${r.ownVerdict}; with what it imports: ${r.verdict}`);
+  lines.push("");
   for (const d of r.degraded) lines.push(`degraded: ${d.subject} \u2014 ${d.reason}`);
   if (r.degraded.length) lines.push("");
   if (r.git) {
@@ -20553,12 +20804,14 @@ function nextLines(r) {
 var HELP = `proof ${VERSION}: is your CLAUDE.md still true?
 
 Usage:
-  proof check [file...] [--json] [--out <dir>] [--verbose]
+  proof check [file...] [--user] [--json] [--out <dir>] [--verbose]
 
 Checks every statement in CLAUDE.md, AGENTS.md and the other instruction files an agent loads
-against the repository, and prints a markdown report. With no files, checks every instruction
-file it discovers.
+against the repository, follows their @imports, and prints a markdown report. With no files,
+checks every instruction file it discovers.
 
+  --user        Also check ~/.claude/CLAUDE.md, ~/.claude/rules/ and this machine's managed policy
+                file, and follow imports outside the repository (reported, never edited)
   --json        Print JSON (an array, one object per file) instead of markdown
   --out <dir>   Also write <name>.md and <name>.json reports into <dir>
   --verbose     List verified, decided and not-checked statements too
@@ -20568,22 +20821,25 @@ async function check(argv) {
   const { values, positionals } = parseArgs({
     args: argv,
     allowPositionals: true,
-    options: { json: { type: "boolean" }, out: { type: "string" }, verbose: { type: "boolean" } }
+    options: { json: { type: "boolean" }, out: { type: "string" }, verbose: { type: "boolean" }, user: { type: "boolean" } }
   });
   const run2 = new Run(process.cwd());
-  const files = positionals.length ? positionals : discover(run2.repo).map((d) => d.file);
-  if (!files.length) {
+  const found = discover(run2.repo, { user: Boolean(values.user) });
+  const targets = positionals.length ? positionals.map((p) => found.files.find((d) => resolve3(run2.repo.root, d.file) === resolve3(p)) ?? { file: resolve3(p), why: "named on the command line", scope: "project" }) : found.files;
+  if (!targets.length) {
     console.error("No instruction file found. Pass one: proof check path/to/CLAUDE.md");
     return 2;
   }
-  const reports = [];
-  for (const f of files) reports.push(await run2.checkFile(f));
+  const reports = await run2.checkTargets(targets, { user: Boolean(values.user) });
+  if (!positionals.length && found.skipped.length && !values.json) {
+    console.error(found.skipped.map((s) => `skipped ${s.file}: ${s.reason}`).join("\n"));
+  }
   if (values.out) {
     mkdirSync(values.out, { recursive: true });
     for (const r of reports) {
       const name = r.file.replace(/[^a-z0-9._-]+/gi, "-").toLowerCase();
-      writeFileSync(join6(values.out, `${name}.md`), toMarkdown(r, { verbose: true }));
-      writeFileSync(join6(values.out, `${name}.json`), `${JSON.stringify(r, null, 2)}
+      writeFileSync(join7(values.out, `${name}.md`), toMarkdown(r, { verbose: true }));
+      writeFileSync(join7(values.out, `${name}.json`), `${JSON.stringify(r, null, 2)}
 `);
     }
   }

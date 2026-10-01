@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
-import { discover } from './discover.ts';
+import { type Discovered, discover } from './discover.ts';
 import { EXIT_CODE } from './model.ts';
 import { type FileReport, Run } from './pipeline.ts';
 import { toMarkdown } from './report.ts';
@@ -10,12 +10,14 @@ import { VERSION } from './version.ts';
 export const HELP = `proof ${VERSION}: is your CLAUDE.md still true?
 
 Usage:
-  proof check [file...] [--json] [--out <dir>] [--verbose]
+  proof check [file...] [--user] [--json] [--out <dir>] [--verbose]
 
 Checks every statement in CLAUDE.md, AGENTS.md and the other instruction files an agent loads
-against the repository, and prints a markdown report. With no files, checks every instruction
-file it discovers.
+against the repository, follows their @imports, and prints a markdown report. With no files,
+checks every instruction file it discovers.
 
+  --user        Also check ~/.claude/CLAUDE.md, ~/.claude/rules/ and this machine's managed policy
+                file, and follow imports outside the repository (reported, never edited)
   --json        Print JSON (an array, one object per file) instead of markdown
   --out <dir>   Also write <name>.md and <name>.json reports into <dir>
   --verbose     List verified, decided and not-checked statements too
@@ -26,16 +28,22 @@ async function check(argv: string[]): Promise<number> {
   const { values, positionals } = parseArgs({
     args: argv,
     allowPositionals: true,
-    options: { json: { type: 'boolean' }, out: { type: 'string' }, verbose: { type: 'boolean' } },
+    options: { json: { type: 'boolean' }, out: { type: 'string' }, verbose: { type: 'boolean' }, user: { type: 'boolean' } },
   });
   const run = new Run(process.cwd());
-  const files = positionals.length ? positionals : discover(run.repo).map((d) => d.file);
-  if (!files.length) {
+  const found = discover(run.repo, { user: Boolean(values.user) });
+  // A file named on the command line keeps the reason an agent loads it, when discovery knows one.
+  const targets: Discovered[] = positionals.length
+    ? positionals.map((p) => found.files.find((d) => resolve(run.repo.root, d.file) === resolve(p)) ?? { file: resolve(p), why: 'named on the command line', scope: 'project' })
+    : found.files;
+  if (!targets.length) {
     console.error('No instruction file found. Pass one: proof check path/to/CLAUDE.md');
     return 2;
   }
-  const reports: FileReport[] = [];
-  for (const f of files) reports.push(await run.checkFile(f));
+  const reports: FileReport[] = await run.checkTargets(targets, { user: Boolean(values.user) });
+  if (!positionals.length && found.skipped.length && !values.json) {
+    console.error(found.skipped.map((s) => `skipped ${s.file}: ${s.reason}`).join('\n'));
+  }
   if (values.out) {
     mkdirSync(values.out, { recursive: true });
     for (const r of reports) {

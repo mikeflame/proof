@@ -2,7 +2,7 @@ import type { CheckedStatement, Span, SpanResult, Statement } from '../model.ts'
 import { checkCommand, projectBinary } from './commands.ts';
 import { checkDependency } from './deps.ts';
 import { checkEnv } from './env.ts';
-import { checkGlob, checkImport, checkLink, checkPath } from './paths.ts';
+import { checkGlob, checkImport, checkLink, checkPath, NO_MATCH } from './paths.ts';
 import { checkSymbol, textInCode } from './symbols.ts';
 import { blocked, type CheckContext, notChecked, verified } from './util.ts';
 import { checkVersion } from './versions.ts';
@@ -84,7 +84,7 @@ function mentionedProjects(ctx: CheckContext, st: Statement): string[] {
   const out = new Set<string>();
   for (const s of st.spans) {
     if (s.kind !== 'path' && s.kind !== 'link') continue;
-    const p = ctx.repo.rel(s.text.replace(/\/$/, ''), ctx.docDir);
+    const p = ctx.repo.rel(s.text.replace(/\/$/, ''), ctx.pathBase);
     if (!p) continue;
     const owner = projects.filter((d) => p === d || p.startsWith(`${d}/`)).sort((a, b) => b.length - a.length)[0];
     if (owner) out.add(owner);
@@ -94,9 +94,13 @@ function mentionedProjects(ctx: CheckContext, st: Statement): string[] {
 
 export async function checkStatement(ctx: CheckContext, st: Statement): Promise<CheckedStatement> {
   const projects = mentionedProjects(ctx, st);
-  const withHints = projects.length ? st.spans.map((s) => (s.kind === 'command' && s.cwd === undefined ? { ...s, hintDirs: [...(s.hintDirs ?? []), ...projects.map((d) => (ctx.docDir && d.startsWith(`${ctx.docDir}/`) ? d.slice(ctx.docDir.length + 1) : d))] } : s)) : st.spans;
+  const withHints = projects.length ? st.spans.map((s) => (s.kind === 'command' && s.cwd === undefined ? { ...s, hintDirs: [...(s.hintDirs ?? []), ...projects.map((d) => (ctx.pathBase && d.startsWith(`${ctx.pathBase}/`) ? d.slice(ctx.pathBase.length + 1) : d))] } : s)) : st.spans;
   const spans: Span[] = withHints.length ? withHints : [{ kind: 'prose', text: '(statement)', expect: 'present' }];
   const results: SpanResult[] = [];
   for (const span of spans) results.push(await checkSpan(ctx, span));
+  // A rule still loads through its other patterns: one that matches nothing today is unconfirmed, not stale.
+  if (st.kind === 'frontmatter' && results.some((r) => r.kind === 'glob' && r.status === 'VERIFIED')) {
+    for (const [i, r] of results.entries()) if (r.kind === 'glob' && r.status === 'STALE' && r.reason.startsWith(NO_MATCH)) results[i] = { ...r, status: 'UNCONFIRMED', reason: `${r.reason}; the rule's other patterns still load it` };
+  }
   return aggregate(st, results);
 }

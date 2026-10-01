@@ -26,8 +26,18 @@ git; everything else ships next to it.
 
 ```bash
 proof check              # every instruction file an agent loads in this repository
-proof check CLAUDE.md    # one file
+proof check CLAUDE.md    # one file, and every file it @imports
+proof check --user       # also ~/.claude/CLAUDE.md, ~/.claude/rules/ and the managed policy file
 ```
+
+It finds what each agent loads: `CLAUDE.md`, `.claude/CLAUDE.md`, `CLAUDE.local.md`
+(even when gitignored), `AGENTS.md`, `.claude/rules/`, Copilot, Cursor, Gemini,
+Windsurf, Cline and Aider files, in any folder. It follows `@path` imports the way
+Claude Code does (relative to the importing file, four hops deep, never inside
+code), and an importer's verdict includes what it pulls in. The `loaded:` and
+`imports:` header lines say why each file counts. A rule's `paths:` globs are
+read as Claude Code reads them: a pattern that matches nothing is unconfirmed,
+and a rule none of whose patterns match is stale because it never loads.
 
 It splits the file into statements (list items, table rows, sentences, fenced
 command lines, imports) and checks each name in them against the repository
