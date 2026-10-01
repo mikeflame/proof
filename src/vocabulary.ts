@@ -118,3 +118,30 @@ export function verdictTable(): string {
 export function commandTable(): string {
   return ['| Command | What it does |', '| --- | --- |', ...COMMANDS.map((c) => `| \`proof ${c.name}\` | ${c.summary} |`)].join('\n');
 }
+
+export interface MatrixCell {
+  ecosystem: string;
+  scripts: string;
+  versions: string;
+  definitions: string;
+}
+
+/**
+ * Spec 6: what the mechanical stage reads per ecosystem, proven by test/matrix.test.ts. Anything marked
+ * "agent only" is left to the verifier agent, which the report shows as unverified until it answers.
+ */
+export const MATRIX: readonly MatrixCell[] = [
+  { ecosystem: 'Node', scripts: 'package.json scripts, workspaces, `npx`/`bunx` binaries', versions: '`engines`, `.nvmrc`, `.node-version`, `.tool-versions`, Dockerfile, CI', definitions: 'tree-sitter TypeScript, TSX, JavaScript' },
+  { ecosystem: 'Python', scripts: 'pyproject scripts (`uv`/`poetry`/`pdm`/`hatch run`), tox, nox, `python -m`, `manage.py`', versions: '`requires-python`, `.python-version`, Dockerfile, CI', definitions: 'tree-sitter Python' },
+  { ecosystem: 'Go', scripts: '`go run`/`go test` on package paths', versions: 'go.mod `go` and `toolchain`', definitions: 'tree-sitter Go, `pkg.Symbol`, receivers, struct tags' },
+  { ecosystem: 'Rust', scripts: 'cargo commands, aliases, `-p` crates', versions: '`rust-toolchain`, `rust-version`', definitions: 'tree-sitter Rust' },
+  { ecosystem: 'JVM', scripts: 'Gradle tasks (registered or standard), Maven phases', versions: 'agent only', definitions: 'tree-sitter Java; Kotlin by line patterns' },
+  { ecosystem: 'Ruby, PHP, .NET', scripts: 'rake tasks from the syntax tree, composer scripts, `dotnet` projects', versions: 'Gemfile `ruby`; PHP and .NET agent only', definitions: 'tree-sitter Ruby, PHP, C#' },
+  { ecosystem: 'Shell', scripts: 'functions and `case` labels in any script, justfile recipes, Taskfile tasks', versions: '', definitions: 'tree-sitter Bash' },
+  { ecosystem: 'Containers and CI', scripts: 'compose services, workflow job names', versions: 'compose and Dockerfile image tags', definitions: 'YAML parse; Dockerfile stages agent only' },
+];
+
+export function matrixTable(corpus: { ecosystem: string }[] = []): string {
+  const count = (e: string) => corpus.filter((c) => e.split(/,\s*/).some((x) => c.ecosystem === x || (x === 'Ruby' && c.ecosystem === 'Ruby'))).length;
+  return ['| Ecosystem | Scripts and tasks | Versions | Definitions | Corpus repos |', '| --- | --- | --- | --- | --- |', ...MATRIX.map((m) => `| ${m.ecosystem} | ${m.scripts} | ${m.versions || '—'} | ${m.definitions} | ${count(m.ecosystem) || '—'} |`)].join('\n');
+}

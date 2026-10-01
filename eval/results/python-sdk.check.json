@@ -1,0 +1,3475 @@
+{
+ "proof": "ef52d8e37086",
+ "stage": "check",
+ "seconds": 2,
+ "exit": 0,
+ "report": {
+  "file": "AGENTS.md",
+  "scope": "project",
+  "why": "Claude Code reads it only when no CLAUDE.md, .claude/CLAUDE.md or CLAUDE.local.md is in the folder or above it, and Codex, Cursor and others read it always",
+  "imports": [],
+  "importedBy": [],
+  "counts": {
+   "VERIFIED": 2,
+   "STALE": 0,
+   "UNCONFIRMED": 6,
+   "UNVERIFIED_WITH_REASON": 45,
+   "DECIDED": 0,
+   "OVERRIDDEN": 0,
+   "NOT_CHECKED": 9,
+   "FIXED": 0,
+   "FIX_REJECTED": 0
+  },
+  "evidenceLevels": {
+   "definition": 26,
+   "declaration": 9,
+   "reference": 27,
+   "comment": 0,
+   "substring": 1,
+   "none": 7
+  },
+  "git": {
+   "root": "/home/ms/projects/proof-cache/corpus/python-sdk",
+   "tree": "2dd724c630e33c044b503288db0877592b370987",
+   "head": "d639cf7f97f77388fa7da60c0f9b04f8837b77fd",
+   "branch": null,
+   "upstream": "origin/main",
+   "behind": 0
+  },
+  "run": {
+   "started": "2026-10-01T12:30:14.728Z",
+   "finished": "2026-10-01T12:30:16.927Z",
+   "version": "0.1.0"
+  },
+  "decisions": [],
+  "reopened": [],
+  "verdict": "PARTLY PROVEN",
+  "ownVerdict": "PARTLY PROVEN",
+  "coverage": {
+   "statements": 62,
+   "withResult": 62
+  },
+  "degraded": [],
+  "statements": [
+   {
+    "id": "9057351159c8b277359aa72b4e8fec8422c9e52f",
+    "file": "AGENTS.md",
+    "line": 5,
+    "endLine": 8,
+    "section": "Note for AI Agents",
+    "kind": "sentence",
+    "text": "If you are an AI coding agent acting for someone who is not a maintainer of this repository, read `CONTRIBUTING.md` before opening issues or pull requests here.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "CONTRIBUTING.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"you coding agent acting someone maintainer …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "CONTRIBUTING.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "CONTRIBUTING.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "CONTRIBUTING.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"you coding agent acting someone maintainer …\"",
+    "settled": false
+   },
+   {
+    "id": "029cccffb860334b1865fa36e9f32cef315fa47c",
+    "file": "AGENTS.md",
+    "line": 7,
+    "endLine": 8,
+    "section": "Note for AI Agents",
+    "kind": "sentence",
+    "text": "In particular, pull requests that aren't linked to an issue assigned to their author are closed automatically.",
+    "spans": [],
+    "residual": [
+     "description \"particular pull requests aren't linked issue …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"particular pull requests aren't linked issue …\"",
+    "settled": false
+   },
+   {
+    "id": "752057ee83c2f13b39473901abde3d6039d31bc1",
+    "file": "AGENTS.md",
+    "line": 12,
+    "endLine": 13,
+    "section": "Branching Model",
+    "kind": "item",
+    "text": "`main` is the current stable line (v2); releases are cut from it (see `RELEASE.md`).",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "main",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "RELEASE.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"current stable line releases cut\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "main",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/actions/conformance/client.py:618",
+        "excerpt": "def main() -> None:",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at .github/actions/conformance/client.py:618"
+     },
+     {
+      "kind": "path",
+      "text": "RELEASE.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "RELEASE.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "RELEASE.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"current stable line releases cut\"",
+    "settled": false
+   },
+   {
+    "id": "a54adfeafe495d934273b9afd58ddfbd324dd880",
+    "file": "AGENTS.md",
+    "line": 14,
+    "endLine": 18,
+    "section": "Branching Model",
+    "kind": "item",
+    "text": "v2 is released; its public API is a compatibility contract for the 2.x line. Removals, renames, or any change to an existing API's signature or observable behaviour (including ones softened by a `@deprecated` shim) is a design decision a maintainer makes explicitly, and should generally be avoided.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "@deprecated",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"should\"",
+     "description \"released public API compatibility contract line …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "@deprecated",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "src/mcp/client/client.py:521",
+        "excerpt": "@deprecated(",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at src/mcp/client/client.py:521"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"should\", description \"released public API compatibility contract line …\"",
+    "settled": false
+   },
+   {
+    "id": "a7fa2858d450f8d9b6dbe915a71d0f9968cad837",
+    "file": "AGENTS.md",
+    "line": 19,
+    "endLine": 20,
+    "section": "Branching Model",
+    "kind": "item",
+    "text": "`docs/migration.md` is the v1 → v2 record and is closed to new entries. Correcting errors or improving clarity in what's there is fine.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "docs/migration.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"record closed new entries Correcting errors …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "docs/migration.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/migration.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "docs/migration.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"record closed new entries Correcting errors …\"",
+    "settled": false
+   },
+   {
+    "id": "1c229dea5de533f3202741c5d6686367d3fa169f",
+    "file": "AGENTS.md",
+    "line": 21,
+    "endLine": 23,
+    "section": "Branching Model",
+    "kind": "item",
+    "text": "`v1.x` is the maintenance branch for the previous major. Backport PRs target it and use a `[v1.x]` title prefix; only critical bug fixes and security fixes land there.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "v1.x",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "[v1.x]",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"only\"",
+     "description \"maintenance branch previous major Backport PRs …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "v1.x",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/ISSUE_TEMPLATE/bug.yaml:30",
+        "excerpt": "- 1.x (maintenance line, v1.x branch)",
+        "level": "reference"
+       },
+       {
+        "ref": "scripts/build-docs.sh:86",
+        "excerpt": "build_branch v1.x \"$V1_WORKTREE\" \"$OUTPUT_DIR/v1\"",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/ISSUE_TEMPLATE/bug.yaml:30"
+     },
+     {
+      "kind": "unknown",
+      "text": "[v1.x]",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `[v1.x]`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "5631219d08076f0222d37941f7efcfca61d812ea",
+    "file": "AGENTS.md",
+    "line": 24,
+    "endLine": 24,
+    "section": "Branching Model",
+    "kind": "item",
+    "text": "`README.md` documents v2. The v1 README lives on the `v1.x` branch.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "README.md",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "v1.x",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"documents README lives branch\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "README.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "README.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "README.md"
+     },
+     {
+      "kind": "symbol",
+      "text": "v1.x",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/ISSUE_TEMPLATE/bug.yaml:30",
+        "excerpt": "- 1.x (maintenance line, v1.x branch)",
+        "level": "reference"
+       },
+       {
+        "ref": "scripts/build-docs.sh:86",
+        "excerpt": "build_branch v1.x \"$V1_WORKTREE\" \"$OUTPUT_DIR/v1\"",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/ISSUE_TEMPLATE/bug.yaml:30"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"documents README lives branch\"",
+    "settled": false
+   },
+   {
+    "id": "3fb6979ee6b0327d0a4b4a2d43868cf63910a098",
+    "file": "AGENTS.md",
+    "line": 28,
+    "endLine": 28,
+    "section": "Package Management",
+    "kind": "item",
+    "text": "ONLY use uv, NEVER pip",
+    "spans": [],
+    "residual": [
+     "quantifier \"ONLY\"",
+     "rule \"NEVER\"",
+     "description \"NEVER pip\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"ONLY\", rule \"NEVER\", description \"NEVER pip\"",
+    "settled": false
+   },
+   {
+    "id": "f75434ee83e433d66e8d85d997cc65e631aa7b00",
+    "file": "AGENTS.md",
+    "line": 29,
+    "endLine": 34,
+    "section": "Package Management",
+    "kind": "item",
+    "text": "Installation: `uv add <package>`. Exception: the root project's runtime dependencies are dynamic (the published `mcp` wheel exact-pins `mcp-types`), so `uv add` cannot edit them — add the requirement to `[tool.hatch.metadata.hooks.uv-dynamic-versioning].dependencies` in `pyproject.toml` by hand, then run `uv lock`. Dependency groups, extras, and the example packages still take plain `uv add`.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "uv add <package>",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "mcp",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "mcp-types",
+      "expect": "present"
+     },
+     {
+      "kind": "command",
+      "text": "uv add",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "[tool.hatch.metadata.hooks.uv-dynamic-versioning].dependencies",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "pyproject.toml",
+      "expect": "present"
+     },
+     {
+      "kind": "command",
+      "text": "uv lock",
+      "expect": "present"
+     },
+     {
+      "kind": "command",
+      "text": "uv add",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Installation Exception root project's runtime dependencies …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "uv add <package>",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "a template with placeholders, not a command to run"
+     },
+     {
+      "kind": "symbol",
+      "text": "mcp",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs_src/apps/tutorial001.py:30",
+        "excerpt": "mcp = MCPServer(\"clock\", extensions=[apps])",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at docs_src/apps/tutorial001.py:30"
+     },
+     {
+      "kind": "symbol",
+      "text": "mcp-types",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "src/mcp-types",
+        "level": "definition"
+       }
+      ],
+      "reason": "named src/mcp-types"
+     },
+     {
+      "kind": "command",
+      "text": "uv add",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "`uv add` is a built-in command"
+     },
+     {
+      "kind": "unknown",
+      "text": "[tool.hatch.metadata.hooks.uv-dynamic-versioning].dependencies",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "path",
+      "text": "pyproject.toml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "pyproject.toml",
+        "level": "definition"
+       }
+      ],
+      "reason": "pyproject.toml"
+     },
+     {
+      "kind": "command",
+      "text": "uv lock",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "`uv lock` is a built-in command"
+     },
+     {
+      "kind": "command",
+      "text": "uv add",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "`uv add` is a built-in command"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `[tool.hatch.metadata.hooks.uv-dynamic-versioning].dependencies`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "8077ec84c60e22fbf4af06ff476db3d5c2c98821",
+    "file": "AGENTS.md",
+    "line": 35,
+    "endLine": 36,
+    "section": "Package Management",
+    "kind": "item",
+    "text": "Running tools: `uv run --frozen <tool>`. Always pass `--frozen` so uv doesn't rewrite `uv.lock` as a side effect.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "uv run --frozen <tool>",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "--frozen",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "uv.lock",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Always\"",
+     "description \"tools Always pass doesn't rewrite side …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "uv run --frozen <tool>",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "a template with placeholders, not a command to run"
+     },
+     {
+      "kind": "symbol",
+      "text": "--frozen",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/workflows/shared.yml:63",
+        "excerpt": "install-flags: \"--frozen\"",
+        "level": "reference"
+       }
+      ],
+      "reason": "a string in code at .github/workflows/shared.yml:63"
+     },
+     {
+      "kind": "path",
+      "text": "uv.lock",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "uv.lock",
+        "level": "definition"
+       }
+      ],
+      "reason": "uv.lock"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"Always\", description \"tools Always pass doesn't rewrite side …\"",
+    "settled": false
+   },
+   {
+    "id": "52b5934965bb5a5b1716211d2a76f9475f5454df",
+    "file": "AGENTS.md",
+    "line": 37,
+    "endLine": 38,
+    "section": "Package Management",
+    "kind": "item",
+    "text": "Cross-version testing: `uv run --frozen --python 3.10 pytest ...` to run against a specific interpreter (CI covers 3.10–3.14).",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "uv run --frozen --python 3.10 pytest ...",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Cross-version testing against specific interpreter covers\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "uv run --frozen --python 3.10 pytest ...",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "runs 3.10 from the environment (not a script in pyproject.toml)"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Cross-version testing against specific interpreter covers\"",
+    "settled": false
+   },
+   {
+    "id": "0f2a2a5d8af2fcbcf43ff24a5cab1a2bf2737022",
+    "file": "AGENTS.md",
+    "line": 39,
+    "endLine": 39,
+    "section": "Package Management",
+    "kind": "item",
+    "text": "Upgrading: `uv lock --upgrade-package <package>`",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "uv lock --upgrade-package <package>",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "uv lock --upgrade-package <package>",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "a template with placeholders, not a command to run"
+     }
+    ],
+    "status": "NOT_CHECKED",
+    "reason": "a template with placeholders, not a command to run",
+    "settled": false
+   },
+   {
+    "id": "d597f0f29177c6c9fc4984583b1c411192f2e6ee",
+    "file": "AGENTS.md",
+    "line": 40,
+    "endLine": 40,
+    "section": "Package Management",
+    "kind": "item",
+    "text": "FORBIDDEN: `uv pip install`, `@latest` syntax",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "uv pip install",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "@latest",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"FORBIDDEN\"",
+     "description \"FORBIDDEN syntax\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "uv pip install",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "`uv pip` is a built-in command"
+     },
+     {
+      "kind": "unknown",
+      "text": "@latest",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `@latest`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "3e1efdcaa4aaaec2c90859dc269941c27f0b4523",
+    "file": "AGENTS.md",
+    "line": 41,
+    "endLine": 44,
+    "section": "Package Management",
+    "kind": "item",
+    "text": "Don't raise dependency floors for CVEs alone. The `>=` constraint already lets users upgrade. Only raise a floor when the SDK needs functionality from the newer version, and don't add SDK code to work around a dependency's vulnerability. See Kludex/uvicorn#2643 and python-sdk #1552 for reasoning.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": ">=",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "count \"2643 and python-sdk\"",
+     "count \"1552 for reasoning\"",
+     "quantifier \"Only\"",
+     "rule \"Don't\"",
+     "description \"Don't raise dependency floors CVEs alone …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": ">=",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `>=`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "2ea60af1ff1637d1d9281c29e13763081da058ed",
+    "file": "AGENTS.md",
+    "line": 48,
+    "endLine": 49,
+    "section": "Code Quality",
+    "kind": "item",
+    "text": "Keep comments brief. Explain only non-obvious reasons or constraints; do not narrate the code or restate names, types, or assertions.",
+    "spans": [],
+    "residual": [
+     "quantifier \"only\"",
+     "rule \"do not\"",
+     "description \"Keep comments brief Explain non-obvious reasons …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"only\", rule \"do not\", description \"Keep comments brief Explain non-obvious reasons …\"",
+    "settled": false
+   },
+   {
+    "id": "ff9aa7fe1e45eb6f33470d4113bf837708dcd7f6",
+    "file": "AGENTS.md",
+    "line": 50,
+    "endLine": 50,
+    "section": "Code Quality",
+    "kind": "item",
+    "text": "Type hints required for all code",
+    "spans": [],
+    "residual": [
+     "quantifier \"all\"",
+     "rule \"required\"",
+     "description \"Type hints required code\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"all\", rule \"required\", description \"Type hints required code\"",
+    "settled": false
+   },
+   {
+    "id": "3531015005786bbd4eb7b12502e69dd89fb85899",
+    "file": "AGENTS.md",
+    "line": 51,
+    "endLine": 53,
+    "section": "Code Quality",
+    "kind": "item",
+    "text": "Public APIs must have docstrings. When a public API raises exceptions a caller would reasonably catch, document them in a `Raises:` section. Don't list exceptions from argument validation or programmer error.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "Raises:",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"must\"",
+     "description \"Public APIs have docstrings public API …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "Raises:",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `Raises:`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "f051d92de31f28f3c8cd3e3df848ba058808eb59",
+    "file": "AGENTS.md",
+    "line": 54,
+    "endLine": 55,
+    "section": "Code Quality",
+    "kind": "item",
+    "text": "`src/mcp/__init__.py` defines the public API surface via `__all__`. Adding a symbol there is a deliberate API decision, not a convenience re-export.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "src/mcp/__init__.py",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "__all__",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"defines public API surface Adding symbol …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "src/mcp/__init__.py",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "src/mcp/__init__.py",
+        "level": "definition"
+       }
+      ],
+      "reason": "src/mcp/__init__.py"
+     },
+     {
+      "kind": "symbol",
+      "text": "__all__",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "examples/stories/serve_one/server.py:28",
+        "excerpt": "__all__ = [\"SingleExchangeContext\", \"build_server\", \"handle_one\"]",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at examples/stories/serve_one/server.py:28"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"defines public API surface Adding symbol …\"",
+    "settled": false
+   },
+   {
+    "id": "afcee45534c5df004d55483e343ba05e09910746",
+    "file": "AGENTS.md",
+    "line": 56,
+    "endLine": 59,
+    "section": "Code Quality",
+    "kind": "item",
+    "text": "IMPORTANT: All imports go at the top of the file — inline imports hide dependencies and obscure circular-import bugs. Only exception: when a top-level import genuinely can't work (lazy-loading optional deps, or tests that re-import a module).",
+    "spans": [],
+    "residual": [
+     "quantifier \"All\"",
+     "description \"IMPORTANT imports top file inline imports …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"All\", description \"IMPORTANT imports top file inline imports …\"",
+    "settled": false
+   },
+   {
+    "id": "4b3a2776cbe3d55888cfe04bf89ff42f9c500d71",
+    "file": "AGENTS.md",
+    "line": 60,
+    "endLine": 64,
+    "section": "Code Quality",
+    "kind": "item",
+    "text": "Always pass `encoding=` to text-mode `open()`, `Path.read_text()`/`write_text()`, `tempfile` and `subprocess` text pipes — normally `\"utf-8\"`, or `\"locale\"` when the platform encoding is genuinely intended; the default is the process locale, not UTF-8. CI and `scripts/test` run pytest with `PYTHONWARNDEFAULTENCODING=1` (PEP 597), which makes any omission an error under the `error` filter.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "encoding=",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "open()",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Path.read_text()",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "write_text()",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "tempfile",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "subprocess",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "utf-8",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "locale",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "scripts/test",
+      "expect": "present"
+     },
+     {
+      "kind": "env",
+      "text": "PYTHONWARNDEFAULTENCODING=1",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "error",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "pytest",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Always\"",
+     "description \"Always pass text-mode text pipes normally …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "encoding=",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs_src/prompts/tutorial004.py:15",
+        "excerpt": "return STYLE_GUIDE_FILE.read_text(encoding=\"utf-8\")",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at docs_src/prompts/tutorial004.py:15"
+     },
+     {
+      "kind": "symbol",
+      "text": "open()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "examples/clients/simple-chatbot/mcp_simple_chatbot/main.py:47",
+        "excerpt": "with open(file_path, encoding=\"utf-8\") as f:",
+        "level": "reference"
+       },
+       {
+        "ref": "src/mcp/server/mcpserver/utilities/types.py:47",
+        "excerpt": "with open(self.path, \"rb\") as f:",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at examples/clients/simple-chatbot/mcp_simple_chatbot/main.py:47"
+     },
+     {
+      "kind": "symbol",
+      "text": "Path.read_text()",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "substring",
+      "evidence": [
+       {
+        "ref": "docs_src/prompts/tutorial004.py:15",
+        "excerpt": "return STYLE_GUIDE_FILE.read_text(encoding=\"utf-8\")",
+        "level": "substring"
+       },
+       {
+        "ref": "docs_src/uri_templates/tutorial002.py:18",
+        "excerpt": "return file.read_text(encoding=\"utf-8\")",
+        "level": "substring"
+       }
+      ],
+      "reason": "Path.read_text appears nowhere; read_text exists elsewhere (docs_src/prompts/tutorial004.py:15), on something not shown to be Path"
+     },
+     {
+      "kind": "symbol",
+      "text": "write_text()",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "write_text appears in no code file or file name"
+     },
+     {
+      "kind": "symbol",
+      "text": "tempfile",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "scripts/gen_surface_types.py:22",
+        "excerpt": "import tempfile",
+        "level": "reference"
+       },
+       {
+        "ref": "scripts/gen_surface_types.py:247",
+        "excerpt": "with tempfile.TemporaryDirectory() as tmp:",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at scripts/gen_surface_types.py:22"
+     },
+     {
+      "kind": "symbol",
+      "text": "subprocess",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "pyproject.toml:303",
+        "excerpt": "patch = [\"subprocess\"]",
+        "level": "reference"
+       },
+       {
+        "ref": "scripts/gen_surface_types.py:20",
+        "excerpt": "import subprocess",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at pyproject.toml:303"
+     },
+     {
+      "kind": "symbol",
+      "text": "utf-8",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "src/mcp/client/stdio.py:107",
+        "excerpt": "encoding: str = \"utf-8\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at src/mcp/client/stdio.py:107"
+     },
+     {
+      "kind": "symbol",
+      "text": "locale",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "locale appears in no code file or file name"
+     },
+     {
+      "kind": "path",
+      "text": "scripts/test",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "scripts/test",
+        "level": "definition"
+       }
+      ],
+      "reason": "scripts/test"
+     },
+     {
+      "kind": "env",
+      "text": "PYTHONWARNDEFAULTENCODING=1",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": ".github/workflows/shared.yml:88",
+        "excerpt": "PYTHONWARNDEFAULTENCODING: \"1\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declared at .github/workflows/shared.yml:88"
+     },
+     {
+      "kind": "symbol",
+      "text": "error",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "examples/clients/simple-auth-client/mcp_simple_auth_client/main.py:86",
+        "excerpt": "self.callback_data[\"error\"] = query_params[\"error\"][0]",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/clients/simple-auth-client/mcp_simple_auth_client/main.py:116",
+        "excerpt": "self.callback_data = {\"authorization_code\": None, \"state\": None, \"iss\": None, \"error\": None}",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at examples/clients/simple-auth-client/mcp_simple_auth_client/main.py:86"
+     },
+     {
+      "kind": "dependency",
+      "text": "pytest",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "examples/clients/simple-auth-client/pyproject.toml pytest \">=8.3.3\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/clients/simple-chatbot/pyproject.toml pytest \">=8.3.3\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/clients/sse-polling-client/pyproject.toml pytest \">=8.3.3\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "examples/clients/simple-auth-client/pyproject.toml depends on pytest"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`Path.read_text()`: Path.read_text appears nowhere; read_text exists elsewhere (docs_src/prompts/tutorial004.py:15), on something not shown to be Path",
+    "settled": false
+   },
+   {
+    "id": "2bb50565bd7db640f551168b8bff1d2128dde4f2",
+    "file": "AGENTS.md",
+    "line": 68,
+    "endLine": 69,
+    "section": "Testing",
+    "kind": "item",
+    "text": "When writing or reviewing tests, conform to `.claude/skills/test-quality/SKILL.md` — it defines the bar for naming, abstraction level, assertions, and determinism.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": ".claude/skills/test-quality/SKILL.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"writing reviewing tests conform defines bar …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": ".claude/skills/test-quality/SKILL.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".claude/skills/test-quality/SKILL.md",
+        "level": "definition"
+       }
+      ],
+      "reason": ".claude/skills/test-quality/SKILL.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"writing reviewing tests conform defines bar …\"",
+    "settled": false
+   },
+   {
+    "id": "c1cb82ca97a5a2f6d68f4293f774db58467f09ad",
+    "file": "AGENTS.md",
+    "line": 70,
+    "endLine": 70,
+    "section": "Testing",
+    "kind": "item",
+    "text": "Framework: `uv run --frozen pytest`",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "uv run --frozen pytest",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "uv run --frozen pytest",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "runs pytest from the environment (not a script in pyproject.toml)"
+     }
+    ],
+    "status": "NOT_CHECKED",
+    "reason": "runs pytest from the environment (not a script in pyproject.toml)",
+    "settled": false
+   },
+   {
+    "id": "99236e6acdbd74927fc5a7391b5395cfe0214ed8",
+    "file": "AGENTS.md",
+    "line": 71,
+    "endLine": 71,
+    "section": "Testing",
+    "kind": "item",
+    "text": "Async testing: use anyio, not asyncio",
+    "spans": [],
+    "residual": [
+     "description \"Async testing anyio asyncio\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Async testing anyio asyncio\"",
+    "settled": false
+   },
+   {
+    "id": "7ab142648d170b29ff908bb9b8cdd1587f45723b",
+    "file": "AGENTS.md",
+    "line": 72,
+    "endLine": 74,
+    "section": "Testing",
+    "kind": "item",
+    "text": "Do not use `Test` prefixed classes — write plain top-level `test_*` functions. Legacy files still contain `Test*` classes; do NOT follow that pattern for new tests even when adding to such a file.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "Test",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "test_*",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "Test*",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "status \"Legacy\"",
+     "rule \"Do not\"",
+     "description \"prefixed classes write plain top-level functions …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "Test",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "tests/client/test_sampling_callback.py:97",
+        "excerpt": "result = await client.call_tool(\"test_backwards_compat\", {\"message\": \"Test\"})",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at tests/client/test_sampling_callback.py:97"
+     },
+     {
+      "kind": "unknown",
+      "text": "test_*",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "Test*",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `test_*`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "105f9bbc02461d31495bfabf6d5ab3f6abd75dc2",
+    "file": "AGENTS.md",
+    "line": 75,
+    "endLine": 76,
+    "section": "Testing",
+    "kind": "item",
+    "text": "IMPORTANT: Tests should be fast and deterministic. Prefer in-memory async execution; reach for threads only when necessary, and subprocesses only as a last resort.",
+    "spans": [],
+    "residual": [
+     "quantifier \"only\"",
+     "rule \"should\"",
+     "description \"IMPORTANT Tests fast deterministic Prefer in-memory …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"only\", rule \"should\", description \"IMPORTANT Tests fast deterministic Prefer in-memory …\"",
+    "settled": false
+   },
+   {
+    "id": "203b618068513a717adcc00ba722490f15f72feb",
+    "file": "AGENTS.md",
+    "line": 77,
+    "endLine": 80,
+    "section": "Testing",
+    "kind": "item",
+    "text": "For end-to-end behavior, an in-memory `Client(server)` is usually the cleanest approach (see `tests/client/test_client.py` for the canonical pattern). For narrower changes, testing the function directly is fine. Use judgment.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "Client()",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "tests/client/test_client.py",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "status \"canonical\"",
+     "description \"end-to-end behavior in-memory usually cleanest approach …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "Client()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/actions/conformance/client.py:238",
+        "excerpt": "async with Client(server_url, mode=client_mode()) as client:",
+        "level": "reference"
+       },
+       {
+        "ref": ".github/actions/conformance/client.py:253",
+        "excerpt": "async with Client(server_url, mode=\"legacy\") as client:",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/actions/conformance/client.py:238"
+     },
+     {
+      "kind": "path",
+      "text": "tests/client/test_client.py",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "tests/client/test_client.py",
+        "level": "definition"
+       }
+      ],
+      "reason": "tests/client/test_client.py"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: status \"canonical\", description \"end-to-end behavior in-memory usually cleanest approach …\"",
+    "settled": false
+   },
+   {
+    "id": "fc7f30a4741a1e1efd391220eb228fee96b43069",
+    "file": "AGENTS.md",
+    "line": 81,
+    "endLine": 82,
+    "section": "Testing",
+    "kind": "item",
+    "text": "Test files mirror the source tree: `src/mcp/client/stdio.py` → `tests/client/test_stdio.py`. Add tests to the existing file for that module.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "src/mcp/client/stdio.py",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "tests/client/test_stdio.py",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Test files mirror source tree Add …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "src/mcp/client/stdio.py",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "src/mcp/client/stdio.py",
+        "level": "definition"
+       }
+      ],
+      "reason": "src/mcp/client/stdio.py"
+     },
+     {
+      "kind": "path",
+      "text": "tests/client/test_stdio.py",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "tests/client/test_stdio.py",
+        "level": "definition"
+       }
+      ],
+      "reason": "tests/client/test_stdio.py"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Test files mirror source tree Add …\"",
+    "settled": false
+   },
+   {
+    "id": "bed49cb76ee8849690da19d335370e175aad7e72",
+    "file": "AGENTS.md",
+    "line": 83,
+    "endLine": 83,
+    "section": "Testing",
+    "kind": "item",
+    "text": "Avoid `anyio.sleep()` with a fixed duration to wait for async operations. Instead:",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "anyio.sleep()",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Avoid\"",
+     "description \"Avoid fixed duration wait async operations …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "anyio.sleep()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs_src/subscriptions/tutorial005.py:20",
+        "excerpt": "await anyio.sleep(1)",
+        "level": "reference"
+       },
+       {
+        "ref": "examples/servers/simple-streamablehttp-stateless/mcp_simple_streamablehttp_stateless/server.py:59",
+        "excerpt": "await anyio.sleep(interval)",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at docs_src/subscriptions/tutorial005.py:20"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"Avoid\", description \"Avoid fixed duration wait async operations …\"",
+    "settled": false
+   },
+   {
+    "id": "dd5177e70475ef05e72993218a313768d1e0d7d3",
+    "file": "AGENTS.md",
+    "line": 84,
+    "endLine": 84,
+    "section": "Testing",
+    "kind": "item",
+    "text": "Use `anyio.Event` — set it in the callback/handler, `await event.wait()` in the test",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "anyio.Event",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "event.wait()",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"set callback handler test\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "anyio.Event",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "examples/stories/parallel_calls/server.py:16",
+        "excerpt": "arrivals: dict[str, anyio.Event] = defaultdict(anyio.Event)",
+        "level": "reference"
+       },
+       {
+        "ref": "examples/stories/parallel_calls/server_lowlevel.py:24",
+        "excerpt": "arrivals: dict[str, anyio.Event] = defaultdict(anyio.Event)",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at examples/stories/parallel_calls/server.py:16"
+     },
+     {
+      "kind": "symbol",
+      "text": "event.wait()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "src/mcp/shared/direct_dispatcher.py:222",
+        "excerpt": "await event.wait()",
+        "level": "reference"
+       },
+       {
+        "ref": "tests/client/test_client.py:314",
+        "excerpt": "await event.wait()",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at src/mcp/shared/direct_dispatcher.py:222"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"set callback handler test\"",
+    "settled": false
+   },
+   {
+    "id": "c7269650cead82c39e554487603376b4a49c2bfd",
+    "file": "AGENTS.md",
+    "line": 85,
+    "endLine": 85,
+    "section": "Testing",
+    "kind": "item",
+    "text": "For stream messages, use `await stream.receive()` instead of `sleep()` + `receive_nowait()`",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "stream.receive()",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "sleep()",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "receive_nowait()",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"stream messages instead\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "stream.receive()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "tests/client/test_stdio.py:1199",
+        "excerpt": "msg = await stream.receive(5)",
+        "level": "reference"
+       },
+       {
+        "ref": "tests/client/test_stdio.py:1207",
+        "excerpt": "await stream.receive(1)",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at tests/client/test_stdio.py:1199"
+     },
+     {
+      "kind": "symbol",
+      "text": "sleep()",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "sleep appears in no code file or file name"
+     },
+     {
+      "kind": "symbol",
+      "text": "receive_nowait()",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "receive_nowait appears in no code file or file name"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`sleep()`: sleep appears in no code file or file name",
+    "settled": false
+   },
+   {
+    "id": "5b5104f3db8fa76d5a24804c8546c4ac2bc89847",
+    "file": "AGENTS.md",
+    "line": 86,
+    "endLine": 86,
+    "section": "Testing",
+    "kind": "item",
+    "text": "Exception: `sleep()` is appropriate when testing time-based features (e.g., timeouts)",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "sleep()",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Exception appropriate testing time-based features timeouts\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "sleep()",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "sleep appears in no code file or file name"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`sleep()`: sleep appears in no code file or file name",
+    "settled": false
+   },
+   {
+    "id": "8e4f6ffb7d00c58a7891c876f6b43e8eaf724aff",
+    "file": "AGENTS.md",
+    "line": 87,
+    "endLine": 87,
+    "section": "Testing",
+    "kind": "item",
+    "text": "Wrap indefinite waits (`event.wait()`, `stream.receive()`) in `anyio.fail_after(5)` to prevent hangs",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "event.wait()",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "stream.receive()",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "anyio.fail_after()",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Wrap indefinite waits prevent hangs\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "event.wait()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "src/mcp/shared/direct_dispatcher.py:222",
+        "excerpt": "await event.wait()",
+        "level": "reference"
+       },
+       {
+        "ref": "tests/client/test_client.py:314",
+        "excerpt": "await event.wait()",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at src/mcp/shared/direct_dispatcher.py:222"
+     },
+     {
+      "kind": "symbol",
+      "text": "stream.receive()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "tests/client/test_stdio.py:1199",
+        "excerpt": "msg = await stream.receive(5)",
+        "level": "reference"
+       },
+       {
+        "ref": "tests/client/test_stdio.py:1207",
+        "excerpt": "await stream.receive(1)",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at tests/client/test_stdio.py:1199"
+     },
+     {
+      "kind": "symbol",
+      "text": "anyio.fail_after()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "examples/stories/_harness.py:170",
+        "excerpt": "with anyio.fail_after(cfg[\"timeout_s\"]):",
+        "level": "reference"
+       },
+       {
+        "ref": "examples/stories/parallel_calls/client.py:29",
+        "excerpt": "with anyio.fail_after(5):",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at examples/stories/_harness.py:170"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Wrap indefinite waits prevent hangs\"",
+    "settled": false
+   },
+   {
+    "id": "4e1a3da842d0ddb052d3dd15d683c9c49c2e72f2",
+    "file": "AGENTS.md",
+    "line": 88,
+    "endLine": 91,
+    "section": "Testing",
+    "kind": "item",
+    "text": "Pytest is configured with `filterwarnings = [\"error\"]`, so warnings fail tests. Don't silence warnings from your own code; fix the underlying cause. Scoped `ignore::` entries for upstream libraries are acceptable in `pyproject.toml` with a comment explaining why.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "filterwarnings = [\"error\"]",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "ignore::",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "pyproject.toml",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Don't\"",
+     "description \"Pytest configured warnings fail tests Don't …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "filterwarnings = [\"error\"]",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "ignore::",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "path",
+      "text": "pyproject.toml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "pyproject.toml",
+        "level": "definition"
+       }
+      ],
+      "reason": "pyproject.toml"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `filterwarnings = [\"error\"]`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "5e6f2bdfeb489aef58f540ae7934718bf9bf4647",
+    "file": "AGENTS.md",
+    "line": 92,
+    "endLine": 96,
+    "section": "Testing",
+    "kind": "item",
+    "text": "New features from the 2026-07-28 spec must have a matching test in the [conformance suite](https://github.com/modelcontextprotocol/conformance) that passes against this SDK (CI runs it via `.github/workflows/conformance.yml`). If no matching test exists, stop and tell the user so they can raise an issue on the conformance repo.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": ".github/workflows/conformance.yml",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"must\"",
+     "description \"New features spec have matching test …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": ".github/workflows/conformance.yml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/workflows/conformance.yml",
+        "level": "definition"
+       }
+      ],
+      "reason": ".github/workflows/conformance.yml"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"must\", description \"New features spec have matching test …\"",
+    "settled": false
+   },
+   {
+    "id": "943a050385b22cb27b181ebb27dd9c36f02e1b34",
+    "file": "AGENTS.md",
+    "line": 100,
+    "endLine": 100,
+    "section": "Coverage",
+    "kind": "sentence",
+    "text": "CI requires 100% (`fail_under = 100`, `branch = true`).",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "fail_under = 100",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "branch = true",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "fail_under = 100",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "pyproject.toml:315",
+        "excerpt": "fail_under = 100",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at pyproject.toml:315"
+     },
+     {
+      "kind": "unknown",
+      "text": "branch = true",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "pyproject.toml:302",
+        "excerpt": "branch = true",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at pyproject.toml:302"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": false
+   },
+   {
+    "id": "1cf593adba25f7ccdd80f25e4e12129be389d4b9",
+    "file": "AGENTS.md",
+    "line": 102,
+    "endLine": 105,
+    "section": "Coverage",
+    "kind": "item",
+    "text": "Full check: `./scripts/test` (~23s). Runs coverage + `strict-no-cover` on the default Python. Not identical to CI: CI runs 3.10–3.14 × {ubuntu, windows} × {locked, lowest-direct}, and some branch-coverage quirks only surface on specific matrix entries.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "./scripts/test",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "strict-no-cover",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"only\"",
+     "description \"Full check coverage default Python identical …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "./scripts/test",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "scripts/test",
+        "level": "definition"
+       }
+      ],
+      "reason": "scripts/test"
+     },
+     {
+      "kind": "symbol",
+      "text": "strict-no-cover",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "pyproject.toml:77",
+        "excerpt": "\"strict-no-cover\",",
+        "level": "declaration"
+       },
+       {
+        "ref": "pyproject.toml:254",
+        "excerpt": "strict-no-cover = { git = \"https://github.com/pydantic/strict-no-cover\" }",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at pyproject.toml:77"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: quantifier \"only\", description \"Full check coverage default Python identical …\"",
+    "settled": false
+   },
+   {
+    "id": "aa8a1a0e27a9533f721d1ef4b3a2075d29e5b526",
+    "file": "AGENTS.md",
+    "line": 109,
+    "endLine": 109,
+    "section": "Coverage",
+    "kind": "command",
+    "text": "uv run --frozen coverage erase",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "uv run --frozen coverage erase",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "uv run --frozen coverage erase",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "runs coverage from the environment (not a script in pyproject.toml)"
+     }
+    ],
+    "status": "NOT_CHECKED",
+    "reason": "runs coverage from the environment (not a script in pyproject.toml)",
+    "settled": false
+   },
+   {
+    "id": "b8e7429202120069270da327c5ad638d33d242d2",
+    "file": "AGENTS.md",
+    "line": 110,
+    "endLine": 110,
+    "section": "Coverage",
+    "kind": "command",
+    "text": "uv run --frozen coverage run -m pytest tests/path/test_foo.py",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "uv run --frozen coverage run -m pytest tests/path/test_foo.py",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "tests/path/test_foo.py",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "uv run --frozen coverage run -m pytest tests/path/test_foo.py",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "runs coverage from the environment (not a script in pyproject.toml)"
+     },
+     {
+      "kind": "path",
+      "text": "tests/path/test_foo.py",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "an example path, not a file the statement claims exists"
+     }
+    ],
+    "status": "NOT_CHECKED",
+    "reason": "runs coverage from the environment (not a script in pyproject.toml)",
+    "settled": false
+   },
+   {
+    "id": "3a60a067356ac167504f7b9956d117a4d6816ca8",
+    "file": "AGENTS.md",
+    "line": 111,
+    "endLine": 111,
+    "section": "Coverage",
+    "kind": "command",
+    "text": "uv run --frozen coverage combine",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "uv run --frozen coverage combine",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "uv run --frozen coverage combine",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "runs coverage from the environment (not a script in pyproject.toml)"
+     }
+    ],
+    "status": "NOT_CHECKED",
+    "reason": "runs coverage from the environment (not a script in pyproject.toml)",
+    "settled": false
+   },
+   {
+    "id": "62203a97d97ecbbb5f32dc6c1985b13995fb233f",
+    "file": "AGENTS.md",
+    "line": 112,
+    "endLine": 112,
+    "section": "Coverage",
+    "kind": "command",
+    "text": "uv run --frozen coverage report --include='src/mcp/path/foo.py' --fail-under=0",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "uv run --frozen coverage report --include=src/mcp/path/foo.py --fail-under=0",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "uv run --frozen coverage report --include=src/mcp/path/foo.py --fail-under=0",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "runs coverage from the environment (not a script in pyproject.toml)"
+     }
+    ],
+    "status": "NOT_CHECKED",
+    "reason": "runs coverage from the environment (not a script in pyproject.toml)",
+    "settled": false
+   },
+   {
+    "id": "d6c562b4f5cb00dd84111f728d1d0166d9e2e037",
+    "file": "AGENTS.md",
+    "line": 114,
+    "endLine": 114,
+    "section": "Coverage",
+    "kind": "command",
+    "text": "UV_FROZEN=1 uv run --frozen strict-no-cover",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "UV_FROZEN=1 uv run --frozen strict-no-cover",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "UV_FROZEN=1 uv run --frozen strict-no-cover",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "runs strict-no-cover from the environment (not a script in pyproject.toml)"
+     }
+    ],
+    "status": "NOT_CHECKED",
+    "reason": "runs strict-no-cover from the environment (not a script in pyproject.toml)",
+    "settled": false
+   },
+   {
+    "id": "1ed88d040820c851ee76def3d858dcd906c6a4d8",
+    "file": "AGENTS.md",
+    "line": 117,
+    "endLine": 120,
+    "section": "Coverage",
+    "kind": "item",
+    "text": "Partial runs can't hit 100% (coverage tracks `tests/` too), so `--fail-under=0` and `--include` scope the report. `strict-no-cover` has no false positives on partial runs — if your new test executes a line marked `# pragma: no cover`, even a single-file run catches it.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "tests/",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "--fail-under=0",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "--include",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "strict-no-cover",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "# pragma: no cover",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Partial can't hit coverage tracks too …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "tests/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "tests",
+        "level": "definition"
+       }
+      ],
+      "reason": "tests"
+     },
+     {
+      "kind": "unknown",
+      "text": "--fail-under=0",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "symbol",
+      "text": "--include",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "no code spells --include as a string (\"--include\" or \"include\")"
+     },
+     {
+      "kind": "symbol",
+      "text": "strict-no-cover",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "pyproject.toml:77",
+        "excerpt": "\"strict-no-cover\",",
+        "level": "declaration"
+       },
+       {
+        "ref": "pyproject.toml:254",
+        "excerpt": "strict-no-cover = { git = \"https://github.com/pydantic/strict-no-cover\" }",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at pyproject.toml:77"
+     },
+     {
+      "kind": "unknown",
+      "text": "# pragma: no cover",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`--include`: no code spells --include as a string (\"--include\" or \"include\")",
+    "settled": false
+   },
+   {
+    "id": "cfaacf6a6ff9046cb29474e74448407d562be1cd",
+    "file": "AGENTS.md",
+    "line": 122,
+    "endLine": 125,
+    "section": "Coverage",
+    "kind": "sentence",
+    "text": "Avoid adding new `# pragma: no cover`, `# type: ignore`, or `# noqa` comments.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "# pragma: no cover",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "# type: ignore",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "# noqa",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Avoid\"",
+     "description \"Avoid adding new comments\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "# pragma: no cover",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "# type: ignore",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "# noqa",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `# pragma: no cover`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "3f1b3abb6b598cc36f711d16c63fee44fc49461c",
+    "file": "AGENTS.md",
+    "line": 123,
+    "endLine": 125,
+    "section": "Coverage",
+    "kind": "sentence",
+    "text": "In tests, use `assert isinstance(x, T)` to narrow types instead of `# type: ignore`.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "isinstance()",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "# type: ignore",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"tests narrow types instead\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "isinstance()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/actions/conformance/client.py:220",
+        "excerpt": "if isinstance(params, types.ElicitRequestFormParams):",
+        "level": "reference"
+       },
+       {
+        "ref": ".github/actions/conformance/client.py:434",
+        "excerpt": "assert isinstance(result, types.CallToolResult)",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/actions/conformance/client.py:220"
+     },
+     {
+      "kind": "unknown",
+      "text": "# type: ignore",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `# type: ignore`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "7ccd40a3c50d33e1fb34eb9f2c80b1efca8b1ad0",
+    "file": "AGENTS.md",
+    "line": 124,
+    "endLine": 125,
+    "section": "Coverage",
+    "kind": "sentence",
+    "text": "In library code (`src/`), a `# pragma: no cover` needs very good reasoning — it usually means a test is missing.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "src/",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "# pragma: no cover",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"library code needs very good reasoning …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "src/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "src",
+        "level": "definition"
+       }
+      ],
+      "reason": "src"
+     },
+     {
+      "kind": "unknown",
+      "text": "# pragma: no cover",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `# pragma: no cover`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "1a00adc57e412f23fdb4f72da023e900ca57918c",
+    "file": "AGENTS.md",
+    "line": 128,
+    "endLine": 128,
+    "section": "Coverage",
+    "kind": "command",
+    "text": "git diff origin/main... | grep -E '^\\+.*(pragma|type: ignore|noqa)'",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "git diff origin/main...",
+      "expect": "present",
+      "hintDirs": [
+       "src"
+      ]
+     },
+     {
+      "kind": "path",
+      "text": "origin/main...",
+      "expect": "present",
+      "hintDirs": [
+       "src"
+      ]
+     },
+     {
+      "kind": "command",
+      "text": "grep -E ^\\+.*(pragma|type: ignore|noqa)",
+      "expect": "present",
+      "hintDirs": [
+       "src"
+      ]
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "git diff origin/main...",
+      "expect": "present",
+      "hintDirs": [
+       "src"
+      ],
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "external tool `git`"
+     },
+     {
+      "kind": "path",
+      "text": "origin/main...",
+      "expect": "present",
+      "hintDirs": [
+       "src"
+      ],
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "no origin/ in this repository; fine if it names a folder somewhere else"
+     },
+     {
+      "kind": "command",
+      "text": "grep -E ^\\+.*(pragma|type: ignore|noqa)",
+      "expect": "present",
+      "hintDirs": [
+       "src"
+      ],
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "external tool `grep`"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`origin/main...`: no origin/ in this repository; fine if it names a folder somewhere else",
+    "settled": false
+   },
+   {
+    "id": "db3c9994ef236721ef45df3f66aed12c05adb5f2",
+    "file": "AGENTS.md",
+    "line": 133,
+    "endLine": 135,
+    "section": "Coverage",
+    "kind": "item",
+    "text": "`# pragma: no cover` — line is never executed. CI's `strict-no-cover` (skipped on Windows runners) fails if it IS executed. When your test starts covering such a line, remove the pragma.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "# pragma: no cover",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "strict-no-cover",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"never\"",
+     "description \"line never executed CI's skipped Windows …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "# pragma: no cover",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "symbol",
+      "text": "strict-no-cover",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "pyproject.toml:77",
+        "excerpt": "\"strict-no-cover\",",
+        "level": "declaration"
+       },
+       {
+        "ref": "pyproject.toml:254",
+        "excerpt": "strict-no-cover = { git = \"https://github.com/pydantic/strict-no-cover\" }",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at pyproject.toml:77"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `# pragma: no cover`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "34e9f36ce755a8e7d70d1af14809142720003ad5",
+    "file": "AGENTS.md",
+    "line": 136,
+    "endLine": 138,
+    "section": "Coverage",
+    "kind": "item",
+    "text": "`# pragma: lax no cover` — excluded from coverage but not checked by `strict-no-cover`. Use for lines covered on some platforms/versions but not others.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "# pragma: lax no cover",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "strict-no-cover",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"excluded coverage checked lines covered some …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "# pragma: lax no cover",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "symbol",
+      "text": "strict-no-cover",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "pyproject.toml:77",
+        "excerpt": "\"strict-no-cover\",",
+        "level": "declaration"
+       },
+       {
+        "ref": "pyproject.toml:254",
+        "excerpt": "strict-no-cover = { git = \"https://github.com/pydantic/strict-no-cover\" }",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at pyproject.toml:77"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `# pragma: lax no cover`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "9515f6f7d44ed681882c5830fc603a019329bc01",
+    "file": "AGENTS.md",
+    "line": 139,
+    "endLine": 140,
+    "section": "Coverage",
+    "kind": "item",
+    "text": "`# pragma: no branch` — excludes branch arcs only. coverage.py misreports the `->exit` arc for nested `async with` on Python 3.11+ (worse on 3.14/Windows).",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "# pragma: no branch",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "->exit",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "async with",
+      "expect": "present"
+     },
+     {
+      "kind": "version",
+      "text": "Python 3.11+",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"only\"",
+     "description \"excludes branch arcs coverage misreports arc …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "# pragma: no branch",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "->exit",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "async with",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/actions/conformance/client.py:156",
+        "excerpt": "async with httpx2.AsyncClient() as client:",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at .github/actions/conformance/client.py:156"
+     },
+     {
+      "kind": "version",
+      "text": "Python 3.11+",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "examples/clients/simple-auth-client/pyproject.toml requires-python \">=3.10\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/clients/simple-chatbot/pyproject.toml requires-python \">=3.10\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/clients/sse-polling-client/pyproject.toml requires-python \">=3.10\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/pyproject.toml requires-python \">=3.10\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "the repository allows Python 3.10 (examples/clients/simple-auth-client/pyproject.toml requires-python \">=3.10\"); the claim is stricter than its config"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`Python 3.11+`: the repository allows Python 3.10 (examples/clients/simple-auth-client/pyproject.toml requires-python \">=3.10\"); the claim is stricter than its config",
+    "settled": false
+   },
+   {
+    "id": "e1cccc5effafb5df52c4a2c762f0e0a2473b38ef",
+    "file": "AGENTS.md",
+    "line": 144,
+    "endLine": 148,
+    "section": "Documentation",
+    "kind": "sentence",
+    "text": "When a change affects public API or user-visible behaviour, update the relevant page(s) under `docs/` in the same PR.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "docs/",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"change affects public API user-visible behaviour …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "docs/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs",
+        "level": "definition"
+       }
+      ],
+      "reason": "docs"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"change affects public API user-visible behaviour …\"",
+    "settled": false
+   },
+   {
+    "id": "936ee26e34be06cd28aa172fc72577f9828faca8",
+    "file": "AGENTS.md",
+    "line": 145,
+    "endLine": 148,
+    "section": "Documentation",
+    "kind": "sentence",
+    "text": "Docs are organised by the `nav:` sections in `mkdocs.yml` (Get started, Servers, Inside your handler, Running your server, Clients, Advanced), not by the on-disk directory names.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "nav:",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "mkdocs.yml",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Docs organised sections Get started Servers …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "nav:",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "path",
+      "text": "mkdocs.yml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "mkdocs.yml",
+        "level": "definition"
+       }
+      ],
+      "reason": "mkdocs.yml"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `nav:`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "6b6924dc73ab2b65e79d7ec328170cae1546e241",
+    "file": "AGENTS.md",
+    "line": 147,
+    "endLine": 148,
+    "section": "Documentation",
+    "kind": "sentence",
+    "text": "Find the page covering the feature you touched in `mkdocs.yml` rather than adding a new one.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "mkdocs.yml",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Find page covering feature you touched …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "mkdocs.yml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "mkdocs.yml",
+        "level": "definition"
+       }
+      ],
+      "reason": "mkdocs.yml"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Find page covering feature you touched …\"",
+    "settled": false
+   },
+   {
+    "id": "ddbe111c759479f5ee26f3a11901c685540e594b",
+    "file": "AGENTS.md",
+    "line": 152,
+    "endLine": 152,
+    "section": "Formatting & Type Checking",
+    "kind": "item",
+    "text": "Format: `uv run --frozen ruff format .`",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "uv run --frozen ruff format .",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "uv run --frozen ruff format .",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "runs ruff from the environment (not a script in pyproject.toml)"
+     }
+    ],
+    "status": "NOT_CHECKED",
+    "reason": "runs ruff from the environment (not a script in pyproject.toml)",
+    "settled": false
+   },
+   {
+    "id": "fe453b946790016164f83e016da57705cce971fe",
+    "file": "AGENTS.md",
+    "line": 153,
+    "endLine": 153,
+    "section": "Formatting & Type Checking",
+    "kind": "item",
+    "text": "Lint: `uv run --frozen ruff check . --fix`",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "uv run --frozen ruff check . --fix",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "uv run --frozen ruff check . --fix",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "runs ruff from the environment (not a script in pyproject.toml)"
+     }
+    ],
+    "status": "NOT_CHECKED",
+    "reason": "runs ruff from the environment (not a script in pyproject.toml)",
+    "settled": false
+   },
+   {
+    "id": "6280cae8cc9cba8a5cd67f35a8f4a707c151c6a8",
+    "file": "AGENTS.md",
+    "line": 154,
+    "endLine": 154,
+    "section": "Formatting & Type Checking",
+    "kind": "item",
+    "text": "Type check: `uv run --frozen pyright`",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "uv run --frozen pyright",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Type check\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "uv run --frozen pyright",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "runs pyright from the environment (not a script in pyproject.toml)"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Type check\"",
+    "settled": false
+   },
+   {
+    "id": "2228eb2c35a559edcd8e880e49cc0f04fbf82807",
+    "file": "AGENTS.md",
+    "line": 155,
+    "endLine": 156,
+    "section": "Formatting & Type Checking",
+    "kind": "item",
+    "text": "Pre-commit runs all of the above plus markdownlint, a `uv.lock` consistency check, and README checks — see `.pre-commit-config.yaml`",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "uv.lock",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": ".pre-commit-config.yaml",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"all\"",
+     "description \"Pre-commit above plus markdownlint consistency check …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "uv.lock",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "uv.lock",
+        "level": "definition"
+       }
+      ],
+      "reason": "uv.lock"
+     },
+     {
+      "kind": "path",
+      "text": ".pre-commit-config.yaml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".pre-commit-config.yaml",
+        "level": "definition"
+       }
+      ],
+      "reason": ".pre-commit-config.yaml"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: quantifier \"all\", description \"Pre-commit above plus markdownlint consistency check …\"",
+    "settled": false
+   },
+   {
+    "id": "2196bc97a7ef1e1fc93760dc259db8a299a03ea4",
+    "file": "AGENTS.md",
+    "line": 160,
+    "endLine": 160,
+    "section": "Exception Handling",
+    "kind": "item",
+    "text": "Always use `logger.exception()` instead of `logger.error()` when catching exceptions",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "logger.exception()",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "logger.error()",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Always\"",
+     "description \"Always instead catching exceptions\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "logger.exception()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/actions/conformance/client.py:368",
+        "excerpt": "logger.exception(f\"call_tool({tool.name!r}) failed\")",
+        "level": "reference"
+       },
+       {
+        "ref": ".github/actions/conformance/client.py:396",
+        "excerpt": "logger.exception(f\"call_tool({name!r}) failed\")",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/actions/conformance/client.py:368"
+     },
+     {
+      "kind": "symbol",
+      "text": "logger.error()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "examples/servers/simple-auth/mcp_simple_auth/server.py:142",
+        "excerpt": "logger.error(f\"Configuration error: {e}\")",
+        "level": "reference"
+       },
+       {
+        "ref": "examples/servers/simple-auth/mcp_simple_auth/server.py:143",
+        "excerpt": "logger.error(\"Make sure to provide a valid Authorization Server URL\")",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at examples/servers/simple-auth/mcp_simple_auth/server.py:142"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"Always\", description \"Always instead catching exceptions\"",
+    "settled": false
+   },
+   {
+    "id": "a273bf1e9eca8738471d88937f353d77db2586ff",
+    "file": "AGENTS.md",
+    "line": 161,
+    "endLine": 161,
+    "section": "Exception Handling",
+    "kind": "item",
+    "text": "Don't include the exception in the message: `logger.exception(\"Failed\")` not `logger.exception(f\"Failed: {e}\")`",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "logger.exception()",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "logger.exception()",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Don't\"",
+     "description \"Don't include exception message\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "logger.exception()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/actions/conformance/client.py:368",
+        "excerpt": "logger.exception(f\"call_tool({tool.name!r}) failed\")",
+        "level": "reference"
+       },
+       {
+        "ref": ".github/actions/conformance/client.py:396",
+        "excerpt": "logger.exception(f\"call_tool({name!r}) failed\")",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/actions/conformance/client.py:368"
+     },
+     {
+      "kind": "symbol",
+      "text": "logger.exception()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/actions/conformance/client.py:368",
+        "excerpt": "logger.exception(f\"call_tool({tool.name!r}) failed\")",
+        "level": "reference"
+       },
+       {
+        "ref": ".github/actions/conformance/client.py:396",
+        "excerpt": "logger.exception(f\"call_tool({name!r}) failed\")",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/actions/conformance/client.py:368"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"Don't\", description \"Don't include exception message\"",
+    "settled": false
+   },
+   {
+    "id": "a3d4b64c2c0f4640559a5c449338f41442c9e689",
+    "file": "AGENTS.md",
+    "line": 163,
+    "endLine": 163,
+    "section": "Exception Handling",
+    "kind": "item",
+    "text": "File ops: `except (OSError, PermissionError):`",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "except (OSError, PermissionError):",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"File ops\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "except (OSError, PermissionError):",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `except (OSError, PermissionError):`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "949c626515ffb0bbbd23b13b3f81edffa4cf6479",
+    "file": "AGENTS.md",
+    "line": 164,
+    "endLine": 164,
+    "section": "Exception Handling",
+    "kind": "item",
+    "text": "JSON: `except json.JSONDecodeError:`",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "except json.JSONDecodeError:",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "except json.JSONDecodeError:",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/actions/conformance/client.py:576",
+        "excerpt": "except json.JSONDecodeError:",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at .github/actions/conformance/client.py:576"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": false
+   },
+   {
+    "id": "9e069f0bdcfec44382d6f1936d19604a6b71e955",
+    "file": "AGENTS.md",
+    "line": 165,
+    "endLine": 165,
+    "section": "Exception Handling",
+    "kind": "item",
+    "text": "Network: `except (ConnectionError, TimeoutError):`",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "except (ConnectionError, TimeoutError):",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "except (ConnectionError, TimeoutError):",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `except (ConnectionError, TimeoutError):`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "e6165261b5556098ea823205864411f08c827380",
+    "file": "AGENTS.md",
+    "line": 166,
+    "endLine": 166,
+    "section": "Exception Handling",
+    "kind": "item",
+    "text": "FORBIDDEN `except Exception:` - unless in top-level handlers",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "except Exception:",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"FORBIDDEN\"",
+     "description \"FORBIDDEN unless top-level handlers\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "except Exception:",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/actions/conformance/client.py:367",
+        "excerpt": "except Exception:",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at .github/actions/conformance/client.py:367"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"FORBIDDEN\", description \"FORBIDDEN unless top-level handlers\"",
+    "settled": false
+   }
+  ]
+ }
+}

@@ -8,7 +8,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
 import { GRAMMARS } from '../src/core/syntax.ts';
-import { commandTable, statusTable, verdictTable } from '../src/vocabulary.ts';
+import { commandTable, matrixTable, statusTable, verdictTable } from '../src/vocabulary.ts';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const check = process.argv.includes('--check');
@@ -72,7 +72,9 @@ const template = readFileSync(join(root, 'src/skill/SKILL.md.tmpl'), 'utf8');
 emit(join(skill, 'SKILL.md'), template.replace('{{STATUS_TABLE}}', statusTable()).replace('{{VERDICT_TABLE}}', verdictTable()));
 
 // The README's generated blocks.
-const blocks = { statuses: statusTable(), verdicts: verdictTable(), commands: commandTable() };
+const corpusFile = join(root, 'eval', 'corpus.json');
+const corpus = existsSync(corpusFile) ? JSON.parse(readFileSync(corpusFile, 'utf8')).repos : [];
+const blocks = { statuses: statusTable(), verdicts: verdictTable(), commands: commandTable(), matrix: matrixTable(corpus) };
 let readme = readFileSync(join(root, 'README.md'), 'utf8');
 for (const [name, body] of Object.entries(blocks)) {
   const re = new RegExp(`(<!-- generated:${name} -->\\n)[\\s\\S]*?(<!-- /generated:${name} -->)`);

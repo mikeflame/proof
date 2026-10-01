@@ -1,0 +1,1069 @@
+{
+ "proof": "ef52d8e37086",
+ "stage": "check",
+ "seconds": 2,
+ "exit": 0,
+ "report": {
+  "file": "AGENTS.md",
+  "scope": "project",
+  "why": "Claude Code reads it only when no CLAUDE.md, .claude/CLAUDE.md or CLAUDE.local.md is in the folder or above it, and Codex, Cursor and others read it always",
+  "imports": [],
+  "importedBy": [],
+  "counts": {
+   "VERIFIED": 0,
+   "STALE": 0,
+   "UNCONFIRMED": 2,
+   "UNVERIFIED_WITH_REASON": 19,
+   "DECIDED": 0,
+   "OVERRIDDEN": 0,
+   "NOT_CHECKED": 0,
+   "FIXED": 0,
+   "FIX_REJECTED": 0
+  },
+  "evidenceLevels": {
+   "definition": 3,
+   "declaration": 0,
+   "reference": 7,
+   "comment": 0,
+   "substring": 0,
+   "none": 3
+  },
+  "git": {
+   "root": "/home/ms/projects/proof-cache/corpus/spring-ai",
+   "tree": "ab87e9f3581db3d92c99c3fbd493afcac6883209",
+   "head": "46d05c2fdbab52f6ef04207abe19b12687a47453",
+   "branch": null,
+   "upstream": "origin/main",
+   "behind": 0
+  },
+  "run": {
+   "started": "2026-10-01T12:30:20.020Z",
+   "finished": "2026-10-01T12:30:22.133Z",
+   "version": "0.1.0"
+  },
+  "decisions": [],
+  "reopened": [],
+  "verdict": "PARTLY PROVEN",
+  "ownVerdict": "PARTLY PROVEN",
+  "coverage": {
+   "statements": 21,
+   "withResult": 21
+  },
+  "degraded": [
+   {
+    "subject": "grammar Kotlin",
+    "reason": "no tree-sitter grammar for Kotlin (12 files): definitions there are matched by line patterns"
+   }
+  ],
+  "statements": [
+   {
+    "id": "6deacfe2022371c83e3b83dbc9f1d3d8fbdbf76c",
+    "file": "AGENTS.md",
+    "line": 3,
+    "endLine": 3,
+    "section": "Spring AI agent guidelines",
+    "kind": "sentence",
+    "text": "Concise extract of [CONTRIBUTING.md](CONTRIBUTING.md), which remains the reference for humans.",
+    "spans": [
+     {
+      "kind": "link",
+      "text": "CONTRIBUTING.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Concise extract remains reference humans\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": "CONTRIBUTING.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "CONTRIBUTING.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "CONTRIBUTING.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Concise extract remains reference humans\"",
+    "settled": false
+   },
+   {
+    "id": "83d579aecd9358282d3086742ec1aa34b05cd7a5",
+    "file": "AGENTS.md",
+    "line": 7,
+    "endLine": 7,
+    "section": "Build",
+    "kind": "item",
+    "text": "JDK 17 with `-XDaddTypeAnnotationsToSymbol` support (see `.sdkmanrc`, e.g. `17.0.19-librca`), native CPU architecture.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "-XDaddTypeAnnotationsToSymbol",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": ".sdkmanrc",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "17.0.19-librca",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "count \"17 with\"",
+     "description \"JDK support native CPU architecture\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "-XDaddTypeAnnotationsToSymbol",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "pom.xml:480",
+        "excerpt": "<arg>-XDaddTypeAnnotationsToSymbol=true</arg>",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at pom.xml:480"
+     },
+     {
+      "kind": "path",
+      "text": ".sdkmanrc",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".sdkmanrc",
+        "level": "definition"
+       }
+      ],
+      "reason": ".sdkmanrc"
+     },
+     {
+      "kind": "unknown",
+      "text": "17.0.19-librca",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".sdkmanrc:3",
+        "excerpt": "java=17.0.19-librca",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at .sdkmanrc:3"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: count \"17 with\", description \"JDK support native CPU architecture\"",
+    "settled": false
+   },
+   {
+    "id": "1898d3c7506fa86fa27bd48237ef6fe53848d012",
+    "file": "AGENTS.md",
+    "line": 8,
+    "endLine": 8,
+    "section": "Build",
+    "kind": "item",
+    "text": "Build and unit tests: `./mvnw clean package` (scope with `-am -pl <module>`).",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "./mvnw clean package",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "-am",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "-pl",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Build unit tests scope\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "./mvnw clean package",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "pom.xml",
+        "level": "reference"
+       }
+      ],
+      "reason": "standard Maven phases on pom.xml"
+     },
+     {
+      "kind": "symbol",
+      "text": "-am",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/workflows/mcp-integration-tests.yml:45",
+        "excerpt": "./mvnw --batch-mode -ntp verify -Pintegration-tests -am -pl \"mcp/transport/mcp-spring-webflux,mcp/transport/mcp-spring-…",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/workflows/mcp-integration-tests.yml:45"
+     },
+     {
+      "kind": "symbol",
+      "text": "-pl",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/actions/do-autoconfigure-test/action.yml:35",
+        "excerpt": "-pl auto-configurations/common/spring-ai-autoconfigure-retry \\",
+        "level": "reference"
+       },
+       {
+        "ref": ".github/actions/do-autoconfigure-test/action.yml:43",
+        "excerpt": "-pl auto-configurations/models/chat/observation/spring-ai-autoconfigure-model-chat-observation \\",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/actions/do-autoconfigure-test/action.yml:35"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Build unit tests scope\"",
+    "settled": false
+   },
+   {
+    "id": "cd4b38066431bd1c3449b84c15ef1b4185c8c109",
+    "file": "AGENTS.md",
+    "line": 9,
+    "endLine": 9,
+    "section": "Build",
+    "kind": "item",
+    "text": "Format sources: `./mvnw process-sources` (enforced by CI, does not fix import order).",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "./mvnw process-sources",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Format sources enforced fix import order\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "./mvnw process-sources",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [
+       {
+        "ref": "pom.xml",
+        "level": "reference"
+       }
+      ],
+      "reason": "process-sources is not a standard Maven phase; plugin goals are not read"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`./mvnw process-sources`: process-sources is not a standard Maven phase; plugin goals are not read",
+    "settled": false
+   },
+   {
+    "id": "ed7bdf92b95ce6ac45a35b336c244a2a5adddb2d",
+    "file": "AGENTS.md",
+    "line": 10,
+    "endLine": 10,
+    "section": "Build",
+    "kind": "item",
+    "text": "Local builds reformat sources automatically: add `-Dspring-javaformat.skip=true` to disable it, or `-P'!format-apply,format-check'` to fail on violations without modifying files.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "-Dspring-javaformat.skip=true",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "-P'!format-apply,format-check'",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Local builds reformat sources automatically add …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "-Dspring-javaformat.skip=true",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "-P'!format-apply,format-check'",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `-Dspring-javaformat.skip=true`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "4daf8019327b511d191e9a48f0d817db825a39f9",
+    "file": "AGENTS.md",
+    "line": 11,
+    "endLine": 11,
+    "section": "Build",
+    "kind": "item",
+    "text": "Integration tests for a module: `./mvnw -am -pl <module> -Pintegration-tests verify`.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "./mvnw -am -pl <module> -Pintegration-tests verify",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Integration tests module\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "./mvnw -am -pl <module> -Pintegration-tests verify",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "a template with placeholders, not a command to run"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Integration tests module\"",
+    "settled": false
+   },
+   {
+    "id": "b148a15a462f9e8cbd9f8287a26d08da8b5a8c3e",
+    "file": "AGENTS.md",
+    "line": 12,
+    "endLine": 12,
+    "section": "Build",
+    "kind": "item",
+    "text": "Single integration test: add `-Dfailsafe.failIfNoSpecifiedTests=false -Dit.test=<TestClassIT>`; tests needing a missing provider API key are skipped.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "-Dfailsafe.failIfNoSpecifiedTests=false -Dit.test=<TestClassIT>",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Single integration test add tests needing …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "-Dfailsafe.failIfNoSpecifiedTests=false -Dit.test=<TestClassIT>",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `-Dfailsafe.failIfNoSpecifiedTests=false -Dit.test=<TestClassIT>`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "d05521f550a560dae53fabe715048d574ae6b861",
+    "file": "AGENTS.md",
+    "line": 13,
+    "endLine": 13,
+    "section": "Build",
+    "kind": "item",
+    "text": "Javadoc check: `./mvnw javadoc:javadoc`. Reference docs: `./mvnw -pl spring-ai-docs antora`.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "./mvnw javadoc:javadoc",
+      "expect": "present"
+     },
+     {
+      "kind": "command",
+      "text": "./mvnw -pl spring-ai-docs antora",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Javadoc check Reference docs\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "./mvnw javadoc:javadoc",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [
+       {
+        "ref": "pom.xml",
+        "level": "reference"
+       }
+      ],
+      "reason": "javadoc:javadoc is not a standard Maven phase; plugin goals are not read"
+     },
+     {
+      "kind": "command",
+      "text": "./mvnw -pl spring-ai-docs antora",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [
+       {
+        "ref": "pom.xml",
+        "level": "reference"
+       }
+      ],
+      "reason": "spring-ai-docs, antora is not a standard Maven phase; plugin goals are not read"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`./mvnw javadoc:javadoc`: javadoc:javadoc is not a standard Maven phase; plugin goals are not read",
+    "settled": false
+   },
+   {
+    "id": "a193800ae668e7df4873a9b65aa523b9174d7db4",
+    "file": "AGENTS.md",
+    "line": 14,
+    "endLine": 14,
+    "section": "Build",
+    "kind": "item",
+    "text": "Maven build cache is enabled; if the build breaks for no clear reason, retry with `-Dmaven.build.cache.enabled=false`.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "-Dmaven.build.cache.enabled=false",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Maven build cache enabled build breaks …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "-Dmaven.build.cache.enabled=false",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `-Dmaven.build.cache.enabled=false`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "8cbaf22bc3997745be8331d1beb4ce92db12f034",
+    "file": "AGENTS.md",
+    "line": 18,
+    "endLine": 18,
+    "section": "Code style",
+    "kind": "item",
+    "text": "Follow Spring Framework code style; match surrounding code and do not reformat unrelated code.",
+    "spans": [],
+    "residual": [
+     "rule \"do not\"",
+     "description \"Follow Spring Framework code style match …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"do not\", description \"Follow Spring Framework code style match …\"",
+    "settled": false
+   },
+   {
+    "id": "b434c7c1d7802de04c833e23c59eb35fbfd5d232",
+    "file": "AGENTS.md",
+    "line": 19,
+    "endLine": 19,
+    "section": "Code style",
+    "kind": "item",
+    "text": "Tabs, LF, UTF-8, no trailing whitespace; wrap Javadoc at 90 and code at ~120 characters.",
+    "spans": [],
+    "residual": [
+     "count \"90 and code\"",
+     "description \"Tabs UTF- trailing whitespace wrap Javadoc …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: count \"90 and code\", description \"Tabs UTF- trailing whitespace wrap Javadoc …\"",
+    "settled": false
+   },
+   {
+    "id": "3c1dda3fae1406354cbfba12e606fe41da2e645c",
+    "file": "AGENTS.md",
+    "line": 20,
+    "endLine": 20,
+    "section": "Code style",
+    "kind": "item",
+    "text": "Import order, groups separated by a blank line: `java.*`, then `javax.*` + `jakarta.*`, then others, then `org.springframework.*`, then static imports.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "java.*",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "javax.*",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "jakarta.*",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "org.springframework.*",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Import order groups separated blank line …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "java.*",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "javax.*",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "jakarta.*",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "org.springframework.*",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `java.*`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "4acf17c355dbd011c86667fc19885b2dd7ef9062",
+    "file": "AGENTS.md",
+    "line": 21,
+    "endLine": 21,
+    "section": "Code style",
+    "kind": "item",
+    "text": "No wildcard imports. No static imports in production code except constants/enum constants and third-party DSL factory methods; use them in tests (e.g. `assertThat`).",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "assertThat",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"wildcard imports static imports production code …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "assertThat",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "advisors/spring-ai-tool-search-advisor/src/test/java/org/springframework/ai/chat/client/advisor/toolsearch/AbstractToolSearchToolCallingAdvisorIT.java:135",
+        "excerpt": "assertThat(response).contains(\"30\", \"10\", \"15\");",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at advisors/spring-ai-tool-search-advisor/src/test/java/org/springframework/ai/chat/client/advisor/toolsearch/AbstractToolSearchToolCallingAdvisorIT.java:135"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"wildcard imports static imports production code …\"",
+    "settled": false
+   },
+   {
+    "id": "13c57a23124ad3d139ac9a4af6e8902d3a7ad559",
+    "file": "AGENTS.md",
+    "line": 22,
+    "endLine": 22,
+    "section": "Code style",
+    "kind": "item",
+    "text": "Every source file: Apache 2.0 license header (`Copyright 2023-present the original author or authors.`, copy from an existing file), package, imports, exactly one top-level class.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "Copyright 2023-present the original author or authors.",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "count \"2.0 license header\"",
+     "quantifier \"Every\"",
+     "description \"source file Apache license header copy …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "Copyright 2023-present the original author or authors.",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".mvn/extensions.xml:3",
+        "excerpt": "~ Copyright 2023-present the original author or authors.",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at .mvn/extensions.xml:3"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: count \"2.0 license header\", quantifier \"Every\", description \"source file Apache license header copy …\"",
+    "settled": false
+   },
+   {
+    "id": "2d9ba2ac4cde201fb987a4d165d34648b847bfdd",
+    "file": "AGENTS.md",
+    "line": 23,
+    "endLine": 23,
+    "section": "Code style",
+    "kind": "item",
+    "text": "Add `@since` on new public types and methods (e.g. `@since 2.0.0`).",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "@since",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "@since 2.0.0",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Add new public types methods\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "@since",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "@since 2.0.0",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `@since`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "5ddbe3e5e97608ffff72b3a571244be66f97b4da",
+    "file": "AGENTS.md",
+    "line": 24,
+    "endLine": 24,
+    "section": "Code style",
+    "kind": "item",
+    "text": "Add or update tests for any code change.",
+    "spans": [],
+    "residual": [
+     "description \"Add update tests code change\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Add update tests code change\"",
+    "settled": false
+   },
+   {
+    "id": "40a02ed636673a999492877f2794339201dce476",
+    "file": "AGENTS.md",
+    "line": 25,
+    "endLine": 25,
+    "section": "Code style",
+    "kind": "item",
+    "text": "In `.adoc` and `.md` files, write one sentence per line.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": ".adoc",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": ".md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"files write one sentence line\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": ".adoc",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "spring-ai-docs/src/main/antora/antora.yml:5",
+        "excerpt": "- modules/ROOT/nav.adoc",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at spring-ai-docs/src/main/antora/antora.yml:5"
+     },
+     {
+      "kind": "unknown",
+      "text": ".md",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `.md`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "9495926a05924a063bf45d1e832a4a51c299b013",
+    "file": "AGENTS.md",
+    "line": 29,
+    "endLine": 29,
+    "section": "Commits and pull requests",
+    "kind": "item",
+    "text": "Title: imperative, capitalized verb, ideally under 50 characters, no `fix:`/`docs:` prefixes and no issue/PR number.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "fix:",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "docs:",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Title imperative capitalized verb ideally characters …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "fix:",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "docs:",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `fix:`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "0adff4ef1fa0d8c7b73fa42fd49a58a94c3e18d0",
+    "file": "AGENTS.md",
+    "line": 30,
+    "endLine": 30,
+    "section": "Commits and pull requests",
+    "kind": "item",
+    "text": "Body wrapped at ~72 characters, followed by `Fixes #123`/`Closes #123` (or `See #123`), then a `Signed-off-by: Name <email>` trailer (DCO, use `git commit -s`).",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "Fixes #123",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "Closes #123",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "See #123",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "Signed-off-by: Name <email>",
+      "expect": "present"
+     },
+     {
+      "kind": "command",
+      "text": "git commit -s",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Body wrapped characters followed trailer DCO\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "Fixes #123",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "Closes #123",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "See #123",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "Signed-off-by: Name <email>",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "command",
+      "text": "git commit -s",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "external tool `git`"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `Fixes #123`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "6692c533b3cb0ea91cf781415891ec3867d92fc7",
+    "file": "AGENTS.md",
+    "line": 31,
+    "endLine": 31,
+    "section": "Commits and pull requests",
+    "kind": "item",
+    "text": "Enclose annotations in backticks in commit messages to avoid mentioning GitHub users.",
+    "spans": [],
+    "residual": [
+     "rule \"avoid\"",
+     "description \"Enclose annotations backticks commit messages avoid …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"avoid\", description \"Enclose annotations backticks commit messages avoid …\"",
+    "settled": false
+   },
+   {
+    "id": "6a641df795223f0715c6ba786204e6d22464e130",
+    "file": "AGENTS.md",
+    "line": 32,
+    "endLine": 32,
+    "section": "Commits and pull requests",
+    "kind": "item",
+    "text": "PR titles feed the changelog: short, descriptive, types or file names in backticks; reference related issues in the description, not the title.",
+    "spans": [],
+    "residual": [
+     "description \"titles feed changelog short descriptive types …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"titles feed changelog short descriptive types …\"",
+    "settled": false
+   }
+  ]
+ }
+}

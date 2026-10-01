@@ -95,6 +95,25 @@ your repository. It needs Node 22+ and git; the parsers and grammars ship next t
 | a rule's `paths:` (`globs:`, `applyTo:`) | the files each pattern matches, read with Claude Code's glob rules (`[` is a bracket expression) |
 <!-- proof:ignore-end -->
 
+## Where it works
+
+What the checks read mechanically in each ecosystem, each cell proven by a fixture in
+`test/matrix.test.ts`. The verifier agent covers the rest, and the corpus column counts the pinned
+public repositories of the evaluation below.
+
+<!-- generated:matrix -->
+| Ecosystem | Scripts and tasks | Versions | Definitions | Corpus repos |
+| --- | --- | --- | --- | --- |
+| Node | package.json scripts, workspaces, `npx`/`bunx` binaries | `engines`, `.nvmrc`, `.node-version`, `.tool-versions`, Dockerfile, CI | tree-sitter TypeScript, TSX, JavaScript | 3 |
+| Python | pyproject scripts (`uv`/`poetry`/`pdm`/`hatch run`), tox, nox, `python -m`, `manage.py` | `requires-python`, `.python-version`, Dockerfile, CI | tree-sitter Python | 2 |
+| Go | `go run`/`go test` on package paths | go.mod `go` and `toolchain` | tree-sitter Go, `pkg.Symbol`, receivers, struct tags | 3 |
+| Rust | cargo commands, aliases, `-p` crates | `rust-toolchain`, `rust-version` | tree-sitter Rust | 1 |
+| JVM | Gradle tasks (registered or standard), Maven phases | agent only | tree-sitter Java; Kotlin by line patterns | 1 |
+| Ruby, PHP, .NET | rake tasks from the syntax tree, composer scripts, `dotnet` projects | Gemfile `ruby`; PHP and .NET agent only | tree-sitter Ruby, PHP, C# | 2 |
+| Shell | functions and `case` labels in any script, justfile recipes, Taskfile tasks | — | tree-sitter Bash | — |
+| Containers and CI | compose services, workflow job names | compose and Dockerfile image tags | YAML parse; Dockerfile stages agent only | — |
+<!-- /generated:matrix -->
+
 ## Reading the report
 
 Every statement lands in one section. Every verified span names its evidence level: definition,

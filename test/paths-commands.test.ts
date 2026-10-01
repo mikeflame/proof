@@ -182,3 +182,17 @@ describe('values and dependencies', () => {
     expect(spanOf(r, '@material-ui/*').status).toBe('UNCONFIRMED');
   });
 });
+
+describe('rake', () => {
+  it('reads tasks from the Ruby syntax tree: namespaces, task classes, generated names and argument syntax', async () => {
+    const r = await checkFiles({
+      'CLAUDE.md': '```bash\nbundle exec rake internal_investigation\nbundle exec rake changelog:new\nrake changelog:merge\nrake changelog:*\nbundle exec rake \'new_cop[Department/CopName]\'\nrake vanished_task\n```\n',
+      Rakefile: "require 'rubocop/rake_task'\nRuboCop::RakeTask.new(:internal_investigation)\ntask default: %i[spec]\n",
+      'tasks/changelog.rake': 'namespace :changelog do\n  %i[new fix].each do |type|\n    task type, [:id] do |_t, args|\n    end\n  end\n  task :merge do\n  end\nend\n',
+      'tasks/new_cop.rake': 'task :new_cop, [:cop] do |_task, args|\nend\n',
+    });
+    for (const cmd of ['bundle exec rake internal_investigation', 'bundle exec rake changelog:new', 'rake changelog:merge', 'rake changelog:*', 'bundle exec rake new_cop[Department/CopName]']) expect(spanOf(r, cmd).status, cmd).toBe('VERIFIED');
+    expect(spanOf(r, 'rake vanished_task').status).toBe('UNCONFIRMED');
+    expect(r.counts.STALE).toBe(0);
+  });
+});

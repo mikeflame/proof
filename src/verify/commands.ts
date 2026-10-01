@@ -4,6 +4,7 @@ import { shellEntries } from '../core/syntax.ts';
 import type { Evidence, Span, SpanResult } from '../model.ts';
 import { KNOWN_TOOLS } from '../parse/classify.ts';
 import { splitShell } from '../parse/shell.ts';
+import { rakeTasks } from './rake.ts';
 import { stringInCode } from './symbols.ts';
 import { blocked, type CheckContext, join, notChecked, stale, unconfirmed, verified, workingDirs } from './util.ts';
 
@@ -288,18 +289,18 @@ function compose(ctx: CheckContext, span: Span, argv: string[], dirs: string[]):
   return verified(span, target.length ? 'definition' : 'reference', found.map((f) => ({ ref: f, level: target.length ? 'definition' : 'reference' })), target.length ? `service ${target.join(', ')} in ${found.join(', ')}` : `${found.join(', ')} exists`);
 }
 
-function rake(ctx: CheckContext, span: Span, argv: string[], dirs: string[]): SpanResult {
+async function rake(ctx: CheckContext, span: Span, argv: string[], dirs: string[]): Promise<SpanResult> {
   const name = argv.slice(argv[0] === 'bundle' ? 3 : 1).find((a) => !a.startsWith('-'))?.split('[')[0];
-  const files = [...dirs.map((d) => join(d, 'Rakefile')), ...ctx.repo.find(/\.rake$/)].filter((f) => ctx.repo.exists(f));
+  const files = [...new Set([...dirs.map((d) => join(d, 'Rakefile')), ...ctx.repo.find(/(^|\/)(Rakefile|[^/]+\.rake)$/)])].filter((f) => ctx.repo.exists(f));
   if (!files.length) return stale(span, 'no Rakefile where this runs');
   if (!name) return verified(span, 'definition', [{ ref: files[0] ?? '', level: 'definition' }], 'Rakefile exists');
-  const leaf = name.split(':').pop() ?? name;
   for (const f of files) {
-    const lines = (ctx.repo.read(f) ?? '').split('\n');
-    const at = lines.findIndex((l) => new RegExp(`\\btask\\s*\\(?\\s*[:"']?${leaf}\\b`).test(l));
-    if (at >= 0) return verified(span, 'definition', [{ ref: `${f}:${at + 1}`, excerpt: lines[at]?.trim(), level: 'definition' }], `task ${name} in ${f}`);
+    const tasks = await rakeTasks(ctx.syntax, ctx.repo, f);
+    // `rake changelog:*`: any task of that namespace.
+    const line = name.endsWith(':*') ? [...tasks.entries()].find(([t]) => t.startsWith(name.slice(0, -1)))?.[1] : tasks.get(name);
+    if (line) return verified(span, 'definition', [{ ref: `${f}:${line}`, excerpt: ctx.repo.lines(f)[line - 1]?.trim(), level: 'definition' }], `task ${name} at ${f}:${line}`);
   }
-  return unconfirmed(span, `no "${name}" task found in ${files.slice(0, 3).join(', ')}; it may come from a gem`);
+  return unconfirmed(span, `no "${name}" task found in ${files.slice(0, 3).join(', ')}${files.length > 3 ? ` and ${files.length - 3} more` : ''}; it may come from a gem`);
 }
 
 function composer(ctx: CheckContext, span: Span, argv: string[], dirs: string[]): SpanResult {
@@ -375,6 +376,42 @@ function projectCommand(ctx: CheckContext, span: Span, argv: string[], source: s
   return verified(span, 'reference', evidence.slice(0, 3), `${argv[0]} is built from ${source}${parts.length ? `; ${parts.join(', ')} ${parts.length === 1 ? 'is a string' : 'are strings'} in its code (${evidence[1]?.ref ?? ''})` : ''}`);
 }
 
+/** Binaries whose package has another name: `npx tsc` runs typescript. */
+const BIN_PACKAGES: Record<string, string> = { tsc: 'typescript', tsserver: 'typescript', 'ts-node': 'ts-node', next: 'next', nuxt: 'nuxt', vite: 'vite', ng: '@angular/cli', nx: 'nx', turbo: 'turbo', jest: 'jest', vitest: 'vitest', playwright: '@playwright/test', cypress: 'cypress', eslint: 'eslint', prettier: 'prettier', biome: '@biomejs/biome', tsup: 'tsup', rollup: 'rollup', webpack: 'webpack-cli', 'drizzle-kit': 'drizzle-kit', prisma: 'prisma', knex: 'knex', 'sequelize-cli': 'sequelize-cli', changeset: '@changesets/cli', lerna: 'lerna', 'npm-run-all': 'npm-run-all', concurrently: 'concurrently', husky: 'husky', 'lint-staged': 'lint-staged', tailwindcss: 'tailwindcss', storybook: 'storybook', wrangler: 'wrangler', vercel: 'vercel', 'react-scripts': 'react-scripts', mocha: 'mocha', c8: 'c8', nyc: 'nyc', rimraf: 'rimraf', esbuild: 'esbuild', swc: '@swc/cli', 'openapi-typescript': 'openapi-typescript', typedoc: 'typedoc', 'api-extractor': '@microsoft/api-extractor' };
+
+/** The installed package whose package.json `bin` provides `tool`, when node_modules is present. */
+function binOwner(ctx: CheckContext, tool: string): string | null {
+  for (const p of ctx.repo.packages) {
+    for (const dep of Object.keys(p.deps)) {
+      const manifest = ctx.repo.structured(join(p.dir, 'node_modules', dep, 'package.json'), { quiet: true }) as { bin?: unknown } | null;
+      const bin = manifest?.bin;
+      if ((typeof bin === 'string' && dep.replace(/^@[^/]+\//, '') === tool) || (bin && typeof bin === 'object' && tool in bin)) return dep;
+    }
+  }
+  return null;
+}
+
+/** Tasks every Gradle build has, or that the common plugins (java, application, spring boot) add. */
+const GRADLE_BUILTINS = new Set(['build', 'clean', 'test', 'check', 'assemble', 'jar', 'javadoc', 'classes', 'compileJava', 'compileKotlin', 'compileTestJava', 'processResources', 'dependencies', 'dependencyInsight', 'tasks', 'projects', 'properties', 'help', 'init', 'wrapper', 'publish', 'publishToMavenLocal', 'run', 'installDist', 'distZip', 'bootRun', 'bootJar', 'bootBuildImage', 'spotlessApply', 'spotlessCheck', 'koverHtmlReport', 'jacocoTestReport', 'lint', 'detekt', 'ktlintCheck', 'ktlintFormat']);
+
+/** `./gradlew integrationTest`: tasks registered in the build files, or built in; a plugin task is unconfirmed. */
+function gradleTasks(ctx: CheckContext, span: Span, argv: string[], build: string): SpanResult {
+  const names = argv.slice(1).filter((a) => !a.startsWith('-')).map((a) => a.split(':').pop() ?? a).filter(Boolean);
+  if (!names.length) return verified(span, 'reference', [{ ref: build, level: 'reference' }], `default tasks of ${build}`);
+  const files = ctx.repo.find(/(^|\/)(build|settings)\.gradle(\.kts)?$|\.gradle(\.kts)?$/);
+  const evidence = [];
+  for (const name of names) {
+    const n = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp(`tasks\\.(?:register|create|named)(?:<[^>]*>)?\\(\\s*["']${n}["']|\\btask\\s*\\(?\\s*["']?${n}\\b`);
+    const hit = files.flatMap((f) => ctx.repo.lines(f).map((l, i) => ({ f, i, l }))).find((x) => re.test(x.l));
+    if (hit) evidence.push({ ref: `${hit.f}:${hit.i + 1}`, excerpt: hit.l.trim(), level: 'definition' as const });
+    else if (GRADLE_BUILTINS.has(name)) evidence.push({ ref: `${name} is a standard Gradle task`, level: 'reference' as const });
+    else return unconfirmed(span, `no build file registers a "${name}" task; it may come from a plugin`, [{ ref: build, level: 'reference' }]);
+  }
+  const level = evidence.every((e) => e.level === 'definition') ? 'definition' : 'reference';
+  return verified(span, level, evidence.slice(0, 3), `${names.join(', ')}: ${evidence.map((e) => e.ref).join('; ')}`);
+}
+
 /** One simple shell command, dispatched to the checker of the tool it runs. */
 export async function checkCommand(ctx: CheckContext, span: Span): Promise<SpanResult> {
   const sc = splitShell(span.text)[0];
@@ -394,8 +431,9 @@ export async function checkCommand(ctx: CheckContext, span: Span): Promise<SpanR
     case 'pnpx': {
       const tool = argv.slice(1).find((a) => !a.startsWith('-'))?.replace(/@[\d^~][\w.-]*$/, '');
       if (!tool) return notChecked(span, 'no tool given');
-      const owner = ctx.repo.packages.find((p) => tool in p.deps || Object.keys(p.deps).some((d) => d.endsWith(`/${tool}`)));
-      return owner ? verified(span, 'reference', [{ ref: `${owner.file} depends on ${tool}`, level: 'reference' }], `${tool} is a dependency in ${owner.file}`) : notChecked(span, `downloads ${tool} from the registry when run`);
+      const pkgName = BIN_PACKAGES[tool] ?? binOwner(ctx, tool) ?? tool;
+      const owner = ctx.repo.packages.find((p) => pkgName in p.deps || tool in p.deps || Object.keys(p.deps).some((d) => d.endsWith(`/${tool}`)));
+      return owner ? verified(span, 'reference', [{ ref: `${owner.file} depends on ${pkgName}`, level: 'reference' }], `${tool} comes from ${pkgName}, a dependency in ${owner.file}`) : notChecked(span, `downloads ${tool} from the registry when run`);
     }
     case 'node':
     case 'deno':
@@ -462,7 +500,7 @@ export async function checkCommand(ctx: CheckContext, span: Span): Promise<SpanR
       const build = dirs.flatMap((d) => ['build.gradle', 'build.gradle.kts', 'settings.gradle', 'settings.gradle.kts'].map((n) => join(d, n))).find((f) => ctx.repo.exists(f));
       if (bin === './gradlew' && !dirs.some((d) => ctx.repo.exists(join(d, 'gradlew')))) return stale(span, 'no gradlew wrapper where this runs');
       if (!build) return stale(span, 'no Gradle build file where this runs');
-      return unconfirmed(span, 'Gradle task names are not read mechanically', [{ ref: build, level: 'reference' }]);
+      return gradleTasks(ctx, span, argv, build);
     }
     case 'dotnet': {
       const proj = ctx.repo.find(/\.(sln|csproj|fsproj)$/);

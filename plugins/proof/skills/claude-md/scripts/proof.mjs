@@ -19253,7 +19253,7 @@ var KNOWN_TOOLS = /* @__PURE__ */ new Set([
   "ps"
 ]);
 var FILE_RUNNERS = /* @__PURE__ */ new Set(["bash", "sh", "zsh", "fish", "source", "node", "deno", "tsx", "ts-node", "python", "python3", "ruby", "php", "bun"]);
-var FILE_EXT = /\.(tmpl|tpl|j2|jinja2?|hbs|ejs|njk|erb|liquid|mustache|template|dist|snap|ts|tsx|mts|cts|js|jsx|mjs|cjs|json|jsonc|json5|md|mdx|mdc|ya?ml|sh|bash|zsh|toml|ini|cfg|conf|sql|env|example|sample|mjml|css|scss|sass|less|lock|txt|py|pyi|go|mod|sum|rs|rb|php|java|kt|kts|gradle|cs|csproj|sln|fs|swift|c|h|cc|cpp|hpp|html|vue|svelte|astro|xml|proto|graphql|gql|tf|tfvars|hcl|dockerfile|ps1|bat|cmd|wasm|pem|crt|key|csv|tsv|png|svg|jpg|jpeg|gif|webp|ico|pdf|zip|gz|tgz)$/i;
+var FILE_EXT = /\.(adoc|asciidoc|rst|org|tex|ipynb|tmpl|tpl|j2|jinja2?|hbs|ejs|njk|erb|liquid|mustache|template|dist|snap|ts|tsx|mts|cts|js|jsx|mjs|cjs|json|jsonc|json5|md|mdx|mdc|ya?ml|sh|bash|zsh|toml|ini|cfg|conf|sql|env|example|sample|mjml|css|scss|sass|less|lock|txt|py|pyi|go|mod|sum|rs|rb|php|java|kt|kts|gradle|cs|csproj|sln|fs|swift|c|h|cc|cpp|hpp|html|vue|svelte|astro|xml|proto|graphql|gql|tf|tfvars|hcl|dockerfile|ps1|bat|cmd|wasm|pem|crt|key|csv|tsv|png|svg|jpg|jpeg|gif|webp|ico|pdf|zip|gz|tgz)$/i;
 var BARE_EXTENSION = /^\.[a-z0-9]{1,6}$/i;
 var IDENT = /^[A-Za-z_$][\w$]*$/;
 function isPathLike(t) {
@@ -19270,13 +19270,14 @@ function qualifiedName(t) {
   const [, scope = "", name = ""] = m;
   if (FILE_EXT.test(`.${name}`) || /^(json|yaml|yml|lock|config|test|spec|d|min|local|example)$/i.test(name)) return null;
   if (/\.[A-Za-z0-9]{1,6}$/.test(scope.split("/").pop() ?? "") && scope.includes("/")) return null;
+  if (scope.includes("/") && /^[a-z0-9]{1,6}$/.test(name)) return null;
   if (!scope.includes("/") && !IDENT.test(scope.split(".").pop() ?? "")) return null;
   return { scope, name };
 }
 var OUTPUT_FLAGS = /* @__PURE__ */ new Set(["-o", "--out", "--output", "--outfile", "--out-file", "--outdir", "--out-dir", "--output-dir", "-coverprofile", "-cpuprofile", "-memprofile", "--coverage-dir", "--junit-xml", "--report"]);
 function pathArgs(argv, cwd, hintDirs) {
   const skipFirst = FILE_RUNNERS.has(argv[0] ?? "") || /^\.?\.?\//.test(argv[0] ?? "");
-  return argv.slice(skipFirst ? 2 : 1).filter((tok, i, all2) => !OUTPUT_FLAGS.has(all2[i - 1] ?? "")).filter((tok) => !tok.startsWith("-") && !tok.startsWith("/") && !tok.startsWith("~") && !tok.includes("$") && !tok.includes("=") && !/^[a-z]+:\/\//i.test(tok)).filter((tok) => tok.includes("/") && isPathLike(tok) && !qualifiedName(tok)).map((tok) => ({ kind: "path", text: tok, expect: "present", ...cwd ? { cwd } : {}, ...hintDirs.length ? { hintDirs } : {} }));
+  return argv.slice(skipFirst ? 2 : 1).filter((tok, i, all2) => !OUTPUT_FLAGS.has(all2[i - 1] ?? "")).filter((tok) => !/^[\w:-]+\[.*\]$/.test(tok)).filter((tok) => !tok.startsWith("-") && !tok.startsWith("/") && !tok.startsWith("~") && !tok.includes("$") && !tok.includes("=") && !/^[a-z]+:\/\//i.test(tok)).filter((tok) => tok.includes("/") && isPathLike(tok) && !qualifiedName(tok)).map((tok) => ({ kind: "path", text: tok, expect: "present", ...cwd ? { cwd } : {}, ...hintDirs.length ? { hintDirs } : {} }));
 }
 var inClone = (path2, clones) => {
   if (!path2) return null;
@@ -19816,6 +19817,75 @@ import { spawnSync as spawnSync6 } from "node:child_process";
 
 // src/verify/commands.ts
 import { posix as posix6 } from "node:path";
+
+// src/verify/rake.ts
+async function rakeTasks(syntax, repo, file) {
+  const out = /* @__PURE__ */ new Map();
+  const tree = await syntax.tree(file);
+  if (!tree) {
+    (repo.read(file) ?? "").split("\n").forEach((l, i) => {
+      const m = /\btask\s*\(?\s*[:"']?([\w:-]+)/.exec(l) ?? /Task\.new\(\s*:(\w+)/.exec(l);
+      if (m?.[1] && !out.has(m[1])) out.set(m[1], i + 1);
+    });
+    return out;
+  }
+  const symbolText = (n) => {
+    if (!n) return null;
+    if (n.type === "simple_symbol") return n.text.replace(/^:/, "");
+    if (n.type === "string" || n.type === "bare_symbol" || n.type === "bare_string") return n.text.replace(/^["':]|["']$/g, "");
+    return null;
+  };
+  const loopValues = (id, node2) => {
+    for (let anc = node2.parent; anc; anc = anc.parent) {
+      if (anc.type !== "call" || anc.childForFieldName("method")?.text !== "each") continue;
+      const params = anc.childForFieldName("block")?.namedChildren.find((c) => c.type === "block_parameters");
+      if (!params?.namedChildren.some((p) => p.text === id)) continue;
+      const receiver = anc.childForFieldName("receiver");
+      if (receiver && /array/.test(receiver.type)) return receiver.namedChildren.map((e) => symbolText(e) ?? e.text.replace(/^["':]|["']$/g, ""));
+    }
+    return [];
+  };
+  const visit = (node2, prefix) => {
+    if (node2.type === "call") {
+      const method = node2.childForFieldName("method")?.text;
+      const args = node2.childForFieldName("arguments")?.namedChildren ?? [];
+      const first = args[0];
+      const block = node2.childForFieldName("block");
+      if (method === "namespace") {
+        const ns = symbolText(first);
+        if (ns && block) {
+          for (const c of block.namedChildren) visit(c, [...prefix, ns]);
+          return;
+        }
+      }
+      const names = [];
+      if (method === "task" && first) {
+        const direct = symbolText(first);
+        if (direct) names.push(direct);
+        else if (first.type === "pair") {
+          const key = first.childForFieldName("key");
+          const k = symbolText(key) ?? key?.text.replace(/:$/, "");
+          if (k) names.push(k);
+        } else if (first.type === "hash") {
+          const key = first.namedChildren[0]?.childForFieldName("key");
+          const k = symbolText(key) ?? key?.text.replace(/:$/, "");
+          if (k) names.push(k);
+        } else if (first.type === "identifier") names.push(...loopValues(first.text, node2));
+      }
+      if (method === "new" && /Task$/.test(node2.childForFieldName("receiver")?.text ?? "")) {
+        const n = symbolText(first);
+        if (n) names.push(n);
+      }
+      for (const n of names) {
+        const full = [...prefix, n].join(":");
+        if (!out.has(full)) out.set(full, node2.startPosition.row + 1);
+      }
+    }
+    for (const c of node2.namedChildren) visit(c, prefix);
+  };
+  visit(tree.rootNode, []);
+  return out;
+}
 
 // src/verify/symbols.ts
 import { posix as posix5 } from "node:path";
@@ -20460,18 +20530,17 @@ function compose(ctx, span, argv, dirs) {
   if (missing.length) return stale(span, `${found.join(", ")} defines no ${missing.join(", ")} service (it has ${[...services].slice(0, 10).join(", ")})`);
   return verified(span, target.length ? "definition" : "reference", found.map((f) => ({ ref: f, level: target.length ? "definition" : "reference" })), target.length ? `service ${target.join(", ")} in ${found.join(", ")}` : `${found.join(", ")} exists`);
 }
-function rake(ctx, span, argv, dirs) {
+async function rake(ctx, span, argv, dirs) {
   const name = argv.slice(argv[0] === "bundle" ? 3 : 1).find((a2) => !a2.startsWith("-"))?.split("[")[0];
-  const files2 = [...dirs.map((d) => join8(d, "Rakefile")), ...ctx.repo.find(/\.rake$/)].filter((f) => ctx.repo.exists(f));
+  const files2 = [.../* @__PURE__ */ new Set([...dirs.map((d) => join8(d, "Rakefile")), ...ctx.repo.find(/(^|\/)(Rakefile|[^/]+\.rake)$/)])].filter((f) => ctx.repo.exists(f));
   if (!files2.length) return stale(span, "no Rakefile where this runs");
   if (!name) return verified(span, "definition", [{ ref: files2[0] ?? "", level: "definition" }], "Rakefile exists");
-  const leaf = name.split(":").pop() ?? name;
   for (const f of files2) {
-    const lines = (ctx.repo.read(f) ?? "").split("\n");
-    const at = lines.findIndex((l) => new RegExp(`\\btask\\s*\\(?\\s*[:"']?${leaf}\\b`).test(l));
-    if (at >= 0) return verified(span, "definition", [{ ref: `${f}:${at + 1}`, excerpt: lines[at]?.trim(), level: "definition" }], `task ${name} in ${f}`);
+    const tasks = await rakeTasks(ctx.syntax, ctx.repo, f);
+    const line = name.endsWith(":*") ? [...tasks.entries()].find(([t]) => t.startsWith(name.slice(0, -1)))?.[1] : tasks.get(name);
+    if (line) return verified(span, "definition", [{ ref: `${f}:${line}`, excerpt: ctx.repo.lines(f)[line - 1]?.trim(), level: "definition" }], `task ${name} at ${f}:${line}`);
   }
-  return unconfirmed(span, `no "${name}" task found in ${files2.slice(0, 3).join(", ")}; it may come from a gem`);
+  return unconfirmed(span, `no "${name}" task found in ${files2.slice(0, 3).join(", ")}${files2.length > 3 ? ` and ${files2.length - 3} more` : ""}; it may come from a gem`);
 }
 function composer(ctx, span, argv, dirs) {
   const sub = argv[1] === "run" || argv[1] === "run-script" ? argv[2] : argv[1];
@@ -20532,6 +20601,34 @@ function projectCommand(ctx, span, argv, source) {
   const parts = [...subcommands, ...flags];
   return verified(span, "reference", evidence.slice(0, 3), `${argv[0]} is built from ${source}${parts.length ? `; ${parts.join(", ")} ${parts.length === 1 ? "is a string" : "are strings"} in its code (${evidence[1]?.ref ?? ""})` : ""}`);
 }
+var BIN_PACKAGES = { tsc: "typescript", tsserver: "typescript", "ts-node": "ts-node", next: "next", nuxt: "nuxt", vite: "vite", ng: "@angular/cli", nx: "nx", turbo: "turbo", jest: "jest", vitest: "vitest", playwright: "@playwright/test", cypress: "cypress", eslint: "eslint", prettier: "prettier", biome: "@biomejs/biome", tsup: "tsup", rollup: "rollup", webpack: "webpack-cli", "drizzle-kit": "drizzle-kit", prisma: "prisma", knex: "knex", "sequelize-cli": "sequelize-cli", changeset: "@changesets/cli", lerna: "lerna", "npm-run-all": "npm-run-all", concurrently: "concurrently", husky: "husky", "lint-staged": "lint-staged", tailwindcss: "tailwindcss", storybook: "storybook", wrangler: "wrangler", vercel: "vercel", "react-scripts": "react-scripts", mocha: "mocha", c8: "c8", nyc: "nyc", rimraf: "rimraf", esbuild: "esbuild", swc: "@swc/cli", "openapi-typescript": "openapi-typescript", typedoc: "typedoc", "api-extractor": "@microsoft/api-extractor" };
+function binOwner(ctx, tool) {
+  for (const p of ctx.repo.packages) {
+    for (const dep of Object.keys(p.deps)) {
+      const manifest = ctx.repo.structured(join8(p.dir, "node_modules", dep, "package.json"), { quiet: true });
+      const bin = manifest?.bin;
+      if (typeof bin === "string" && dep.replace(/^@[^/]+\//, "") === tool || bin && typeof bin === "object" && tool in bin) return dep;
+    }
+  }
+  return null;
+}
+var GRADLE_BUILTINS = /* @__PURE__ */ new Set(["build", "clean", "test", "check", "assemble", "jar", "javadoc", "classes", "compileJava", "compileKotlin", "compileTestJava", "processResources", "dependencies", "dependencyInsight", "tasks", "projects", "properties", "help", "init", "wrapper", "publish", "publishToMavenLocal", "run", "installDist", "distZip", "bootRun", "bootJar", "bootBuildImage", "spotlessApply", "spotlessCheck", "koverHtmlReport", "jacocoTestReport", "lint", "detekt", "ktlintCheck", "ktlintFormat"]);
+function gradleTasks(ctx, span, argv, build) {
+  const names = argv.slice(1).filter((a2) => !a2.startsWith("-")).map((a2) => a2.split(":").pop() ?? a2).filter(Boolean);
+  if (!names.length) return verified(span, "reference", [{ ref: build, level: "reference" }], `default tasks of ${build}`);
+  const files2 = ctx.repo.find(/(^|\/)(build|settings)\.gradle(\.kts)?$|\.gradle(\.kts)?$/);
+  const evidence = [];
+  for (const name of names) {
+    const n = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const re = new RegExp(`tasks\\.(?:register|create|named)(?:<[^>]*>)?\\(\\s*["']${n}["']|\\btask\\s*\\(?\\s*["']?${n}\\b`);
+    const hit = files2.flatMap((f) => ctx.repo.lines(f).map((l, i) => ({ f, i, l }))).find((x) => re.test(x.l));
+    if (hit) evidence.push({ ref: `${hit.f}:${hit.i + 1}`, excerpt: hit.l.trim(), level: "definition" });
+    else if (GRADLE_BUILTINS.has(name)) evidence.push({ ref: `${name} is a standard Gradle task`, level: "reference" });
+    else return unconfirmed(span, `no build file registers a "${name}" task; it may come from a plugin`, [{ ref: build, level: "reference" }]);
+  }
+  const level = evidence.every((e) => e.level === "definition") ? "definition" : "reference";
+  return verified(span, level, evidence.slice(0, 3), `${names.join(", ")}: ${evidence.map((e) => e.ref).join("; ")}`);
+}
 async function checkCommand(ctx, span) {
   const sc = splitShell(span.text)[0];
   if (!sc?.argv.length) return notChecked(span, "empty command");
@@ -20550,8 +20647,9 @@ async function checkCommand(ctx, span) {
     case "pnpx": {
       const tool = argv.slice(1).find((a2) => !a2.startsWith("-"))?.replace(/@[\d^~][\w.-]*$/, "");
       if (!tool) return notChecked(span, "no tool given");
-      const owner = ctx.repo.packages.find((p) => tool in p.deps || Object.keys(p.deps).some((d) => d.endsWith(`/${tool}`)));
-      return owner ? verified(span, "reference", [{ ref: `${owner.file} depends on ${tool}`, level: "reference" }], `${tool} is a dependency in ${owner.file}`) : notChecked(span, `downloads ${tool} from the registry when run`);
+      const pkgName = BIN_PACKAGES[tool] ?? binOwner(ctx, tool) ?? tool;
+      const owner = ctx.repo.packages.find((p) => pkgName in p.deps || tool in p.deps || Object.keys(p.deps).some((d) => d.endsWith(`/${tool}`)));
+      return owner ? verified(span, "reference", [{ ref: `${owner.file} depends on ${pkgName}`, level: "reference" }], `${tool} comes from ${pkgName}, a dependency in ${owner.file}`) : notChecked(span, `downloads ${tool} from the registry when run`);
     }
     case "node":
     case "deno":
@@ -20618,7 +20716,7 @@ async function checkCommand(ctx, span) {
       const build = dirs.flatMap((d) => ["build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts"].map((n) => join8(d, n))).find((f) => ctx.repo.exists(f));
       if (bin === "./gradlew" && !dirs.some((d) => ctx.repo.exists(join8(d, "gradlew")))) return stale(span, "no gradlew wrapper where this runs");
       if (!build) return stale(span, "no Gradle build file where this runs");
-      return unconfirmed(span, "Gradle task names are not read mechanically", [{ ref: build, level: "reference" }]);
+      return gradleTasks(ctx, span, argv, build);
     }
     case "dotnet": {
       const proj = ctx.repo.find(/\.(sln|csproj|fsproj)$/);

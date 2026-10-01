@@ -21,7 +21,7 @@ export const KNOWN_TOOLS = new Set([
 /** Commands that take a file to run; the command check validates that file itself. */
 export const FILE_RUNNERS = new Set(['bash', 'sh', 'zsh', 'fish', 'source', 'node', 'deno', 'tsx', 'ts-node', 'python', 'python3', 'ruby', 'php', 'bun']);
 
-const FILE_EXT = /\.(tmpl|tpl|j2|jinja2?|hbs|ejs|njk|erb|liquid|mustache|template|dist|snap|ts|tsx|mts|cts|js|jsx|mjs|cjs|json|jsonc|json5|md|mdx|mdc|ya?ml|sh|bash|zsh|toml|ini|cfg|conf|sql|env|example|sample|mjml|css|scss|sass|less|lock|txt|py|pyi|go|mod|sum|rs|rb|php|java|kt|kts|gradle|cs|csproj|sln|fs|swift|c|h|cc|cpp|hpp|html|vue|svelte|astro|xml|proto|graphql|gql|tf|tfvars|hcl|dockerfile|ps1|bat|cmd|wasm|pem|crt|key|csv|tsv|png|svg|jpg|jpeg|gif|webp|ico|pdf|zip|gz|tgz)$/i;
+const FILE_EXT = /\.(adoc|asciidoc|rst|org|tex|ipynb|tmpl|tpl|j2|jinja2?|hbs|ejs|njk|erb|liquid|mustache|template|dist|snap|ts|tsx|mts|cts|js|jsx|mjs|cjs|json|jsonc|json5|md|mdx|mdc|ya?ml|sh|bash|zsh|toml|ini|cfg|conf|sql|env|example|sample|mjml|css|scss|sass|less|lock|txt|py|pyi|go|mod|sum|rs|rb|php|java|kt|kts|gradle|cs|csproj|sln|fs|swift|c|h|cc|cpp|hpp|html|vue|svelte|astro|xml|proto|graphql|gql|tf|tfvars|hcl|dockerfile|ps1|bat|cmd|wasm|pem|crt|key|csv|tsv|png|svg|jpg|jpeg|gif|webp|ico|pdf|zip|gz|tgz)$/i;
 /** `.ts`, `.md`: a file type mentioned in prose, not a file. */
 const BARE_EXTENSION = /^\.[a-z0-9]{1,6}$/i;
 const IDENT = /^[A-Za-z_$][\w$]*$/;
@@ -47,6 +47,9 @@ export function qualifiedName(t: string): { scope: string; name: string } | null
   if (FILE_EXT.test(`.${name}`) || /^(json|yaml|yml|lock|config|test|spec|d|min|local|example)$/i.test(name)) return null;
   // `src/skill/SKILL.md.tmpl`, `types.d.ts`: a file whose name already has an extension.
   if (/\.[A-Za-z0-9]{1,6}$/.test(scope.split('/').pop() ?? '') && scope.includes('/')) return null;
+  // `docs/pages/versioning.adoc`: under a folder path, a short lowercase tail is an extension. Exported Go
+  // names (`testgit.RealGit`) start with a capital.
+  if (scope.includes('/') && /^[a-z0-9]{1,6}$/.test(name)) return null;
   if (!scope.includes('/') && !IDENT.test(scope.split('.').pop() ?? '')) return null;
   return { scope, name };
 }
@@ -60,6 +63,8 @@ function pathArgs(argv: string[], cwd: string | undefined, hintDirs: string[]): 
   return argv
     .slice(skipFirst ? 2 : 1)
     .filter((tok, i, all) => !OUTPUT_FLAGS.has(all[i - 1] ?? ''))
+    // `new_cop[Department/CopName]`: a rake task with arguments, not a path.
+    .filter((tok) => !/^[\w:-]+\[.*\]$/.test(tok))
     .filter((tok) => !tok.startsWith('-') && !tok.startsWith('/') && !tok.startsWith('~') && !tok.includes('$') && !tok.includes('=') && !/^[a-z]+:\/\//i.test(tok))
     .filter((tok) => tok.includes('/') && isPathLike(tok) && !qualifiedName(tok))
     .map((tok): Span => ({ kind: 'path', text: tok, expect: 'present', ...(cwd ? { cwd } : {}), ...(hintDirs.length ? { hintDirs } : {}) }));

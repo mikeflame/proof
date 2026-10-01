@@ -1,0 +1,6260 @@
+{
+ "proof": "ef52d8e37086",
+ "stage": "check",
+ "seconds": 3,
+ "exit": 1,
+ "report": {
+  "file": "CLAUDE.md",
+  "scope": "project",
+  "why": "Claude Code project instructions (at launch for this folder and above, on demand below)",
+  "imports": [],
+  "importedBy": [],
+  "counts": {
+   "VERIFIED": 16,
+   "STALE": 4,
+   "UNCONFIRMED": 4,
+   "UNVERIFIED_WITH_REASON": 87,
+   "DECIDED": 0,
+   "OVERRIDDEN": 0,
+   "NOT_CHECKED": 1,
+   "FIXED": 0,
+   "FIX_REJECTED": 0
+  },
+  "evidenceLevels": {
+   "definition": 110,
+   "declaration": 21,
+   "reference": 35,
+   "comment": 0,
+   "substring": 0,
+   "none": 8
+  },
+  "git": {
+   "root": "/home/ms/projects/proof-cache/corpus/typescript-sdk",
+   "tree": "9a06db8bfd360a41ae2a1ccd581d720792744ddb",
+   "head": "433eb413dc305ebeb93b8ebcde0095a8fc0d5fa0",
+   "branch": null,
+   "upstream": "origin/main",
+   "behind": 0
+  },
+  "run": {
+   "started": "2026-10-01T12:30:17.069Z",
+   "finished": "2026-10-01T12:30:19.766Z",
+   "version": "0.1.0"
+  },
+  "decisions": [],
+  "reopened": [],
+  "verdict": "NOT PROVEN",
+  "ownVerdict": "NOT PROVEN",
+  "coverage": {
+   "statements": 112,
+   "withResult": 112
+  },
+  "degraded": [],
+  "statements": [
+   {
+    "id": "8bc57eb358878f413c425ee21da09b4e7c66c22a",
+    "file": "CLAUDE.md",
+    "line": 3,
+    "endLine": 3,
+    "section": "CLAUDE.md",
+    "kind": "sentence",
+    "text": "This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.",
+    "spans": [],
+    "residual": [
+     "description \"file provides guidance Claude Code claude …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"file provides guidance Claude Code claude …\"",
+    "settled": false
+   },
+   {
+    "id": "107621b8fdc306c04557de4e82c6a5f34824d4d5",
+    "file": "CLAUDE.md",
+    "line": 8,
+    "endLine": 8,
+    "section": "Build & Test Commands",
+    "kind": "command",
+    "text": "pnpm install # Install all workspace dependencies",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "pnpm install",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "pnpm install",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "`pnpm install` is a built-in command"
+     }
+    ],
+    "status": "NOT_CHECKED",
+    "reason": "`pnpm install` is a built-in command",
+    "settled": false
+   },
+   {
+    "id": "27632600ad24a6938d8bf60506718e2261077051",
+    "file": "CLAUDE.md",
+    "line": 10,
+    "endLine": 10,
+    "section": "Build & Test Commands",
+    "kind": "command",
+    "text": "pnpm build:all # Build all packages",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "pnpm build:all",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "pnpm build:all",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "package.json scripts.build:all",
+        "excerpt": "pnpm -r build",
+        "level": "definition"
+       }
+      ],
+      "reason": "script \"build:all\" in package.json"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "be06981b691bea976f6799b8793d6e03467088c0",
+    "file": "CLAUDE.md",
+    "line": 11,
+    "endLine": 11,
+    "section": "Build & Test Commands",
+    "kind": "command",
+    "text": "pnpm lint:all # Run ESLint + Prettier checks across all packages",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "pnpm lint:all",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "pnpm lint:all",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "package.json scripts.lint:all",
+        "excerpt": "pnpm sync:snippets --check && pnpm -r lint",
+        "level": "definition"
+       }
+      ],
+      "reason": "script \"lint:all\" in package.json"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "03d65d721bef0a4fc8a4daff632c5816e7190c8f",
+    "file": "CLAUDE.md",
+    "line": 12,
+    "endLine": 12,
+    "section": "Build & Test Commands",
+    "kind": "command",
+    "text": "pnpm lint:fix:all # Auto-fix lint and formatting issues across all packages",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "pnpm lint:fix:all",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "pnpm lint:fix:all",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "package.json scripts.lint:fix:all",
+        "excerpt": "pnpm sync:snippets && pnpm -r lint:fix",
+        "level": "definition"
+       }
+      ],
+      "reason": "script \"lint:fix:all\" in package.json"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "0d32f2111613f98fbdfb44339344e13cc894d475",
+    "file": "CLAUDE.md",
+    "line": 13,
+    "endLine": 13,
+    "section": "Build & Test Commands",
+    "kind": "command",
+    "text": "pnpm typecheck:all # Type-check all packages",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "pnpm typecheck:all",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "pnpm typecheck:all",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "package.json scripts.typecheck:all",
+        "excerpt": "pnpm -r typecheck",
+        "level": "definition"
+       }
+      ],
+      "reason": "script \"typecheck:all\" in package.json"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "0cca65bfe1be6e68facd666c8af873217d28f9db",
+    "file": "CLAUDE.md",
+    "line": 14,
+    "endLine": 14,
+    "section": "Build & Test Commands",
+    "kind": "command",
+    "text": "pnpm test:all # Run all tests (vitest) across all packages",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "pnpm test:all",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "pnpm test:all",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "package.json scripts.test:all",
+        "excerpt": "pnpm -r test",
+        "level": "definition"
+       }
+      ],
+      "reason": "script \"test:all\" in package.json"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "aca0469d4d2cd1325501fdbb94562d73ccb47c4b",
+    "file": "CLAUDE.md",
+    "line": 15,
+    "endLine": 15,
+    "section": "Build & Test Commands",
+    "kind": "command",
+    "text": "pnpm check:all # typecheck + lint across all packages",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "pnpm check:all",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "pnpm check:all",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "package.json scripts.check:all",
+        "excerpt": "pnpm sync:snippets --check && pnpm -r typecheck && pnpm -r lint && pnpm run docs:check",
+        "level": "definition"
+       }
+      ],
+      "reason": "script \"check:all\" in package.json"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "9c14efed9457ab74775b3c61dbc840dfa948710b",
+    "file": "CLAUDE.md",
+    "line": 19,
+    "endLine": 19,
+    "section": "Build & Test Commands",
+    "kind": "command",
+    "text": "pnpm --filter @modelcontextprotocol/core-internal test # vitest run (core)",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "pnpm --filter @modelcontextprotocol/core-internal test",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "@modelcontextprotocol/core-internal",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "pnpm --filter @modelcontextprotocol/core-internal test",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/package.json scripts.test",
+        "excerpt": "vitest run",
+        "level": "definition"
+       }
+      ],
+      "reason": "script \"test\" in packages/core-internal/package.json"
+     },
+     {
+      "kind": "path",
+      "text": "@modelcontextprotocol/core-internal",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "examples/client-quickstart/tsconfig.json:13",
+        "excerpt": "\"@modelcontextprotocol/core-internal\": [",
+        "level": "reference"
+       }
+      ],
+      "reason": "not a path: the code spells it as a name at examples/client-quickstart/tsconfig.json:13"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": false
+   },
+   {
+    "id": "98c11cbf778d603d03287b1d0cd38cef4e2c1845",
+    "file": "CLAUDE.md",
+    "line": 20,
+    "endLine": 20,
+    "section": "Build & Test Commands",
+    "kind": "command",
+    "text": "pnpm --filter @modelcontextprotocol/core-internal test:watch # vitest (watch)",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "pnpm --filter @modelcontextprotocol/core-internal test:watch",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "@modelcontextprotocol/core-internal",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "pnpm --filter @modelcontextprotocol/core-internal test:watch",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/package.json scripts.test:watch",
+        "excerpt": "vitest",
+        "level": "definition"
+       }
+      ],
+      "reason": "script \"test:watch\" in packages/core-internal/package.json"
+     },
+     {
+      "kind": "path",
+      "text": "@modelcontextprotocol/core-internal",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "examples/client-quickstart/tsconfig.json:13",
+        "excerpt": "\"@modelcontextprotocol/core-internal\": [",
+        "level": "reference"
+       }
+      ],
+      "reason": "not a path: the code spells it as a name at examples/client-quickstart/tsconfig.json:13"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": false
+   },
+   {
+    "id": "10c8d8446d346aee98edb9ce2665b11b01fc31a1",
+    "file": "CLAUDE.md",
+    "line": 21,
+    "endLine": 21,
+    "section": "Build & Test Commands",
+    "kind": "command",
+    "text": "pnpm --filter @modelcontextprotocol/core-internal test -- path/to/file.test.ts",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "pnpm --filter @modelcontextprotocol/core-internal test -- path/to/file.test.ts",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "@modelcontextprotocol/core-internal",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "path/to/file.test.ts",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "pnpm --filter @modelcontextprotocol/core-internal test -- path/to/file.test.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/package.json scripts.test",
+        "excerpt": "vitest run",
+        "level": "definition"
+       }
+      ],
+      "reason": "script \"test\" in packages/core-internal/package.json"
+     },
+     {
+      "kind": "path",
+      "text": "@modelcontextprotocol/core-internal",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "examples/client-quickstart/tsconfig.json:13",
+        "excerpt": "\"@modelcontextprotocol/core-internal\": [",
+        "level": "reference"
+       }
+      ],
+      "reason": "not a path: the code spells it as a name at examples/client-quickstart/tsconfig.json:13"
+     },
+     {
+      "kind": "path",
+      "text": "path/to/file.test.ts",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "an example path, not a file the statement claims exists"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": false
+   },
+   {
+    "id": "0ccb9ef8964e2b08e64b0d0ecdbdc604c9b8b9bb",
+    "file": "CLAUDE.md",
+    "line": 22,
+    "endLine": 22,
+    "section": "Build & Test Commands",
+    "kind": "command",
+    "text": "pnpm --filter @modelcontextprotocol/core-internal test -- -t \"test name\"",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "pnpm --filter @modelcontextprotocol/core-internal test -- -t test name",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "@modelcontextprotocol/core-internal",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "pnpm --filter @modelcontextprotocol/core-internal test -- -t test name",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/package.json scripts.test",
+        "excerpt": "vitest run",
+        "level": "definition"
+       }
+      ],
+      "reason": "script \"test\" in packages/core-internal/package.json"
+     },
+     {
+      "kind": "path",
+      "text": "@modelcontextprotocol/core-internal",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "examples/client-quickstart/tsconfig.json:13",
+        "excerpt": "\"@modelcontextprotocol/core-internal\": [",
+        "level": "reference"
+       }
+      ],
+      "reason": "not a path: the code spells it as a name at examples/client-quickstart/tsconfig.json:13"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": false
+   },
+   {
+    "id": "1c15b921849a0ad52c53b3b74ea97433dd466840",
+    "file": "CLAUDE.md",
+    "line": 27,
+    "endLine": 31,
+    "section": "Breaking Changes",
+    "kind": "sentence",
+    "text": "When making breaking changes, add to the relevant subsystem section in `docs/migration/upgrade-to-v2.md` (or `docs/migration/support-2026-07-28.md` if the change is 2026-07-28-only).",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "docs/migration/upgrade-to-v2.md",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "docs/migration/support-2026-07-28.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"only\"",
+     "description \"making breaking changes add relevant subsystem …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "docs/migration/upgrade-to-v2.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/migration/upgrade-to-v2.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "docs/migration/upgrade-to-v2.md"
+     },
+     {
+      "kind": "path",
+      "text": "docs/migration/support-2026-07-28.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/migration/support-2026-07-28.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "docs/migration/support-2026-07-28.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: quantifier \"only\", description \"making breaking changes add relevant subsystem …\"",
+    "settled": false
+   },
+   {
+    "id": "11f779cde751580886312b2eb4b93e09f9ac95a3",
+    "file": "CLAUDE.md",
+    "line": 29,
+    "endLine": 31,
+    "section": "Breaking Changes",
+    "kind": "sentence",
+    "text": "Mechanical renames go in `packages/codemod/src/migrations/v1-to-v2/mappings/` and the codemod handles them — do not reproduce mapping tables in the guide; link to the mapping file instead.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "packages/codemod/src/migrations/v1-to-v2/mappings/",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"do not\"",
+     "description \"Mechanical renames codemod handles them reproduce …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "packages/codemod/src/migrations/v1-to-v2/mappings/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/codemod/src/migrations/v1-to-v2/mappings",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/codemod/src/migrations/v1-to-v2/mappings"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"do not\", description \"Mechanical renames codemod handles them reproduce …\"",
+    "settled": false
+   },
+   {
+    "id": "fdc476bc0adc6794b8e164a95052c0d95d8855bf",
+    "file": "CLAUDE.md",
+    "line": 33,
+    "endLine": 33,
+    "section": "Breaking Changes",
+    "kind": "sentence",
+    "text": "Include what changed, why, and how to migrate.",
+    "spans": [],
+    "residual": [
+     "description \"Include changed migrate\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Include changed migrate\"",
+    "settled": false
+   },
+   {
+    "id": "217599c68a779c94241cc6de4d9c1b9e432c457f",
+    "file": "CLAUDE.md",
+    "line": 33,
+    "endLine": 33,
+    "section": "Breaking Changes",
+    "kind": "sentence",
+    "text": "Search for related sections and group related changes together rather than adding new standalone sections.",
+    "spans": [],
+    "residual": [
+     "description \"Search related sections group related changes …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Search related sections group related changes …\"",
+    "settled": false
+   },
+   {
+    "id": "fbfc972511ddbc4b4c9c5a471bd340e1a4593172",
+    "file": "CLAUDE.md",
+    "line": 37,
+    "endLine": 37,
+    "section": "Code Style Guidelines",
+    "kind": "item",
+    "text": "TypeScript: Strict type checking, ES modules, explicit return types",
+    "spans": [],
+    "residual": [
+     "description \"TypeScript Strict type checking modules explicit …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"TypeScript Strict type checking modules explicit …\"",
+    "settled": false
+   },
+   {
+    "id": "19efa426dd1f44fd46a65f12e4b712e9153eefda",
+    "file": "CLAUDE.md",
+    "line": 38,
+    "endLine": 38,
+    "section": "Code Style Guidelines",
+    "kind": "item",
+    "text": "Naming: PascalCase for classes/types, camelCase for functions/variables",
+    "spans": [],
+    "residual": [
+     "description \"Naming PascalCase classes types camelCase functions …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Naming PascalCase classes types camelCase functions …\"",
+    "settled": false
+   },
+   {
+    "id": "a3343b1bb53e2ee10d8634446951f5bdfd8f07d1",
+    "file": "CLAUDE.md",
+    "line": 39,
+    "endLine": 39,
+    "section": "Code Style Guidelines",
+    "kind": "item",
+    "text": "Files: Lowercase with hyphens, test files with `.test.ts` suffix",
+    "spans": [
+     {
+      "kind": "path",
+      "text": ".test.ts",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Files Lowercase hyphens test files suffix\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": ".test.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "scripts/sync-snippets.ts:462",
+        "excerpt": "if (name.endsWith('.test.ts')) continue;",
+        "level": "reference"
+       }
+      ],
+      "reason": "not a file in the repository; the code names it at scripts/sync-snippets.ts:462"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Files Lowercase hyphens test files suffix\"",
+    "settled": false
+   },
+   {
+    "id": "b4ee13ea50cff9b9257fa04158311b513cdcf24e",
+    "file": "CLAUDE.md",
+    "line": 40,
+    "endLine": 40,
+    "section": "Code Style Guidelines",
+    "kind": "item",
+    "text": "Imports: ES module style, no `.js` extension on relative imports (project uses `moduleResolution: bundler`), group imports logically",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": ".js",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "moduleResolution: bundler",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Imports module style extension relative imports …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": ".js",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "moduleResolution: bundler",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `.js`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "fa2da8828cf8e355a5180aec8732cf13eb40f158",
+    "file": "CLAUDE.md",
+    "line": 41,
+    "endLine": 41,
+    "section": "Code Style Guidelines",
+    "kind": "item",
+    "text": "Formatting: 2-space indentation, semicolons required, single quotes preferred",
+    "spans": [],
+    "residual": [
+     "status \"preferred\"",
+     "rule \"required\"",
+     "description \"Formatting space indentation semicolons required single …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: status \"preferred\", rule \"required\", description \"Formatting space indentation semicolons required single …\"",
+    "settled": false
+   },
+   {
+    "id": "692a9d4e1bd31a45d8320ae9617836f77c3676d9",
+    "file": "CLAUDE.md",
+    "line": 42,
+    "endLine": 42,
+    "section": "Code Style Guidelines",
+    "kind": "item",
+    "text": "Testing: Place tests under each package's `test/` directory (vitest only includes `test/**/*.test.ts`), use descriptive test names",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "test/",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "test/**/*.test.ts",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"each\"",
+     "description \"Testing Place tests package's directory vitest …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "test/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "test",
+        "level": "definition"
+       }
+      ],
+      "reason": "test"
+     },
+     {
+      "kind": "path",
+      "text": "test/**/*.test.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "test/e2e/coverage.test.ts",
+        "level": "definition"
+       },
+       {
+        "ref": "test/e2e/helpers/wire-sniffer.test.ts",
+        "level": "definition"
+       },
+       {
+        "ref": "test/e2e/scenarios/client-auth.test.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "test/e2e/coverage.test.ts, test/e2e/helpers/wire-sniffer.test.ts, test/e2e/scenarios/client-auth.test.ts and 62 more"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: quantifier \"each\", description \"Testing Place tests package's directory vitest …\"",
+    "settled": false
+   },
+   {
+    "id": "629f8c21f567ffc5cbc242e25752d1dff3aa667e",
+    "file": "CLAUDE.md",
+    "line": 43,
+    "endLine": 43,
+    "section": "Code Style Guidelines",
+    "kind": "item",
+    "text": "Comments: JSDoc for public APIs, inline comments for complex logic",
+    "spans": [],
+    "residual": [
+     "description \"Comments JSDoc public APIs inline comments …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Comments JSDoc public APIs inline comments …\"",
+    "settled": false
+   },
+   {
+    "id": "7242dde6734c54671cc64a59a54a79126a9f09f6",
+    "file": "CLAUDE.md",
+    "line": 47,
+    "endLine": 47,
+    "section": "JSDoc `@example` Code Snippets",
+    "kind": "sentence",
+    "text": "JSDoc `@example` tags should pull type-checked code from companion `.examples.ts` files (e.g., `client.ts` → `client.examples.ts`).",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "@example",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": ".examples.ts",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "client.ts",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "client.examples.ts",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"should\"",
+     "description \"JSDoc tags pull type-checked code companion …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "@example",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "examples/elicitation/client.ts:70",
+        "excerpt": "check.match(accepted.content?.[0]?.type === 'text' ? accepted.content[0].text : '', /registered alice <alice@example.co…",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at examples/elicitation/client.ts:70"
+     },
+     {
+      "kind": "path",
+      "text": ".examples.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "scripts/run-guide-examples.ts:89",
+        "excerpt": ".filter(name => name.endsWith('.examples.ts'))",
+        "level": "reference"
+       }
+      ],
+      "reason": "not a file in the repository; the code names it at scripts/run-guide-examples.ts:89"
+     },
+     {
+      "kind": "path",
+      "text": "client.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "examples/bearer-auth/client.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "found under examples/bearer-auth/: examples/bearer-auth/client.ts"
+     },
+     {
+      "kind": "path",
+      "text": "client.examples.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/client.examples.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "found at packages/client/src/client/client.examples.ts"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"should\", description \"JSDoc tags pull type-checked code companion …\"",
+    "settled": false
+   },
+   {
+    "id": "597157be70296601307fcb6939073ae1237fec6f",
+    "file": "CLAUDE.md",
+    "line": 47,
+    "endLine": 47,
+    "section": "JSDoc `@example` Code Snippets",
+    "kind": "sentence",
+    "text": "Use ````ts source=\"./file.examples.ts#regionName\"` fences referencing `//#region regionName` blocks; region names follow `exportedName_variant` or `ClassName_methodName_variant` pattern (e.g., `applyMiddlewares_basicUsage`, `Client_connect_basicUsage`). For whole-file inclusion (any file type), omit the `#regionName`.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "ts source=\"./file.examples.ts#regionName\"",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "//#region regionName",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "//#region",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "exportedName_variant",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "ClassName_methodName_variant",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "applyMiddlewares_basicUsage",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Client_connect_basicUsage",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "#regionName",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"source file examples regionName region regionName …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "ts source=\"./file.examples.ts#regionName\"",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "//#region regionName",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "path",
+      "text": "//#region",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "outside the repository"
+     },
+     {
+      "kind": "symbol",
+      "text": "exportedName_variant",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "exportedName_variant appears in no code file or file name"
+     },
+     {
+      "kind": "symbol",
+      "text": "ClassName_methodName_variant",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "ClassName_methodName_variant appears in no code file or file name"
+     },
+     {
+      "kind": "symbol",
+      "text": "applyMiddlewares_basicUsage",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/middleware.examples.ts:24",
+        "excerpt": "async function applyMiddlewares_basicUsage(oauthProvider: unknown) {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/client/src/client/middleware.examples.ts:24"
+     },
+     {
+      "kind": "symbol",
+      "text": "Client_connect_basicUsage",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "Client_connect_basicUsage appears in no code file or file name"
+     },
+     {
+      "kind": "unknown",
+      "text": "#regionName",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`exportedName_variant`: exportedName_variant appears in no code file or file name",
+    "settled": false
+   },
+   {
+    "id": "d2457912c8493d6801c0c2600566d45c172869f5",
+    "file": "CLAUDE.md",
+    "line": 49,
+    "endLine": 49,
+    "section": "JSDoc `@example` Code Snippets",
+    "kind": "sentence",
+    "text": "Run `pnpm sync:snippets` to sync example content into JSDoc comments and markdown files.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "pnpm sync:snippets",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"sync example content JSDoc comments markdown …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "pnpm sync:snippets",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "package.json scripts.sync:snippets",
+        "excerpt": "tsx scripts/sync-snippets.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "script \"sync:snippets\" in package.json"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"sync example content JSDoc comments markdown …\"",
+    "settled": false
+   },
+   {
+    "id": "ab53ac6db365f1586d675ec265d83d365660c862",
+    "file": "CLAUDE.md",
+    "line": 57,
+    "endLine": 57,
+    "section": "Core Layers",
+    "kind": "item",
+    "text": "Types Layer (`packages/core-internal/src/types/types.ts`) - Protocol types generated from the MCP specification. All JSON-RPC message types, schemas, and protocol constants are defined here using Zod v4.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "packages/core-internal/src/types/types.ts",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "Zod",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"All\"",
+     "description \"Types Layer Protocol types generated MCP …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "packages/core-internal/src/types/types.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/types/types.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/core-internal/src/types/types.ts"
+     },
+     {
+      "kind": "dependency",
+      "text": "Zod",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "examples/bearer-auth-web/package.json zod \"catalog:runtimeShared\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/bearer-auth/package.json zod \"catalog:runtimeShared\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/cli-client/package.json zod \"catalog:runtimeShared\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "examples/bearer-auth-web/package.json depends on zod"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: quantifier \"All\", description \"Types Layer Protocol types generated MCP …\"",
+    "settled": false
+   },
+   {
+    "id": "d7cdd72e365b957db8d05a225ea067edfeb44142",
+    "file": "CLAUDE.md",
+    "line": 59,
+    "endLine": 59,
+    "section": "Core Layers",
+    "kind": "item",
+    "text": "Protocol Layer (`packages/core-internal/src/shared/protocol.ts`) - The abstract `Protocol` class that handles JSON-RPC message routing, request/response correlation, capability negotiation, and transport management. Both `Client` and `Server` extend this class.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "packages/core-internal/src/shared/protocol.ts",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Protocol",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Client",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Server",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Protocol Layer abstract class handles JSON-RPC …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "packages/core-internal/src/shared/protocol.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/shared/protocol.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/core-internal/src/shared/protocol.ts"
+     },
+     {
+      "kind": "symbol",
+      "text": "Protocol",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/shared/protocol.ts:565",
+        "excerpt": "export abstract class Protocol<ContextT extends BaseContext> {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/core-internal/src/shared/protocol.ts:565"
+     },
+     {
+      "kind": "symbol",
+      "text": "Client",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/client.ts:530",
+        "excerpt": "export class Client extends Protocol<ClientContext> {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/client/src/client/client.ts:530"
+     },
+     {
+      "kind": "symbol",
+      "text": "Server",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/server/src/server/server.ts:261",
+        "excerpt": "export class Server extends Protocol<ServerContext> {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/server/src/server/server.ts:261"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Protocol Layer abstract class handles JSON-RPC …\"",
+    "settled": false
+   },
+   {
+    "id": "334805a2438e060ea33a9c0388acd3124f63dffc",
+    "file": "CLAUDE.md",
+    "line": 62,
+    "endLine": 62,
+    "section": "Core Layers",
+    "kind": "item",
+    "text": "`Client` (`packages/client/src/client/client.ts`) - Client implementation extending Protocol with typed methods for MCP operations",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "Client",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "packages/client/src/client/client.ts",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Client implementation extending Protocol typed methods …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "Client",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/client.ts:530",
+        "excerpt": "export class Client extends Protocol<ClientContext> {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/client/src/client/client.ts:530"
+     },
+     {
+      "kind": "path",
+      "text": "packages/client/src/client/client.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/client.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/client/src/client/client.ts"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Client implementation extending Protocol typed methods …\"",
+    "settled": false
+   },
+   {
+    "id": "1dbf9e3ee301f9c606357f1ceb7d91d9fa2c281a",
+    "file": "CLAUDE.md",
+    "line": 63,
+    "endLine": 63,
+    "section": "Core Layers",
+    "kind": "item",
+    "text": "`Server` (`packages/server/src/server/server.ts`) - Server implementation extending Protocol with request handler registration",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "Server",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "packages/server/src/server/server.ts",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Server implementation extending Protocol request handler …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "Server",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/server/src/server/server.ts:261",
+        "excerpt": "export class Server extends Protocol<ServerContext> {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/server/src/server/server.ts:261"
+     },
+     {
+      "kind": "path",
+      "text": "packages/server/src/server/server.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/server/src/server/server.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/server/src/server/server.ts"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Server implementation extending Protocol request handler …\"",
+    "settled": false
+   },
+   {
+    "id": "f6e0bce21f2aa380131b2cde2d776efd83820045",
+    "file": "CLAUDE.md",
+    "line": 64,
+    "endLine": 64,
+    "section": "Core Layers",
+    "kind": "item",
+    "text": "`McpServer` (`packages/server/src/server/mcp.ts`) - High-level server API with simplified resource/tool/prompt registration",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "McpServer",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "packages/server/src/server/mcp.ts",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"High-level server API simplified resource tool …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "McpServer",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/server/src/server/mcp.ts:68",
+        "excerpt": "export class McpServer {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/server/src/server/mcp.ts:68"
+     },
+     {
+      "kind": "path",
+      "text": "packages/server/src/server/mcp.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/server/src/server/mcp.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/server/src/server/mcp.ts"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"High-level server API simplified resource tool …\"",
+    "settled": false
+   },
+   {
+    "id": "6fac6d65887f0a219bd888f491056b0b18a8b924",
+    "file": "CLAUDE.md",
+    "line": 70,
+    "endLine": 70,
+    "section": "Public API Exports",
+    "kind": "item",
+    "text": "`@modelcontextprotocol/core-internal` (main entry, `packages/core-internal/src/index.ts`) — Internal barrel. Exports everything (including Zod schemas, Protocol class, stdio utils). Only consumed by sibling packages within the monorepo (`private: true`).",
+    "spans": [
+     {
+      "kind": "dependency",
+      "text": "@modelcontextprotocol/core-internal",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "packages/core-internal/src/index.ts",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "private: true",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "Zod",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"Only\"",
+     "description \"main entry Internal barrel Exports everything …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "dependency",
+      "text": "@modelcontextprotocol/core-internal",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "packages/client/package.json @modelcontextprotocol/core-internal \"workspace:^\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "packages/middleware/node/package.json @modelcontextprotocol/core-internal \"workspace:^\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "packages/client/package.json depends on @modelcontextprotocol/core-internal"
+     },
+     {
+      "kind": "path",
+      "text": "packages/core-internal/src/index.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/index.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/core-internal/src/index.ts"
+     },
+     {
+      "kind": "unknown",
+      "text": "private: true",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "test/integration/test/server/cloudflareWorkers.test.ts:283",
+        "excerpt": "private: true,",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at test/integration/test/server/cloudflareWorkers.test.ts:283"
+     },
+     {
+      "kind": "dependency",
+      "text": "Zod",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "examples/bearer-auth-web/package.json zod \"catalog:runtimeShared\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/bearer-auth/package.json zod \"catalog:runtimeShared\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/cli-client/package.json zod \"catalog:runtimeShared\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "examples/bearer-auth-web/package.json depends on zod"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: quantifier \"Only\", description \"main entry Internal barrel Exports everything …\"",
+    "settled": false
+   },
+   {
+    "id": "53e26e613f8ec96be700c214a05f19ec44a01994",
+    "file": "CLAUDE.md",
+    "line": 71,
+    "endLine": 71,
+    "section": "Public API Exports",
+    "kind": "item",
+    "text": "`@modelcontextprotocol/core-internal/public` (`packages/core-internal/src/exports/public/index.ts`) — Curated public API. Exports TypeScript types, error classes, constants, guards, and the `Protocol` base class (+ `mergeCapabilities`). Re-exported by client and server packages.",
+    "spans": [
+     {
+      "kind": "dependency",
+      "text": "@modelcontextprotocol/core-internal",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "packages/core-internal/src/exports/public/index.ts",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Protocol",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "mergeCapabilities",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Curated public API Exports TypeScript types …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "dependency",
+      "text": "@modelcontextprotocol/core-internal",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "packages/client/package.json @modelcontextprotocol/core-internal \"workspace:^\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "packages/middleware/node/package.json @modelcontextprotocol/core-internal \"workspace:^\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "packages/client/package.json depends on @modelcontextprotocol/core-internal"
+     },
+     {
+      "kind": "path",
+      "text": "packages/core-internal/src/exports/public/index.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/exports/public/index.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/core-internal/src/exports/public/index.ts"
+     },
+     {
+      "kind": "symbol",
+      "text": "Protocol",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/shared/protocol.ts:565",
+        "excerpt": "export abstract class Protocol<ContextT extends BaseContext> {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/core-internal/src/shared/protocol.ts:565"
+     },
+     {
+      "kind": "symbol",
+      "text": "mergeCapabilities",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/shared/protocol.ts:1921",
+        "excerpt": "export function mergeCapabilities(base: ServerCapabilities, additional: Partial<ServerCapabilities>): ServerCapabilitie…",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/core-internal/src/shared/protocol.ts:1921"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Curated public API Exports TypeScript types …\"",
+    "settled": false
+   },
+   {
+    "id": "c65815840d439239cc38a3af7537337de117934c",
+    "file": "CLAUDE.md",
+    "line": 72,
+    "endLine": 72,
+    "section": "Public API Exports",
+    "kind": "item",
+    "text": "`@modelcontextprotocol/client` and `@modelcontextprotocol/server` (`packages/*/src/index.ts`) — Final public surface. Package-specific exports (named explicitly) plus re-exports from `core-internal/public`.",
+    "spans": [
+     {
+      "kind": "dependency",
+      "text": "@modelcontextprotocol/client",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "@modelcontextprotocol/server",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "packages/*/src/index.ts",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "core-internal/public",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Final public surface Package-specific exports named …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "dependency",
+      "text": "@modelcontextprotocol/client",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "examples/bearer-auth-web/package.json @modelcontextprotocol/client \"workspace:*\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/bearer-auth/package.json @modelcontextprotocol/client \"workspace:*\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "examples/bearer-auth-web/package.json depends on @modelcontextprotocol/client"
+     },
+     {
+      "kind": "dependency",
+      "text": "@modelcontextprotocol/server",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "examples/bearer-auth-web/package.json @modelcontextprotocol/server \"workspace:*\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/bearer-auth/package.json @modelcontextprotocol/server \"workspace:*\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "examples/bearer-auth-web/package.json depends on @modelcontextprotocol/server"
+     },
+     {
+      "kind": "path",
+      "text": "packages/*/src/index.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/index.ts",
+        "level": "definition"
+       },
+       {
+        "ref": "packages/codemod/src/index.ts",
+        "level": "definition"
+       },
+       {
+        "ref": "packages/core-internal/src/index.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/client/src/index.ts, packages/codemod/src/index.ts, packages/core-internal/src/index.ts and 3 more"
+     },
+     {
+      "kind": "path",
+      "text": "core-internal/public",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/package.json exports[\"./public\"]",
+        "level": "declaration"
+       }
+      ],
+      "reason": "an export of a workspace package: packages/core-internal/package.json exports[\"./public\"]"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Final public surface Package-specific exports named …\"",
+    "settled": false
+   },
+   {
+    "id": "f3f1a54dd3455ff26f169d554aa77a5a79ac1481",
+    "file": "CLAUDE.md",
+    "line": 73,
+    "endLine": 73,
+    "section": "Public API Exports",
+    "kind": "item",
+    "text": "`@modelcontextprotocol/core` (`packages/core/src/index.ts`) — Public Zod-schema package and the canonical home of the schema source modules (`src/schemas.ts`, `src/auth.ts`, `src/constants.ts`). The root entry re-exports only the `*Schema` Zod constants (MCP spec + OAuth/OpenID) — the published home for raw runtime validation (`CallToolResultSchema.parse(...)`); runtime-neutral (`zod` is its only dependency). The `./internal` subpath re-exports the schema modules wholesale for the sibling packages: `core-internal` re-exports them at the old module paths, and the `client`/`server`/`server-legacy` bundles resolve `@modelcontextprotocol/core/internal` as a real external dependency instead of carrying their own schema copies (their public surfaces stay Zod-free).",
+    "spans": [
+     {
+      "kind": "dependency",
+      "text": "@modelcontextprotocol/core",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "packages/core/src/index.ts",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "src/schemas.ts",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "src/auth.ts",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "src/constants.ts",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "*Schema",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "CallToolResultSchema.parse()",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "zod",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "./internal",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "core-internal",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "client",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "server",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "server-legacy",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "@modelcontextprotocol/core",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "Zod",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "status \"canonical\"",
+     "quantifier \"only\"",
+     "description \"Public schema package canonical home schema …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "dependency",
+      "text": "@modelcontextprotocol/core",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "examples/package.json @modelcontextprotocol/core \"workspace:^\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "packages/client/package.json @modelcontextprotocol/core \"workspace:*\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "examples/package.json depends on @modelcontextprotocol/core"
+     },
+     {
+      "kind": "path",
+      "text": "packages/core/src/index.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core/src/index.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/core/src/index.ts"
+     },
+     {
+      "kind": "path",
+      "text": "src/schemas.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core/src/schemas.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "found under packages/core/: packages/core/src/schemas.ts"
+     },
+     {
+      "kind": "path",
+      "text": "src/auth.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "examples/shared/src/auth.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "found under examples/shared/: examples/shared/src/auth.ts"
+     },
+     {
+      "kind": "path",
+      "text": "src/constants.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core/src/constants.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "found under packages/core/: packages/core/src/constants.ts"
+     },
+     {
+      "kind": "unknown",
+      "text": "*Schema",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "symbol",
+      "text": "CallToolResultSchema.parse()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "packages/codemod/test/integration.test.ts:491",
+        "excerpt": "expect(output).toContain('CallToolResultSchema.parse');",
+        "level": "reference"
+       },
+       {
+        "ref": "packages/codemod/test/v1-to-v2/transforms/importPaths.test.ts:410",
+        "excerpt": "expect(result).toContain('CallToolResultSchema.parse(value)');",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at packages/codemod/test/integration.test.ts:491"
+     },
+     {
+      "kind": "symbol",
+      "text": "zod",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "examples/bearer-auth-web/package.json:14",
+        "excerpt": "\"zod\": \"catalog:runtimeShared\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/bearer-auth/package.json:15",
+        "excerpt": "\"zod\": \"catalog:runtimeShared\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at examples/bearer-auth-web/package.json:14"
+     },
+     {
+      "kind": "path",
+      "text": "./internal",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "packages/client/tsdown.config.ts:38",
+        "excerpt": "// bundled core-internal shims import them via the './internal' subpath, which must stay an",
+        "level": "reference"
+       }
+      ],
+      "reason": "not a file in the repository; the code names it at packages/client/tsdown.config.ts:38"
+     },
+     {
+      "kind": "symbol",
+      "text": "core-internal",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal",
+        "level": "definition"
+       }
+      ],
+      "reason": "named packages/core-internal"
+     },
+     {
+      "kind": "symbol",
+      "text": "client",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "examples/bearer-auth-web/client.ts:23",
+        "excerpt": "const client = new Client(",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at examples/bearer-auth-web/client.ts:23"
+     },
+     {
+      "kind": "symbol",
+      "text": "server",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "examples/bearer-auth-web/server.ts:31",
+        "excerpt": "const server = new McpServer({ name: 'bearer-auth-web-example', version: '1.0.0' });",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at examples/bearer-auth-web/server.ts:31"
+     },
+     {
+      "kind": "symbol",
+      "text": "server-legacy",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/server-legacy",
+        "level": "definition"
+       }
+      ],
+      "reason": "named packages/server-legacy"
+     },
+     {
+      "kind": "dependency",
+      "text": "@modelcontextprotocol/core",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "examples/package.json @modelcontextprotocol/core \"workspace:^\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "packages/client/package.json @modelcontextprotocol/core \"workspace:*\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "examples/package.json depends on @modelcontextprotocol/core"
+     },
+     {
+      "kind": "dependency",
+      "text": "Zod",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "examples/bearer-auth-web/package.json zod \"catalog:runtimeShared\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/bearer-auth/package.json zod \"catalog:runtimeShared\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/cli-client/package.json zod \"catalog:runtimeShared\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "examples/bearer-auth-web/package.json depends on zod"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `*Schema`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "d351f0b40445caa6d36ae43f7100916c67b3d179",
+    "file": "CLAUDE.md",
+    "line": 77,
+    "endLine": 77,
+    "section": "Public API Exports",
+    "kind": "item",
+    "text": "Use explicit named exports, not `export *`, in package `index.ts` files and `core-internal/public`.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "export *",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "index.ts",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "core-internal/public",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"explicit named exports package files\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "export *",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "external tool `export`"
+     },
+     {
+      "kind": "path",
+      "text": "index.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/.vitepress/theme/index.ts",
+        "level": "definition"
+       },
+       {
+        "ref": "docs/v1/.vitepress/theme/index.ts",
+        "level": "definition"
+       },
+       {
+        "ref": "examples/client-quickstart/src/index.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "found at docs/.vitepress/theme/index.ts, docs/v1/.vitepress/theme/index.ts, examples/client-quickstart/src/index.ts and 23 more"
+     },
+     {
+      "kind": "path",
+      "text": "core-internal/public",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/package.json exports[\"./public\"]",
+        "level": "declaration"
+       }
+      ],
+      "reason": "an export of a workspace package: packages/core-internal/package.json exports[\"./public\"]"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"explicit named exports package files\"",
+    "settled": false
+   },
+   {
+    "id": "073d04a05cfaa946fcce32f6082ad923178b4b90",
+    "file": "CLAUDE.md",
+    "line": 78,
+    "endLine": 78,
+    "section": "Public API Exports",
+    "kind": "item",
+    "text": "Adding a symbol to a package `index.ts` makes it public API — do so intentionally.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "index.ts",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Adding symbol package makes public API …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "index.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/.vitepress/theme/index.ts",
+        "level": "definition"
+       },
+       {
+        "ref": "docs/v1/.vitepress/theme/index.ts",
+        "level": "definition"
+       },
+       {
+        "ref": "examples/client-quickstart/src/index.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "found at docs/.vitepress/theme/index.ts, docs/v1/.vitepress/theme/index.ts, examples/client-quickstart/src/index.ts and 23 more"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Adding symbol package makes public API …\"",
+    "settled": false
+   },
+   {
+    "id": "5d862ac85f5979fdf1e227efba55d6c57f84b4b4",
+    "file": "CLAUDE.md",
+    "line": 79,
+    "endLine": 79,
+    "section": "Public API Exports",
+    "kind": "item",
+    "text": "Internal helpers should stay in the core internal barrel and not be added to `core-internal/public` or package index files.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "core-internal/public",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"should\"",
+     "description \"Internal helpers stay core internal barrel …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "core-internal/public",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/package.json exports[\"./public\"]",
+        "level": "declaration"
+       }
+      ],
+      "reason": "an export of a workspace package: packages/core-internal/package.json exports[\"./public\"]"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"should\", description \"Internal helpers stay core internal barrel …\"",
+    "settled": false
+   },
+   {
+    "id": "c4f478f246a7a3ff7e1f8a5ca79a093ef75c919f",
+    "file": "CLAUDE.md",
+    "line": 80,
+    "endLine": 80,
+    "section": "Public API Exports",
+    "kind": "item",
+    "text": "The package root entry must stay runtime-neutral so browser and Cloudflare Workers bundlers can consume it. Exports whose module graph transitively touches unpolyfillable Node builtins (`node:child_process`, `node:net`, `cross-spawn`, etc.) must live at a named subpath export (e.g. `./stdio`) and be covered by a `barrelClean` test in that package.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "node:child_process",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "node:net",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "cross-spawn",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "./stdio",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "barrelClean",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"must\"",
+     "description \"package root entry stay runtime-neutral browser …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "node:child_process",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "examples/guides/serving/stdio.examples.ts:79",
+        "excerpt": "const { spawn } = await import('node:child_process');",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at examples/guides/serving/stdio.examples.ts:79"
+     },
+     {
+      "kind": "unknown",
+      "text": "node:net",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "examples/cli-client/host/auth.ts:2",
+        "excerpt": "import type { AddressInfo } from 'node:net';",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at examples/cli-client/host/auth.ts:2"
+     },
+     {
+      "kind": "symbol",
+      "text": "cross-spawn",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "packages/client/package.json:137",
+        "excerpt": "\"cross-spawn\": \"catalog:runtimeClientOnly\",",
+        "level": "declaration"
+       },
+       {
+        "ref": "pnpm-lock.yaml:85",
+        "excerpt": "cross-spawn:",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at packages/client/package.json:137"
+     },
+     {
+      "kind": "path",
+      "text": "./stdio",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "packages/client/package.json:33",
+        "excerpt": "\"./stdio\": {",
+        "level": "reference"
+       }
+      ],
+      "reason": "not a file in the repository; the code names it at packages/client/package.json:33"
+     },
+     {
+      "kind": "symbol",
+      "text": "barrelClean",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "packages/client/test/client/barrelClean.test.ts",
+        "level": "reference"
+       },
+       {
+        "ref": "packages/server/test/server/barrelClean.test.ts",
+        "level": "reference"
+       }
+      ],
+      "reason": "used in file names: packages/client/test/client/barrelClean.test.ts, packages/server/test/server/barrelClean.test.ts"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"must\", description \"package root entry stay runtime-neutral browser …\"",
+    "settled": false
+   },
+   {
+    "id": "bd881540ec9c9fb19d9183837fa85a4a69d6246c",
+    "file": "CLAUDE.md",
+    "line": 84,
+    "endLine": 84,
+    "section": "Transport System",
+    "kind": "sentence",
+    "text": "Transports (`packages/core-internal/src/shared/transport.ts`) provide the communication layer:",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "packages/core-internal/src/shared/transport.ts",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Transports provide communication layer\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "packages/core-internal/src/shared/transport.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/shared/transport.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/core-internal/src/shared/transport.ts"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Transports provide communication layer\"",
+    "settled": false
+   },
+   {
+    "id": "7f179d9435bba5a91ed3a0997ead5f71f087a9e9",
+    "file": "CLAUDE.md",
+    "line": 86,
+    "endLine": 86,
+    "section": "Transport System",
+    "kind": "item",
+    "text": "Streamable HTTP (`packages/server/src/server/streamableHttp.ts`, `packages/client/src/client/streamableHttp.ts`) - Recommended transport for remote servers, supports SSE for streaming",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "packages/server/src/server/streamableHttp.ts",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "packages/client/src/client/streamableHttp.ts",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Streamable HTTP Recommended transport remote servers …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "packages/server/src/server/streamableHttp.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/server/src/server/streamableHttp.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/server/src/server/streamableHttp.ts"
+     },
+     {
+      "kind": "path",
+      "text": "packages/client/src/client/streamableHttp.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/streamableHttp.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/client/src/client/streamableHttp.ts"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Streamable HTTP Recommended transport remote servers …\"",
+    "settled": false
+   },
+   {
+    "id": "2c1cf118c5317ecd8129248d294e3154dbf241ee",
+    "file": "CLAUDE.md",
+    "line": 87,
+    "endLine": 87,
+    "section": "Transport System",
+    "kind": "item",
+    "text": "SSE (`packages/server/src/server/sse.ts`, `packages/client/src/client/sse.ts`) - Legacy HTTP+SSE transport for backwards compatibility",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "packages/server/src/server/sse.ts",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "packages/client/src/client/sse.ts",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "status \"Legacy\"",
+     "description \"SSE Legacy HTTP SSE transport backwards …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "packages/server/src/server/sse.ts",
+      "expect": "present",
+      "status": "STALE",
+      "level": "none",
+      "evidence": [],
+      "reason": "not found: packages/server/src/server/sse.ts"
+     },
+     {
+      "kind": "path",
+      "text": "packages/client/src/client/sse.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/sse.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/client/src/client/sse.ts"
+     }
+    ],
+    "status": "STALE",
+    "reason": "`packages/server/src/server/sse.ts`: not found: packages/server/src/server/sse.ts",
+    "settled": false
+   },
+   {
+    "id": "2dbee95f6fb90e49e10b2634e819d900baad8a13",
+    "file": "CLAUDE.md",
+    "line": 88,
+    "endLine": 88,
+    "section": "Transport System",
+    "kind": "item",
+    "text": "stdio (`packages/server/src/server/stdio.ts`, `packages/client/src/client/stdio.ts`) - For local process-spawned integrations",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "packages/server/src/server/stdio.ts",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "packages/client/src/client/stdio.ts",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"stdio local process-spawned integrations\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "packages/server/src/server/stdio.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/server/src/server/stdio.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/server/src/server/stdio.ts"
+     },
+     {
+      "kind": "path",
+      "text": "packages/client/src/client/stdio.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/stdio.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/client/src/client/stdio.ts"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"stdio local process-spawned integrations\"",
+    "settled": false
+   },
+   {
+    "id": "d4710bd7781e2a2e9403958bd283dddace068c23",
+    "file": "CLAUDE.md",
+    "line": 92,
+    "endLine": 92,
+    "section": "Server-Side Features",
+    "kind": "item",
+    "text": "Tools/Resources/Prompts: Registered via `McpServer.tool()`, `.resource()`, `.prompt()` methods",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "McpServer.tool()",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": ".resource()",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": ".prompt()",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Tools Resources Prompts Registered methods\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "McpServer.tool()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "examples/schema-validators/client.ts:23",
+        "excerpt": "const tool = list.tools.find(t => t.name === name);",
+        "level": "reference"
+       }
+      ],
+      "reason": "tool is defined at examples/schema-validators/client.ts:23; its owning type could not be read"
+     },
+     {
+      "kind": "unknown",
+      "text": ".resource()",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": ".prompt()",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `.resource()`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "ac4a70986df9dd63d7277e6643114493a19b2f5d",
+    "file": "CLAUDE.md",
+    "line": 93,
+    "endLine": 93,
+    "section": "Server-Side Features",
+    "kind": "item",
+    "text": "OAuth/Auth: Full OAuth 2.0 server implementation in `packages/server/src/server/auth/`",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "packages/server/src/server/auth/",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "count \"2.0 server implementation\"",
+     "description \"OAuth Auth Full OAuth server implementation\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "packages/server/src/server/auth/",
+      "expect": "present",
+      "status": "STALE",
+      "level": "none",
+      "evidence": [],
+      "reason": "not found: packages/server/src/server/auth"
+     }
+    ],
+    "status": "STALE",
+    "reason": "`packages/server/src/server/auth/`: not found: packages/server/src/server/auth",
+    "settled": false
+   },
+   {
+    "id": "037b4a1a33e080154d7d29ec5549b30d02ffd6cc",
+    "file": "CLAUDE.md",
+    "line": 94,
+    "endLine": 94,
+    "section": "Server-Side Features",
+    "kind": "item",
+    "text": "Completions: Auto-completion support via `packages/server/src/server/completable.ts`",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "packages/server/src/server/completable.ts",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Completions Auto-completion support\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "packages/server/src/server/completable.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/server/src/server/completable.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/server/src/server/completable.ts"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Completions Auto-completion support\"",
+    "settled": false
+   },
+   {
+    "id": "81ca2fc964c26cf3abccc2eb709658386bad1f71",
+    "file": "CLAUDE.md",
+    "line": 98,
+    "endLine": 98,
+    "section": "Client-Side Features",
+    "kind": "item",
+    "text": "Auth: OAuth client support in `packages/client/src/client/auth.ts` and `packages/client/src/client/auth-extensions.ts`",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "packages/client/src/client/auth.ts",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "packages/client/src/client/auth-extensions.ts",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Auth OAuth client support\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "packages/client/src/client/auth.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/auth.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/client/src/client/auth.ts"
+     },
+     {
+      "kind": "path",
+      "text": "packages/client/src/client/auth-extensions.ts",
+      "expect": "present",
+      "status": "STALE",
+      "level": "none",
+      "evidence": [],
+      "reason": "not found: packages/client/src/client/auth-extensions.ts"
+     }
+    ],
+    "status": "STALE",
+    "reason": "`packages/client/src/client/auth-extensions.ts`: not found: packages/client/src/client/auth-extensions.ts",
+    "settled": false
+   },
+   {
+    "id": "27e8efddb045cc81a1015e8c263fc17d264639fd",
+    "file": "CLAUDE.md",
+    "line": 99,
+    "endLine": 99,
+    "section": "Client-Side Features",
+    "kind": "item",
+    "text": "Client middleware: Request middleware in `packages/client/src/client/middleware.ts` (unrelated to the framework adapter packages below)",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "packages/client/src/client/middleware.ts",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Client middleware Request middleware unrelated framework …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "packages/client/src/client/middleware.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/middleware.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/client/src/client/middleware.ts"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Client middleware Request middleware unrelated framework …\"",
+    "settled": false
+   },
+   {
+    "id": "33dd30b09dd62bdded15aef13757b96628954f72",
+    "file": "CLAUDE.md",
+    "line": 100,
+    "endLine": 100,
+    "section": "Client-Side Features",
+    "kind": "item",
+    "text": "Sampling: Clients can handle `sampling/createMessage` requests from servers (LLM completions)",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "sampling/createMessage",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Sampling Clients handle requests servers LLM …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "sampling/createMessage",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "examples/cli-client/host/host.ts:382",
+        "excerpt": "client.setRequestHandler('sampling/createMessage', async request => {",
+        "level": "reference"
+       }
+      ],
+      "reason": "not a path: the code spells it as a name at examples/cli-client/host/host.ts:382"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Sampling Clients handle requests servers LLM …\"",
+    "settled": false
+   },
+   {
+    "id": "e4e168276c55275e42fc93e9fe8e45c9fa3c93a8",
+    "file": "CLAUDE.md",
+    "line": 101,
+    "endLine": 101,
+    "section": "Client-Side Features",
+    "kind": "item",
+    "text": "Elicitation: Clients can handle `elicitation/create` requests for user input (form or URL mode)",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "elicitation/create",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Elicitation Clients handle requests user input …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "elicitation/create",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "examples/cli-client/host/host.ts:429",
+        "excerpt": "client.setRequestHandler('elicitation/create', async (request): Promise<ElicitResult> => {",
+        "level": "reference"
+       }
+      ],
+      "reason": "not a path: the code spells it as a name at examples/cli-client/host/host.ts:429"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Elicitation Clients handle requests user input …\"",
+    "settled": false
+   },
+   {
+    "id": "c8922e987ef9fa71941ad987e00b6a35683bc369",
+    "file": "CLAUDE.md",
+    "line": 102,
+    "endLine": 102,
+    "section": "Client-Side Features",
+    "kind": "item",
+    "text": "Roots: Clients can expose filesystem roots to servers via `roots/list`",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "roots/list",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Roots Clients expose filesystem roots servers\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "roots/list",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "examples/cli-client/host/host.ts:60",
+        "excerpt": "/** Workspace roots exposed to servers via `roots/list` (absolute or cwd-relative paths). */",
+        "level": "reference"
+       }
+      ],
+      "reason": "not a path: the code spells it as a name at examples/cli-client/host/host.ts:60"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Roots Clients expose filesystem roots servers\"",
+    "settled": false
+   },
+   {
+    "id": "a626d30b49b9e182a129e06d1e819fe24b75620c",
+    "file": "CLAUDE.md",
+    "line": 106,
+    "endLine": 106,
+    "section": "Middleware packages (framework/runtime adapters)",
+    "kind": "sentence",
+    "text": "The repo also ships “middleware” packages under `packages/middleware/` (e.g.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "packages/middleware/",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"repo ships middleware packages\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "packages/middleware/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/middleware",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/middleware"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"repo ships middleware packages\"",
+    "settled": false
+   },
+   {
+    "id": "917f2423e55302beb46321547bb42e01b61401d7",
+    "file": "CLAUDE.md",
+    "line": 106,
+    "endLine": 106,
+    "section": "Middleware packages (framework/runtime adapters)",
+    "kind": "sentence",
+    "text": "`@modelcontextprotocol/express`, `@modelcontextprotocol/hono`, `@modelcontextprotocol/node`).",
+    "spans": [
+     {
+      "kind": "dependency",
+      "text": "@modelcontextprotocol/express",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "@modelcontextprotocol/hono",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "@modelcontextprotocol/node",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "dependency",
+      "text": "@modelcontextprotocol/express",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "examples/bearer-auth/package.json @modelcontextprotocol/express \"workspace:*\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/legacy-routing/package.json @modelcontextprotocol/express \"workspace:*\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "examples/bearer-auth/package.json depends on @modelcontextprotocol/express"
+     },
+     {
+      "kind": "dependency",
+      "text": "@modelcontextprotocol/hono",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "examples/caching/package.json @modelcontextprotocol/hono \"workspace:*\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/custom-methods/package.json @modelcontextprotocol/hono \"workspace:*\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "examples/caching/package.json depends on @modelcontextprotocol/hono"
+     },
+     {
+      "kind": "dependency",
+      "text": "@modelcontextprotocol/node",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "examples/bearer-auth-web/package.json @modelcontextprotocol/node \"workspace:*\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/bearer-auth/package.json @modelcontextprotocol/node \"workspace:*\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "examples/bearer-auth-web/package.json depends on @modelcontextprotocol/node"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "5a4fc9b72f2c0f5e4568af09753b5e0100a55d8a",
+    "file": "CLAUDE.md",
+    "line": 106,
+    "endLine": 106,
+    "section": "Middleware packages (framework/runtime adapters)",
+    "kind": "sentence",
+    "text": "These are thin integration layers for specific frameworks/runtimes and should not add new MCP functionality.",
+    "spans": [],
+    "residual": [
+     "rule \"should\"",
+     "description \"thin integration layers specific frameworks runtimes …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"should\", description \"thin integration layers specific frameworks runtimes …\"",
+    "settled": false
+   },
+   {
+    "id": "6e2be1e9d937aeeada227c9c5ce3aec09a291c45",
+    "file": "CLAUDE.md",
+    "line": 110,
+    "endLine": 110,
+    "section": "Experimental Features",
+    "kind": "sentence",
+    "text": "Located in `packages/*/src/experimental/`.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "packages/*/src/experimental/",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "packages/*/src/experimental/",
+      "expect": "present",
+      "status": "STALE",
+      "level": "none",
+      "evidence": [],
+      "reason": "not found: packages/*/src/experimental"
+     }
+    ],
+    "status": "STALE",
+    "reason": "`packages/*/src/experimental/`: not found: packages/*/src/experimental",
+    "settled": false
+   },
+   {
+    "id": "5577efc978376cc2957fba8ec1b0a2a1c3ad5eae",
+    "file": "CLAUDE.md",
+    "line": 110,
+    "endLine": 110,
+    "section": "Experimental Features",
+    "kind": "sentence",
+    "text": "Currently empty.",
+    "spans": [],
+    "residual": [
+     "description \"Currently empty\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Currently empty\"",
+    "settled": false
+   },
+   {
+    "id": "bb00aa6a9eefc947267dd9a1156ee1f35b8cde8e",
+    "file": "CLAUDE.md",
+    "line": 114,
+    "endLine": 114,
+    "section": "Zod Schemas",
+    "kind": "sentence",
+    "text": "The SDK uses `zod/v4` internally.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "zod/v4",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"SDK uses internally\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "zod/v4",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "examples/bearer-auth-web/package.json zod",
+        "level": "declaration"
+       }
+      ],
+      "reason": "an import path into zod, which examples/bearer-auth-web/package.json declares"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"SDK uses internally\"",
+    "settled": false
+   },
+   {
+    "id": "5ab6f0852d141306587fdbbc96d4c4336e7274fc",
+    "file": "CLAUDE.md",
+    "line": 116,
+    "endLine": 116,
+    "section": "Zod Schemas",
+    "kind": "item",
+    "text": "`packages/core-internal/src/util/schema.ts` - AnySchema alias and helpers for inspecting Zod objects",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "packages/core-internal/src/util/schema.ts",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "Zod",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"AnySchema alias helpers inspecting objects\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "packages/core-internal/src/util/schema.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/util/schema.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/core-internal/src/util/schema.ts"
+     },
+     {
+      "kind": "dependency",
+      "text": "Zod",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "examples/bearer-auth-web/package.json zod \"catalog:runtimeShared\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/bearer-auth/package.json zod \"catalog:runtimeShared\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/cli-client/package.json zod \"catalog:runtimeShared\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "examples/bearer-auth-web/package.json depends on zod"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"AnySchema alias helpers inspecting objects\"",
+    "settled": false
+   },
+   {
+    "id": "393cff674436fdf3d58ec0e0d31c7d2467d40fd9",
+    "file": "CLAUDE.md",
+    "line": 120,
+    "endLine": 120,
+    "section": "Validation",
+    "kind": "sentence",
+    "text": "Pluggable JSON Schema validation (`packages/core-internal/src/validators/`):",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "packages/core-internal/src/validators/",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Pluggable JSON Schema validation\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "packages/core-internal/src/validators/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/validators",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/core-internal/src/validators"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Pluggable JSON Schema validation\"",
+    "settled": false
+   },
+   {
+    "id": "af713d9d850bbe9293ae47ad28350768d270d514",
+    "file": "CLAUDE.md",
+    "line": 122,
+    "endLine": 122,
+    "section": "Validation",
+    "kind": "item",
+    "text": "`ajvProvider.ts` - Default Ajv-based validator",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "ajvProvider.ts",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Default Ajv-based validator\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "ajvProvider.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/validators/ajvProvider.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "found at packages/core-internal/src/validators/ajvProvider.ts"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Default Ajv-based validator\"",
+    "settled": false
+   },
+   {
+    "id": "a6179339498fc9858d67d9056a5a0781cb2bd161",
+    "file": "CLAUDE.md",
+    "line": 123,
+    "endLine": 123,
+    "section": "Validation",
+    "kind": "item",
+    "text": "`cfWorkerProvider.ts` - Cloudflare Workers-compatible alternative",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "cfWorkerProvider.ts",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Cloudflare Workers-compatible alternative\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "cfWorkerProvider.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/validators/cfWorkerProvider.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "found at packages/core-internal/src/validators/cfWorkerProvider.ts"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Cloudflare Workers-compatible alternative\"",
+    "settled": false
+   },
+   {
+    "id": "8bb736cf65dde60a6987661a610e08f3e8f90f1a",
+    "file": "CLAUDE.md",
+    "line": 127,
+    "endLine": 131,
+    "section": "Examples",
+    "kind": "sentence",
+    "text": "Runnable examples in `examples/<story>/{server.ts,client.ts}` — each story is its own `@mcp-examples/<story>` workspace package and a self-verifying e2e test (the client connects, asserts results, exits non-zero on mismatch). `pnpm run:examples` runs every story over its configured transport×era legs; the `examples (build + e2e)` CI job is part of the per-PR gate basket.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "examples/<story>/{server.ts,client.ts}",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "@mcp-examples/<story>",
+      "expect": "present"
+     },
+     {
+      "kind": "command",
+      "text": "pnpm run:examples",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "examples (build + e2e)",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"each\"",
+     "description \"Runnable examples story own workspace package …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "examples/<story>/{server.ts,client.ts}",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "examples/bearer-auth-web/server.ts",
+        "level": "definition"
+       },
+       {
+        "ref": "examples/bearer-auth/server.ts",
+        "level": "definition"
+       },
+       {
+        "ref": "examples/caching/server.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "examples/bearer-auth-web/server.ts, examples/bearer-auth/server.ts, examples/caching/server.ts and 58 more"
+     },
+     {
+      "kind": "path",
+      "text": "@mcp-examples/<story>",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "no file matches the pattern @mcp-examples/<story> yet"
+     },
+     {
+      "kind": "command",
+      "text": "pnpm run:examples",
+      "expect": "present",
+      "hintDirs": [
+       "examples"
+      ],
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [
+       {
+        "ref": "package.json scripts.run:examples",
+        "level": "definition"
+       }
+      ],
+      "reason": "examples/package.json has no \"run:examples\" script; package.json defines one"
+     },
+     {
+      "kind": "unknown",
+      "text": "examples (build + e2e)",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/workflows/examples.yml:24",
+        "excerpt": "name: examples (build + e2e)",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at .github/workflows/examples.yml:24"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`@mcp-examples/<story>`: no file matches the pattern @mcp-examples/<story> yet",
+    "settled": false
+   },
+   {
+    "id": "d40c6a4fe73fd87ffe9d73bfbc23ff454a55c9b5",
+    "file": "CLAUDE.md",
+    "line": 131,
+    "endLine": 131,
+    "section": "Examples",
+    "kind": "sentence",
+    "text": "See `examples/README.md` for the full story matrix.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "examples/README.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"full story matrix\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "examples/README.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "examples/README.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "examples/README.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"full story matrix\"",
+    "settled": false
+   },
+   {
+    "id": "6e62b59dfd6bbf403a94282f31194e6da9dcadaa",
+    "file": "CLAUDE.md",
+    "line": 133,
+    "endLine": 133,
+    "section": "Examples",
+    "kind": "item",
+    "text": "`examples/shared/` — `@mcp-examples/shared` package. Root export is args-only (`parseExampleArgs`, `check`, `siblingPath`); the demo OAuth provider and `InMemoryEventStore` live at the `@mcp-examples/shared/auth` subpath so non-auth stories don't eagerly evaluate better-auth/express/better-sqlite3. Stories import only this plumbing and inline the SDK transport setup themselves — see `examples/CONTRIBUTING.md`.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "examples/shared/",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "@mcp-examples/shared",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "parseExampleArgs",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "check",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "siblingPath",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "InMemoryEventStore",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "@mcp-examples/shared",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "examples/CONTRIBUTING.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"only\"",
+     "rule \"don't\"",
+     "description \"package Root export args-only demo OAuth …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "examples/shared/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "examples/shared",
+        "level": "definition"
+       }
+      ],
+      "reason": "examples/shared"
+     },
+     {
+      "kind": "dependency",
+      "text": "@mcp-examples/shared",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "examples/bearer-auth-web/package.json @mcp-examples/shared \"workspace:*\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/bearer-auth/package.json @mcp-examples/shared \"workspace:*\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "examples/bearer-auth-web/package.json depends on @mcp-examples/shared"
+     },
+     {
+      "kind": "symbol",
+      "text": "parseExampleArgs",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "examples/shared/src/args.ts:50",
+        "excerpt": "export function parseExampleArgs(defaultPort = 3000): ExampleArgs {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at examples/shared/src/args.ts:50"
+     },
+     {
+      "kind": "symbol",
+      "text": "check",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/workflows/main.yml:32",
+        "excerpt": "- run: pnpm run check:all",
+        "level": "reference"
+       },
+       {
+        "ref": "examples/bearer-auth-web/client.ts:7",
+        "excerpt": "import { check, parseExampleArgs } from '@mcp-examples/shared';",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/workflows/main.yml:32"
+     },
+     {
+      "kind": "symbol",
+      "text": "siblingPath",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "examples/shared/src/args.ts:25",
+        "excerpt": "export function siblingPath(importMetaUrl: string | URL, name: string): string {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at examples/shared/src/args.ts:25"
+     },
+     {
+      "kind": "symbol",
+      "text": "InMemoryEventStore",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "examples/shared/src/inMemoryEventStore.ts:8",
+        "excerpt": "export class InMemoryEventStore implements EventStore {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at examples/shared/src/inMemoryEventStore.ts:8"
+     },
+     {
+      "kind": "dependency",
+      "text": "@mcp-examples/shared",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "examples/bearer-auth-web/package.json @mcp-examples/shared \"workspace:*\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/bearer-auth/package.json @mcp-examples/shared \"workspace:*\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "examples/bearer-auth-web/package.json depends on @mcp-examples/shared"
+     },
+     {
+      "kind": "path",
+      "text": "examples/CONTRIBUTING.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "examples/CONTRIBUTING.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "examples/CONTRIBUTING.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: quantifier \"only\", rule \"don't\", description \"package Root export args-only demo OAuth …\"",
+    "settled": false
+   },
+   {
+    "id": "4aeb4d5854ccc6c00ce468802181f4fa4155a91c",
+    "file": "CLAUDE.md",
+    "line": 134,
+    "endLine": 134,
+    "section": "Examples",
+    "kind": "item",
+    "text": "`scripts/examples/` — runner (`run-examples.ts`)",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "scripts/examples/",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "run-examples.ts",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "scripts/examples/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "scripts/examples",
+        "level": "definition"
+       }
+      ],
+      "reason": "scripts/examples"
+     },
+     {
+      "kind": "path",
+      "text": "run-examples.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "scripts/examples/run-examples.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "found at scripts/examples/run-examples.ts"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "ba9b75a6c1235859424d9babd8b4ab4dd866a892",
+    "file": "CLAUDE.md",
+    "line": 135,
+    "endLine": 135,
+    "section": "Examples",
+    "kind": "item",
+    "text": "`examples/guides/` — per-page snippet companions for the `docs/` guide pages (one `<section>/<page>.examples.ts` per page); fences sync via `pnpm sync:snippets`, and the runnable ones are executed in CI by `pnpm docs:examples`",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "examples/guides/",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "docs/",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "<section>/<page>.examples.ts",
+      "expect": "present"
+     },
+     {
+      "kind": "command",
+      "text": "pnpm sync:snippets",
+      "expect": "present"
+     },
+     {
+      "kind": "command",
+      "text": "pnpm docs:examples",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"per-page snippet companions guide pages one …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "examples/guides/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "examples/guides",
+        "level": "definition"
+       }
+      ],
+      "reason": "examples/guides"
+     },
+     {
+      "kind": "path",
+      "text": "docs/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs",
+        "level": "definition"
+       }
+      ],
+      "reason": "docs"
+     },
+     {
+      "kind": "path",
+      "text": "<section>/<page>.examples.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "examples/guides/index.examples.ts",
+        "level": "definition"
+       },
+       {
+        "ref": "examples/guides/protocolVersions.examples.ts",
+        "level": "definition"
+       },
+       {
+        "ref": "examples/guides/testing.examples.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "found under examples/: examples/guides/index.examples.ts, examples/guides/protocolVersions.examples.ts, examples/guides/testing.examples.ts and 2 more"
+     },
+     {
+      "kind": "command",
+      "text": "pnpm sync:snippets",
+      "expect": "present",
+      "hintDirs": [
+       "examples"
+      ],
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [
+       {
+        "ref": "package.json scripts.sync:snippets",
+        "level": "definition"
+       }
+      ],
+      "reason": "examples/package.json has no \"sync:snippets\" script; package.json defines one"
+     },
+     {
+      "kind": "command",
+      "text": "pnpm docs:examples",
+      "expect": "present",
+      "hintDirs": [
+       "examples"
+      ],
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [
+       {
+        "ref": "package.json scripts.docs:examples",
+        "level": "definition"
+       }
+      ],
+      "reason": "examples/package.json has no \"docs:examples\" script; package.json defines one"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`pnpm sync:snippets`: examples/package.json has no \"sync:snippets\" script; package.json defines one",
+    "settled": false
+   },
+   {
+    "id": "8d942bad32f414b6166a988a1a7256c4fd200667",
+    "file": "CLAUDE.md",
+    "line": 139,
+    "endLine": 139,
+    "section": "Message Flow (Bidirectional Protocol)",
+    "kind": "sentence",
+    "text": "MCP is bidirectional: both client and server can send requests.",
+    "spans": [],
+    "residual": [
+     "description \"MCP bidirectional both client server send …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"MCP bidirectional both client server send …\"",
+    "settled": false
+   },
+   {
+    "id": "5a7dfe5ae15d265c2af3c072a9948a9cf71bcfcb",
+    "file": "CLAUDE.md",
+    "line": 139,
+    "endLine": 139,
+    "section": "Message Flow (Bidirectional Protocol)",
+    "kind": "sentence",
+    "text": "Understanding this flow is essential when implementing new request types.",
+    "spans": [],
+    "residual": [
+     "description \"Understanding flow essential implementing new request …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Understanding flow essential implementing new request …\"",
+    "settled": false
+   },
+   {
+    "id": "9f27e213695751c96e28f376ddcf98c43f3c29be",
+    "file": "CLAUDE.md",
+    "line": 152,
+    "endLine": 152,
+    "section": "Outbound Flow: Sending Requests",
+    "kind": "sentence",
+    "text": "When code calls `client.callTool()` or `server.createMessage()`:",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "client.callTool()",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "server.createMessage()",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"code calls\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "client.callTool()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/client.ts:2327",
+        "excerpt": "async callTool(params: CallToolRequest['params'], options?: CallToolRequestOptions): Promise<CallToolResult> {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/client/src/client/client.ts:2327 in packages/client, packages/client/src/client"
+     },
+     {
+      "kind": "symbol",
+      "text": "server.createMessage()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/server/src/server/server.ts:1042",
+        "excerpt": "async createMessage(params: CreateMessageRequestParamsBase, options?: RequestOptions): Promise<CreateMessageResult>;",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/server/src/server/server.ts:1042 in packages/server, packages/server/src/server"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"code calls\"",
+    "settled": false
+   },
+   {
+    "id": "1fc7858e87f22cad95315d9661e6cd4709f4e27a",
+    "file": "CLAUDE.md",
+    "line": 154,
+    "endLine": 154,
+    "section": "Outbound Flow: Sending Requests",
+    "kind": "item",
+    "text": "High-level method (e.g., `Client.callTool()`) calls `this.request()`",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "Client.callTool()",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "this.request()",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"High-level method calls\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "Client.callTool()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/client.ts:2327",
+        "excerpt": "async callTool(params: CallToolRequest['params'], options?: CallToolRequestOptions): Promise<CallToolResult> {",
+        "level": "definition"
+       }
+      ],
+      "reason": "callTool is defined on Client at packages/client/src/client/client.ts:2327"
+     },
+     {
+      "kind": "symbol",
+      "text": "this.request()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/client.ts:1048",
+        "excerpt": "const result = await this.request(",
+        "level": "reference"
+       },
+       {
+        "ref": "packages/client/src/client/client.ts:1546",
+        "excerpt": "return this.request({ method: 'ping' }, options);",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at packages/client/src/client/client.ts:1048"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"High-level method calls\"",
+    "settled": false
+   },
+   {
+    "id": "d468377877f424282f9b36179074ecd426b37d86",
+    "file": "CLAUDE.md",
+    "line": 155,
+    "endLine": 155,
+    "section": "Outbound Flow: Sending Requests",
+    "kind": "item",
+    "text": "`Protocol.request()`:",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "Protocol.request()",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "Protocol.request()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "examples/cli-client/test/providers.test.ts:28",
+        "excerpt": "const request: GenerateRequest = {",
+        "level": "reference"
+       },
+       {
+        "ref": "examples/elicitation/server.ts:298",
+        "excerpt": "const request = await toWebRequest(req);",
+        "level": "reference"
+       }
+      ],
+      "reason": "request is defined at examples/cli-client/test/providers.test.ts:28; its owning type could not be read"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": false
+   },
+   {
+    "id": "2118bbed84a6aa8677b26206e63d4c03e7b0422f",
+    "file": "CLAUDE.md",
+    "line": 156,
+    "endLine": 156,
+    "section": "Outbound Flow: Sending Requests",
+    "kind": "item",
+    "text": "Assigns unique message ID",
+    "spans": [],
+    "residual": [
+     "description \"Assigns unique message\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Assigns unique message\"",
+    "settled": false
+   },
+   {
+    "id": "867c6ca3c11a19baf519a3a2bab4fa04fa0b4c93",
+    "file": "CLAUDE.md",
+    "line": 157,
+    "endLine": 157,
+    "section": "Outbound Flow: Sending Requests",
+    "kind": "item",
+    "text": "Checks capabilities via `assertCapabilityForMethod()` (abstract, implemented by Client/Server)",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "assertCapabilityForMethod()",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Checks capabilities abstract implemented Client Server\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "assertCapabilityForMethod()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/client.ts:1400",
+        "excerpt": "protected assertCapabilityForMethod(method: RequestMethod | string): void {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/client/src/client/client.ts:1400"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Checks capabilities abstract implemented Client Server\"",
+    "settled": false
+   },
+   {
+    "id": "37452abe52ae14a81b354cfa6f693deb93fe8f04",
+    "file": "CLAUDE.md",
+    "line": 158,
+    "endLine": 158,
+    "section": "Outbound Flow: Sending Requests",
+    "kind": "item",
+    "text": "Creates response handler promise",
+    "spans": [],
+    "residual": [
+     "description \"Creates response handler promise\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Creates response handler promise\"",
+    "settled": false
+   },
+   {
+    "id": "5a9b8a9d8bd34fca9549518a74f74ac228d4ee26",
+    "file": "CLAUDE.md",
+    "line": 159,
+    "endLine": 159,
+    "section": "Outbound Flow: Sending Requests",
+    "kind": "item",
+    "text": "Calls `transport.send()` with JSON-RPC request",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "transport.send()",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Calls JSON-RPC request\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "transport.send()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "packages/client/test/client/bodyDerivedProbeHeaders.test.ts:61",
+        "excerpt": "await transport.send(probeRequest);",
+        "level": "reference"
+       },
+       {
+        "ref": "packages/client/test/client/bodyDerivedProbeHeaders.test.ts:73",
+        "excerpt": "await transport.send(probeRequest);",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at packages/client/test/client/bodyDerivedProbeHeaders.test.ts:61"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Calls JSON-RPC request\"",
+    "settled": false
+   },
+   {
+    "id": "1540c42573365d3fa4f37450de1d190f195359af",
+    "file": "CLAUDE.md",
+    "line": 160,
+    "endLine": 160,
+    "section": "Outbound Flow: Sending Requests",
+    "kind": "item",
+    "text": "Waits for response handler to resolve",
+    "spans": [],
+    "residual": [
+     "description \"Waits response handler resolve\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Waits response handler resolve\"",
+    "settled": false
+   },
+   {
+    "id": "494d48b30b1d409ba48b9fed312d89bd037e8831",
+    "file": "CLAUDE.md",
+    "line": 161,
+    "endLine": 161,
+    "section": "Outbound Flow: Sending Requests",
+    "kind": "item",
+    "text": "Transport serializes and sends over wire (HTTP, stdio, etc.)",
+    "spans": [],
+    "residual": [
+     "description \"Transport serializes sends wire HTTP stdio\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Transport serializes sends wire HTTP stdio\"",
+    "settled": false
+   },
+   {
+    "id": "cb8036a1679fc03c44e6a5b1e0df477c23561653",
+    "file": "CLAUDE.md",
+    "line": 162,
+    "endLine": 162,
+    "section": "Outbound Flow: Sending Requests",
+    "kind": "item",
+    "text": "`Protocol._onresponse()` resolves the promise when response arrives",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "Protocol._onresponse()",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"resolves promise response arrives\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "Protocol._onresponse()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/shared/protocol.ts:1213",
+        "excerpt": "protected _onresponse(response: JSONRPCResponse | JSONRPCErrorResponse): void {",
+        "level": "definition"
+       }
+      ],
+      "reason": "_onresponse is defined on Protocol at packages/core-internal/src/shared/protocol.ts:1213"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"resolves promise response arrives\"",
+    "settled": false
+   },
+   {
+    "id": "c9ca519e77cf91e1782b67cf2c0e12a2f839b24c",
+    "file": "CLAUDE.md",
+    "line": 168,
+    "endLine": 168,
+    "section": "Inbound Flow: Handling Requests",
+    "kind": "item",
+    "text": "Transport receives message, calls `transport.onmessage()`",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "transport.onmessage()",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Transport receives message calls\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "transport.onmessage()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/versionNegotiation.ts:212",
+        "excerpt": "transport.onmessage = message => {",
+        "level": "reference"
+       },
+       {
+        "ref": "packages/client/test/client/sse.test.ts:159",
+        "excerpt": "transport.onmessage = msg => receivedMessages.push(msg);",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at packages/client/src/client/versionNegotiation.ts:212"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Transport receives message calls\"",
+    "settled": false
+   },
+   {
+    "id": "744ab909ea9ba5fb0e1186e605b934f546be063b",
+    "file": "CLAUDE.md",
+    "line": 169,
+    "endLine": 169,
+    "section": "Inbound Flow: Handling Requests",
+    "kind": "item",
+    "text": "`Protocol.connect()` routes to `_onrequest()`, `_onresponse()`, or `_onnotification()`",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "Protocol.connect()",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "_onrequest()",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "_onresponse()",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "_onnotification()",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "Protocol.connect()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "examples/dual-era/client.ts:24",
+        "excerpt": "const connect = async (mode: 'legacy' | 'auto'): Promise<Client> => {",
+        "level": "reference"
+       },
+       {
+        "ref": "examples/guides/clients/subscriptions.examples.ts:59",
+        "excerpt": "async function connect(client: Client, target: typeof handler): Promise<void> {",
+        "level": "reference"
+       }
+      ],
+      "reason": "connect is defined at examples/dual-era/client.ts:24; its owning type could not be read"
+     },
+     {
+      "kind": "symbol",
+      "text": "_onrequest()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/shared/protocol.ts:938",
+        "excerpt": "private _onrequest(rawRequest: JSONRPCRequest, extra?: MessageExtraInfo): void {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/core-internal/src/shared/protocol.ts:938"
+     },
+     {
+      "kind": "symbol",
+      "text": "_onresponse()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/client.ts:2234",
+        "excerpt": "protected override _onresponse(response: JSONRPCResponse): void {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/client/src/client/client.ts:2234"
+     },
+     {
+      "kind": "symbol",
+      "text": "_onnotification()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/client.ts:2161",
+        "excerpt": "protected override _onnotification(raw: JSONRPCNotification, extra?: MessageExtraInfo): void {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/client/src/client/client.ts:2161"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": false
+   },
+   {
+    "id": "492d893ce6e198c27bf56a80dbd3c3481e63463f",
+    "file": "CLAUDE.md",
+    "line": 170,
+    "endLine": 170,
+    "section": "Inbound Flow: Handling Requests",
+    "kind": "item",
+    "text": "`Protocol._onrequest()`:",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "Protocol._onrequest()",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "Protocol._onrequest()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/shared/protocol.ts:938",
+        "excerpt": "private _onrequest(rawRequest: JSONRPCRequest, extra?: MessageExtraInfo): void {",
+        "level": "definition"
+       }
+      ],
+      "reason": "_onrequest is defined on Protocol at packages/core-internal/src/shared/protocol.ts:938"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "f2bd85837ac28e66d00f99a0cb80260a02ba68c2",
+    "file": "CLAUDE.md",
+    "line": 171,
+    "endLine": 171,
+    "section": "Inbound Flow: Handling Requests",
+    "kind": "item",
+    "text": "Looks up handler in `_requestHandlers` map (keyed by method name)",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "_requestHandlers",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Looks handler map keyed method name\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "_requestHandlers",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "examples/caching/server.ts:78",
+        "excerpt": "const handlers = (server.server as unknown as { _requestHandlers: Map<string, (...a: unknown[]) => Promise<unknown>> })",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at examples/caching/server.ts:78"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Looks handler map keyed method name\"",
+    "settled": false
+   },
+   {
+    "id": "00860aae98c4f61e9c260ffe6a75f2aa8820e092",
+    "file": "CLAUDE.md",
+    "line": 172,
+    "endLine": 172,
+    "section": "Inbound Flow: Handling Requests",
+    "kind": "item",
+    "text": "Creates `BaseContext` with `signal`, `sessionId`, `sendNotification`, `sendRequest`, etc.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "BaseContext",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "signal",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "sessionId",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "sendNotification",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "sendRequest",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "BaseContext",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/shared/protocol.ts:334",
+        "excerpt": "export type BaseContext = {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/core-internal/src/shared/protocol.ts:334"
+     },
+     {
+      "kind": "symbol",
+      "text": "signal",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/streamableHttp.ts:598",
+        "excerpt": "const signal =",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/client/src/client/streamableHttp.ts:598"
+     },
+     {
+      "kind": "symbol",
+      "text": "sessionId",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "examples/guides/serving/legacy-clients.examples.ts:79",
+        "excerpt": "const sessionId = req.query.sessionId;",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at examples/guides/serving/legacy-clients.examples.ts:79"
+     },
+     {
+      "kind": "symbol",
+      "text": "sendNotification",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/shared/protocol.ts:1047",
+        "excerpt": "const sendNotification = (notification: Notification, options?: NotificationOptions) =>",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/core-internal/src/shared/protocol.ts:1047"
+     },
+     {
+      "kind": "symbol",
+      "text": "sendRequest",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/shared/protocol.ts:1052",
+        "excerpt": "const sendRequest = <U extends StandardSchemaV1>(r: Request, resultSchema: U, options?: RequestOptions) =>",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/core-internal/src/shared/protocol.ts:1052"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "f6e1726e504a6e1e1eddd4878df8b5e5da93f4e2",
+    "file": "CLAUDE.md",
+    "line": 173,
+    "endLine": 173,
+    "section": "Inbound Flow: Handling Requests",
+    "kind": "item",
+    "text": "Calls `buildContext()` to let subclasses enrich the context (e.g., Server adds HTTP request info)",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "buildContext()",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Calls let subclasses enrich context Server …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "buildContext()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/client.ts:663",
+        "excerpt": "protected override buildContext(ctx: BaseContext, _transportInfo?: MessageExtraInfo): ClientContext {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/client/src/client/client.ts:663"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Calls let subclasses enrich context Server …\"",
+    "settled": false
+   },
+   {
+    "id": "f7d57215414e8916e7e86b6af5041a57c172335c",
+    "file": "CLAUDE.md",
+    "line": 174,
+    "endLine": 174,
+    "section": "Inbound Flow: Handling Requests",
+    "kind": "item",
+    "text": "Invokes handler, sends JSON-RPC response back via transport",
+    "spans": [],
+    "residual": [
+     "description \"Invokes handler sends JSON-RPC response back …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Invokes handler sends JSON-RPC response back …\"",
+    "settled": false
+   },
+   {
+    "id": "1fd6744e4be4156ca1eb73c7a1cb60e5b1f10c0e",
+    "file": "CLAUDE.md",
+    "line": 175,
+    "endLine": 175,
+    "section": "Inbound Flow: Handling Requests",
+    "kind": "item",
+    "text": "Handler was registered via `setRequestHandler('method', handler)`",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "setRequestHandler()",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Handler registered\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "setRequestHandler()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/shared/protocol.ts:1710",
+        "excerpt": "setRequestHandler(",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/core-internal/src/shared/protocol.ts:1710"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Handler registered\"",
+    "settled": false
+   },
+   {
+    "id": "3e36ac1a80cde63a90a259375899ce0767985532",
+    "file": "CLAUDE.md",
+    "line": 195,
+    "endLine": 195,
+    "section": "Request Handler Context",
+    "kind": "sentence",
+    "text": "The `ctx` parameter in handlers provides a structured context:",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "ctx",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"parameter handlers provides structured context\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "ctx",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/codemod/test/v1-to-v2/transforms/completableNesting.test.ts:8",
+        "excerpt": "const ctx: TransformContext = { projectType: 'server' };",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/codemod/test/v1-to-v2/transforms/completableNesting.test.ts:8"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"parameter handlers provides structured context\"",
+    "settled": false
+   },
+   {
+    "id": "b759f6322c84bc379e9baefa1c55017bb8f008cf",
+    "file": "CLAUDE.md",
+    "line": 197,
+    "endLine": 197,
+    "section": "Request Handler Context",
+    "kind": "sentence",
+    "text": "`BaseContext` (common to both Server and Client), fields organized into nested groups:",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "BaseContext",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"common both Server Client fields organized …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "BaseContext",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/shared/protocol.ts:334",
+        "excerpt": "export type BaseContext = {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/core-internal/src/shared/protocol.ts:334"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"common both Server Client fields organized …\"",
+    "settled": false
+   },
+   {
+    "id": "ffa29d957f505dd84f2d4e4aa2c360dd58f9cc57",
+    "file": "CLAUDE.md",
+    "line": 199,
+    "endLine": 199,
+    "section": "Request Handler Context",
+    "kind": "item",
+    "text": "`sessionId?`: Transport session identifier",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "sessionId?",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Transport session identifier\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "sessionId?",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "examples/guides/advanced/custom-transports.examples.ts:116",
+        "excerpt": "sessionId?: string;",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at examples/guides/advanced/custom-transports.examples.ts:116"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Transport session identifier\"",
+    "settled": false
+   },
+   {
+    "id": "ce73be3e040f8ce5aad82f1e688479f257e6c9b3",
+    "file": "CLAUDE.md",
+    "line": 200,
+    "endLine": 200,
+    "section": "Request Handler Context",
+    "kind": "item",
+    "text": "`mcpReq`: Request-level concerns",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "mcpReq",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Request-level concerns\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "mcpReq",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/test/shared/inputRequiredFunnel.test.ts:177",
+        "excerpt": "const mcpReq = seen[0]!;",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/core-internal/test/shared/inputRequiredFunnel.test.ts:177"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Request-level concerns\"",
+    "settled": false
+   },
+   {
+    "id": "971d3bc8e1c186b448e52548f79303dd76b1f9a1",
+    "file": "CLAUDE.md",
+    "line": 201,
+    "endLine": 201,
+    "section": "Request Handler Context",
+    "kind": "item",
+    "text": "`id`: JSON-RPC message ID",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "id",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"JSON-RPC message\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "id",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `id`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "a4956f5291fd576189315b0e4b08561d2638c8f0",
+    "file": "CLAUDE.md",
+    "line": 202,
+    "endLine": 202,
+    "section": "Request Handler Context",
+    "kind": "item",
+    "text": "`method`: Request method string (e.g., 'tools/call')",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "method",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Request method string tools call'\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "method",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/middleware.ts:155",
+        "excerpt": "const method = (init?.method ?? 'GET').toUpperCase();",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/client/src/client/middleware.ts:155"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Request method string tools call'\"",
+    "settled": false
+   },
+   {
+    "id": "9a29f1f0aa4613957cdf4c307b403d688f02d360",
+    "file": "CLAUDE.md",
+    "line": 203,
+    "endLine": 203,
+    "section": "Request Handler Context",
+    "kind": "item",
+    "text": "`_meta?`: Request metadata",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "_meta?",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Request metadata\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "_meta?",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "examples/guides/clients/calling.examples.ts:67",
+        "excerpt": "const progressToken = ctx.mcpReq._meta?.progressToken;",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at examples/guides/clients/calling.examples.ts:67"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Request metadata\"",
+    "settled": false
+   },
+   {
+    "id": "87f06bbf252c8d697d1b978b68970a7e21787f32",
+    "file": "CLAUDE.md",
+    "line": 204,
+    "endLine": 204,
+    "section": "Request Handler Context",
+    "kind": "item",
+    "text": "`signal`: AbortSignal for cancellation",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "signal",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"AbortSignal cancellation\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "signal",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/streamableHttp.ts:598",
+        "excerpt": "const signal =",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/client/src/client/streamableHttp.ts:598"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"AbortSignal cancellation\"",
+    "settled": false
+   },
+   {
+    "id": "e7db33c4af623927c4f291cf1b2aa62b0dbbaa86",
+    "file": "CLAUDE.md",
+    "line": 205,
+    "endLine": 205,
+    "section": "Request Handler Context",
+    "kind": "item",
+    "text": "`send(request, schema, options?)`: Send related request (for bidirectional flows)",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "send()",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Send related request bidirectional flows\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "send()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "examples/guides/advanced/custom-transports.examples.ts:35",
+        "excerpt": "async send(message: JSONRPCMessage): Promise<void> {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at examples/guides/advanced/custom-transports.examples.ts:35"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Send related request bidirectional flows\"",
+    "settled": false
+   },
+   {
+    "id": "392e4ee9a3a5a12babfc2608b83b76c3f3df31b2",
+    "file": "CLAUDE.md",
+    "line": 206,
+    "endLine": 206,
+    "section": "Request Handler Context",
+    "kind": "item",
+    "text": "`notify(notification)`: Send related notification back",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "notify()",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Send related notification back\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "notify()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "packages/server/test/server/legacyDefaultServing.test.ts:80",
+        "excerpt": "await notify({ jsonrpc: '2.0', method: 'notifications/initialized' });",
+        "level": "reference"
+       },
+       {
+        "ref": "packages/server/test/server/lowLevelLegacyWrap.test.ts:54",
+        "excerpt": "await notify({ jsonrpc: '2.0', method: 'notifications/initialized' });",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at packages/server/test/server/legacyDefaultServing.test.ts:80"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Send related notification back\"",
+    "settled": false
+   },
+   {
+    "id": "852571d3d6f722e235dba4eea49e825a3bad2e7c",
+    "file": "CLAUDE.md",
+    "line": 207,
+    "endLine": 207,
+    "section": "Request Handler Context",
+    "kind": "item",
+    "text": "`http?`: HTTP transport info (undefined for stdio)",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "http?",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"HTTP transport info undefined stdio\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "http?",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "examples/guides/serving/authorization.examples.ts:71",
+        "excerpt": "const caller = ctx.http?.authInfo;",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at examples/guides/serving/authorization.examples.ts:71"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"HTTP transport info undefined stdio\"",
+    "settled": false
+   },
+   {
+    "id": "bf5d5268c9d87b702a5607e802066353cd093c37",
+    "file": "CLAUDE.md",
+    "line": 208,
+    "endLine": 208,
+    "section": "Request Handler Context",
+    "kind": "item",
+    "text": "`authInfo?`: Validated auth token info",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "authInfo?",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Validated auth token info\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "authInfo?",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "examples/guides/serving/authorization.examples.ts:98",
+        "excerpt": "return scopes.every(scope => authInfo?.scopes.includes(scope))",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at examples/guides/serving/authorization.examples.ts:98"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Validated auth token info\"",
+    "settled": false
+   },
+   {
+    "id": "76b1245518b0de8fdbd8b412f4d1c1e37b2baa02",
+    "file": "CLAUDE.md",
+    "line": 210,
+    "endLine": 210,
+    "section": "Request Handler Context",
+    "kind": "sentence",
+    "text": "`ServerContext` extends `BaseContext.mcpReq` and `BaseContext.http?` via type intersection:",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "ServerContext",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "BaseContext.mcpReq",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "BaseContext.http?",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"extends type intersection\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "ServerContext",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/shared/protocol.ts:458",
+        "excerpt": "export type ServerContext = BaseContext & {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/core-internal/src/shared/protocol.ts:458"
+     },
+     {
+      "kind": "symbol",
+      "text": "BaseContext.mcpReq",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/shared/protocol.ts:343",
+        "excerpt": "mcpReq: {",
+        "level": "definition"
+       }
+      ],
+      "reason": "mcpReq is defined on BaseContext at packages/core-internal/src/shared/protocol.ts:343"
+     },
+     {
+      "kind": "unknown",
+      "text": "BaseContext.http?",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `BaseContext.http?`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "7873a123f516c11892e1a98e51843e1b7231c899",
+    "file": "CLAUDE.md",
+    "line": 212,
+    "endLine": 212,
+    "section": "Request Handler Context",
+    "kind": "item",
+    "text": "`mcpReq` adds: `log(level, data, logger?)`, `elicitInput(params, options?)`, `requestSampling(params, options?)`",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "mcpReq",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "log()",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "elicitInput()",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "requestSampling()",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "mcpReq",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/test/shared/inputRequiredFunnel.test.ts:177",
+        "excerpt": "const mcpReq = seen[0]!;",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/core-internal/test/shared/inputRequiredFunnel.test.ts:177"
+     },
+     {
+      "kind": "symbol",
+      "text": "log()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/servers/logging-progress-cancellation.md",
+        "level": "reference"
+       },
+       {
+        "ref": "examples/guides/servers/logging-progress-cancellation.examples.ts",
+        "level": "reference"
+       }
+      ],
+      "reason": "used in file names: docs/servers/logging-progress-cancellation.md, examples/guides/servers/logging-progress-cancellation.examples.ts and 7 more"
+     },
+     {
+      "kind": "symbol",
+      "text": "elicitInput()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/server/src/server/server.ts:1159",
+        "excerpt": "async elicitInput(params: ElicitRequestFormParams | ElicitRequestURLParams, options?: RequestOptions): Promise<ElicitRe…",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/server/src/server/server.ts:1159"
+     },
+     {
+      "kind": "symbol",
+      "text": "requestSampling()",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "requestSampling appears in no code file or file name"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`requestSampling()`: requestSampling appears in no code file or file name",
+    "settled": false
+   },
+   {
+    "id": "d6a4da8826accd2e62bf6df1c3e178f375fe48e8",
+    "file": "CLAUDE.md",
+    "line": 213,
+    "endLine": 213,
+    "section": "Request Handler Context",
+    "kind": "item",
+    "text": "`http?` adds: `req?` (HTTP request info), `closeSSE?`, `closeStandaloneSSE?`",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "http?",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "req?",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "closeSSE?",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "closeStandaloneSSE?",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"adds HTTP request info\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "http?",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "examples/guides/serving/authorization.examples.ts:71",
+        "excerpt": "const caller = ctx.http?.authInfo;",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at examples/guides/serving/authorization.examples.ts:71"
+     },
+     {
+      "kind": "unknown",
+      "text": "req?",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/shared/protocol.ts:499",
+        "excerpt": "req?: globalThis.Request;",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at packages/core-internal/src/shared/protocol.ts:499"
+     },
+     {
+      "kind": "unknown",
+      "text": "closeSSE?",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/shared/protocol.ts:505",
+        "excerpt": "closeSSE?: () => void;",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at packages/core-internal/src/shared/protocol.ts:505"
+     },
+     {
+      "kind": "unknown",
+      "text": "closeStandaloneSSE?",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/shared/protocol.ts:511",
+        "excerpt": "closeStandaloneSSE?: () => void;",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at packages/core-internal/src/shared/protocol.ts:511"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"adds HTTP request info\"",
+    "settled": false
+   },
+   {
+    "id": "3fe3621b4fa2ef0e837a3a20a277628140a29947",
+    "file": "CLAUDE.md",
+    "line": 215,
+    "endLine": 215,
+    "section": "Request Handler Context",
+    "kind": "sentence",
+    "text": "`ClientContext` is currently identical to `BaseContext`.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "ClientContext",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "BaseContext",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"currently identical\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "ClientContext",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/shared/protocol.ts:518",
+        "excerpt": "export type ClientContext = BaseContext;",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/core-internal/src/shared/protocol.ts:518"
+     },
+     {
+      "kind": "symbol",
+      "text": "BaseContext",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/shared/protocol.ts:334",
+        "excerpt": "export type BaseContext = {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/core-internal/src/shared/protocol.ts:334"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"currently identical\"",
+    "settled": false
+   },
+   {
+    "id": "d9033212783448f3ea2f7413639d3d1118faa25c",
+    "file": "CLAUDE.md",
+    "line": 219,
+    "endLine": 219,
+    "section": "Capability Checking",
+    "kind": "sentence",
+    "text": "Both sides declare capabilities during initialization.",
+    "spans": [],
+    "residual": [
+     "description \"Both sides declare capabilities during initialization\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Both sides declare capabilities during initialization\"",
+    "settled": false
+   },
+   {
+    "id": "09669292163cda7eaef43f59a86a627c7270504e",
+    "file": "CLAUDE.md",
+    "line": 221,
+    "endLine": 221,
+    "section": "Capability Checking",
+    "kind": "item",
+    "text": "Client→Server: `Client.assertCapabilityForMethod()` checks `_serverCapabilities`",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "Client.assertCapabilityForMethod()",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "_serverCapabilities",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Client Server checks\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "Client.assertCapabilityForMethod()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/client.ts:1400",
+        "excerpt": "protected assertCapabilityForMethod(method: RequestMethod | string): void {",
+        "level": "definition"
+       }
+      ],
+      "reason": "assertCapabilityForMethod is defined on Client at packages/client/src/client/client.ts:1400"
+     },
+     {
+      "kind": "symbol",
+      "text": "_serverCapabilities",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/client.ts:531",
+        "excerpt": "private _serverCapabilities?: ServerCapabilities;",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/client/src/client/client.ts:531"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Client Server checks\"",
+    "settled": false
+   },
+   {
+    "id": "4f7c184735110e4d11cc33c8949e4f9b6224cd7e",
+    "file": "CLAUDE.md",
+    "line": 222,
+    "endLine": 222,
+    "section": "Capability Checking",
+    "kind": "item",
+    "text": "Server→Client: `Server.assertCapabilityForMethod()` checks `_clientCapabilities`",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "Server.assertCapabilityForMethod()",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "_clientCapabilities",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Server Client checks\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "Server.assertCapabilityForMethod()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/server/src/server/server.ts:754",
+        "excerpt": "protected assertCapabilityForMethod(method: RequestMethod | string): void {",
+        "level": "definition"
+       }
+      ],
+      "reason": "assertCapabilityForMethod is defined on Server at packages/server/src/server/server.ts:754"
+     },
+     {
+      "kind": "symbol",
+      "text": "_clientCapabilities",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/server/src/server/server.ts:262",
+        "excerpt": "private _clientCapabilities?: ClientCapabilities;",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/server/src/server/server.ts:262"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Server Client checks\"",
+    "settled": false
+   },
+   {
+    "id": "f511f15838a317629301288b868748a7940e249d",
+    "file": "CLAUDE.md",
+    "line": 223,
+    "endLine": 223,
+    "section": "Capability Checking",
+    "kind": "item",
+    "text": "Handler registration: `assertRequestHandlerCapability()` validates local capabilities",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "assertRequestHandlerCapability()",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Handler registration validates local capabilities\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "assertRequestHandlerCapability()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/client.ts:1502",
+        "excerpt": "protected assertRequestHandlerCapability(method: string): void {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/client/src/client/client.ts:1502"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Handler registration validates local capabilities\"",
+    "settled": false
+   },
+   {
+    "id": "e86d769a3775a7877a16c4bc9ee07efae84136f8",
+    "file": "CLAUDE.md",
+    "line": 227,
+    "endLine": 227,
+    "section": "Adding a New Request Type",
+    "kind": "item",
+    "text": "Define schema in `src/types.ts` (request params, result schema)",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "src/types.ts",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Define schema request params result schema\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "src/types.ts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/codemod/src/types.ts",
+        "level": "definition"
+       }
+      ],
+      "reason": "found under packages/codemod/: packages/codemod/src/types.ts"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Define schema request params result schema\"",
+    "settled": false
+   },
+   {
+    "id": "e91f23fc6a78fe093cc54faa2e1d83700a1e90c8",
+    "file": "CLAUDE.md",
+    "line": 228,
+    "endLine": 228,
+    "section": "Adding a New Request Type",
+    "kind": "item",
+    "text": "Add capability to `ClientCapabilities` or `ServerCapabilities` in types",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "ClientCapabilities",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "ServerCapabilities",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Add capability types\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "ClientCapabilities",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/types/spec.types.2025-11-25.ts:315",
+        "excerpt": "export interface ClientCapabilities {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/core-internal/src/types/spec.types.2025-11-25.ts:315"
+     },
+     {
+      "kind": "symbol",
+      "text": "ServerCapabilities",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/types/spec.types.2025-11-25.ts:391",
+        "excerpt": "export interface ServerCapabilities {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/core-internal/src/types/spec.types.2025-11-25.ts:391"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Add capability types\"",
+    "settled": false
+   },
+   {
+    "id": "e6cd3cf3707c20e440be1821d36cd56d78fe1c8b",
+    "file": "CLAUDE.md",
+    "line": 229,
+    "endLine": 229,
+    "section": "Adding a New Request Type",
+    "kind": "item",
+    "text": "Implement sender method in Client or Server class",
+    "spans": [],
+    "residual": [
+     "description \"Implement sender method Client Server class\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Implement sender method Client Server class\"",
+    "settled": false
+   },
+   {
+    "id": "005d020eb54a10a94f3000d4f670972fa31f41a7",
+    "file": "CLAUDE.md",
+    "line": 230,
+    "endLine": 230,
+    "section": "Adding a New Request Type",
+    "kind": "item",
+    "text": "Add capability check in the appropriate `assertCapabilityForMethod()`",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "assertCapabilityForMethod()",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Add capability check appropriate\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "assertCapabilityForMethod()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/client/src/client/client.ts:1400",
+        "excerpt": "protected assertCapabilityForMethod(method: RequestMethod | string): void {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/client/src/client/client.ts:1400"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Add capability check appropriate\"",
+    "settled": false
+   },
+   {
+    "id": "a942d15b693b9e76125cd81afbb58d5557e20dc8",
+    "file": "CLAUDE.md",
+    "line": 231,
+    "endLine": 231,
+    "section": "Adding a New Request Type",
+    "kind": "item",
+    "text": "Register handler on the receiving side with `setRequestHandler()`",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "setRequestHandler()",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Register handler receiving side\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "setRequestHandler()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/core-internal/src/shared/protocol.ts:1710",
+        "excerpt": "setRequestHandler(",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at packages/core-internal/src/shared/protocol.ts:1710"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Register handler receiving side\"",
+    "settled": false
+   },
+   {
+    "id": "41805a99b4372d617ac1584255db5a3ca7a75579",
+    "file": "CLAUDE.md",
+    "line": 232,
+    "endLine": 232,
+    "section": "Adding a New Request Type",
+    "kind": "item",
+    "text": "For McpServer: Add high-level wrapper method if needed",
+    "spans": [],
+    "residual": [
+     "description \"McpServer Add high-level wrapper method needed\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"McpServer Add high-level wrapper method needed\"",
+    "settled": false
+   }
+  ]
+ }
+}

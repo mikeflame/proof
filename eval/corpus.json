@@ -1,0 +1,17 @@
+{
+  "note": "Public repositories pinned to commits. The held-out split is never run while proof is being tuned; its results are computed once, after the tune split is frozen. Spec 9.6.",
+  "repos": [
+    { "name": "no-mistakes", "repo": "kunchenguid/no-mistakes", "sha": "f4b85ae161cef8f14e289cc90aebae044ed570b9", "ecosystem": "Go", "file": "AGENTS.md", "split": "tune" },
+    { "name": "python-sdk", "repo": "modelcontextprotocol/python-sdk", "sha": "d639cf7f97f77388fa7da60c0f9b04f8837b77fd", "ecosystem": "Python", "file": "AGENTS.md", "split": "tune" },
+    { "name": "typescript-sdk", "repo": "modelcontextprotocol/typescript-sdk", "sha": "433eb413dc305ebeb93b8ebcde0095a8fc0d5fa0", "ecosystem": "Node", "file": "CLAUDE.md", "split": "tune" },
+    { "name": "spring-ai", "repo": "spring-projects/spring-ai", "sha": "46d05c2fdbab52f6ef04207abe19b12687a47453", "ecosystem": "JVM", "file": "AGENTS.md", "split": "tune" },
+    { "name": "rubocop", "repo": "rubocop/rubocop", "sha": "8cdbb3bffe672b47aed6b8da7443060373458629", "ecosystem": "Ruby", "file": "AGENTS.md", "split": "tune" },
+    { "name": "gh-cli", "repo": "cli/cli", "sha": "fc4b137cdef0a6bd28fd461b7cf9c84a5812a8cd", "ecosystem": "Go", "file": "AGENTS.md", "split": "tune" },
+    { "name": "sentry-python", "repo": "getsentry/sentry-python", "sha": "014769c4ba1db2810e0a1a5c59659b4689b80d32", "ecosystem": "Python", "file": "AGENTS.md", "split": "heldout" },
+    { "name": "aspire", "repo": "dotnet/aspire", "sha": "d70876569e27b318bb2d7035dc1f63d439b13166", "ecosystem": ".NET", "file": "AGENTS.md", "split": "heldout" },
+    { "name": "temporal", "repo": "temporalio/temporal", "sha": "fc4372605ce23f333b7e1a43eef303ff002c2ef1", "ecosystem": "Go", "file": "AGENTS.md", "split": "heldout" },
+    { "name": "excalidraw", "repo": "excalidraw/excalidraw", "sha": "1919728724a1b71af73cb7e6d2d1a418a1415b1c", "ecosystem": "Node", "file": "CLAUDE.md", "split": "heldout" },
+    { "name": "ruff", "repo": "astral-sh/ruff", "sha": "ccba26cc3af909b7f19060f48f53daeab5070f9d", "ecosystem": "Rust", "file": "AGENTS.md", "split": "heldout" },
+    { "name": "posthog-js", "repo": "PostHog/posthog-js", "sha": "c7bf8ca76b5aaad2a4badd1d1476dc499ca0009a", "ecosystem": "Node", "file": "AGENTS.md", "split": "heldout" }
+  ]
+}

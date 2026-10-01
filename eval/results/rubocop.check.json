@@ -1,0 +1,4525 @@
+{
+ "proof": "ef52d8e37086",
+ "stage": "check",
+ "seconds": 3,
+ "exit": 0,
+ "report": {
+  "file": "AGENTS.md",
+  "scope": "project",
+  "why": "Claude Code reads it only when no CLAUDE.md, .claude/CLAUDE.md or CLAUDE.local.md is in the folder or above it, and Codex, Cursor and others read it always",
+  "imports": [],
+  "importedBy": [],
+  "counts": {
+   "VERIFIED": 12,
+   "STALE": 0,
+   "UNCONFIRMED": 2,
+   "UNVERIFIED_WITH_REASON": 62,
+   "DECIDED": 0,
+   "OVERRIDDEN": 0,
+   "NOT_CHECKED": 0,
+   "FIXED": 0,
+   "FIX_REJECTED": 0
+  },
+  "evidenceLevels": {
+   "definition": 60,
+   "declaration": 9,
+   "reference": 47,
+   "comment": 0,
+   "substring": 0,
+   "none": 2
+  },
+  "git": {
+   "root": "/home/ms/projects/proof-cache/corpus/rubocop",
+   "tree": "7ce90be4bdf2c8b41d1be077bb8b04029f54fcd1",
+   "head": "8cdbb3bffe672b47aed6b8da7443060373458629",
+   "branch": null,
+   "upstream": "origin/master",
+   "behind": 0
+  },
+  "run": {
+   "started": "2026-10-01T12:31:43.310Z",
+   "finished": "2026-10-01T12:31:45.964Z",
+   "version": "0.1.0"
+  },
+  "decisions": [],
+  "reopened": [],
+  "verdict": "PARTLY PROVEN",
+  "ownVerdict": "PARTLY PROVEN",
+  "coverage": {
+   "statements": 76,
+   "withResult": 76
+  },
+  "degraded": [],
+  "statements": [
+   {
+    "id": "248a81d55190a8e9aa5b1b6b9875e85e05239c5f",
+    "file": "AGENTS.md",
+    "line": 3,
+    "endLine": 5,
+    "section": "AI Agent Guide for RuboCop",
+    "kind": "sentence",
+    "text": "RuboCop is a Ruby static code analyzer and formatter.",
+    "spans": [],
+    "residual": [
+     "description \"RuboCop Ruby static code analyzer formatter\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"RuboCop Ruby static code analyzer formatter\"",
+    "settled": false
+   },
+   {
+    "id": "17666073bd48470cecfee76d6cfe0a61db5efde9",
+    "file": "AGENTS.md",
+    "line": 4,
+    "endLine": 5,
+    "section": "AI Agent Guide for RuboCop",
+    "kind": "sentence",
+    "text": "Before contributing, read [CONTRIBUTING.md](CONTRIBUTING.md) and the [development docs](https://docs.rubocop.org/rubocop/development.html).",
+    "spans": [
+     {
+      "kind": "link",
+      "text": "CONTRIBUTING.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Before contributing read\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": "CONTRIBUTING.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "CONTRIBUTING.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "CONTRIBUTING.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Before contributing read\"",
+    "settled": false
+   },
+   {
+    "id": "2cdac35944cef27ae364d0ce3053188c1ae9cebc",
+    "file": "AGENTS.md",
+    "line": 10,
+    "endLine": 10,
+    "section": "Essential Commands",
+    "kind": "command",
+    "text": "bundle exec rake # Full CI: codespell + doc syntax check + specs + self-lint",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "Rakefile",
+        "level": "definition"
+       }
+      ],
+      "reason": "Rakefile exists"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "995a4147893d9034406faa04818acdffc2294bd7",
+    "file": "AGENTS.md",
+    "line": 11,
+    "endLine": 11,
+    "section": "Essential Commands",
+    "kind": "command",
+    "text": "bundle exec rake spec # Run specs (Parser)",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake spec",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake spec",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "tasks/spec_runner.rake:298",
+        "excerpt": "task :spec do",
+        "level": "definition"
+       }
+      ],
+      "reason": "task spec at tasks/spec_runner.rake:298"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "437a9f8cc07c70a9a38e225d11400d7e70af7df1",
+    "file": "AGENTS.md",
+    "line": 12,
+    "endLine": 12,
+    "section": "Essential Commands",
+    "kind": "command",
+    "text": "bundle exec rake prism_spec # Run specs (Prism parser)",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake prism_spec",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake prism_spec",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "tasks/spec_runner.rake:308",
+        "excerpt": "task :prism_spec do",
+        "level": "definition"
+       }
+      ],
+      "reason": "task prism_spec at tasks/spec_runner.rake:308"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "0b459342cc8f476eccaa30eacb1b309a14f85955",
+    "file": "AGENTS.md",
+    "line": 13,
+    "endLine": 13,
+    "section": "Essential Commands",
+    "kind": "command",
+    "text": "bundle exec rake internal_investigation # RuboCop linting itself",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake internal_investigation",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake internal_investigation",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "Rakefile:25",
+        "excerpt": "RuboCop::RakeTask.new(:internal_investigation)",
+        "level": "definition"
+       }
+      ],
+      "reason": "task internal_investigation at Rakefile:25"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "9b413df00d79f09871d1c1e920c13b906632c674",
+    "file": "AGENTS.md",
+    "line": 14,
+    "endLine": 14,
+    "section": "Essential Commands",
+    "kind": "command",
+    "text": "bundle exec rubocop --only Department/CopName # Lint with a single cop",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "bundle exec rubocop --only Department/CopName",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "Department/CopName",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "bundle exec rubocop --only Department/CopName",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "`bundle exec` is a built-in command"
+     },
+     {
+      "kind": "path",
+      "text": "Department/CopName",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/cop/badge.rb:9",
+        "excerpt": "# Badges can be parsed as either `Department/CopName` or just `CopName` to",
+        "level": "reference"
+       }
+      ],
+      "reason": "not a path: the code spells it as a name at lib/rubocop/cop/badge.rb:9"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": false
+   },
+   {
+    "id": "8bdcc7b17fd2861eb92d3bbd8f25ff5bec616c9e",
+    "file": "AGENTS.md",
+    "line": 17,
+    "endLine": 17,
+    "section": "Essential Commands",
+    "kind": "sentence",
+    "text": "Always run `bundle exec rake` before opening a PR.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Always\"",
+     "description \"Always before opening\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "Rakefile",
+        "level": "definition"
+       }
+      ],
+      "reason": "Rakefile exists"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"Always\", description \"Always before opening\"",
+    "settled": false
+   },
+   {
+    "id": "324a9ec2d5f5c432926767da879d5b8ef3bfdd66",
+    "file": "AGENTS.md",
+    "line": 29,
+    "endLine": 30,
+    "section": "Project Layout",
+    "kind": "sentence",
+    "text": "Departments: `Bundler`, `Gemspec`, `Layout`, `Lint`, `Metrics`, `Migration`, `Naming`, `Security`, `Style`, `InternalAffairs`.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "Bundler",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Gemspec",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Layout",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Lint",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Metrics",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Migration",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Naming",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Security",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Style",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "InternalAffairs",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "Bundler",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/cop/bundler.rb:7",
+        "excerpt": "module Bundler",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/cop/bundler.rb:7"
+     },
+     {
+      "kind": "symbol",
+      "text": "Gemspec",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/cop/gemspec.rb:7",
+        "excerpt": "module Gemspec",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/cop/gemspec.rb:7"
+     },
+     {
+      "kind": "symbol",
+      "text": "Layout",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".rubocop.yml:76",
+        "excerpt": "Layout/EndOfLine:",
+        "level": "reference"
+       },
+       {
+        "ref": ".rubocop.yml:79",
+        "excerpt": "Layout/ClassStructure:",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .rubocop.yml:76"
+     },
+     {
+      "kind": "symbol",
+      "text": "Lint",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".rubocop.yml:91",
+        "excerpt": "Lint/DeprecatedReference:",
+        "level": "reference"
+       },
+       {
+        "ref": ".rubocop.yml:95",
+        "excerpt": "Lint/AmbiguousBlockAssociation:",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .rubocop.yml:91"
+     },
+     {
+      "kind": "symbol",
+      "text": "Metrics",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/cop/metrics.rb:7",
+        "excerpt": "module Metrics",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/cop/metrics.rb:7"
+     },
+     {
+      "kind": "symbol",
+      "text": "Migration",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/cop/migration.rb:7",
+        "excerpt": "module Migration",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/cop/migration.rb:7"
+     },
+     {
+      "kind": "symbol",
+      "text": "Naming",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/cop/naming.rb:7",
+        "excerpt": "module Naming",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/cop/naming.rb:7"
+     },
+     {
+      "kind": "symbol",
+      "text": "Security",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/cop/security.rb:7",
+        "excerpt": "module Security",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/cop/security.rb:7"
+     },
+     {
+      "kind": "symbol",
+      "text": "Style",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/ISSUE_TEMPLATE/bug_report.yml:36",
+        "excerpt": "placeholder: \"Style/StringLiterals\"",
+        "level": "reference"
+       },
+       {
+        "ref": ".github/ISSUE_TEMPLATE/feature_request.yml:17",
+        "excerpt": "placeholder: \"Style/StringLiterals\"",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/ISSUE_TEMPLATE/bug_report.yml:36"
+     },
+     {
+      "kind": "symbol",
+      "text": "InternalAffairs",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/cop/internal_affairs/cop_description.rb:5",
+        "excerpt": "module InternalAffairs",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/cop/internal_affairs/cop_description.rb:5"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": false
+   },
+   {
+    "id": "7fdefceccf298c3d9f85577a28a195dabb027b4c",
+    "file": "AGENTS.md",
+    "line": 37,
+    "endLine": 37,
+    "section": "Creating a New Cop",
+    "kind": "command",
+    "text": "bundle exec rake 'new_cop[Department/CopName]'",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake new_cop[Department/CopName]",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "new_cop[Department/CopName]",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake new_cop[Department/CopName]",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "tasks/new_cop.rake:6",
+        "excerpt": "task :new_cop, [:cop] do |_task, args|",
+        "level": "definition"
+       }
+      ],
+      "reason": "task new_cop at tasks/new_cop.rake:6"
+     },
+     {
+      "kind": "path",
+      "text": "new_cop[Department/CopName]",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "no new_cop[Department/ in this repository; fine if it names a folder somewhere else"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`new_cop[Department/CopName]`: no new_cop[Department/ in this repository; fine if it names a folder somewhere else",
+    "settled": false
+   },
+   {
+    "id": "a9cba1fcfb946613088f5109dd4759de6b47a574",
+    "file": "AGENTS.md",
+    "line": 40,
+    "endLine": 42,
+    "section": "Creating a New Cop",
+    "kind": "sentence",
+    "text": "This generates the source file, spec file, `config/default.yml` entry, and a `register_cop` directive in the department module (`lib/rubocop/cop/<department>.rb`), which registers the cop for lazy loading.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "config/default.yml",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "register_cop",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "lib/rubocop/cop/<department>.rb",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"generates source file spec file entry …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "config/default.yml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "config/default.yml",
+        "level": "definition"
+       }
+      ],
+      "reason": "config/default.yml"
+     },
+     {
+      "kind": "symbol",
+      "text": "register_cop",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/cop/lazy_loader.rb:30",
+        "excerpt": "def register_cop(constant_name, path)",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/cop/lazy_loader.rb:30"
+     },
+     {
+      "kind": "path",
+      "text": "lib/rubocop/cop/<department>.rb",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/cop/autocorrect_logic.rb",
+        "level": "definition"
+       },
+       {
+        "ref": "lib/rubocop/cop/badge.rb",
+        "level": "definition"
+       },
+       {
+        "ref": "lib/rubocop/cop/base.rb",
+        "level": "definition"
+       }
+      ],
+      "reason": "lib/rubocop/cop/autocorrect_logic.rb, lib/rubocop/cop/badge.rb, lib/rubocop/cop/base.rb and 29 more"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"generates source file spec file entry …\"",
+    "settled": false
+   },
+   {
+    "id": "d14d9fdb30d6e1f03845629d2e9ad09206e38bea",
+    "file": "AGENTS.md",
+    "line": 44,
+    "endLine": 44,
+    "section": "Creating a New Cop",
+    "kind": "item",
+    "text": "Update the description in `config/default.yml`.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "config/default.yml",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Update description\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "config/default.yml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "config/default.yml",
+        "level": "definition"
+       }
+      ],
+      "reason": "config/default.yml"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Update description\"",
+    "settled": false
+   },
+   {
+    "id": "0c8c2642c38f8d1d1c95565462cd8077199a2028",
+    "file": "AGENTS.md",
+    "line": 45,
+    "endLine": 45,
+    "section": "Creating a New Cop",
+    "kind": "item",
+    "text": "Implement the cop.",
+    "spans": [],
+    "residual": [
+     "description \"Implement cop\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Implement cop\"",
+    "settled": false
+   },
+   {
+    "id": "04bde972c199b22e7dfded2538858334c3fac8ec",
+    "file": "AGENTS.md",
+    "line": 46,
+    "endLine": 46,
+    "section": "Creating a New Cop",
+    "kind": "item",
+    "text": "Write specs.",
+    "spans": [],
+    "residual": [
+     "description \"Write specs\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Write specs\"",
+    "settled": false
+   },
+   {
+    "id": "5ad99d0dd5473b09e70199e36aca3bd57065e569",
+    "file": "AGENTS.md",
+    "line": 47,
+    "endLine": 47,
+    "section": "Creating a New Cop",
+    "kind": "item",
+    "text": "Add a changelog entry: `bundle exec rake changelog:new`.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake changelog:new",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Add changelog entry\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake changelog:new",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "tasks/changelog.rake:8",
+        "excerpt": "task type, [:id] do |_task, args|",
+        "level": "definition"
+       }
+      ],
+      "reason": "task changelog:new at tasks/changelog.rake:8"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Add changelog entry\"",
+    "settled": false
+   },
+   {
+    "id": "2c041f88b75991209d9daa341e261c544f583ac5",
+    "file": "AGENTS.md",
+    "line": 97,
+    "endLine": 98,
+    "section": "Cop Class Structure",
+    "kind": "item",
+    "text": "`RESTRICT_ON_SEND` — list method names so `on_send` is only called for those methods (performance optimization). Required when using `on_send`.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "RESTRICT_ON_SEND",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "on_send",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "on_send",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"only\"",
+     "rule \"Required\"",
+     "description \"list method names called methods performance …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "RESTRICT_ON_SEND",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:284",
+        "excerpt": "RESTRICT_ON_SEND = [:!].freeze # optimization: don't call `on_send` unless",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at docs/modules/ROOT/pages/development.adoc:284"
+     },
+     {
+      "kind": "symbol",
+      "text": "on_send",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:256",
+        "excerpt": "def on_send(node)",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at docs/modules/ROOT/pages/development.adoc:256"
+     },
+     {
+      "kind": "symbol",
+      "text": "on_send",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:256",
+        "excerpt": "def on_send(node)",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at docs/modules/ROOT/pages/development.adoc:256"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: quantifier \"only\", rule \"Required\", description \"list method names called methods performance …\"",
+    "settled": false
+   },
+   {
+    "id": "5eabc710cc0e33cfcae90b0296ed436c905685f4",
+    "file": "AGENTS.md",
+    "line": 99,
+    "endLine": 101,
+    "section": "Cop Class Structure",
+    "kind": "item",
+    "text": "`alias on_csend on_send` — handle safe navigation (`&.`). Add this whenever you define `on_send`, unless the cop explicitly does not apply to safe navigation.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "alias on_csend on_send",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "&.",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "on_send",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"handle safe navigation Add whenever you …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "alias on_csend on_send",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:707",
+        "excerpt": "alias on_csend on_send",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at docs/modules/ROOT/pages/development.adoc:707"
+     },
+     {
+      "kind": "unknown",
+      "text": "&.",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "symbol",
+      "text": "on_send",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:256",
+        "excerpt": "def on_send(node)",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at docs/modules/ROOT/pages/development.adoc:256"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `&.`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "eca9e8e6930d413082318f509c4bf4045f8d0c43",
+    "file": "AGENTS.md",
+    "line": 102,
+    "endLine": 104,
+    "section": "Cop Class Structure",
+    "kind": "item",
+    "text": "`alias on_numblock on_block` and `alias on_itblock on_block` — handle numbered-parameter blocks (`_1`) and `it`-blocks. Add these whenever you define `on_block`.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "alias on_numblock on_block",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "alias on_itblock on_block",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "_1",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "it",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "on_block",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"handle numbered-parameter blocks blocks Add whenever …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "alias on_numblock on_block",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:723",
+        "excerpt": "alias on_numblock on_block",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at docs/modules/ROOT/pages/development.adoc:723"
+     },
+     {
+      "kind": "unknown",
+      "text": "alias on_itblock on_block",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:724",
+        "excerpt": "alias on_itblock on_block",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at docs/modules/ROOT/pages/development.adoc:724"
+     },
+     {
+      "kind": "unknown",
+      "text": "_1",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "it",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "symbol",
+      "text": "on_block",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:720",
+        "excerpt": "def on_block(node)",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at docs/modules/ROOT/pages/development.adoc:720"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `_1`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "7d0416e55f376ca7da157d3a08a237c01bd013c5",
+    "file": "AGENTS.md",
+    "line": 105,
+    "endLine": 105,
+    "section": "Cop Class Structure",
+    "kind": "item",
+    "text": "`extend AutoCorrector` — declare this when the cop provides autocorrect.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "extend AutoCorrector",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"declare cop provides autocorrect\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "extend AutoCorrector",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:360",
+        "excerpt": "It's necessary to `extend AutoCorrector`.",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at docs/modules/ROOT/pages/development.adoc:360"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"declare cop provides autocorrect\"",
+    "settled": false
+   },
+   {
+    "id": "2b373cf204051c7e40ec8ebc0ca545c266fef1b4",
+    "file": "AGENTS.md",
+    "line": 106,
+    "endLine": 107,
+    "section": "Cop Class Structure",
+    "kind": "item",
+    "text": "`def_node_matcher` / `def_node_search` — DSL for AST pattern matching. Document with a `@!method` YARD tag above each matcher.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "def_node_matcher",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "def_node_search",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "@!method",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"each\"",
+     "description \"DSL AST pattern matching Document YARD …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "def_node_matcher",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".rubocop.yml:36",
+        "excerpt": "- def_node_matcher",
+        "level": "reference"
+       },
+       {
+        "ref": ".rubocop.yml:120",
+        "excerpt": "- 'def_node_matcher'",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .rubocop.yml:36"
+     },
+     {
+      "kind": "symbol",
+      "text": "def_node_search",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".rubocop.yml:37",
+        "excerpt": "- def_node_search",
+        "level": "reference"
+       },
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:740",
+        "excerpt": "Every `def_node_matcher` and `def_node_search` should have a `@!method`",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .rubocop.yml:37"
+     },
+     {
+      "kind": "unknown",
+      "text": "@!method",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:738",
+        "excerpt": "=== Documenting node matchers with `@!method`",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at docs/modules/ROOT/pages/development.adoc:738"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: quantifier \"each\", description \"DSL AST pattern matching Document YARD …\"",
+    "settled": false
+   },
+   {
+    "id": "8f2073d41aaf8f75703c7ebf0f7cc8e4bb745fbe",
+    "file": "AGENTS.md",
+    "line": 108,
+    "endLine": 110,
+    "section": "Cop Class Structure",
+    "kind": "item",
+    "text": "YARD `@example` — every cop must have at least one `# bad` / `# good` example pair. Examples must be valid Ruby syntax (the CI doc-syntax check parses them).",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "@example",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "# bad",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "# good",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"every\"",
+     "rule \"must\"",
+     "description \"YARD cop have least one example …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "@example",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:781",
+        "excerpt": "The CI `documentation_syntax_check` task parses every `@example` block, so all",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at docs/modules/ROOT/pages/development.adoc:781"
+     },
+     {
+      "kind": "unknown",
+      "text": "# bad",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "# good",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `# bad`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "0b43ddb7caf966998e3c2807e40944951ca663f3",
+    "file": "AGENTS.md",
+    "line": 111,
+    "endLine": 112,
+    "section": "Cop Class Structure",
+    "kind": "item",
+    "text": "Cop description — the first line of the YARD comment must be a complete sentence starting with a verb and ending with a period.",
+    "spans": [],
+    "residual": [
+     "rule \"must\"",
+     "description \"Cop description first line YARD comment …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"must\", description \"Cop description first line YARD comment …\"",
+    "settled": false
+   },
+   {
+    "id": "79e53dec67c2c2e41092973e7cf29b2ae322fdbf",
+    "file": "AGENTS.md",
+    "line": 113,
+    "endLine": 114,
+    "section": "Cop Class Structure",
+    "kind": "item",
+    "text": "Method definition order: define methods in the order they are called, so a new method is placed where the call flow reaches it.",
+    "spans": [],
+    "residual": [
+     "description \"Method definition order define methods order …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Method definition order define methods order …\"",
+    "settled": false
+   },
+   {
+    "id": "761ca0528499d6b8d2c68033409f745778a20b0e",
+    "file": "AGENTS.md",
+    "line": 118,
+    "endLine": 119,
+    "section": "Preview: Shipping Unstable Behavior",
+    "kind": "sentence",
+    "text": "`AllCops: Preview` (or `--preview`) is the opt-in channel for changes that are not ready to be the default.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "AllCops: Preview",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "--preview",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"opt-in channel changes ready default\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "AllCops: Preview",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "symbol",
+      "text": "--preview",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "config/default.yml:122",
+        "excerpt": "# Projects opt in to preview with `Preview: true` here, or with the `--preview`",
+        "level": "reference"
+       }
+      ],
+      "reason": "a string in code at config/default.yml:122"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `AllCops: Preview`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "c4cafce990107d099811972dc2067d9a238f30e8",
+    "file": "AGENTS.md",
+    "line": 119,
+    "endLine": 119,
+    "section": "Preview: Shipping Unstable Behavior",
+    "kind": "sentence",
+    "text": "Cops read it via `preview?`.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "preview?",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Cops read\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "preview?",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:632",
+        "excerpt": "=== Shipping unstable behavior with `preview?`",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at docs/modules/ROOT/pages/development.adoc:632"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Cops read\"",
+    "settled": false
+   },
+   {
+    "id": "c4a3ccac014ec4bd439097a510f8eb00eea69968",
+    "file": "AGENTS.md",
+    "line": 123,
+    "endLine": 128,
+    "section": "Preview: Shipping Unstable Behavior",
+    "kind": "item",
+    "text": "A cop's default should change in the next major release (its `Enabled` state, a `Max` threshold, an `EnforcedStyle`). Add a `Preview` section to the cop's entry in `config/default.yml` with the new values. `AllCops` can carry one too. This needs no code: the configuration loader applies the section under preview and drops it otherwise. This is the most common case.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "Enabled",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Max",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "EnforcedStyle",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Preview",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "config/default.yml",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "AllCops",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"should\"",
+     "description \"cop's default change next major release …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "Enabled",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": ".rubocop.yml:40",
+        "excerpt": "Enabled: true",
+        "level": "declaration"
+       },
+       {
+        "ref": ".rubocop.yml:80",
+        "excerpt": "Enabled: true",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at .rubocop.yml:40"
+     },
+     {
+      "kind": "symbol",
+      "text": "Max",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": ".rubocop.yml:108",
+        "excerpt": "Max: 100",
+        "level": "declaration"
+       },
+       {
+        "ref": ".rubocop.yml:241",
+        "excerpt": "Max: 7",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at .rubocop.yml:108"
+     },
+     {
+      "kind": "symbol",
+      "text": "EnforcedStyle",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": ".rubocop.yml:77",
+        "excerpt": "EnforcedStyle: lf",
+        "level": "declaration"
+       },
+       {
+        "ref": ".rubocop.yml:221",
+        "excerpt": "EnforcedStyle: single_line_only",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at .rubocop.yml:77"
+     },
+     {
+      "kind": "symbol",
+      "text": "Preview",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "config/default.yml:126",
+        "excerpt": "Preview:",
+        "level": "declaration"
+       },
+       {
+        "ref": "config/default.yml:279",
+        "excerpt": "Preview:",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at config/default.yml:126"
+     },
+     {
+      "kind": "path",
+      "text": "config/default.yml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "config/default.yml",
+        "level": "definition"
+       }
+      ],
+      "reason": "config/default.yml"
+     },
+     {
+      "kind": "symbol",
+      "text": "AllCops",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": ".rubocop.yml:11",
+        "excerpt": "AllCops:",
+        "level": "declaration"
+       },
+       {
+        "ref": "config/default.yml:3",
+        "excerpt": "AllCops:",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at .rubocop.yml:11"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"should\", description \"cop's default change next major release …\"",
+    "settled": false
+   },
+   {
+    "id": "b69faa83e3543f11a421de70a7be61bdfe75f1fa",
+    "file": "AGENTS.md",
+    "line": 129,
+    "endLine": 131,
+    "section": "Preview: Shipping Unstable Behavior",
+    "kind": "item",
+    "text": "An existing cop should start reporting a case it currently misses, and the change is contested enough that turning it on for everyone would be rude. Without preview this waits for a major release.",
+    "spans": [],
+    "residual": [
+     "rule \"should\"",
+     "description \"existing cop start reporting case currently …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"should\", description \"existing cop start reporting case currently …\"",
+    "settled": false
+   },
+   {
+    "id": "f8a22b1712b4e6f4d30d25616eb3e4edd77c5adb",
+    "file": "AGENTS.md",
+    "line": 132,
+    "endLine": 133,
+    "section": "Preview: Shipping Unstable Behavior",
+    "kind": "item",
+    "text": "An existing cop should correct something differently, and the new correction needs real-world exposure before it becomes the default.",
+    "spans": [],
+    "residual": [
+     "rule \"should\"",
+     "description \"existing cop correct something differently new …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"should\", description \"existing cop correct something differently new …\"",
+    "settled": false
+   },
+   {
+    "id": "d7cce390c864a5f1d9d68343cecc42c6c3afcc5e",
+    "file": "AGENTS.md",
+    "line": 134,
+    "endLine": 136,
+    "section": "Preview: Shipping Unstable Behavior",
+    "kind": "item",
+    "text": "A new cop is too speculative even for `pending`, so it ships as `Enabled: preview` in `config/default.yml`. It is opt-in only and, unlike a pending cop, is never reported as needing a decision.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "pending",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "Enabled: preview",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "config/default.yml",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"only\"",
+     "rule \"never\"",
+     "description \"new cop too speculative even ships …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "pending",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "tasks/changelog.rb:101",
+        "excerpt": "def self.pending?",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at tasks/changelog.rb:101"
+     },
+     {
+      "kind": "unknown",
+      "text": "Enabled: preview",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/usage/cli_reference.adoc:160",
+        "excerpt": "| Opt in to unstable behavior: cops that are `Enabled: preview`, and changes to existing cops that are not the default …",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at docs/modules/ROOT/pages/usage/cli_reference.adoc:160"
+     },
+     {
+      "kind": "path",
+      "text": "config/default.yml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "config/default.yml",
+        "level": "definition"
+       }
+      ],
+      "reason": "config/default.yml"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: quantifier \"only\", rule \"never\", description \"new cop too speculative even ships …\"",
+    "settled": false
+   },
+   {
+    "id": "7d23b7173e2fb90f4520d54ed516c1814c41b956",
+    "file": "AGENTS.md",
+    "line": 140,
+    "endLine": 140,
+    "section": "Preview: Shipping Unstable Behavior",
+    "kind": "item",
+    "text": "The change is a plain bug fix. Those just ship.",
+    "spans": [],
+    "residual": [
+     "description \"change plain bug fix ship\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"change plain bug fix ship\"",
+    "settled": false
+   },
+   {
+    "id": "afead4c176ad5eb2b20c87179d53bb0fd49b0b1e",
+    "file": "AGENTS.md",
+    "line": 141,
+    "endLine": 142,
+    "section": "Preview: Shipping Unstable Behavior",
+    "kind": "item",
+    "text": "The cop is new and you already expect it to be on by default eventually. That is what `Enabled: pending` is for.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "Enabled: pending",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"cop new you already expect default …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "Enabled: pending",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "config/default.yml:299",
+        "excerpt": "Enabled: pending",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at config/default.yml:299"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"cop new you already expect default …\"",
+    "settled": false
+   },
+   {
+    "id": "08ea23f99419412fc93cf6df00e0f6791533a5cc",
+    "file": "AGENTS.md",
+    "line": 144,
+    "endLine": 145,
+    "section": "Preview: Shipping Unstable Behavior",
+    "kind": "sentence",
+    "text": "The rule of thumb: if you already know it should become the default, it is `pending`.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "pending",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"should\"",
+     "description \"rule thumb you already know become …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "pending",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "tasks/changelog.rb:101",
+        "excerpt": "def self.pending?",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at tasks/changelog.rb:101"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"should\", description \"rule thumb you already know become …\"",
+    "settled": false
+   },
+   {
+    "id": "e0c860427a0b4be9688b585d98e87a445a8591a1",
+    "file": "AGENTS.md",
+    "line": 145,
+    "endLine": 145,
+    "section": "Preview: Shipping Unstable Behavior",
+    "kind": "sentence",
+    "text": "If you are asking users to help you find out, it is `preview`.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "preview",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"you asking users help you find …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "preview",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/config.rb:232",
+        "excerpt": "def preview?(options = {})",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/config.rb:232"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"you asking users help you find …\"",
+    "settled": false
+   },
+   {
+    "id": "343b5062b4b2e48f93d79107b9ca8cb6b50f88dd",
+    "file": "AGENTS.md",
+    "line": 177,
+    "endLine": 178,
+    "section": "Preview: Shipping Unstable Behavior",
+    "kind": "sentence",
+    "text": "Preview behavior is unstable by contract: it can change or be withdrawn in any release.",
+    "spans": [],
+    "residual": [
+     "description \"Preview behavior unstable contract change withdrawn …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Preview behavior unstable contract change withdrawn …\"",
+    "settled": false
+   },
+   {
+    "id": "0bd783849774a30d4deebdc4b6de9ff13bda644d",
+    "file": "AGENTS.md",
+    "line": 178,
+    "endLine": 178,
+    "section": "Preview: Shipping Unstable Behavior",
+    "kind": "sentence",
+    "text": "See `docs/modules/ROOT/pages/versioning.adoc` for the lifecycle.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "docs/modules/ROOT/pages/versioning.adoc",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "docs/modules/ROOT/pages/versioning.adoc",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/versioning.adoc",
+        "level": "definition"
+       }
+      ],
+      "reason": "docs/modules/ROOT/pages/versioning.adoc"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "78f0980ba246bbc7618a8bfce0d63a66ff4d8304",
+    "file": "AGENTS.md",
+    "line": 182,
+    "endLine": 189,
+    "section": "Severity",
+    "kind": "sentence",
+    "text": "A cop's default severity comes from its department, via `DEPARTMENT_SEVERITIES` in `Cop::Base`: `Lint` and `Security` report as `warning`, `Metrics` as `refactor`, everything else as `convention`.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "DEPARTMENT_SEVERITIES",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "Cop::Base",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Lint",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Security",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "warning",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Metrics",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "refactor",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "convention",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"cop's default severity comes department report …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "DEPARTMENT_SEVERITIES",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/cop/base.rb:57",
+        "excerpt": "DEPARTMENT_SEVERITIES = { Lint: :warning, Security: :warning, Metrics: :refactor }.freeze",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/cop/base.rb:57"
+     },
+     {
+      "kind": "unknown",
+      "text": "Cop::Base",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/cops_layout.adoc:7240",
+        "excerpt": "RuboCop::Cop::Base",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at docs/modules/ROOT/pages/cops_layout.adoc:7240"
+     },
+     {
+      "kind": "symbol",
+      "text": "Lint",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".rubocop.yml:91",
+        "excerpt": "Lint/DeprecatedReference:",
+        "level": "reference"
+       },
+       {
+        "ref": ".rubocop.yml:95",
+        "excerpt": "Lint/AmbiguousBlockAssociation:",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .rubocop.yml:91"
+     },
+     {
+      "kind": "symbol",
+      "text": "Security",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/cop/security.rb:7",
+        "excerpt": "module Security",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/cop/security.rb:7"
+     },
+     {
+      "kind": "symbol",
+      "text": "warning",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/config_obsoletion/cop_rule.rb:25",
+        "excerpt": "def warning?",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/config_obsoletion/cop_rule.rb:25"
+     },
+     {
+      "kind": "symbol",
+      "text": "Metrics",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/cop/metrics.rb:7",
+        "excerpt": "module Metrics",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/cop/metrics.rb:7"
+     },
+     {
+      "kind": "symbol",
+      "text": "refactor",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "config/default.yml:65",
+        "excerpt": "FailLevel: refactor",
+        "level": "reference"
+       },
+       {
+        "ref": "docs/modules/ROOT/pages/configuration.adoc:92",
+        "excerpt": "By default any offense at `refactor` severity or above makes `rubocop` exit with",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at config/default.yml:65"
+     },
+     {
+      "kind": "symbol",
+      "text": "convention",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/configuration/cop_settings.adoc:94",
+        "excerpt": "`convention`, `warning`, `error` and `fatal`.",
+        "level": "declaration"
+       },
+       {
+        "ref": "docs/modules/ROOT/pages/formatters.adoc:244",
+        "excerpt": "\"severity\": \"convention\",",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at docs/modules/ROOT/pages/configuration/cop_settings.adoc:94"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"cop's default severity comes department report …\"",
+    "settled": false
+   },
+   {
+    "id": "d35a97b4e8ae26759ab361bc2199b9a8b9557daf",
+    "file": "AGENTS.md",
+    "line": 184,
+    "endLine": 189,
+    "section": "Severity",
+    "kind": "sentence",
+    "text": "Do not add `Severity:` to a cop in `config/default.yml` unless it genuinely differs from its department; `spec/project_spec.rb` rejects a line that restates the default.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "Severity:",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "config/default.yml",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "spec/project_spec.rb",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Do not\"",
+     "description \"add cop unless genuinely differs department …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "Severity:",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "path",
+      "text": "config/default.yml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "config/default.yml",
+        "level": "definition"
+       }
+      ],
+      "reason": "config/default.yml"
+     },
+     {
+      "kind": "path",
+      "text": "spec/project_spec.rb",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "spec/project_spec.rb",
+        "level": "definition"
+       }
+      ],
+      "reason": "spec/project_spec.rb"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `Severity:`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "91928fd31a310b972b7c320d2a2cedaff416c970",
+    "file": "AGENTS.md",
+    "line": 186,
+    "endLine": 189,
+    "section": "Severity",
+    "kind": "sentence",
+    "text": "The few existing exceptions are lint-like cops in mixed departments (`Bundler/InsecureProtocolSource`) and the three `Layout` alignment cops that used to live in `Lint`.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "Bundler/InsecureProtocolSource",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Layout",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Lint",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"few existing exceptions lint-like cops mixed …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "Bundler/InsecureProtocolSource",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/configuration/cop_settings.adoc:121",
+        "excerpt": "department mixes lint-like and style cops: `Bundler/InsecureProtocolSource`",
+        "level": "reference"
+       }
+      ],
+      "reason": "not a path: the code spells it as a name at docs/modules/ROOT/pages/configuration/cop_settings.adoc:121"
+     },
+     {
+      "kind": "symbol",
+      "text": "Layout",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".rubocop.yml:76",
+        "excerpt": "Layout/EndOfLine:",
+        "level": "reference"
+       },
+       {
+        "ref": ".rubocop.yml:79",
+        "excerpt": "Layout/ClassStructure:",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .rubocop.yml:76"
+     },
+     {
+      "kind": "symbol",
+      "text": "Lint",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".rubocop.yml:91",
+        "excerpt": "Lint/DeprecatedReference:",
+        "level": "reference"
+       },
+       {
+        "ref": ".rubocop.yml:95",
+        "excerpt": "Lint/AmbiguousBlockAssociation:",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .rubocop.yml:91"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"few existing exceptions lint-like cops mixed …\"",
+    "settled": false
+   },
+   {
+    "id": "412806631d065beb6d23354b3def4cd655ec264c",
+    "file": "AGENTS.md",
+    "line": 191,
+    "endLine": 192,
+    "section": "Severity",
+    "kind": "sentence",
+    "text": "`AllCops: FailLevel` (default `refactor`) is the lowest severity that fails a run; `--fail-level` overrides it.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "AllCops: FailLevel",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "refactor",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "--fail-level",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"default lowest severity fails overrides\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "AllCops: FailLevel",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/configuration/cop_settings.adoc:92",
+        "excerpt": "`AllCops: FailLevel` filter on and what the leading letter in the default output",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at docs/modules/ROOT/pages/configuration/cop_settings.adoc:92"
+     },
+     {
+      "kind": "symbol",
+      "text": "refactor",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "config/default.yml:65",
+        "excerpt": "FailLevel: refactor",
+        "level": "reference"
+       },
+       {
+        "ref": "docs/modules/ROOT/pages/configuration.adoc:92",
+        "excerpt": "By default any offense at `refactor` severity or above makes `rubocop` exit with",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at config/default.yml:65"
+     },
+     {
+      "kind": "symbol",
+      "text": "--fail-level",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "config/default.yml:64",
+        "excerpt": "# reported. Can be overridden by the `--fail-level` command line option.",
+        "level": "reference"
+       }
+      ],
+      "reason": "a string in code at config/default.yml:64"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"default lowest severity fails overrides\"",
+    "settled": false
+   },
+   {
+    "id": "304a0b5d7b1aef06bc533c9d29847d0c170974fb",
+    "file": "AGENTS.md",
+    "line": 192,
+    "endLine": 192,
+    "section": "Severity",
+    "kind": "sentence",
+    "text": "Under `Preview` it is `warning`.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "Preview",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "warning",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "Preview",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "config/default.yml:126",
+        "excerpt": "Preview:",
+        "level": "declaration"
+       },
+       {
+        "ref": "config/default.yml:279",
+        "excerpt": "Preview:",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at config/default.yml:126"
+     },
+     {
+      "kind": "symbol",
+      "text": "warning",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/config_obsoletion/cop_rule.rb:25",
+        "excerpt": "def warning?",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/config_obsoletion/cop_rule.rb:25"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "12c51075d555663a34cdda986ea4eef930501d83",
+    "file": "AGENTS.md",
+    "line": 219,
+    "endLine": 220,
+    "section": "Writing Specs",
+    "kind": "item",
+    "text": "`expect_offense` — `^` carets mark the offense range and must align exactly under the offending code. The message follows the last caret.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "expect_offense",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "^",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"must\"",
+     "description \"carets mark offense range align exactly …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "expect_offense",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/rspec/expect_offense.rb:121",
+        "excerpt": "def expect_offense(source, file = nil, severity: nil, chomp: false, **replacements)",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/rspec/expect_offense.rb:121"
+     },
+     {
+      "kind": "unknown",
+      "text": "^",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `^`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "6edce0abe70e50e9361fc160bea3854db66ff3b7",
+    "file": "AGENTS.md",
+    "line": 221,
+    "endLine": 222,
+    "section": "Writing Specs",
+    "kind": "item",
+    "text": "`expect_correction` — expected source after autocorrect. Must follow `expect_offense` in the same example.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "expect_correction",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "expect_offense",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Must\"",
+     "description \"expected source after autocorrect follow same …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "expect_correction",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/rspec/expect_offense.rb:143",
+        "excerpt": "def expect_correction(correction, loop: true, source: nil)",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/rspec/expect_offense.rb:143"
+     },
+     {
+      "kind": "symbol",
+      "text": "expect_offense",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/rspec/expect_offense.rb:121",
+        "excerpt": "def expect_offense(source, file = nil, severity: nil, chomp: false, **replacements)",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/rspec/expect_offense.rb:121"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"Must\", description \"expected source after autocorrect follow same …\"",
+    "settled": false
+   },
+   {
+    "id": "497604a3ce0ce407d67118adabd6f3b3181e453a",
+    "file": "AGENTS.md",
+    "line": 223,
+    "endLine": 223,
+    "section": "Writing Specs",
+    "kind": "item",
+    "text": "`expect_no_offenses` — assert no violations.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "expect_no_offenses",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"assert violations\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "expect_no_offenses",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/rspec/expect_offense.rb:194",
+        "excerpt": "def expect_no_offenses(source, file = nil)",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/rspec/expect_offense.rb:194"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"assert violations\"",
+    "settled": false
+   },
+   {
+    "id": "bcbc72bbbf91b71b0a1e205016bc0055aa64d506",
+    "file": "AGENTS.md",
+    "line": 224,
+    "endLine": 224,
+    "section": "Writing Specs",
+    "kind": "item",
+    "text": "Use `%{variable}` in `expect_offense` heredocs to interpolate dynamic values.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "%{variable}",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "expect_offense",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"heredocs interpolate dynamic values\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "%{variable}",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "symbol",
+      "text": "expect_offense",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/rspec/expect_offense.rb:121",
+        "excerpt": "def expect_offense(source, file = nil, severity: nil, chomp: false, **replacements)",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/rspec/expect_offense.rb:121"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `%{variable}`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "255c9065993d3dd9d2193b6f38d4a01e052ea2f6",
+    "file": "AGENTS.md",
+    "line": 225,
+    "endLine": 225,
+    "section": "Writing Specs",
+    "kind": "item",
+    "text": "Use `_{variable}` for offense-range placeholders.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "_{variable}",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"offense-range placeholders\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "_{variable}",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `_{variable}`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "00d3da17814a69dcc518df237448b19ddb3a39fd",
+    "file": "AGENTS.md",
+    "line": 226,
+    "endLine": 227,
+    "section": "Writing Specs",
+    "kind": "item",
+    "text": "Use RSpec metadata tags like `:ruby27`, `:ruby34` to set the target Ruby version for a test.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": ":ruby27",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": ":ruby34",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"RSpec metadata tags like set target …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": ":ruby27",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/rspec/support.rb:27",
+        "excerpt": "config.include_context 'ruby 2.7', :ruby27",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at lib/rubocop/rspec/support.rb:27"
+     },
+     {
+      "kind": "unknown",
+      "text": ":ruby34",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/rspec/support.rb:32",
+        "excerpt": "config.include_context 'ruby 3.4', :ruby34",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at lib/rubocop/rspec/support.rb:32"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"RSpec metadata tags like set target …\"",
+    "settled": false
+   },
+   {
+    "id": "5391388a5d0f873e4ab7a53f91f3da3738789639",
+    "file": "AGENTS.md",
+    "line": 228,
+    "endLine": 228,
+    "section": "Writing Specs",
+    "kind": "item",
+    "text": "Configuration: `let(:cop_config) { { 'EnforcedStyle' => 'bar' } }`.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "let()",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "let()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/cops_lint.adoc:809",
+        "excerpt": "let(:test_request) { Class.new }",
+        "level": "reference"
+       },
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:512",
+        "excerpt": "let(:gem_versions) { { 'my-gem' => '1.0.0' } }",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at docs/modules/ROOT/pages/cops_lint.adoc:809"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": false
+   },
+   {
+    "id": "0dc074672a2908541361329f6c7adec544622f2b",
+    "file": "AGENTS.md",
+    "line": 235,
+    "endLine": 235,
+    "section": "Changelog Entries",
+    "kind": "command",
+    "text": "bundle exec rake changelog:fix # Bug fix",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake changelog:fix",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake changelog:fix",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "tasks/changelog.rake:8",
+        "excerpt": "task type, [:id] do |_task, args|",
+        "level": "definition"
+       }
+      ],
+      "reason": "task changelog:fix at tasks/changelog.rake:8"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "917047a9b7550314d436dd1c59a4ff3f81dbab7e",
+    "file": "AGENTS.md",
+    "line": 236,
+    "endLine": 236,
+    "section": "Changelog Entries",
+    "kind": "command",
+    "text": "bundle exec rake changelog:new # New feature",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake changelog:new",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake changelog:new",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "tasks/changelog.rake:8",
+        "excerpt": "task type, [:id] do |_task, args|",
+        "level": "definition"
+       }
+      ],
+      "reason": "task changelog:new at tasks/changelog.rake:8"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "22d4d1c36e4840acb0f54751f698cd658f6000b1",
+    "file": "AGENTS.md",
+    "line": 237,
+    "endLine": 237,
+    "section": "Changelog Entries",
+    "kind": "command",
+    "text": "bundle exec rake changelog:change # Changed behavior",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake changelog:change",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake changelog:change",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "tasks/changelog.rake:8",
+        "excerpt": "task type, [:id] do |_task, args|",
+        "level": "definition"
+       }
+      ],
+      "reason": "task changelog:change at tasks/changelog.rake:8"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "3b2caaeaa3c32e384b9603d839f5920bf2165788",
+    "file": "AGENTS.md",
+    "line": 240,
+    "endLine": 240,
+    "section": "Changelog Entries",
+    "kind": "sentence",
+    "text": "Commit first; the task derives the entry's text from the last commit title.",
+    "spans": [],
+    "residual": [
+     "description \"Commit first task derives entry's text …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Commit first task derives entry's text …\"",
+    "settled": false
+   },
+   {
+    "id": "38f1cef54a13a7898b181ef41b91c694267ebc7d",
+    "file": "AGENTS.md",
+    "line": 248,
+    "endLine": 248,
+    "section": "Changelog Entries",
+    "kind": "item",
+    "text": "Must end with `([@username][])`.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "([@username][])",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Must\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "([@username][])",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `([@username][])`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "773ae23f1b952557233a10ef9dcd5e409e54deab",
+    "file": "AGENTS.md",
+    "line": 249,
+    "endLine": 249,
+    "section": "Changelog Entries",
+    "kind": "item",
+    "text": "`spec/project_spec.rb` validates the format in CI.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "spec/project_spec.rb",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"validates format\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "spec/project_spec.rb",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "spec/project_spec.rb",
+        "level": "definition"
+       }
+      ],
+      "reason": "spec/project_spec.rb"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"validates format\"",
+    "settled": false
+   },
+   {
+    "id": "b9d59d13b15709b7f6c0f805484a0dddc4a92ea9",
+    "file": "AGENTS.md",
+    "line": 250,
+    "endLine": 251,
+    "section": "Changelog Entries",
+    "kind": "item",
+    "text": "Skip the changelog only for purely internal changes (refactors with no user-visible effect).",
+    "spans": [],
+    "residual": [
+     "quantifier \"only\"",
+     "description \"Skip changelog purely internal changes refactors …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"only\", description \"Skip changelog purely internal changes refactors …\"",
+    "settled": false
+   },
+   {
+    "id": "61b6755a02b7a3095ffe2ffe7159faa4ba29dfca",
+    "file": "AGENTS.md",
+    "line": 252,
+    "endLine": 254,
+    "section": "Changelog Entries",
+    "kind": "item",
+    "text": "Generate the entry after committing the change, then amend it into that commit. `rake changelog:*` names the file after the last commit subject, so committing first gives the entry the right filename.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "rake changelog:*",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Generate entry after committing change amend …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "rake changelog:*",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "no \"changelog:*\" task found in Rakefile, tasks/changelog.rake, tasks/check_commit.rake and 8 more; it may come from a gem"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`rake changelog:*`: no \"changelog:*\" task found in Rakefile, tasks/changelog.rake, tasks/check_commit.rake and 8 more; it may come from a gem",
+    "settled": false
+   },
+   {
+    "id": "a62ae783e92f0a1068e6969edad4c16d09015212",
+    "file": "AGENTS.md",
+    "line": 258,
+    "endLine": 258,
+    "section": "PR and Commit Conventions",
+    "kind": "item",
+    "text": "Prefix commit messages with `[Fix #N]` when an issue exists.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "[Fix #N]",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Prefix commit messages issue exists\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "[Fix #N]",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `[Fix #N]`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "29e454ff9595312a3dee6359997f8ee689571fcc",
+    "file": "AGENTS.md",
+    "line": 259,
+    "endLine": 262,
+    "section": "PR and Commit Conventions",
+    "kind": "item",
+    "text": "Each distinct fix belongs in its own logical commit. When a PR bundles several unrelated fixes (e.g. multiple cops, multiple false positives), give each one a separate commit with its own changelog entry rather than squashing them all into a single commit. Squash only commits that are part of the same fix.",
+    "spans": [],
+    "residual": [
+     "quantifier \"Each\"",
+     "description \"distinct fix belongs own logical commit …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"Each\", description \"distinct fix belongs own logical commit …\"",
+    "settled": false
+   },
+   {
+    "id": "c473f375b0024c9bc3d94952f9ff68936d711ec0",
+    "file": "AGENTS.md",
+    "line": 263,
+    "endLine": 265,
+    "section": "PR and Commit Conventions",
+    "kind": "item",
+    "text": "A changelog entry belongs in the same commit as the change it describes. Never add a changelog-only commit, including a follow-up that just fills in the PR number. Amend the entry into the commit it belongs to instead.",
+    "spans": [],
+    "residual": [
+     "quantifier \"only\"",
+     "rule \"Never\"",
+     "description \"changelog entry belongs same commit change …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"only\", rule \"Never\", description \"changelog entry belongs same commit change …\"",
+    "settled": false
+   },
+   {
+    "id": "0884239dbaa6804ea69ea936c4f96e18c7634ca8",
+    "file": "AGENTS.md",
+    "line": 266,
+    "endLine": 268,
+    "section": "PR and Commit Conventions",
+    "kind": "item",
+    "text": "Never add AI attribution to a commit or a PR description: no `Co-authored-by` or `Assisted-by` trailers naming a tool or model, and no \"generated with\" footers. CONTRIBUTING.md asks the same of human contributors.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "Co-authored-by",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "Assisted-by",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Never\"",
+     "description \"Never add attribution commit description trailers …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "Co-authored-by",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "Assisted-by",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `Co-authored-by`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "5b51a45b27bbfd34403e5b316d9ea5f17a5a6c13",
+    "file": "AGENTS.md",
+    "line": 269,
+    "endLine": 269,
+    "section": "PR and Commit Conventions",
+    "kind": "item",
+    "text": "Run `bundle exec rake` and ensure it passes before pushing.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"ensure passes before pushing\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "Rakefile",
+        "level": "definition"
+       }
+      ],
+      "reason": "Rakefile exists"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"ensure passes before pushing\"",
+    "settled": false
+   },
+   {
+    "id": "a347cdb59cbe2d012c5e50302ed525aaccdabe61",
+    "file": "AGENTS.md",
+    "line": 273,
+    "endLine": 274,
+    "section": "Common Mistakes",
+    "kind": "item",
+    "text": "Missing `alias on_csend on_send` — cops that check `on_send` must also handle safe navigation unless explicitly inapplicable.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "alias on_csend on_send",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "on_send",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"must\"",
+     "description \"Missing cops check handle safe navigation …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "alias on_csend on_send",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:707",
+        "excerpt": "alias on_csend on_send",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at docs/modules/ROOT/pages/development.adoc:707"
+     },
+     {
+      "kind": "symbol",
+      "text": "on_send",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:256",
+        "excerpt": "def on_send(node)",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at docs/modules/ROOT/pages/development.adoc:256"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"must\", description \"Missing cops check handle safe navigation …\"",
+    "settled": false
+   },
+   {
+    "id": "4c068ea1d36b4579a1d9a83187a902f55ec6f6db",
+    "file": "AGENTS.md",
+    "line": 275,
+    "endLine": 277,
+    "section": "Common Mistakes",
+    "kind": "item",
+    "text": "Missing `alias on_numblock on_block` / `alias on_itblock on_block` — cops that check `on_block` must also handle numbered-parameter and `it`-parameter block forms.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "alias on_numblock on_block",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "alias on_itblock on_block",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "on_block",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "it",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"must\"",
+     "description \"Missing cops check handle numbered-parameter parameter …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "alias on_numblock on_block",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:723",
+        "excerpt": "alias on_numblock on_block",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at docs/modules/ROOT/pages/development.adoc:723"
+     },
+     {
+      "kind": "unknown",
+      "text": "alias on_itblock on_block",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:724",
+        "excerpt": "alias on_itblock on_block",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at docs/modules/ROOT/pages/development.adoc:724"
+     },
+     {
+      "kind": "symbol",
+      "text": "on_block",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:720",
+        "excerpt": "def on_block(node)",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at docs/modules/ROOT/pages/development.adoc:720"
+     },
+     {
+      "kind": "unknown",
+      "text": "it",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `it`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "1f5fc46d2c54d8dc0b99908cca1d9f5359ea80aa",
+    "file": "AGENTS.md",
+    "line": 278,
+    "endLine": 279,
+    "section": "Common Mistakes",
+    "kind": "item",
+    "text": "Invalid Ruby in YARD examples — the CI `documentation_syntax_check` task parses every `@example` block. Use only valid syntax.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "documentation_syntax_check",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "@example",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"every\"",
+     "description \"Invalid Ruby YARD examples task parses …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "documentation_syntax_check",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/workflows/rubocop.yml:119",
+        "excerpt": "run: bundle exec rake documentation_syntax_check",
+        "level": "reference"
+       },
+       {
+        "ref": "Rakefile:31",
+        "excerpt": "task default: %i[codespell documentation_syntax_check spec internal_investigation]",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/workflows/rubocop.yml:119"
+     },
+     {
+      "kind": "unknown",
+      "text": "@example",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:781",
+        "excerpt": "The CI `documentation_syntax_check` task parses every `@example` block, so all",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at docs/modules/ROOT/pages/development.adoc:781"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: quantifier \"every\", description \"Invalid Ruby YARD examples task parses …\"",
+    "settled": false
+   },
+   {
+    "id": "1755c8bccd8bfdd701a8da73d3928650e1f85553",
+    "file": "AGENTS.md",
+    "line": 280,
+    "endLine": 281,
+    "section": "Common Mistakes",
+    "kind": "item",
+    "text": "Cop description not a sentence — must start with a verb and end with a period (e.g. `# Checks for ...`, not `# Check for ...`).",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "# Checks for ...",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "# Check for ...",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"must\"",
+     "description \"Cop description sentence start verb end …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "# Checks for ...",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "# Check for ...",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `# Checks for ...`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "aae5a425ff59127a282b54569357c736e0d2c337",
+    "file": "AGENTS.md",
+    "line": 282,
+    "endLine": 282,
+    "section": "Common Mistakes",
+    "kind": "item",
+    "text": "Missing `RESTRICT_ON_SEND` — always define this when using `on_send`.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "RESTRICT_ON_SEND",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "on_send",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"always\"",
+     "description \"Missing always define\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "RESTRICT_ON_SEND",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:284",
+        "excerpt": "RESTRICT_ON_SEND = [:!].freeze # optimization: don't call `on_send` unless",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at docs/modules/ROOT/pages/development.adoc:284"
+     },
+     {
+      "kind": "symbol",
+      "text": "on_send",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:256",
+        "excerpt": "def on_send(node)",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at docs/modules/ROOT/pages/development.adoc:256"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"always\", description \"Missing always define\"",
+    "settled": false
+   },
+   {
+    "id": "55a8dc767c5c69320013c7c9c1694a557a0d8b50",
+    "file": "AGENTS.md",
+    "line": 283,
+    "endLine": 284,
+    "section": "Common Mistakes",
+    "kind": "item",
+    "text": "Missing `@!method` YARD tag — every `def_node_matcher` / `def_node_search` needs a `@!method` tag above it.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "@!method",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "def_node_matcher",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "def_node_search",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "@!method",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"every\"",
+     "description \"Missing YARD tag needs tag above\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "@!method",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:738",
+        "excerpt": "=== Documenting node matchers with `@!method`",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at docs/modules/ROOT/pages/development.adoc:738"
+     },
+     {
+      "kind": "symbol",
+      "text": "def_node_matcher",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".rubocop.yml:36",
+        "excerpt": "- def_node_matcher",
+        "level": "reference"
+       },
+       {
+        "ref": ".rubocop.yml:120",
+        "excerpt": "- 'def_node_matcher'",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .rubocop.yml:36"
+     },
+     {
+      "kind": "symbol",
+      "text": "def_node_search",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".rubocop.yml:37",
+        "excerpt": "- def_node_search",
+        "level": "reference"
+       },
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:740",
+        "excerpt": "Every `def_node_matcher` and `def_node_search` should have a `@!method`",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .rubocop.yml:37"
+     },
+     {
+      "kind": "unknown",
+      "text": "@!method",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:738",
+        "excerpt": "=== Documenting node matchers with `@!method`",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at docs/modules/ROOT/pages/development.adoc:738"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: quantifier \"every\", description \"Missing YARD tag needs tag above\"",
+    "settled": false
+   },
+   {
+    "id": "0313bb54075fab6d060f9704bc2eb05645b255d2",
+    "file": "AGENTS.md",
+    "line": 285,
+    "endLine": 285,
+    "section": "Common Mistakes",
+    "kind": "item",
+    "text": "Forgetting changelog entry — CI will flag it.",
+    "spans": [],
+    "residual": [
+     "description \"Forgetting changelog entry flag\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Forgetting changelog entry flag\"",
+    "settled": false
+   },
+   {
+    "id": "cd1ae5574c977f0159c70843e586db3607695605",
+    "file": "AGENTS.md",
+    "line": 286,
+    "endLine": 287,
+    "section": "Common Mistakes",
+    "kind": "item",
+    "text": "Manually creating changelog files — use the rake tasks instead to get the correct filename format.",
+    "spans": [],
+    "residual": [
+     "description \"Manually creating changelog files rake tasks …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Manually creating changelog files rake tasks …\"",
+    "settled": false
+   },
+   {
+    "id": "43a18f22ae200bdc675e4d3d49e1826fd51ad5bd",
+    "file": "AGENTS.md",
+    "line": 288,
+    "endLine": 289,
+    "section": "Common Mistakes",
+    "kind": "item",
+    "text": "Missing `extend AutoCorrector` — required if the cop provides a `corrector` block in `add_offense`.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "extend AutoCorrector",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "corrector",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "add_offense",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"required\"",
+     "description \"Missing required cop provides block\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "extend AutoCorrector",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/development.adoc:360",
+        "excerpt": "It's necessary to `extend AutoCorrector`.",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at docs/modules/ROOT/pages/development.adoc:360"
+     },
+     {
+      "kind": "symbol",
+      "text": "corrector",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/cop/base.rb:463",
+        "excerpt": "corrector = Corrector.new(self)",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/cop/base.rb:463"
+     },
+     {
+      "kind": "symbol",
+      "text": "add_offense",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/cop/base.rb:209",
+        "excerpt": "def add_offense(node_or_range, message: nil, severity: nil, &block)",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/cop/base.rb:209"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"required\", description \"Missing required cop provides block\"",
+    "settled": false
+   },
+   {
+    "id": "a140903590b01d3255b5341649e24c6cced28f99",
+    "file": "AGENTS.md",
+    "line": 290,
+    "endLine": 291,
+    "section": "Common Mistakes",
+    "kind": "item",
+    "text": "Not running full `bundle exec rake` — partial test runs miss lint and doc-syntax failures.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"full partial test miss lint doc-syntax …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "bundle exec rake",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "Rakefile",
+        "level": "definition"
+       }
+      ],
+      "reason": "Rakefile exists"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"full partial test miss lint doc-syntax …\"",
+    "settled": false
+   },
+   {
+    "id": "13364ef135ddbaf6c63ac7196b9904eca2ac3c67",
+    "file": "AGENTS.md",
+    "line": 292,
+    "endLine": 293,
+    "section": "Common Mistakes",
+    "kind": "item",
+    "text": "Hardcoding node types instead of using node pattern matchers — prefer `def_node_matcher` over manual `node.type == :send` checks.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "def_node_matcher",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "node.type == :send",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"prefer\"",
+     "description \"Hardcoding node types instead node pattern …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "def_node_matcher",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".rubocop.yml:36",
+        "excerpt": "- def_node_matcher",
+        "level": "reference"
+       },
+       {
+        "ref": ".rubocop.yml:120",
+        "excerpt": "- 'def_node_matcher'",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .rubocop.yml:36"
+     },
+     {
+      "kind": "unknown",
+      "text": "node.type == :send",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `node.type == :send`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "87696274b77ab3192b9938f261e581ef822525e1",
+    "file": "AGENTS.md",
+    "line": 294,
+    "endLine": 295,
+    "section": "Common Mistakes",
+    "kind": "item",
+    "text": "Not testing both `send` and `csend` — if you alias `on_csend`, write specs that cover the `&.` operator.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "send",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "csend",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "on_csend",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "&.",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"testing both you alias write specs …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "send",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "config/default.yml:6049",
+        "excerpt": "StyleGuide: '#prefer-public-send'",
+        "level": "reference"
+       },
+       {
+        "ref": "docs/modules/ROOT/pages/cops_lint.adoc:5110",
+        "excerpt": "bar.send(:to_c)",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at config/default.yml:6049"
+     },
+     {
+      "kind": "symbol",
+      "text": "csend",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/cop/internal_affairs/node_pattern_groups.rb:37",
+        "excerpt": "call: %i[send csend],",
+        "level": "reference"
+       },
+       {
+        "ref": "lib/rubocop/cop/lint/assignment_in_condition.rb:53",
+        "excerpt": "ASGN_TYPES = [:begin, *AST::Node::EQUALS_ASSIGNMENTS, :send, :csend].freeze",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at lib/rubocop/cop/internal_affairs/node_pattern_groups.rb:37"
+     },
+     {
+      "kind": "symbol",
+      "text": "on_csend",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/cop/lint/redundant_safe_navigation.rb:194",
+        "excerpt": "def on_csend(node)",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/cop/lint/redundant_safe_navigation.rb:194"
+     },
+     {
+      "kind": "unknown",
+      "text": "&.",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `&.`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "9b579abe18fdab7e0059d8d0283756f2d756cf9f",
+    "file": "AGENTS.md",
+    "line": 296,
+    "endLine": 301,
+    "section": "Common Mistakes",
+    "kind": "item",
+    "text": "Spec stubs inheriting from `RuboCop::Cop::Cop`: inheriting from the deprecated class emits a warning, and CI runs specs with `STRICT_WARNINGS=1`, which turns it into a failure you won't see locally. Stub cops with `stub_cop_class` on `Base`, and read their offenses from `cop.send(:complete_investigation).offenses`; `Base#offenses` raises by design.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "RuboCop::Cop::Cop",
+      "expect": "present"
+     },
+     {
+      "kind": "env",
+      "text": "STRICT_WARNINGS=1",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "stub_cop_class",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Base",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "cop.send(:complete_investigation).offenses",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "Base#offenses",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "status \"deprecated\"",
+     "description \"Spec stubs inheriting inheriting deprecated class …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "RuboCop::Cop::Cop",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/v1_upgrade_notes.adoc:10",
+        "excerpt": "1) Your class should inherit from `RuboCop::Cop::Base` instead of `RuboCop::Cop::Cop`.",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at docs/modules/ROOT/pages/v1_upgrade_notes.adoc:10"
+     },
+     {
+      "kind": "env",
+      "text": "STRICT_WARNINGS=1",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": ".github/workflows/rubocop.yml:42",
+        "excerpt": "STRICT_WARNINGS: 1",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declared at .github/workflows/rubocop.yml:42"
+     },
+     {
+      "kind": "symbol",
+      "text": "stub_cop_class",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "lib/rubocop/rspec/shared_contexts.rb:96",
+        "excerpt": "def stub_cop_class(name, inherit: RuboCop::Cop::Base, &block)",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at lib/rubocop/rspec/shared_contexts.rb:96"
+     },
+     {
+      "kind": "symbol",
+      "text": "Base",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/cops_lint.adoc:1545",
+        "excerpt": "class Base",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at docs/modules/ROOT/pages/cops_lint.adoc:1545"
+     },
+     {
+      "kind": "unknown",
+      "text": "cop.send(:complete_investigation).offenses",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "spec/rubocop/cop/cop_spec.rb:226",
+        "excerpt": "expect(cop.send(:complete_investigation).offenses.first.severity).to eq(severity)",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at spec/rubocop/cop/cop_spec.rb:226"
+     },
+     {
+      "kind": "unknown",
+      "text": "Base#offenses",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `Base#offenses`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "15610a9e2b46f14c050582feac865f54fe37a7e9",
+    "file": "AGENTS.md",
+    "line": 302,
+    "endLine": 304,
+    "section": "Common Mistakes",
+    "kind": "item",
+    "text": "Using `--only` to test whether a cop is enabled: `--only` forces the named cop on regardless of `Enabled`, `pending` or preview. To test enablement, run without it and count the cop's offenses in the output.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "--only",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "--only",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Enabled",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "pending",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"test whether cop enabled forces named …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "--only",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/configuration/cop_settings.adoc:37",
+        "excerpt": "interacts with `NewCops`, `--only` and the enable-everything settings.",
+        "level": "reference"
+       }
+      ],
+      "reason": "a string in code at docs/modules/ROOT/pages/configuration/cop_settings.adoc:37"
+     },
+     {
+      "kind": "symbol",
+      "text": "--only",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/configuration/cop_settings.adoc:37",
+        "excerpt": "interacts with `NewCops`, `--only` and the enable-everything settings.",
+        "level": "reference"
+       }
+      ],
+      "reason": "a string in code at docs/modules/ROOT/pages/configuration/cop_settings.adoc:37"
+     },
+     {
+      "kind": "symbol",
+      "text": "Enabled",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": ".rubocop.yml:40",
+        "excerpt": "Enabled: true",
+        "level": "declaration"
+       },
+       {
+        "ref": ".rubocop.yml:80",
+        "excerpt": "Enabled: true",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at .rubocop.yml:40"
+     },
+     {
+      "kind": "symbol",
+      "text": "pending",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "tasks/changelog.rb:101",
+        "excerpt": "def self.pending?",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at tasks/changelog.rb:101"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"test whether cop enabled forces named …\"",
+    "settled": false
+   },
+   {
+    "id": "e46dd47ba047b54947642587f308058571afe8ce",
+    "file": "AGENTS.md",
+    "line": 305,
+    "endLine": 308,
+    "section": "Common Mistakes",
+    "kind": "item",
+    "text": "Committing regenerated cop docs: `rake update_cops_documentation` rewrites `docs/modules/ROOT/pages/cops_*.adoc` and picks up drift from every cop merged since the last release. Those files are regenerated at release time; don't include them in a PR.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "rake update_cops_documentation",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "docs/modules/ROOT/pages/cops_*.adoc",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"every\"",
+     "rule \"don't\"",
+     "description \"Committing regenerated cop docs rewrites picks …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "rake update_cops_documentation",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "tasks/cops_documentation.rake:13",
+        "excerpt": "task update_cops_documentation: :yard_for_generate_documentation do",
+        "level": "definition"
+       }
+      ],
+      "reason": "task update_cops_documentation at tasks/cops_documentation.rake:13"
+     },
+     {
+      "kind": "path",
+      "text": "docs/modules/ROOT/pages/cops_*.adoc",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/cops_bundler.adoc",
+        "level": "definition"
+       },
+       {
+        "ref": "docs/modules/ROOT/pages/cops_gemspec.adoc",
+        "level": "definition"
+       },
+       {
+        "ref": "docs/modules/ROOT/pages/cops_layout.adoc",
+        "level": "definition"
+       }
+      ],
+      "reason": "docs/modules/ROOT/pages/cops_bundler.adoc, docs/modules/ROOT/pages/cops_gemspec.adoc, docs/modules/ROOT/pages/cops_layout.adoc and 6 more"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: quantifier \"every\", rule \"don't\", description \"Committing regenerated cop docs rewrites picks …\"",
+    "settled": false
+   },
+   {
+    "id": "2d9b2a854f6517c92d2414db63214ca6755e9679",
+    "file": "AGENTS.md",
+    "line": 309,
+    "endLine": 312,
+    "section": "Common Mistakes",
+    "kind": "item",
+    "text": "Guessing Antora anchors: cross-page `xref` anchors in the manual are the heading lowercased with everything but letters removed (`#allowmultilinefinalelement`), not Asciidoctor's `_`-prefixed default. When in doubt, put an explicit `[#my-anchor]` above the heading.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "xref",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "#allowmultilinefinalelement",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "_",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "[#my-anchor]",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Guessing Antora anchors cross-page anchors manual …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "xref",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/compatibility.adoc:41",
+        "excerpt": "IMPORTANT: The table above is about *runtime* support (which Ruby can run RuboCop itself). *Code analysis* support is b…",
+        "level": "reference"
+       },
+       {
+        "ref": "docs/modules/ROOT/pages/compatibility.adoc:46",
+        "excerpt": "xref:configuration.adoc#setting-the-parser-engine[`ParserEngine`]:",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at docs/modules/ROOT/pages/compatibility.adoc:41"
+     },
+     {
+      "kind": "unknown",
+      "text": "#allowmultilinefinalelement",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "docs/modules/ROOT/pages/cops_layout.adoc:3375",
+        "excerpt": "[#allowmultilinefinalelement_-false-_default_-layoutfirstarrayelementlinebreak]",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at docs/modules/ROOT/pages/cops_layout.adoc:3375"
+     },
+     {
+      "kind": "unknown",
+      "text": "_",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "[#my-anchor]",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `_`: not a path, command, name or version this tool can check",
+    "settled": false
+   }
+  ]
+ }
+}

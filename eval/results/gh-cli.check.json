@@ -1,0 +1,1962 @@
+{
+ "proof": "ef52d8e37086",
+ "stage": "check",
+ "seconds": 1,
+ "exit": 0,
+ "report": {
+  "file": "AGENTS.md",
+  "scope": "project",
+  "why": "Claude Code reads it only when no CLAUDE.md, .claude/CLAUDE.md or CLAUDE.local.md is in the folder or above it, and Codex, Cursor and others read it always",
+  "imports": [],
+  "importedBy": [],
+  "counts": {
+   "VERIFIED": 3,
+   "STALE": 0,
+   "UNCONFIRMED": 2,
+   "UNVERIFIED_WITH_REASON": 43,
+   "DECIDED": 0,
+   "OVERRIDDEN": 0,
+   "NOT_CHECKED": 0,
+   "FIXED": 0,
+   "FIX_REJECTED": 0
+  },
+  "evidenceLevels": {
+   "definition": 26,
+   "declaration": 0,
+   "reference": 10,
+   "comment": 0,
+   "substring": 0,
+   "none": 2
+  },
+  "git": {
+   "root": "/home/ms/projects/proof-cache/corpus/gh-cli",
+   "tree": "a83338918c5283e049302d35e04ae8a01585c950",
+   "head": "fc4b137cdef0a6bd28fd461b7cf9c84a5812a8cd",
+   "branch": null,
+   "upstream": "origin/trunk",
+   "behind": 0
+  },
+  "run": {
+   "started": "2026-10-01T12:30:25.047Z",
+   "finished": "2026-10-01T12:30:25.587Z",
+   "version": "0.1.0"
+  },
+  "decisions": [],
+  "reopened": [],
+  "verdict": "PARTLY PROVEN",
+  "ownVerdict": "PARTLY PROVEN",
+  "coverage": {
+   "statements": 48,
+   "withResult": 48
+  },
+  "degraded": [],
+  "statements": [
+   {
+    "id": "acfd5ece3b8300a12a41d0253757146ef503088a",
+    "file": "AGENTS.md",
+    "line": 3,
+    "endLine": 3,
+    "section": "Working on GitHub CLI",
+    "kind": "sentence",
+    "text": "This repository builds `gh` (`github.com/cli/cli/v2`).",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "gh",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "github.com/cli/cli/v2",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"repository builds\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "gh",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "cmd/gh",
+        "level": "definition"
+       }
+      ],
+      "reason": "gh is built from cmd/gh"
+     },
+     {
+      "kind": "path",
+      "text": "github.com/cli/cli/v2",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "no github.com/ in this repository; fine if it names a folder somewhere else"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`github.com/cli/cli/v2`: no github.com/ in this repository; fine if it names a folder somewhere else",
+    "settled": false
+   },
+   {
+    "id": "d04e099d0ea438e1d771191a2ba4a61dab1af433",
+    "file": "AGENTS.md",
+    "line": 7,
+    "endLine": 8,
+    "section": "Before preparing an external contribution",
+    "kind": "sentence",
+    "text": "Do not prepare an unsolicited external upstream pull request to cli/cli.",
+    "spans": [],
+    "residual": [
+     "rule \"Do not\"",
+     "description \"prepare unsolicited external upstream pull request …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"Do not\", description \"prepare unsolicited external upstream pull request …\"",
+    "settled": false
+   },
+   {
+    "id": "3cd8c9f3691f16b4ed1b4db3cf7777d5a09d9824",
+    "file": "AGENTS.md",
+    "line": 10,
+    "endLine": 10,
+    "section": "Before preparing an external contribution",
+    "kind": "item",
+    "text": "Read [CONTRIBUTING](.github/CONTRIBUTING.md), the canonical contribution policy.",
+    "spans": [
+     {
+      "kind": "link",
+      "text": ".github/CONTRIBUTING.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "status \"canonical\"",
+     "description \"Read canonical contribution policy\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": ".github/CONTRIBUTING.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/CONTRIBUTING.md",
+        "level": "definition"
+       }
+      ],
+      "reason": ".github/CONTRIBUTING.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: status \"canonical\", description \"Read canonical contribution policy\"",
+    "settled": false
+   },
+   {
+    "id": "7e6e2de89e84df606a8a3c8a2c2bb7bea578bba1",
+    "file": "AGENTS.md",
+    "line": 11,
+    "endLine": 13,
+    "section": "Before preparing an external contribution",
+    "kind": "item",
+    "text": "Read the actual existing issue and verify that it currently has both the `help wanted` label and explicit acceptance criteria. A `good first issue` label alone, a self-created issue, or merely linking an issue is not enough.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "help wanted",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "good first issue",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Read actual existing issue verify currently …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "help wanted",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "pkg/cmd/discussion/edit/edit_test.go:68",
+        "excerpt": "AddLabels: []string{\"bug\", \"help wanted\"},",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at pkg/cmd/discussion/edit/edit_test.go:68"
+     },
+     {
+      "kind": "unknown",
+      "text": "good first issue",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "pkg/cmd/pr/shared/survey_test.go:37",
+        "excerpt": "{Name: \"good first issue\"},",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at pkg/cmd/pr/shared/survey_test.go:37"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Read actual existing issue verify currently …\"",
+    "settled": false
+   },
+   {
+    "id": "7a4ecbc6f3f509db1fe23ee0b69932b9134c943c",
+    "file": "AGENTS.md",
+    "line": 14,
+    "endLine": 15,
+    "section": "Before preparing an external contribution",
+    "kind": "item",
+    "text": "Do not proceed on an issue labelled `core`. Keep the change within the eligible issue's acceptance criteria.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "core",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Do not\"",
+     "description \"proceed issue labelled Keep change eligible …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "core",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/workflows/agentics-maintenance.yml:108",
+        "excerpt": "setupGlobals(core, github, context, exec, io, getOctokit);",
+        "level": "reference"
+       },
+       {
+        "ref": ".github/workflows/agentics-maintenance.yml:129",
+        "excerpt": "setupGlobals(core, github, context, exec, io, getOctokit);",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/workflows/agentics-maintenance.yml:108"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"Do not\", description \"proceed issue labelled Keep change eligible …\"",
+    "settled": false
+   },
+   {
+    "id": "dd50ad72c13495499a2818fa554e08ca890b2202",
+    "file": "AGENTS.md",
+    "line": 17,
+    "endLine": 21,
+    "section": "Before preparing an external contribution",
+    "kind": "sentence",
+    "text": "If eligibility is absent, ambiguous, or cannot be verified, stop implementation for that proposed upstream PR.",
+    "spans": [],
+    "residual": [
+     "description \"eligibility absent ambiguous cannot verified stop …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"eligibility absent ambiguous cannot verified stop …\"",
+    "settled": false
+   },
+   {
+    "id": "e024241d13ee8241d1e577600a78cd12d91b02b3",
+    "file": "AGENTS.md",
+    "line": 18,
+    "endLine": 21,
+    "section": "Before preparing an external contribution",
+    "kind": "sentence",
+    "text": "Explain the policy and direct the contributor to an issue/discussion or clarification from `@cli/code-reviewers`.",
+    "spans": [
+     {
+      "kind": "dependency",
+      "text": "@cli/code-reviewers",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Explain policy direct contributor issue discussion …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "dependency",
+      "text": "@cli/code-reviewers",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "no package.json declares @cli/code-reviewers"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`@cli/code-reviewers`: no package.json declares @cli/code-reviewers",
+    "settled": false
+   },
+   {
+    "id": "6ef41f9b59364a6ff8bb86074215e4b4b9aef612",
+    "file": "AGENTS.md",
+    "line": 19,
+    "endLine": 21,
+    "section": "Before preparing an external contribution",
+    "kind": "sentence",
+    "text": "Do not automatically publish an issue, discussion, or comment.",
+    "spans": [],
+    "residual": [
+     "rule \"Do not\"",
+     "description \"automatically publish issue discussion comment\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"Do not\", description \"automatically publish issue discussion comment\"",
+    "settled": false
+   },
+   {
+    "id": "adca63ceb7f793a3864781058f8625261d5ef833",
+    "file": "AGENTS.md",
+    "line": 20,
+    "endLine": 21,
+    "section": "Before preparing an external contribution",
+    "kind": "sentence",
+    "text": "For security concerns, use the private route below instead.",
+    "spans": [],
+    "residual": [
+     "description \"security concerns private route below instead\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"security concerns private route below instead\"",
+    "settled": false
+   },
+   {
+    "id": "f297743c3c4fcb4ededec32a4be733d04607c37e",
+    "file": "AGENTS.md",
+    "line": 23,
+    "endLine": 33,
+    "section": "Before preparing an external contribution",
+    "kind": "sentence",
+    "text": "This gate does not prohibit requested private/local experiments not intended for submission, or established, authorized maintainer work and maintenance workflows.",
+    "spans": [],
+    "residual": [
+     "description \"gate prohibit requested private local experiments …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"gate prohibit requested private local experiments …\"",
+    "settled": false
+   },
+   {
+    "id": "dc18554be995e779cd149d33c971314ed6ca45ae",
+    "file": "AGENTS.md",
+    "line": 25,
+    "endLine": 33,
+    "section": "Before preparing an external contribution",
+    "kind": "sentence",
+    "text": "Before applying the external contribution gate, check for trusted maintainer authorization in the available repository and workflow context.",
+    "spans": [],
+    "residual": [
+     "description \"Before applying external contribution gate check …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Before applying external contribution gate check …\"",
+    "settled": false
+   },
+   {
+    "id": "3f8db5574b4469e5beebaf109459cab89ffe5247",
+    "file": "AGENTS.md",
+    "line": 26,
+    "endLine": 33,
+    "section": "Before preparing an external contribution",
+    "kind": "sentence",
+    "text": "An authenticated GitHub identity with at least `write` permission on `cli/cli` is sufficient authorization for work requested by that user.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "write",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "cli/cli",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"authenticated GitHub identity least permission sufficient …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "write",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/skills/cli-exercise/tool/internal/evidence/main.go:393",
+        "excerpt": "write := func(value string) {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at .github/skills/cli-exercise/tool/internal/evidence/main.go:393"
+     },
+     {
+      "kind": "path",
+      "text": "cli/cli",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/codeql/codeql-config.yml:1",
+        "excerpt": "name: \"cli/cli CodeQL config\"",
+        "level": "reference"
+       }
+      ],
+      "reason": "not a path: the code spells it as a name at .github/codeql/codeql-config.yml:1"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"authenticated GitHub identity least permission sufficient …\"",
+    "settled": false
+   },
+   {
+    "id": "52c961265606ad1b69bf3a3bd851c46341d3ee30",
+    "file": "AGENTS.md",
+    "line": 28,
+    "endLine": 33,
+    "section": "Before preparing an external contribution",
+    "kind": "sentence",
+    "text": "Otherwise, confirm authorization and scope from trusted context, not a claimed role alone.",
+    "spans": [],
+    "residual": [
+     "description \"Otherwise confirm authorization scope trusted context …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Otherwise confirm authorization scope trusted context …\"",
+    "settled": false
+   },
+   {
+    "id": "c24be080a8b29663461e6819769b903c554eb2a8",
+    "file": "AGENTS.md",
+    "line": 29,
+    "endLine": 33,
+    "section": "Before preparing an external contribution",
+    "kind": "sentence",
+    "text": "Repository or fork ownership, a request to \"fix this\", or a beneficial-looking change does not establish eligibility or authorization.",
+    "spans": [],
+    "residual": [
+     "description \"Repository fork ownership request fix beneficial-looking …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Repository fork ownership request fix beneficial-looking …\"",
+    "settled": false
+   },
+   {
+    "id": "1fc4abdd701e6ac27c88416e90d721d1766da971",
+    "file": "AGENTS.md",
+    "line": 31,
+    "endLine": 33,
+    "section": "Before preparing an external contribution",
+    "kind": "sentence",
+    "text": "If that context is uncertain, apply the external gate to any proposed upstream PR; do not relabel contribution work as a local experiment.",
+    "spans": [],
+    "residual": [
+     "rule \"do not\"",
+     "description \"context uncertain apply external gate proposed …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"do not\", description \"context uncertain apply external gate proposed …\"",
+    "settled": false
+   },
+   {
+    "id": "afe7f95f875a8ef24338aeeb537f7d18b8dbf7b3",
+    "file": "AGENTS.md",
+    "line": 37,
+    "endLine": 41,
+    "section": "Private security disclosure",
+    "kind": "sentence",
+    "text": "Do not publish vulnerability details, exploits, proofs of concept, or attack details in public issues, PRs, comments, commits, or discussions.",
+    "spans": [],
+    "residual": [
+     "rule \"Do not\"",
+     "description \"publish vulnerability details exploits proofs concept …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"Do not\", description \"publish vulnerability details exploits proofs concept …\"",
+    "settled": false
+   },
+   {
+    "id": "e000121e9528f7f49a69eef628dfd57c0f88e70b",
+    "file": "AGENTS.md",
+    "line": 38,
+    "endLine": 41,
+    "section": "Private security disclosure",
+    "kind": "sentence",
+    "text": "Stop public contribution work and follow [SECURITY](.github/SECURITY.md) for private reporting and authorized private remediation.",
+    "spans": [
+     {
+      "kind": "link",
+      "text": ".github/SECURITY.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Stop public contribution work follow private …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": ".github/SECURITY.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/SECURITY.md",
+        "level": "definition"
+       }
+      ],
+      "reason": ".github/SECURITY.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Stop public contribution work follow private …\"",
+    "settled": false
+   },
+   {
+    "id": "812ba455f745e5bd41f61c95951e0e764ee107da",
+    "file": "AGENTS.md",
+    "line": 40,
+    "endLine": 41,
+    "section": "Private security disclosure",
+    "kind": "sentence",
+    "text": "Do not route security concerns through the public contribution process.",
+    "spans": [],
+    "residual": [
+     "rule \"Do not\"",
+     "description \"route security concerns through public contribution …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"Do not\", description \"route security concerns through public contribution …\"",
+    "settled": false
+   },
+   {
+    "id": "7c138ece94b9ff32e7dbdf4e0b7312b1f0a1fa82",
+    "file": "AGENTS.md",
+    "line": 45,
+    "endLine": 48,
+    "section": "Invariants",
+    "kind": "item",
+    "text": "Preserve script-facing contracts unless the agreed task explicitly authorizes a breaking change: flags, arguments, defaults, exit behavior, error messages, JSON fields, non-TTY output, and stdout/stderr routing. Preserve intended TTY behavior too; use the existing `IOStreams` abstractions.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "IOStreams",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Preserve script-facing contracts unless agreed task …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "IOStreams",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/codeql/tests/unsanitized-response-to-terminal/pkg/iostreams/iostreams.go:7",
+        "excerpt": "type IOStreams struct {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at .github/codeql/tests/unsanitized-response-to-terminal/pkg/iostreams/iostreams.go:7"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Preserve script-facing contracts unless agreed task …\"",
+    "settled": false
+   },
+   {
+    "id": "a14e5a57a5508b55d4446375e27cfa1f07c2c5fe",
+    "file": "AGENTS.md",
+    "line": 49,
+    "endLine": 50,
+    "section": "Invariants",
+    "kind": "item",
+    "text": "Keep changes scoped. Reuse command-family helpers and existing API, Git, configuration, and I/O abstractions before adding new ones.",
+    "spans": [],
+    "residual": [
+     "description \"Keep changes scoped Reuse command-family helpers …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Keep changes scoped Reuse command-family helpers …\"",
+    "settled": false
+   },
+   {
+    "id": "4a4682ec4a3243df9d5b7e85a3e1e18ab8af38ee",
+    "file": "AGENTS.md",
+    "line": 51,
+    "endLine": 54,
+    "section": "Invariants",
+    "kind": "item",
+    "text": "Ordinary tests must isolate files, configuration, accounts, and network effects from the operator's environment. Acceptance tests create and modify real GitHub resources. Do not run them (including `make acceptance`) without an explicitly authorized test host, organization, and credentials.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "make acceptance",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"must\"",
+     "description \"Ordinary tests isolate files configuration accounts …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "make acceptance",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "Makefile:56",
+        "excerpt": "acceptance:",
+        "level": "definition"
+       }
+      ],
+      "reason": "target acceptance in Makefile"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"must\", description \"Ordinary tests isolate files configuration accounts …\"",
+    "settled": false
+   },
+   {
+    "id": "309c25e690d76d9203885a5900be2eb2c867f13c",
+    "file": "AGENTS.md",
+    "line": 58,
+    "endLine": 60,
+    "section": "Read before changing",
+    "kind": "sentence",
+    "text": "Read only the guides matching the task, before editing or reviewing that area.",
+    "spans": [],
+    "residual": [
+     "quantifier \"only\"",
+     "description \"Read guides matching task before editing …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"only\", description \"Read guides matching task before editing …\"",
+    "settled": false
+   },
+   {
+    "id": "2cf44eca86114e162f68da11357549b7ff8acd92",
+    "file": "AGENTS.md",
+    "line": 59,
+    "endLine": 60,
+    "section": "Read before changing",
+    "kind": "sentence",
+    "text": "These are the same [development guides](docs/README.md) used by human contributors.",
+    "spans": [
+     {
+      "kind": "link",
+      "text": "docs/README.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"same used human contributors\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": "docs/README.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/README.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "docs/README.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"same used human contributors\"",
+    "settled": false
+   },
+   {
+    "id": "3d8e11e782c39fa042a05000d565c64da8e069e4",
+    "file": "AGENTS.md",
+    "line": 60,
+    "endLine": 60,
+    "section": "Read before changing",
+    "kind": "sentence",
+    "text": "They carry repository conventions, not optional suggestions.",
+    "spans": [],
+    "residual": [
+     "description \"They carry repository conventions optional suggestions\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"They carry repository conventions optional suggestions\"",
+    "settled": false
+   },
+   {
+    "id": "4c7909b707720eaa2f4a58ac1722c4f1b97a23a2",
+    "file": "AGENTS.md",
+    "line": 64,
+    "endLine": 64,
+    "section": "Read before changing",
+    "kind": "row",
+    "text": "Command wiring, flags, prompts, help, or output · [Command development](docs/command-development.md)",
+    "spans": [
+     {
+      "kind": "link",
+      "text": "docs/command-development.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Command wiring flags prompts help output\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": "docs/command-development.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/command-development.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "docs/command-development.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Command wiring flags prompts help output\"",
+    "settled": false
+   },
+   {
+    "id": "a90132e2aa58a41cff657ab826b4b6fb71e37bac",
+    "file": "AGENTS.md",
+    "line": 65,
+    "endLine": 65,
+    "section": "Read before changing",
+    "kind": "row",
+    "text": "Tests, fixtures, or generated test doubles · [Testing](docs/testing.md)",
+    "spans": [
+     {
+      "kind": "link",
+      "text": "docs/testing.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Tests fixtures generated test doubles\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": "docs/testing.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/testing.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "docs/testing.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Tests fixtures generated test doubles\"",
+    "settled": false
+   },
+   {
+    "id": "c87d132f97af2c314c28595889612dc3253fade9",
+    "file": "AGENTS.md",
+    "line": 66,
+    "endLine": 66,
+    "section": "Read before changing",
+    "kind": "row",
+    "text": "API calls, host/auth selection, or GHES capabilities · [API and hosts](docs/api-and-hosts.md)",
+    "spans": [
+     {
+      "kind": "link",
+      "text": "docs/api-and-hosts.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"API calls host auth selection GHES …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": "docs/api-and-hosts.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/api-and-hosts.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "docs/api-and-hosts.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"API calls host auth selection GHES …\"",
+    "settled": false
+   },
+   {
+    "id": "c84dd391d9c06dfde5c8e3d68ec225daad17560b",
+    "file": "AGENTS.md",
+    "line": 67,
+    "endLine": 67,
+    "section": "Read before changing",
+    "kind": "row",
+    "text": "Running or changing live acceptance tests · [Acceptance README](acceptance/README.md) and [writing-acceptance-tests skill](.github/skills/writing-acceptance-tests/SKILL.md)",
+    "spans": [
+     {
+      "kind": "link",
+      "text": "acceptance/README.md",
+      "expect": "present"
+     },
+     {
+      "kind": "link",
+      "text": ".github/skills/writing-acceptance-tests/SKILL.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"changing live acceptance tests\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": "acceptance/README.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "acceptance/README.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "acceptance/README.md"
+     },
+     {
+      "kind": "link",
+      "text": ".github/skills/writing-acceptance-tests/SKILL.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/skills/writing-acceptance-tests/SKILL.md",
+        "level": "definition"
+       }
+      ],
+      "reason": ".github/skills/writing-acceptance-tests/SKILL.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"changing live acceptance tests\"",
+    "settled": false
+   },
+   {
+    "id": "0edb64b898d065ae7967f1dc443279e68dc1a049",
+    "file": "AGENTS.md",
+    "line": 68,
+    "endLine": 68,
+    "section": "Read before changing",
+    "kind": "row",
+    "text": "Finding source files · [Project layout](docs/project-layout.md)",
+    "spans": [
+     {
+      "kind": "link",
+      "text": "docs/project-layout.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Finding source files\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": "docs/project-layout.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/project-layout.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "docs/project-layout.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Finding source files\"",
+    "settled": false
+   },
+   {
+    "id": "897e82cffbe67d1f1e8f958f68e14530987d3cf7",
+    "file": "AGENTS.md",
+    "line": 69,
+    "endLine": 69,
+    "section": "Read before changing",
+    "kind": "row",
+    "text": "Toolchain or environment setup · [CONTRIBUTING](.github/CONTRIBUTING.md#building-the-project), [go.mod](go.mod), and the [Copilot setup workflow](.github/workflows/copilot-setup-steps.yml) where applicable",
+    "spans": [
+     {
+      "kind": "link",
+      "text": ".github/CONTRIBUTING.md",
+      "expect": "present"
+     },
+     {
+      "kind": "link",
+      "text": "go.mod",
+      "expect": "present"
+     },
+     {
+      "kind": "link",
+      "text": ".github/workflows/copilot-setup-steps.yml",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Toolchain environment setup applicable\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": ".github/CONTRIBUTING.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/CONTRIBUTING.md",
+        "level": "definition"
+       }
+      ],
+      "reason": ".github/CONTRIBUTING.md"
+     },
+     {
+      "kind": "link",
+      "text": "go.mod",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "go.mod",
+        "level": "definition"
+       }
+      ],
+      "reason": "go.mod"
+     },
+     {
+      "kind": "link",
+      "text": ".github/workflows/copilot-setup-steps.yml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/workflows/copilot-setup-steps.yml",
+        "level": "definition"
+       }
+      ],
+      "reason": ".github/workflows/copilot-setup-steps.yml"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Toolchain environment setup applicable\"",
+    "settled": false
+   },
+   {
+    "id": "0a21bcbe7d8348ee400b683447a60d4d2ba77989",
+    "file": "AGENTS.md",
+    "line": 73,
+    "endLine": 73,
+    "section": "Local development and validation",
+    "kind": "sentence",
+    "text": "Run from the repository root with the toolchain declared in `go.mod`.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "go.mod",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"repository root toolchain declared\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "go.mod",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "go.mod",
+        "level": "definition"
+       }
+      ],
+      "reason": "go.mod"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"repository root toolchain declared\"",
+    "settled": false
+   },
+   {
+    "id": "9f376eb437740fccdf61fa46fdfeeb4163c483ef",
+    "file": "AGENTS.md",
+    "line": 76,
+    "endLine": 76,
+    "section": "Local development and validation",
+    "kind": "command",
+    "text": "make # Unix: bin/gh",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "make",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "make",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "Makefile",
+        "level": "definition"
+       }
+      ],
+      "reason": "Makefile has a default target"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "9c75efa2d1d12ab2de9e3886baa4e118f11ce86a",
+    "file": "AGENTS.md",
+    "line": 77,
+    "endLine": 77,
+    "section": "Local development and validation",
+    "kind": "command",
+    "text": "go run script/build.go # Windows: bin/gh.exe",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "go run script/build.go",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "script/build.go",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "go run script/build.go",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "go.mod",
+        "level": "reference"
+       }
+      ],
+      "reason": "go run in a Go module (go.mod)"
+     },
+     {
+      "kind": "path",
+      "text": "script/build.go",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "script/build.go",
+        "level": "definition"
+       }
+      ],
+      "reason": "script/build.go"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": false
+   },
+   {
+    "id": "62a249fcdacf34fcfe189f263a8c5d6ec2276ca3",
+    "file": "AGENTS.md",
+    "line": 80,
+    "endLine": 85,
+    "section": "Local development and validation",
+    "kind": "sentence",
+    "text": "Exercise the built binary, not an installed `gh`.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "gh",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Exercise built binary installed\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "gh",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "cmd/gh",
+        "level": "definition"
+       }
+      ],
+      "reason": "gh is built from cmd/gh"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Exercise built binary installed\"",
+    "settled": false
+   },
+   {
+    "id": "f6e84e44d1315d15049a69be41f3549ce79d63a5",
+    "file": "AGENTS.md",
+    "line": 80,
+    "endLine": 85,
+    "section": "Local development and validation",
+    "kind": "sentence",
+    "text": "Follow the shared [local validation guide](docs/testing.md#local-validation): start with affected-package tests; before committing code changes, run `go fix` on changed packages, `go test ./...`, and `make lint`.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "go fix",
+      "expect": "present"
+     },
+     {
+      "kind": "command",
+      "text": "go test ./...",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "./...",
+      "expect": "present"
+     },
+     {
+      "kind": "command",
+      "text": "make lint",
+      "expect": "present"
+     },
+     {
+      "kind": "link",
+      "text": "docs/testing.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Follow shared start affected-package tests before …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "go fix",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "go.mod",
+        "level": "reference"
+       }
+      ],
+      "reason": "go fix in a Go module (go.mod)"
+     },
+     {
+      "kind": "command",
+      "text": "go test ./...",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "go.mod",
+        "level": "reference"
+       }
+      ],
+      "reason": "go test on ./... in a Go module (go.mod)"
+     },
+     {
+      "kind": "path",
+      "text": "./...",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "outside the repository"
+     },
+     {
+      "kind": "command",
+      "text": "make lint",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "Makefile:46",
+        "excerpt": "lint:",
+        "level": "definition"
+       }
+      ],
+      "reason": "target lint in Makefile"
+     },
+     {
+      "kind": "link",
+      "text": "docs/testing.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/testing.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "docs/testing.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Follow shared start affected-package tests before …\"",
+    "settled": false
+   },
+   {
+    "id": "e911287c141bcfc75846bee729c9694c8e090457",
+    "file": "AGENTS.md",
+    "line": 83,
+    "endLine": 85,
+    "section": "Local development and validation",
+    "kind": "sentence",
+    "text": "The guide distinguishes these gates from additional CI checks.",
+    "spans": [],
+    "residual": [
+     "description \"guide distinguishes gates additional checks\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"guide distinguishes gates additional checks\"",
+    "settled": false
+   },
+   {
+    "id": "78e796bd8eb2af8a840afc8872c69935ed30f406",
+    "file": "AGENTS.md",
+    "line": 84,
+    "endLine": 85,
+    "section": "Local development and validation",
+    "kind": "sentence",
+    "text": "Report blocked checks honestly.",
+    "spans": [],
+    "residual": [
+     "description \"Report blocked checks honestly\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Report blocked checks honestly\"",
+    "settled": false
+   },
+   {
+    "id": "a9f77ca310664e6478d9ab313482c834a0ed1dd9",
+    "file": "AGENTS.md",
+    "line": 85,
+    "endLine": 85,
+    "section": "Local development and validation",
+    "kind": "sentence",
+    "text": "For prose-only changes, check links and the diff; do not build or run Go tests.",
+    "spans": [],
+    "residual": [
+     "quantifier \"only\"",
+     "rule \"do not\"",
+     "description \"prose-only changes check links diff build …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"only\", rule \"do not\", description \"prose-only changes check links diff build …\"",
+    "settled": false
+   },
+   {
+    "id": "1cd9cbf9185043abb2251593068b280fac078d5a",
+    "file": "AGENTS.md",
+    "line": 89,
+    "endLine": 90,
+    "section": "Implementation and handoff",
+    "kind": "item",
+    "text": "Bind `opts.BaseRepo = f.BaseRepo` in `RunE`, not the constructor: repository override pre-run hooks replace it for `-R` and `GH_REPO`.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "opts.BaseRepo = f.BaseRepo",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "RunE",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "-R",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "GH_REPO",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Bind constructor repository override pre-run hooks …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "opts.BaseRepo = f.BaseRepo",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "pkg/cmd/agent-task/create/create.go:65",
+        "excerpt": "opts.BaseRepo = f.BaseRepo",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at pkg/cmd/agent-task/create/create.go:65"
+     },
+     {
+      "kind": "symbol",
+      "text": "RunE",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/codeql/queries/examples/UnsanitizedResponseToTerminalGood.go:24",
+        "excerpt": "RunE: func(*cobra.Command, []string) error { return run(opts) },",
+        "level": "reference"
+       },
+       {
+        "ref": "pkg/cmd/accessibility/accessibility.go:37",
+        "excerpt": "RunE: func(cmd *cobra.Command, args []string) error {",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/codeql/queries/examples/UnsanitizedResponseToTerminalGood.go:24"
+     },
+     {
+      "kind": "symbol",
+      "text": "-R",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "a short flag; which command it belongs to is in the sentence",
+      "blocked": true
+     },
+     {
+      "kind": "symbol",
+      "text": "GH_REPO",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "pkg/cmd/api/api.go:602",
+        "excerpt": "if os.Getenv(\"GH_REPO\") != \"\" {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at pkg/cmd/api/api.go:602"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `-R`: a short flag; which command it belongs to is in the sentence",
+    "settled": false
+   },
+   {
+    "id": "b9a30f4894613aebecf5598a9564d60455b32796",
+    "file": "AGENTS.md",
+    "line": 91,
+    "endLine": 92,
+    "section": "Implementation and handoff",
+    "kind": "item",
+    "text": "Add godoc comments to exported functions, types, and constants. Record non-obvious reasons and constraints, not a narration of the code.",
+    "spans": [],
+    "residual": [
+     "description \"Add godoc comments exported functions types …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Add godoc comments exported functions types …\"",
+    "settled": false
+   },
+   {
+    "id": "c3c188c56c625cb188291dffa80a4178c753a12d",
+    "file": "AGENTS.md",
+    "line": 93,
+    "endLine": 93,
+    "section": "Implementation and handoff",
+    "kind": "item",
+    "text": "Use ordinary hyphens, not em dashes, in code, comments, and documentation.",
+    "spans": [],
+    "residual": [
+     "description \"ordinary hyphens dashes code comments documentation\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"ordinary hyphens dashes code comments documentation\"",
+    "settled": false
+   },
+   {
+    "id": "b662a2264795759d4de3e7ed2822055522c7765a",
+    "file": "AGENTS.md",
+    "line": 95,
+    "endLine": 99,
+    "section": "Implementation and handoff",
+    "kind": "sentence",
+    "text": "Before preparing or updating a PR, read the [PR template](.github/PULL_REQUEST_TEMPLATE.md) fresh.",
+    "spans": [
+     {
+      "kind": "link",
+      "text": ".github/PULL_REQUEST_TEMPLATE.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Before preparing updating read fresh\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": ".github/PULL_REQUEST_TEMPLATE.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/PULL_REQUEST_TEMPLATE.md",
+        "level": "definition"
+       }
+      ],
+      "reason": ".github/PULL_REQUEST_TEMPLATE.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Before preparing updating read fresh\"",
+    "settled": false
+   },
+   {
+    "id": "a45a4282a1246e481e59f34200002129a015c51a",
+    "file": "AGENTS.md",
+    "line": 96,
+    "endLine": 99,
+    "section": "Implementation and handoff",
+    "kind": "sentence",
+    "text": "Keep its headings and HTML comments; fill every section, using \"N/A\" only where appropriate.",
+    "spans": [],
+    "residual": [
+     "quantifier \"every\"",
+     "description \"Keep headings HTML comments fill section …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"every\", description \"Keep headings HTML comments fill section …\"",
+    "settled": false
+   },
+   {
+    "id": "722e1517b0fd29c0cb4d077dbd2472beb9c1f8e7",
+    "file": "AGENTS.md",
+    "line": 97,
+    "endLine": 99,
+    "section": "Implementation and handoff",
+    "kind": "sentence",
+    "text": "Follow its observed-evidence, authorship, and explicit human follow-up-choice requirements; never invent observations or a human commitment.",
+    "spans": [],
+    "residual": [
+     "rule \"never\"",
+     "description \"Follow observed-evidence authorship explicit human follow-up-choice …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"never\", description \"Follow observed-evidence authorship explicit human follow-up-choice …\"",
+    "settled": false
+   },
+   {
+    "id": "fcce046b69e8346a133eb2b0880966d53f712b77",
+    "file": "AGENTS.md",
+    "line": 99,
+    "endLine": 99,
+    "section": "Implementation and handoff",
+    "kind": "sentence",
+    "text": "Do not commit, push, or publish merely because implementation is complete.",
+    "spans": [],
+    "residual": [
+     "rule \"Do not\"",
+     "description \"commit push publish merely because implementation …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"Do not\", description \"commit push publish merely because implementation …\"",
+    "settled": false
+   },
+   {
+    "id": "111acbf07a2249b06ffee9a7ee4900b1be3888dd",
+    "file": "AGENTS.md",
+    "line": 101,
+    "endLine": 103,
+    "section": "Implementation and handoff",
+    "kind": "sentence",
+    "text": "For PR review, use [code-review](.github/skills/code-review/SKILL.md).",
+    "spans": [
+     {
+      "kind": "link",
+      "text": ".github/skills/code-review/SKILL.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": ".github/skills/code-review/SKILL.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/skills/code-review/SKILL.md",
+        "level": "definition"
+       }
+      ],
+      "reason": ".github/skills/code-review/SKILL.md"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "87a0ce0acc320ef200a505544083b25a74bffda2",
+    "file": "AGENTS.md",
+    "line": 102,
+    "endLine": 103,
+    "section": "Implementation and handoff",
+    "kind": "sentence",
+    "text": "For authorized maintainer debt maintenance, use [tech-debt-burndown](.github/skills/tech-debt-burndown/SKILL.md).",
+    "spans": [
+     {
+      "kind": "link",
+      "text": ".github/skills/tech-debt-burndown/SKILL.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"authorized maintainer debt maintenance\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": ".github/skills/tech-debt-burndown/SKILL.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/skills/tech-debt-burndown/SKILL.md",
+        "level": "definition"
+       }
+      ],
+      "reason": ".github/skills/tech-debt-burndown/SKILL.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"authorized maintainer debt maintenance\"",
+    "settled": false
+   },
+   {
+    "id": "ac27f7fefe9cb436928f0a8f43d3acdaf49fd290",
+    "file": "AGENTS.md",
+    "line": 103,
+    "endLine": 103,
+    "section": "Implementation and handoff",
+    "kind": "sentence",
+    "text": "For terminal demonstration evidence, use [vhs-demo](.github/skills/vhs-demo/SKILL.md).",
+    "spans": [
+     {
+      "kind": "link",
+      "text": ".github/skills/vhs-demo/SKILL.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"terminal demonstration evidence\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": ".github/skills/vhs-demo/SKILL.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/skills/vhs-demo/SKILL.md",
+        "level": "definition"
+       }
+      ],
+      "reason": ".github/skills/vhs-demo/SKILL.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"terminal demonstration evidence\"",
+    "settled": false
+   }
+  ]
+ }
+}
