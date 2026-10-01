@@ -43,6 +43,13 @@ every citation checks out: it re-reads each `file:line` and re-runs each read-on
 57 with checked citations, left 6 open with reasons, and found 2 real contradictions with the code
 that no name check could see.
 
+Then it fixes what is stale. A fixer proposes each edit from the evidence alone, proof applies its
+policy (never add a line, never delete a rule, delete a fact only with evidence it is gone, cite
+everything), and a fresh verifier re-checks the edited text. Edits it refuses are reverted and
+reported. Every fix and every decision you record with `proof decide` goes into a sidecar
+(`CLAUDE.md.proof.json`), so the next run shows decided lines as decided and asks only about what
+changed. You review the diff afterwards; nothing is committed unless you pass `--commit`.
+
 ## Install
 
 The repository is private for now; these commands work for collaborators until it is public.

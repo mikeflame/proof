@@ -100,12 +100,29 @@ export interface AgentVerdict {
   model: string;
 }
 
+export interface FixOutcome {
+  tier: 'A' | 'B' | 'C';
+  action: 'replace' | 'delete';
+  old: string;
+  new: string;
+  reason: string;
+  evidence: AgentVerdict['evidence'];
+  /** applied: written and re-verified; rejected: the re-verifier refused it and it was reverted; refused: policy kept it out; dry-run: shown, not written. */
+  outcome: 'applied' | 'rejected' | 'refused' | 'dry-run';
+  /** What the fresh re-verification said about the edited text. */
+  reverify: string;
+  /** For an applied fix: the statement it replaced. */
+  was?: string;
+}
+
 export interface CheckedStatement extends Statement {
   status: StatementStatus;
   results: SpanResult[];
   reason: string;
   /** The verifier's answer, when the statement went to the agent stage. */
   agent?: AgentVerdict;
+  /** The fix proposed for it, and what became of it. Spec 3.5, 3.6. */
+  fix?: FixOutcome;
   /** Settled by mechanical checks alone: every typed span verified at definition or declaration level and nothing residual. */
   settled: boolean;
 }

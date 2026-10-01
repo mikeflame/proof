@@ -1,12 +1,15 @@
-import { existsSync, realpathSync } from 'node:fs';
+import { existsSync, realpathSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { isAbsolute, join, posix, resolve } from 'node:path';
 import { type GitState, gitState } from './core/git.ts';
 import { type Degradation, RepoContext } from './core/repo.ts';
 import { NO_GRAMMAR, Syntax } from './core/syntax.ts';
 import type { Discovered, Scope } from './discover.ts';
-import type { CheckedStatement, EvidenceLevel, StatementStatus, Verdict } from './model.ts';
+import type { CheckedStatement, EvidenceLevel, FixOutcome, StatementStatus, Verdict } from './model.ts';
+import { appendDecisions, type DecisionRecord, loadDecisions, replayDecisions, sidecarPath } from './decisions.ts';
 import { parseDocument } from './parse/markdown.ts';
+import { applyEdits, type FixOptions, type ProposedEdit, proposeFixes, unifiedDiff } from './agent/fix.ts';
+import type { GapProposal } from './agent/gaps.ts';
 import { type AgentCoverage, type VerifyOptions, verifyFiles } from './agent/verify.ts';
 import { checkStatement } from './verify/index.ts';
 import { pathBaseOf } from './verify/util.ts';
@@ -14,6 +17,17 @@ import { VERSION } from './version.ts';
 
 /** Claude Code follows `@path` imports this many hops deep, and no further. */
 export const MAX_IMPORT_HOPS = 4;
+
+export interface FileFix {
+  proposed: ProposedEdit[];
+  accepted: ProposedEdit[];
+  rejected: ProposedEdit[];
+  failure: string | null;
+  costUsd: number;
+  before: string;
+  after: string;
+  reverified: Map<ProposedEdit, { verdict: string; statements: CheckedStatement[] }>;
+}
 
 export interface ImportInfo {
   /** As written after the `@`. */
@@ -44,8 +58,19 @@ export interface FileReport {
   /** The agent stage, when it ran. */
   agent?: AgentCoverage;
   git: GitState | null;
-  run: { started: string; finished: string; version: string };
+  /** budgetUsd: what the agent stages of the whole run spent, the same on every file of the run. */
+  run: { started: string; finished: string; version: string; budgetUsedUsd?: number };
   statements: CheckedStatement[];
+  /** The decisions sidecar as read at the start of the run. Spec 4.5. */
+  decisions: DecisionRecord[];
+  /** Decisions whose line was edited since: that line is open again. */
+  reopened: DecisionRecord[];
+  /** The edit this run made to the file (or would make, with --dry-run), as a unified diff. */
+  diff?: string;
+  /** With --gaps: lines the file is missing, proposed with evidence and never written. */
+  gaps?: GapProposal[];
+  /** Every edit the fixer proposed and what became of it. Spec 7.2. */
+  fixes?: { statement_id: string; line: number; tier: string; action: string; old: string; new: string; outcome: FixOutcome['outcome']; reverify: string; refused: string | null }[];
 }
 
 const emptyCounts = (): Record<StatementStatus, number> => ({ VERIFIED: 0, STALE: 0, UNCONFIRMED: 0, UNVERIFIED_WITH_REASON: 0, DECIDED: 0, OVERRIDDEN: 0, NOT_CHECKED: 0, FIXED: 0, FIX_REJECTED: 0 });
@@ -66,6 +91,20 @@ export function verdictOf(statements: CheckedStatement[]): Verdict {
   return 'PROVEN';
 }
 
+/**
+ * An edit that proves what it changed may leave older wording open: every span it introduced is
+ * verified, nothing in the edited statement is stale or unconfirmed, and the verifier did not call the
+ * new text stale. It is applied, and the statement stays listed as open for its untouched part.
+ */
+export function improves(edited: CheckedStatement, original: CheckedStatement | undefined): boolean {
+  if (edited.status !== 'UNVERIFIED_WITH_REASON' || edited.agent?.verdict === 'stale') return false;
+  const typed = edited.results.filter((r) => r.kind !== 'prose');
+  if (typed.some((r) => r.status === 'STALE' || r.status === 'UNCONFIRMED' || r.blocked)) return false;
+  const before = new Set((original?.results ?? []).map((r) => r.text));
+  const introduced = typed.filter((r) => !before.has(r.text));
+  return introduced.length > 0 && introduced.every((r) => r.status === 'VERIFIED');
+}
+
 /** Recount a report after its statements changed; an incomplete agent stage makes the file UNTESTED. */
 export function tally(r: FileReport): void {
   const counts = emptyCounts();
@@ -82,6 +121,37 @@ export function tally(r: FileReport): void {
     r.reason = `the verifier answered ${r.agent.answered} of ${r.agent.sent} open statements: ${r.agent.failures.join('; ') || 'no verdict for the rest'}`;
   }
   r.verdict = r.ownVerdict;
+}
+
+/**
+ * Mark the final reports with what the fix stage did: the new statements of applied fixes are FIXED, a
+ * rejected fix leaves its statement FIX_REJECTED, a refused or dry-run fix is shown on the stale line.
+ */
+export function annotateFixes(reports: FileReport[], fixes: Map<string, FileFix>, dryRun: boolean): void {
+  for (const r of reports) {
+    const f = fixes.get(r.file);
+    if (!f) continue;
+    r.diff = unifiedDiff(r.file, f.before, f.after);
+    const outcomeOf = (e: ProposedEdit): FixOutcome['outcome'] => (e.refused ? 'refused' : f.rejected.includes(e) ? 'rejected' : dryRun ? 'dry-run' : 'applied');
+    r.fixes = f.proposed.map((e) => ({ statement_id: e.statementId, line: e.line, tier: e.tier, action: e.action, old: e.old, new: e.new, outcome: outcomeOf(e), reverify: f.reverified.get(e)?.verdict ?? '', refused: e.refused }));
+    for (const e of f.proposed) {
+      const outcome = outcomeOf(e);
+      const base: FixOutcome = { tier: e.tier, action: e.action, old: e.old, new: e.new, reason: e.reason, evidence: e.evidence, outcome, reverify: e.refused ?? f.reverified.get(e)?.verdict ?? '' };
+      if (outcome === 'applied') {
+        const ids = new Set((f.reverified.get(e)?.statements ?? []).map((s) => s.id));
+        // A statement whose untouched wording is still open keeps its status; the fix shows on it.
+        r.statements = r.statements.map((s) => (ids.has(s.id) ? (s.status === 'VERIFIED' || s.status === 'DECIDED' ? { ...s, status: 'FIXED', reason: `fixed (tier ${e.tier}) and re-verified`, fix: { ...base, was: e.was } } : { ...s, fix: { ...base, was: e.was } }) : s));
+        continue;
+      }
+      r.statements = r.statements.map((s) => {
+        if (s.id !== e.statementId) return s;
+        if (outcome === 'rejected') return { ...s, status: 'FIX_REJECTED', reason: `the fix was reverted: ${base.reverify}`, fix: base };
+        return { ...s, fix: base };
+      });
+    }
+    tally(r);
+  }
+  combineVerdicts(reports);
 }
 
 /** Each importer's verdict is the worst of its own and of everything it imports, transitively. */
@@ -164,6 +234,81 @@ export class Run {
     return reports;
   }
 
+  /** Mechanical results for every statement of `text`, read as the file `rel`. */
+  async checkText(rel: string, text: string): Promise<CheckedStatement[]> {
+    const doc = parseDocument(text, rel);
+    const dir = posix.dirname(rel);
+    const docDir = dir === '.' ? '' : dir;
+    const ctx = { repo: this.repo, syntax: this.syntax, docFile: rel, docDir, pathBase: isAbsolute(rel) ? '' : pathBaseOf(rel, docDir) };
+    const out: CheckedStatement[] = [];
+    for (const st of doc.statements) out.push(await checkStatement(ctx, st));
+    return out;
+  }
+
+  /**
+   * The fix stage (spec 3.5 to 3.7): the fixer proposes an edit per stale statement, proof vets it against
+   * the autofix policy, a fresh verifier re-checks each edited statement on its own, and only edits it
+   * accepts are written. Every applied and rejected fix is recorded in the sidecar with tree and head.
+   */
+  async fix(reports: FileReport[], opts: FixOptions & { dryRun: boolean; verify: VerifyOptions }): Promise<Map<string, FileFix>> {
+    const out = new Map<string, FileFix>();
+    for (const r of reports) {
+      const stale = r.statements.filter((s) => s.status === 'STALE');
+      if (!stale.length) continue;
+      const source = this.repo.read(r.file) ?? '';
+      const proposed = await proposeFixes(this.repo, r.file, r.scope, stale, r.decisions, opts);
+      const outcome: FileFix = { proposed: proposed.edits, accepted: [], rejected: [], failure: proposed.failure, costUsd: proposed.costUsd, before: source, after: source, reverified: new Map() };
+      out.set(r.file, outcome);
+      const vetted = proposed.edits.filter((e) => !e.refused);
+      // Each edit is re-verified alone: the statements it produces, mechanically, then by a fresh verifier.
+      const trial = new Map<ProposedEdit, CheckedStatement[]>();
+      for (const e of vetted) {
+        const candidate = applyEdits(source, [e]);
+        const delta = candidate.split('\n').length - source.split('\n').length;
+        const oldIds = new Set(r.statements.map((s) => s.id));
+        const produced = (await this.checkText(r.file, candidate)).filter((s) => s.line >= e.line && s.line <= Math.max(e.line, e.endLine + delta) && !oldIds.has(s.id));
+        trial.set(e, produced);
+      }
+      const toVerify = [...trial.values()].flat();
+      if (toVerify.length) {
+        const note = `These statements are proposed corrections that are not written yet: ${r.file} on disk still has the old text. Judge each statement exactly as given here against the repository; do not judge the file on disk.`;
+        const cov = await verifyFiles(this.repo, [{ file: r.file, why: r.why, statements: toVerify, note }], reports.map((x) => x.file), { ...opts.verify, budgetUsd: Math.min(opts.verify.budgetUsd, toVerify.length * opts.verify.perStatementUsd + 0.5) });
+        outcome.costUsd += cov.get(r.file)?.costUsd ?? 0;
+      }
+      for (const e of vetted) {
+        const produced = (trial.get(e) ?? []).map((s) => toVerify.find((t) => t.id === s.id && t.line === s.line) ?? s);
+        const original = r.statements.find((s) => s.id === e.statementId);
+        const failed = produced.find((s) => s.status !== 'VERIFIED' && s.status !== 'DECIDED' && s.status !== 'NOT_CHECKED' && !improves(s, original));
+        const cited = failed?.agent?.evidence.find((x) => x.valid) ?? failed?.results.find((x) => x.status === 'STALE')?.evidence[0];
+        const verdict = failed
+          ? `${failed.status.toLowerCase().replace(/_/g, ' ')}: ${failed.agent?.rejected ?? failed.agent?.reason ?? failed.reason}${cited ? ` (${cited.ref}${'excerpt' in cited && cited.excerpt ? ` "${cited.excerpt.slice(0, 80)}"` : ''})` : ''}`
+          : produced.length
+            ? 'verified'
+            : 'removed, with evidence of absence';
+        outcome.reverified.set(e, { verdict, statements: produced });
+        if (failed || (e.action === 'replace' && !produced.length)) outcome.rejected.push(e);
+        else outcome.accepted.push(e);
+      }
+      outcome.after = applyEdits(source, outcome.accepted);
+      if (!opts.dryRun && outcome.after !== source) writeFileSync(isAbsolute(r.file) ? r.file : join(this.repo.root, r.file), outcome.after);
+      if (!opts.dryRun) {
+        const at = new Date().toISOString();
+        const tree = this.git?.tree ?? null;
+        const head = this.git?.head ?? null;
+        const by = `proof ${VERSION} (${opts.model})`;
+        const byId = new Map(r.statements.map((s) => [s.id, s]));
+        appendDecisions(this.repo.root, r.file, [
+          ...outcome.accepted.flatMap((e) => {
+            const produced = outcome.reverified.get(e)?.statements ?? [];
+            return (produced.length ? produced : [null]).map((p): DecisionRecord => ({ statement_id: p?.id ?? e.statementId, text: p?.text ?? '', kind: 'fixed', reason: e.reason, evidence: e.evidence.filter((x) => x.valid).map(({ kind, ref, excerpt }) => ({ kind, ref, excerpt })), by, at, tree, head, previous: byId.get(e.statementId)?.text, tier: e.tier, edit: { old: e.old, new: e.new }, line: e.line }));
+          }),
+          ...outcome.rejected.map((e): DecisionRecord => ({ statement_id: e.statementId, text: byId.get(e.statementId)?.text ?? '', kind: 'fix-rejected', reason: `re-verifier: ${outcome.reverified.get(e)?.verdict ?? 'rejected'}`, evidence: [], by, at, tree, head, previous: byId.get(e.statementId)?.text, tier: e.tier, edit: { old: e.old, new: e.new } })),
+        ]);
+      }
+    }
+    return out;
+  }
+
   /**
    * Check the targets and every instruction file they import, depth first, so each importer's verdict
    * includes what it pulls in. Each real file is checked once. Spec 3.1.
@@ -221,7 +366,7 @@ export class Run {
       run: { started, finished: started, version: VERSION },
     };
     const text = this.repo.read(rel);
-    if (text === null) return { ...base, verdict: 'UNTESTED', ownVerdict: 'UNTESTED', reason: `${rel} cannot be read`, coverage: { statements: 0, withResult: 0 }, degraded: [...this.repo.degraded], statements: [] };
+    if (text === null) return { ...base, verdict: 'UNTESTED', ownVerdict: 'UNTESTED', reason: `${rel} cannot be read`, coverage: { statements: 0, withResult: 0 }, degraded: [...this.repo.degraded], statements: [], decisions: [], reopened: [] };
 
     const doc = parseDocument(text, rel);
     if (doc.frontmatterError) this.repo.degrade(rel, `frontmatter does not parse (${doc.frontmatterError}); Claude Code loads this rule as if it had no paths`);
@@ -229,8 +374,11 @@ export class Run {
     const docDir = dir === '.' ? '' : dir;
     const ctx = { repo: this.repo, syntax: this.syntax, docFile: rel, docDir, pathBase: isAbsolute(rel) ? '' : pathBaseOf(rel, docDir) };
     this.repo.primeIgnored(doc.statements.flatMap((s) => s.spans.filter((sp) => sp.kind === 'path' || sp.kind === 'link').map((sp) => sp.text.replace(/^\.\//, ''))));
-    const statements: CheckedStatement[] = [];
-    for (const st of doc.statements) statements.push(await checkStatement(ctx, st));
+    const checked: CheckedStatement[] = [];
+    for (const st of doc.statements) checked.push(await checkStatement(ctx, st));
+    const sidecar = loadDecisions(this.repo.root, rel);
+    if (sidecar.error) this.repo.degrade(sidecarPath(rel), `${sidecar.error}; recorded decisions are not replayed`);
+    const { statements, reopened } = replayDecisions(this.repo.root, checked, sidecar.records);
     for (const s of statements) {
       counts[s.status] += 1;
       for (const r of s.results) if (r.status === 'VERIFIED' || r.status === 'UNCONFIRMED') evidenceLevels[r.level] += 1;
@@ -243,6 +391,8 @@ export class Run {
     const ownVerdict = verdictOf(statements);
     return {
       ...base,
+      decisions: sidecar.records,
+      reopened,
       imports,
       verdict: ownVerdict,
       ownVerdict,

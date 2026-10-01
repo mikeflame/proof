@@ -50,9 +50,54 @@ export const VERIFIER_SCHEMA = {
           proposed_text: { type: 'string' },
           action: { type: 'string', enum: [...ACTIONS] },
         },
-        required: ['statement_id', 'verdict', 'evidence', 'action'],
+        required: ['statement_id', 'verdict', 'evidence', 'reason', 'action'],
       },
     },
   },
   required: ['results'],
+} as const;
+
+/** The fixer's policy: spec 5. Rendered into the fixer prompt and the skill from this one list. */
+export const FIXER_RULES: readonly string[] = [
+  'Correct only what the evidence shows is wrong. Never add a statement, a line or a section, and never add content to close a gap.',
+  'Tier A (mechanical): a stale path, link, import, script name, subcommand or version where the repository offers exactly one candidate. Use the candidate.',
+  'Tier B (rewrite with evidence): rewrite the statement to what the evidence shows, keeping the author\'s phrasing and format wherever it still holds.',
+  'Tier C (pointer): when the statement copies something the repository owns (a command list from package.json or a Makefile), replace the copy with a pointer to the owner named in the ownership map, or to the file the evidence came from.',
+  'Never delete a rule; rewrite it to match the tooling, citing the config file.',
+  'Delete a fact only with evidence that the thing is absent (an absence citation). A fact that is merely unverified stays.',
+  '`old` is an exact substring of the statement\'s source lines, as written in the file, and `new` replaces it. Keep list markers, backticks, links and line breaks; `new` has no more lines than `old`.',
+  'Every edit cites the evidence it relies on, in the same kinds the verifier uses. An edit without a citation that checks out is not applied.',
+  'Never propose again a fix a person or the re-verifier rejected; the rejected fixes are listed.',
+  'If no edit is justified, return action none with the reason.',
+  'Never edit, create or delete files yourself; proof applies the edits you return.',
+];
+
+export const FIXER_SCHEMA = {
+  type: 'object',
+  properties: {
+    edits: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          statement_id: { type: 'string' },
+          tier: { type: 'string', enum: ['A', 'B', 'C'] },
+          action: { type: 'string', enum: ['replace', 'delete', 'none'] },
+          old: { type: 'string' },
+          new: { type: 'string' },
+          evidence: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: { kind: { type: 'string', enum: [...EVIDENCE_KINDS] }, ref: { type: 'string' }, excerpt: { type: 'string', maxLength: 200 } },
+              required: ['kind', 'ref'],
+            },
+          },
+          reason: { type: 'string' },
+        },
+        required: ['statement_id', 'action', 'evidence', 'reason'],
+      },
+    },
+  },
+  required: ['edits'],
 } as const;

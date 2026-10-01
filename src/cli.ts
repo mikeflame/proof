@@ -1,10 +1,15 @@
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import { type Discovered, discover } from './discover.ts';
 import { EXIT_CODE } from './model.ts';
+import { proposeGaps } from './agent/gaps.ts';
 import { DEFAULT_VERIFY, type VerifyOptions } from './agent/verify.ts';
-import { type FileReport, Run } from './pipeline.ts';
+import { annotateFixes, type FileFix, type FileReport, Run } from './pipeline.ts';
+import { loadConfig } from './config.ts';
+import { sidecarPath } from './decisions.ts';
+import { decide, HumanError, listOpen, revert } from './human.ts';
 import { toMarkdown } from './report.ts';
 import { VERSION } from './version.ts';
 
@@ -12,14 +17,21 @@ export const HELP = `proof ${VERSION}: is your CLAUDE.md still true?
 
 Usage:
   proof check [file...] [--user] [--json] [--out <dir>] [--verbose]
-  proof run   [file...] [--user] [--model <id>] [--effort <lvl>] [--budget-usd <n>] [--jobs <n>] [--no-cache] [--json] [--out <dir>]
+  proof run   [file...] [--user] [--no-fix] [--dry-run] [--commit] [--fix-rounds <n>] [--gaps] [--model <id>] [--effort <lvl>] [--budget-usd <n>]
+              [--jobs <n>] [--no-cache] [--json] [--out <dir>]
+  proof decide <file> [L<line>|<id> (--rule | --fact --evidence <path:line>) --reason "…"]
+  proof revert <file> --id <statement id>
 
 check   Checks every statement in CLAUDE.md, AGENTS.md and the other instruction files an agent loads
         against the repository with deterministic parsers, follows their @imports, and prints a report.
         With no files, checks every instruction file it discovers.
 run     Does the same, then hands every statement the checks left open to a verifier agent (the
         claude CLI, read-only tools), keeps only verdicts whose citations check out, and reports coverage.
-        A run can take many minutes; it is working, not stalled.
+        Then it fixes the stale lines: a fixer proposes each edit, a fresh verifier re-checks it, and only
+        edits it accepts are written. Review the diff afterwards. A run can take many minutes.
+decide  Lists the open statements of a file, or records a person's decision on one in <file>.proof.json,
+        so later runs show it as decided instead of asking again.
+revert  Puts back the text a fix replaced and records the rejection, so it is not proposed again.
 
   --user          Also check ~/.claude/CLAUDE.md, ~/.claude/rules/ and this machine's managed policy file,
                   and follow imports outside the repository (reported, never edited)
@@ -28,6 +40,11 @@ run     Does the same, then hands every statement the checks left open to a veri
   --budget-usd    Total spend for the verifier across the run (default ${DEFAULT_VERIFY.budgetUsd})
   --jobs <n>      Verifier calls in parallel (default ${DEFAULT_VERIFY.jobs})
   --no-cache      Ask again even when the code and the statement are unchanged since the last run
+  --no-fix        Verify only; change nothing
+  --dry-run       Show the diff the fixes would make, without writing it
+  --commit        Commit the fixed files and their sidecars (nothing is committed without it)
+  --fix-rounds    Fix rounds, each re-verified (default 1); a later round sees why earlier edits were rejected
+  --gaps          Also propose up to five missing lines per file, with evidence; never written
   --json          Print JSON (an array, one object per file) instead of markdown
   --out <dir>     Also write <name>.md and <name>.json reports into <dir>
   --verbose       List verified, decided and not-checked statements too
@@ -60,6 +77,10 @@ async function pipeline(mode: 'check' | 'run', argv: string[]): Promise<number> 
       'batch-size': { type: 'string' },
       'no-cache': { type: 'boolean' },
       'no-fix': { type: 'boolean' },
+      'dry-run': { type: 'boolean' },
+      'fix-rounds': { type: 'string' },
+      gaps: { type: 'boolean' },
+      commit: { type: 'boolean' },
     },
   });
   const run = new Run(process.cwd());
@@ -88,6 +109,44 @@ async function pipeline(mode: 'check' | 'run', argv: string[]): Promise<number> 
     };
     if (!values.json) console.error(`verifying open statements with ${opts.model} (budget $${opts.budgetUsd.toFixed(2)}); this can take minutes`);
     reports = await run.verify(reports, opts);
+    let spent = reports.reduce((n, r) => n + (r.agent?.costUsd ?? 0), 0);
+    const rounds = NUMBER('fix-rounds', values['fix-rounds'], 1);
+    const dryRun = Boolean(values['dry-run']);
+    const config = loadConfig(run.repo);
+    let current = run;
+    const merged = new Map<string, FileFix>();
+    // One bounded round by default; a later round sees every rejected attempt and the re-verifier's verdict on it.
+    for (let round = 1; round <= rounds && !values['no-fix'] && reports.some((r) => r.counts.STALE); round++) {
+      const stale = reports.reduce((n, r) => n + r.counts.STALE, 0);
+      if (!values.json) console.error(`fixing ${stale} stale statement(s)${rounds > 1 ? ` (round ${round} of ${rounds})` : ''}${dryRun ? ' (dry run: nothing is written)' : ''}`);
+      const fixes = await current.fix(reports, { model: opts.model, effort: opts.effort, budgetUsd: Math.min(Math.max(0.1, opts.budgetUsd - spent), Math.max(1, stale * opts.perStatementUsd * 2)), timeoutMs: opts.timeoutMs, user: Boolean(values.user), config, dryRun, verify: opts });
+      spent += [...fixes.values()].reduce((n, x) => n + x.costUsd, 0);
+      const changed = [...fixes.values()].some((f) => f.after !== f.before || f.accepted.length || f.rejected.length);
+      if (changed && !dryRun) {
+        // The files changed: check them again; the verdict cache answers every statement that did not.
+        current = new Run(process.cwd());
+        reports = await current.verify(await current.checkTargets(targets, { user: Boolean(values.user) }), opts);
+        spent += reports.reduce((n, r) => n + (r.agent?.costUsd ?? 0), 0);
+        if (values.commit) commitFixes(current.repo.root, [...fixes.entries()].filter(([, f]) => f.after !== f.before || f.rejected.length).map(([file]) => file), fixes);
+      }
+      for (const [file, f] of fixes) {
+        const prev = merged.get(file);
+        merged.set(file, prev ? { ...f, before: prev.before, proposed: [...prev.proposed, ...f.proposed], accepted: [...prev.accepted, ...f.accepted], rejected: [...prev.rejected, ...f.rejected], costUsd: prev.costUsd + f.costUsd, reverified: new Map([...prev.reverified, ...f.reverified]) } : f);
+      }
+      if (dryRun || !fixes.size || ![...fixes.values()].some((f) => f.rejected.length)) break;
+    }
+    if (merged.size) annotateFixes(reports, merged, dryRun);
+    if (values.gaps) {
+      // Proposals only: nothing here writes to any file (spec 5.4).
+      for (const r of reports.filter((x) => x.scope !== 'managed' && x.statements.length)) {
+        const g = await proposeGaps(current.repo, r.file, current.repo.read(r.file) ?? '', { model: opts.model, effort: opts.effort, budgetUsd: Math.min(1, Math.max(0.1, opts.budgetUsd - spent)), timeoutMs: opts.timeoutMs });
+        spent += g.costUsd;
+        r.gaps = g.proposals;
+        if (g.failure) r.degraded.push({ subject: 'gaps', reason: `gap proposals failed: ${g.failure}` });
+      }
+    }
+    for (const r of reports) r.run.budgetUsedUsd = spent;
+    if (!values.json) console.error(`spent $${spent.toFixed(2)} of $${opts.budgetUsd.toFixed(2)}`);
   }
   if (values.out) {
     mkdirSync(values.out, { recursive: true });
@@ -102,6 +161,41 @@ async function pipeline(mode: 'check' | 'run', argv: string[]): Promise<number> 
   return Math.max(...reports.map((r) => EXIT_CODE[r.verdict]));
 }
 
+/** `--commit`: the fixed files and their sidecars only, never anything else that is staged. */
+function commitFixes(root: string, files: string[], fixes: Map<string, FileFix>): void {
+  const paths = files.flatMap((f) => [f, sidecarPath(f)]).filter((p) => existsSync(join(root, p)));
+  if (!paths.length) return;
+  const applied = [...fixes.values()].reduce((n, f) => n + f.accepted.length, 0);
+  spawnSync('git', ['add', '--', ...paths], { cwd: root });
+  const res = spawnSync('git', ['commit', '-q', '-m', `docs: proof fixed ${applied} stale statement${applied === 1 ? '' : 's'} in ${files.join(', ')}`, '--', ...paths], { cwd: root, encoding: 'utf8' });
+  if (res.status !== 0) console.error(`commit failed: ${res.stderr.trim()}. The fixes are in the working tree.`);
+}
+
+async function decideCommand(argv: string[]): Promise<number> {
+  const { values, positionals } = parseArgs({ args: argv, allowPositionals: true, options: { rule: { type: 'boolean' }, fact: { type: 'boolean' }, reason: { type: 'string' }, evidence: { type: 'string', multiple: true }, by: { type: 'string' } } });
+  const [file, which] = positionals;
+  if (!file) throw new UsageError('proof decide needs a file');
+  const run = new Run(process.cwd());
+  if (!which) {
+    process.stdout.write(await listOpen(run, file));
+    return 0;
+  }
+  if (values.rule === values.fact) throw new UsageError('pass exactly one of --rule or --fact');
+  const record = await decide(run, file, which, { kind: values.rule ? 'rule' : 'fact', reason: values.reason ?? '', evidence: (values.evidence ?? []).flatMap((e) => e.split(',')), ...(values.by ? { by: values.by } : {}) });
+  console.log(`decided ${record.kind}: ${record.text}\nrecorded in ${sidecarPath(run.repo.rel(file) ?? file)}`);
+  return 0;
+}
+
+function revertCommand(argv: string[]): number {
+  const { values, positionals } = parseArgs({ args: argv, allowPositionals: true, options: { id: { type: 'string' }, by: { type: 'string' } } });
+  const [file] = positionals;
+  if (!file || !values.id) throw new UsageError('proof revert needs a file and --id <statement id>');
+  const run = new Run(process.cwd());
+  const record = revert(run, file, values.id, values.by);
+  console.log(`reverted: ${record.edit?.new || '(deleted text)'} → ${record.edit?.old}\nrecorded as fix-rejected in ${sidecarPath(run.repo.rel(file) ?? file)}`);
+  return 0;
+}
+
 export async function main(argv: string[]): Promise<number> {
   const [first, ...rest] = argv;
   if (first === '--help' || first === '-h' || first === 'help') {
@@ -114,9 +208,15 @@ export async function main(argv: string[]): Promise<number> {
   }
   try {
     if (first === 'check' || first === 'run') return await pipeline(first, rest);
+    if (first === 'decide') return await decideCommand(rest);
+    if (first === 'revert') return revertCommand(rest);
     // `proof CLAUDE.md` and `proof --json` mean `proof check …`.
     if (!first || first.startsWith('-') || /\.(md|mdc)$|rules$/i.test(first)) return await pipeline('check', argv);
   } catch (err) {
+    if (err instanceof HumanError) {
+      console.error(err.message);
+      return 2;
+    }
     if (err instanceof UsageError || (err instanceof TypeError && 'code' in err && String(err.code).startsWith('ERR_PARSE_ARGS'))) {
       console.error(`${err.message}. Run: proof help`);
       return 2;

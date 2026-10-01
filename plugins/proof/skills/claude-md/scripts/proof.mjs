@@ -7468,8 +7468,9 @@ var require_format = __commonJS({
 });
 
 // src/cli.ts
-import { mkdirSync as mkdirSync2, writeFileSync as writeFileSync2 } from "node:fs";
-import { join as join8, resolve as resolve3 } from "node:path";
+import { spawnSync as spawnSync7 } from "node:child_process";
+import { existsSync as existsSync8, mkdirSync as mkdirSync2, writeFileSync as writeFileSync6 } from "node:fs";
+import { join as join11, resolve as resolve3 } from "node:path";
 import { parseArgs } from "node:util";
 
 // src/discover.ts
@@ -7684,12 +7685,6 @@ var EXIT_CODE = {
   UNTESTED: 2
 };
 var LEVEL_RANK = { definition: 5, declaration: 4, reference: 3, comment: 2, substring: 1, none: 0 };
-
-// src/agent/verify.ts
-import { createHash } from "node:crypto";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { homedir as homedir2 } from "node:os";
-import { join as join3 } from "node:path";
 
 // src/agent/claude.ts
 import { spawn, spawnSync as spawnSync2 } from "node:child_process";
@@ -8049,15 +8044,108 @@ var VERIFIER_SCHEMA = {
           proposed_text: { type: "string" },
           action: { type: "string", enum: [...ACTIONS] }
         },
-        required: ["statement_id", "verdict", "evidence", "action"]
+        required: ["statement_id", "verdict", "evidence", "reason", "action"]
       }
     }
   },
   required: ["results"]
 };
+var FIXER_RULES = [
+  "Correct only what the evidence shows is wrong. Never add a statement, a line or a section, and never add content to close a gap.",
+  "Tier A (mechanical): a stale path, link, import, script name, subcommand or version where the repository offers exactly one candidate. Use the candidate.",
+  "Tier B (rewrite with evidence): rewrite the statement to what the evidence shows, keeping the author's phrasing and format wherever it still holds.",
+  "Tier C (pointer): when the statement copies something the repository owns (a command list from package.json or a Makefile), replace the copy with a pointer to the owner named in the ownership map, or to the file the evidence came from.",
+  "Never delete a rule; rewrite it to match the tooling, citing the config file.",
+  "Delete a fact only with evidence that the thing is absent (an absence citation). A fact that is merely unverified stays.",
+  "`old` is an exact substring of the statement's source lines, as written in the file, and `new` replaces it. Keep list markers, backticks, links and line breaks; `new` has no more lines than `old`.",
+  "Every edit cites the evidence it relies on, in the same kinds the verifier uses. An edit without a citation that checks out is not applied.",
+  "Never propose again a fix a person or the re-verifier rejected; the rejected fixes are listed.",
+  "If no edit is justified, return action none with the reason.",
+  "Never edit, create or delete files yourself; proof applies the edits you return."
+];
+var FIXER_SCHEMA = {
+  type: "object",
+  properties: {
+    edits: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          statement_id: { type: "string" },
+          tier: { type: "string", enum: ["A", "B", "C"] },
+          action: { type: "string", enum: ["replace", "delete", "none"] },
+          old: { type: "string" },
+          new: { type: "string" },
+          evidence: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: { kind: { type: "string", enum: [...EVIDENCE_KINDS] }, ref: { type: "string" }, excerpt: { type: "string", maxLength: 200 } },
+              required: ["kind", "ref"]
+            }
+          },
+          reason: { type: "string" }
+        },
+        required: ["statement_id", "action", "evidence", "reason"]
+      }
+    }
+  },
+  required: ["edits"]
+};
+
+// src/agent/gaps.ts
+var SCHEMA = {
+  type: "object",
+  properties: {
+    proposals: {
+      type: "array",
+      maxItems: 5,
+      items: {
+        type: "object",
+        properties: {
+          text: { type: "string" },
+          section: { type: "string" },
+          reason: { type: "string" },
+          evidence: { type: "array", items: { type: "object", properties: { kind: { type: "string", enum: [...EVIDENCE_KINDS] }, ref: { type: "string" }, excerpt: { type: "string", maxLength: 200 } }, required: ["kind", "ref"] } }
+        },
+        required: ["text", "section", "reason", "evidence"]
+      }
+    }
+  },
+  required: ["proposals"]
+};
+var RULES = [
+  "Propose at most five facts a new agent session in this repository would need and the file does not state: a command, a layout fact, a convention the tooling enforces.",
+  "Each proposal is one line in the file's own style and names the section it belongs in.",
+  "Each cites evidence (file_line with an excerpt, or a read-only command): a proposal without a citation that checks out is dropped.",
+  "Never propose what the file already says, a restatement of tool defaults, or anything the code makes obvious at a glance.",
+  "Never edit, create or delete files."
+];
+async function proposeGaps(repo, file, text4, opts) {
+  const prompt = [`You look for what the instruction file ${file} is missing, against the repository in your working directory.`, "", "Rules:", ...RULES.map((r, i) => `${i + 1}. ${r}`), "", "<file>", text4, "</file>"].join("\n");
+  const result = await runClaude({ cwd: repo.root, prompt, schema: SCHEMA, model: opts.model, effort: opts.effort, budgetUsd: opts.budgetUsd, tools: ["Read", "Grep", "Glob", "Bash"], allowedTools: ["Read", "Grep", "Glob", "Bash(git log:*)", "Bash(git ls-files:*)", "Bash(ls:*)", "Bash(cat:*)", "Bash(grep:*)"], timeoutMs: opts.timeoutMs });
+  if (!result.ok) return { proposals: [], costUsd: result.costUsd, failure: `${result.subtype}${result.error ? ` (${result.error})` : ""}` };
+  const raw = result.structured?.proposals ?? [];
+  const proposals = [];
+  for (const p of raw.slice(0, 5)) {
+    if (typeof p.text !== "string" || !p.text.trim()) continue;
+    const cited = Array.isArray(p.evidence) ? p.evidence.filter((e) => Boolean(e) && typeof e.ref === "string" && typeof e.kind === "string") : [];
+    const evidence = cited.slice(0, 4).map((e) => {
+      const c = checkEvidence(repo, e);
+      return { kind: c.kind, ref: c.ref, excerpt: c.excerpt, valid: c.valid, problem: c.problem };
+    });
+    if (!evidence.some((e) => e.valid)) continue;
+    proposals.push({ text: p.text.trim().split("\n")[0] ?? "", section: typeof p.section === "string" ? p.section : "", reason: typeof p.reason === "string" ? p.reason : "", evidence });
+  }
+  return { proposals, costUsd: result.costUsd, failure: null };
+}
 
 // src/agent/verify.ts
-var PROMPT_VERSION = "2";
+import { createHash } from "node:crypto";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { homedir as homedir2 } from "node:os";
+import { join as join3 } from "node:path";
+var PROMPT_VERSION = "3";
 var DEFAULT_VERIFY = { model: "claude-sonnet-5-5", effort: "high", budgetUsd: 10, perStatementUsd: 0.25, batchSize: 8, jobs: 2, cache: true, timeoutMs: 15 * 6e4 };
 function needsAgent(st) {
   if (st.kind === "marker" || st.override?.reason) return false;
@@ -8066,7 +8154,7 @@ function needsAgent(st) {
 }
 var TOOLS = ["Read", "Grep", "Glob", "Bash"];
 var ALLOWED = ["Read", "Grep", "Glob", "Bash(git log:*)", "Bash(git grep:*)", "Bash(git ls-files:*)", "Bash(git show:*)", "Bash(git blame:*)", "Bash(git rev-list:*)", "Bash(ls:*)", "Bash(wc:*)", "Bash(find:*)", "Bash(grep:*)", "Bash(rg:*)", "Bash(head:*)", "Bash(cat:*)", "Bash(sort:*)", "Bash(uniq:*)", "Bash(jq:*)"];
-function buildPrompt(file, why, batch) {
+function buildPrompt(file, why, batch, note) {
   const items = batch.map(({ key, st }) => ({
     statement_id: key,
     line: st.line,
@@ -8081,6 +8169,7 @@ function buildPrompt(file, why, batch) {
   }));
   return [
     `You verify statements from the instruction file ${file} (${why}) against the repository in your working directory.`,
+    ...note ? ["", note] : [],
     "",
     "Rules:",
     ...VERIFIER_RULES.map((r, i) => `${i + 1}. ${r}`),
@@ -8120,6 +8209,19 @@ function applyVerdict(st, v) {
   if (v.verdict === "stale") return { ...out, status: "STALE", reason: st.status === "STALE" ? st.reason : v.reason || "the verifier found it contradicted", settled: false };
   return { ...out, status: st.status === "STALE" ? "STALE" : "UNVERIFIED_WITH_REASON", reason: st.status === "STALE" ? st.reason : v.reason, settled: false };
 }
+var treeMemo = /* @__PURE__ */ new WeakMap();
+function codeTreeOf(repo, instructionFiles) {
+  if (!repo.isGit) return "no-git";
+  const excluded = [...new Set(instructionFiles.filter((f) => !f.startsWith("/")))].sort();
+  const key = excluded.join("\0");
+  const memo = treeMemo.get(repo) ?? /* @__PURE__ */ new Map();
+  treeMemo.set(repo, memo);
+  const known = memo.get(key);
+  if (known) return known;
+  const tree = workingTreeHash(repo.root, [...excluded, ":(glob)**/*.proof.json"]);
+  memo.set(key, tree);
+  return tree;
+}
 function cacheDir(root) {
   const base = process.env.XDG_CACHE_HOME ?? join3(homedir2(), ".cache");
   return join3(base, "proof", createHash("sha1").update(root).digest("hex").slice(0, 16));
@@ -8141,7 +8243,7 @@ function saveCache(root, cache2) {
 async function verifyFiles(repo, files, instructionFiles, opts) {
   const coverage = /* @__PURE__ */ new Map();
   const version = claudeVersion();
-  const codeTree = repo.isGit ? workingTreeHash(repo.root, [...instructionFiles.filter((f) => !f.startsWith("/")), ":(glob)**/*.proof.json"]) : "no-git";
+  const codeTree = codeTreeOf(repo, instructionFiles);
   const cache2 = opts.cache ? loadCache(repo.root) : {};
   let spent = 0;
   const jobs = [];
@@ -8152,7 +8254,7 @@ async function verifyFiles(repo, files, instructionFiles, opts) {
     cov.sent = open.length;
     const fresh = [];
     for (const { st, index: index2 } of open) {
-      const cacheKey = createHash("sha1").update([PROMPT_VERSION, opts.model, codeTree, f.file, st.id, st.status, st.reason].join("\0")).digest("hex");
+      const cacheKey = createHash("sha1").update([PROMPT_VERSION, opts.model, codeTree, f.file, st.id, st.status, st.reason, f.note ?? ""].join("\0")).digest("hex");
       const hit = cache2[cacheKey];
       const v = hit ? judge(repo, hit.raw, opts.model, true) : null;
       if (v) {
@@ -8176,7 +8278,7 @@ async function verifyFiles(repo, files, instructionFiles, opts) {
       job.cov.failures.push(`budget of $${opts.budgetUsd.toFixed(2)} spent before L${job.batch[0]?.st.line}\u2013L${job.batch[job.batch.length - 1]?.st.line} were verified`);
       return;
     }
-    const prompt = buildPrompt(job.file.file, job.file.why, job.batch);
+    const prompt = buildPrompt(job.file.file, job.file.why, job.batch, job.file.note);
     let result = await runClaude({ cwd: repo.root, prompt, schema: VERIFIER_SCHEMA, model: opts.model, effort: opts.effort, budgetUsd: ceiling, tools: TOOLS, allowedTools: ALLOWED, timeoutMs: opts.timeoutMs });
     spent += result.costUsd;
     job.cov.costUsd += result.costUsd;
@@ -8219,9 +8321,9 @@ async function verifyFiles(repo, files, instructionFiles, opts) {
 }
 
 // src/pipeline.ts
-import { existsSync as existsSync6, realpathSync as realpathSync2 } from "node:fs";
+import { existsSync as existsSync7, realpathSync as realpathSync2, writeFileSync as writeFileSync4 } from "node:fs";
 import { homedir as homedir5 } from "node:os";
-import { isAbsolute as isAbsolute3, join as join7, posix as posix7, resolve as resolve2 } from "node:path";
+import { isAbsolute as isAbsolute4, join as join9, posix as posix7, resolve as resolve2 } from "node:path";
 
 // src/core/repo.ts
 import { existsSync as existsSync3, readdirSync as readdirSync2, readFileSync as readFileSync2, statSync as statSync2 } from "node:fs";
@@ -9520,6 +9622,55 @@ async function shellEntries(syntax, repo, file) {
     }
   });
   return out;
+}
+
+// src/decisions.ts
+import { spawnSync as spawnSync4 } from "node:child_process";
+import { existsSync as existsSync5, readFileSync as readFileSync3, writeFileSync as writeFileSync2 } from "node:fs";
+import { isAbsolute as isAbsolute2, join as join6 } from "node:path";
+var sidecarPath = (file) => `${file}.proof.json`;
+function loadDecisions(root, file) {
+  const path2 = isAbsolute2(file) ? sidecarPath(file) : join6(root, sidecarPath(file));
+  if (!existsSync5(path2)) return { records: [], error: null };
+  try {
+    const data = JSON.parse(readFileSync3(path2, "utf8"));
+    if (!Array.isArray(data)) return { records: [], error: `${sidecarPath(file)} is not an array of records` };
+    return { records: data.filter((r) => Boolean(r) && typeof r.statement_id === "string" && typeof r.kind === "string"), error: null };
+  } catch (err) {
+    return { records: [], error: `${sidecarPath(file)} does not parse (${err instanceof Error ? err.message.split("\n")[0] : String(err)})` };
+  }
+}
+function appendDecisions(root, file, add) {
+  if (!add.length) return;
+  const { records } = loadDecisions(root, file);
+  const path2 = isAbsolute2(file) ? sidecarPath(file) : join6(root, sidecarPath(file));
+  writeFileSync2(path2, `${JSON.stringify([...records, ...add], null, 2)}
+`);
+}
+var ageCache = /* @__PURE__ */ new Map();
+function commitsSince(root, head) {
+  if (!head) return null;
+  const key = `${root}\0${head}`;
+  if (!ageCache.has(key)) {
+    const res = spawnSync4("git", ["rev-list", "--count", `${head}..HEAD`], { cwd: root, encoding: "utf8" });
+    ageCache.set(key, res.status === 0 ? Number(res.stdout.trim()) : null);
+  }
+  return ageCache.get(key) ?? null;
+}
+function replayDecisions(root, statements, records) {
+  const decisions = /* @__PURE__ */ new Map();
+  for (const r of records) if (r.kind === "rule" || r.kind === "fact") decisions.set(r.statement_id, r);
+  const ids = new Set(statements.map((s) => s.id));
+  const reopened = [...decisions.values()].filter((r) => !ids.has(r.statement_id));
+  const out = statements.map((s) => {
+    const d = decisions.get(s.id);
+    if (!d || s.kind === "marker" || s.status === "OVERRIDDEN") return s;
+    const age = commitsSince(root, d.head);
+    const when = age === null ? `on ${d.at.slice(0, 10)}` : age === 0 ? "at the current commit" : `${age} commit${age === 1 ? "" : "s"} ago`;
+    if (s.status === "STALE") return { ...s, reason: `${s.reason} (decided as a ${d.kind} by ${d.by} ${when}, but the repository now contradicts it)` };
+    return { ...s, status: "DECIDED", reason: `decided as a ${d.kind} by ${d.by} ${when}: ${d.reason}`, settled: true };
+  });
+  return { statements: out, reopened };
 }
 
 // src/parse/markdown.ts
@@ -19326,7 +19477,10 @@ function residualOf(text4) {
   if (quantifier) out.push(`quantifier "${quantifier[0]}"`);
   const rule = prose.match(RULE_WORDS);
   if (rule) out.push(`rule "${rule[0]}"`);
-  const words = contentWords(prose.replace(/\[[^\]]*\]/g, " ").replace(/@\S+/g, " "));
+  let described = prose.replace(/\[[^\]]*\]/g, " ").replace(/@\S+/g, " ");
+  for (const v of versionSpans(described)) described = described.replace(v.text, " ");
+  for (const d of dependencySpans(described)) described = described.replace(new RegExp(`\\b${d.text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "g"), " ");
+  const words = contentWords(described);
   if (words.length >= 2) out.push(`description "${words.slice(0, 6).join(" ")}${words.length > 6 ? " \u2026" : ""}"`);
   return out;
 }
@@ -19528,6 +19682,112 @@ function parseDocument(source, file) {
   return { statements: [...statements, ...markers2.findings], imports, paths, frontmatterError };
 }
 
+// src/agent/fix.ts
+import { spawnSync as spawnSync5 } from "node:child_process";
+import { mkdtempSync as mkdtempSync2, rmSync as rmSync2, writeFileSync as writeFileSync3 } from "node:fs";
+import { tmpdir as tmpdir2 } from "node:os";
+import { join as join7 } from "node:path";
+var TOOLS2 = ["Read", "Grep", "Glob", "Bash"];
+var ALLOWED2 = ["Read", "Grep", "Glob", "Bash(git log:*)", "Bash(git grep:*)", "Bash(git ls-files:*)", "Bash(git show:*)", "Bash(ls:*)", "Bash(wc:*)", "Bash(find:*)", "Bash(grep:*)", "Bash(cat:*)", "Bash(jq:*)"];
+var sourceOf = (source, st) => source.split("\n").slice(st.line - 1, Math.max(st.line, st.endLine)).join("\n");
+function evidenceOf(st) {
+  const out = [];
+  for (const r of st.results) if (r.status === "STALE" || r.status === "VERIFIED") out.push({ kind: "mechanical", ref: `${r.status.toLowerCase()} \`${r.text}\``, excerpt: `${r.reason}${r.evidence[0] ? ` (${r.evidence[0].ref})` : ""}`.slice(0, 200) });
+  for (const e of st.agent?.evidence ?? []) if (e.valid) out.push({ kind: e.kind, ref: e.ref, ...e.excerpt ? { excerpt: e.excerpt } : {} });
+  return out;
+}
+function buildFixPrompt(file, source, stale2, records, config) {
+  const rejected = records.filter((r) => r.kind === "fix-rejected").map((r) => ({ statement: r.previous ?? r.text, rejected_edit: r.edit?.new ?? null, why: r.reason }));
+  const items = stale2.map(({ key, st }) => ({ statement_id: key, lines: `${st.line}-${st.endLine}`, source: sourceOf(source, st), verdict: "stale", evidence: evidenceOf(st) }));
+  const tiers = ["A", "B", "C"].filter((t) => config.autofix[t]);
+  return [
+    `You correct stale statements in the instruction file ${file} so they match the repository in your working directory.`,
+    "",
+    "Policy:",
+    ...FIXER_RULES.map((r, i) => `${i + 1}. ${r}`),
+    "",
+    `Tiers allowed in this repository: ${tiers.join(", ") || "none"}.`,
+    `Ownership map: ${Object.keys(config.ownership).length ? JSON.stringify(config.ownership) : "none; a pointer may only name the file the evidence came from"}.`,
+    `Fixes rejected before (never propose these again): ${rejected.length ? JSON.stringify(rejected) : "none"}.`,
+    "",
+    `Return one edit (or action none) for each of the ${stale2.length} statement ids below.`,
+    "",
+    "<statements>",
+    JSON.stringify(items, null, 1),
+    "</statements>"
+  ].join("\n");
+}
+var isRule = (st) => st.residual.some((r) => r.startsWith("rule "));
+function vetEdit(repo, source, st, raw, scope, opts) {
+  if (raw.action !== "replace" && raw.action !== "delete") return null;
+  const action = raw.action;
+  const tier = raw.tier === "A" || raw.tier === "B" || raw.tier === "C" ? raw.tier : "B";
+  const old = typeof raw.old === "string" ? raw.old : action === "delete" ? sourceOf(source, st) : "";
+  const next = action === "delete" ? "" : typeof raw.new === "string" ? raw.new : "";
+  const cited = Array.isArray(raw.evidence) ? raw.evidence.filter((e) => Boolean(e) && typeof e.ref === "string" && typeof e.kind === "string") : [];
+  const evidence = cited.slice(0, 6).map((e) => {
+    const c = checkEvidence(repo, e);
+    return { kind: c.kind, ref: c.ref, excerpt: c.excerpt, valid: c.valid, problem: c.problem };
+  });
+  const edit = { statementId: st.id, line: st.line, endLine: st.endLine, tier, action, old, new: next, evidence, reason: typeof raw.reason === "string" ? raw.reason.slice(0, 600) : "", was: st.text, refused: null };
+  const lines = sourceOf(source, st);
+  const count = old ? lines.split(old).length - 1 : 0;
+  const lineCount = (t) => t.split("\n").length;
+  if (scope === "managed") edit.refused = "a managed policy file: proof reports it and never edits it";
+  else if (scope === "user" && !opts.user) edit.refused = "a user-level file: pass --user to let proof edit it";
+  else if (!opts.config.autofix[tier]) edit.refused = `tier ${tier} is switched off in .proof.yaml`;
+  else if (!old) edit.refused = "no `old` text to replace";
+  else if (count !== 1) edit.refused = count ? "`old` appears more than once in the statement" : "`old` is not in the statement as written";
+  else if (old === next) edit.refused = "the edit changes nothing";
+  else if (action === "replace" && lineCount(next) > lineCount(old)) edit.refused = "the edit adds lines; proof never adds content (gap proposals need --gaps)";
+  else if (action === "delete" && isRule(st)) edit.refused = "a rule is rewritten to match the tooling, never deleted";
+  else if (action === "delete" && !evidence.some((e) => e.valid && e.kind === "absence") && !st.results.some((r) => r.status === "STALE" && /not found|does not exist|said to be gone/.test(r.reason))) edit.refused = "a deletion needs evidence that the thing is absent";
+  else if (!evidence.some((e) => e.valid)) edit.refused = evidence.length ? `no citation checks out (${evidence.map((e) => `${e.ref}: ${e.problem}`).join("; ").slice(0, 240)})` : "an edit without evidence";
+  return edit;
+}
+async function proposeFixes(repo, file, scope, stale2, records, opts) {
+  const source = repo.read(file) ?? "";
+  const keyed = stale2.map((st, i) => ({ key: `s${i + 1}`, st }));
+  const result = await runClaude({ cwd: repo.root, prompt: buildFixPrompt(file, source, keyed, records, opts.config), schema: FIXER_SCHEMA, model: opts.model, effort: opts.effort, budgetUsd: opts.budgetUsd, tools: TOOLS2, allowedTools: ALLOWED2, timeoutMs: opts.timeoutMs });
+  if (!result.ok) return { edits: [], costUsd: result.costUsd, failure: `${result.subtype}${result.error ? ` (${result.error})` : ""}` };
+  const raw = result.structured?.edits ?? [];
+  const edits = [];
+  for (const { key, st } of keyed) {
+    const r = raw.find((e) => e.statement_id === key);
+    const vetted = r ? vetEdit(repo, source, st, r, scope, opts) : null;
+    if (vetted) edits.push(vetted);
+  }
+  return { edits, costUsd: result.costUsd, failure: null };
+}
+function applyEdits(source, edits) {
+  const markerOnly = /^\s*(?:[-*+]|\d+[.)])?\s*$/;
+  let lines = source.split("\n");
+  for (const e of [...edits].sort((a2, b) => b.line - a2.line)) {
+    const from = e.line - 1;
+    const to = Math.max(e.line, e.endLine);
+    const block = lines.slice(from, to).join("\n");
+    const at = block.indexOf(e.old);
+    if (at < 0) continue;
+    const before = block.split("\n");
+    const after = `${block.slice(0, at)}${e.new}${block.slice(at + e.old.length)}`.split("\n");
+    const kept = e.action === "delete" ? after.filter((l, i) => !(markerOnly.test(l) && !markerOnly.test(before[i] ?? "x"))) : after;
+    lines = [...lines.slice(0, from), ...kept, ...lines.slice(to)];
+  }
+  return lines.join("\n");
+}
+function unifiedDiff(file, before, after) {
+  if (before === after) return "";
+  const dir = mkdtempSync2(join7(tmpdir2(), "proof-diff-"));
+  try {
+    writeFileSync3(join7(dir, "a"), before);
+    writeFileSync3(join7(dir, "b"), after);
+    const res = spawnSync5("git", ["diff", "--no-index", "--no-color", "--no-ext-diff", "--", "a", "b"], { cwd: dir, encoding: "utf8" });
+    return res.stdout.replace(/^diff --git a\/a b\/b\n(index [^\n]*\n)?/, "").replace(/^--- a\/a$/m, `--- a/${file}`).replace(/^\+\+\+ b\/b$/m, `+++ b/${file}`);
+  } finally {
+    rmSync2(dir, { recursive: true, force: true });
+  }
+}
+
 // src/verify/commands.ts
 import { posix as posix5 } from "node:path";
 
@@ -19545,11 +19805,11 @@ var stale = (span, reason, evidence = []) => ({ ...span, status: "STALE", level:
 var unconfirmed = (span, reason, evidence = [], level = "none") => ({ ...span, status: "UNCONFIRMED", level, evidence, reason });
 var notChecked = (span, reason, evidence = []) => ({ ...span, status: "NOT_CHECKED", level: "none", evidence, reason });
 var blocked = (span, reason) => ({ ...span, status: "NOT_CHECKED", level: "none", evidence: [], reason, blocked: true });
-var join6 = (...parts) => parts.filter((p) => Boolean(p)).join("/").replace(/\/+/g, "/").replace(/(^|\/)\.\//g, "$1").replace(/\/$/, "");
+var join8 = (...parts) => parts.filter((p) => Boolean(p)).join("/").replace(/\/+/g, "/").replace(/(^|\/)\.\//g, "$1").replace(/\/$/, "");
 function workingDirs(ctx, span) {
   const out = [];
-  if (span.cwd !== void 0) out.push(join6(ctx.pathBase, span.cwd));
-  for (const h of span.hintDirs ?? []) out.push(join6(ctx.pathBase, h));
+  if (span.cwd !== void 0) out.push(join8(ctx.pathBase, span.cwd));
+  for (const h of span.hintDirs ?? []) out.push(join8(ctx.pathBase, h));
   out.push(ctx.pathBase, ctx.docDir, "");
   return [...new Set(out.map((d) => d.replace(/^\.$/, "")))];
 }
@@ -19642,7 +19902,7 @@ function scopeDirs(ctx, scope) {
   const out = /* @__PURE__ */ new Set();
   for (const s of [scope, scope.replace(/\./g, "/")]) {
     for (const base of ["", ctx.pathBase, ...ctx.repo.projectDirs]) {
-      const d = join6(base, s);
+      const d = join8(base, s);
       if (ctx.repo.dirs.has(d)) out.add(d);
     }
   }
@@ -19923,7 +20183,7 @@ var BUN_BUILTINS = /* @__PURE__ */ new Set(["install", "i", "add", "remove", "rm
 var CARGO_BUILTINS = /* @__PURE__ */ new Set(["build", "b", "check", "c", "clean", "doc", "d", "new", "init", "add", "remove", "run", "r", "test", "t", "bench", "update", "search", "publish", "install", "uninstall", "fmt", "clippy", "fix", "tree", "vendor", "metadata", "package", "login", "yank", "owner", "locate-project", "generate-lockfile", "fetch", "rustc", "rustdoc", "version", "help", "nextest", "watch", "expand", "deny", "audit", "llvm-cov", "miri", "machete", "udeps", "outdated"]);
 var MAVEN_PHASES = /* @__PURE__ */ new Set(["clean", "validate", "compile", "test", "package", "verify", "install", "deploy", "site", "test-compile", "integration-test", "spotless:apply", "spotless:check", "dependency:tree"]);
 function pkgIn(ctx, dir) {
-  const file = join6(dir, "package.json");
+  const file = join8(dir, "package.json");
   if (ctx.repo.brokenManifest(file)) return "broken";
   return ctx.repo.packages.find((p) => p.dir === dir) ?? null;
 }
@@ -19935,7 +20195,7 @@ function checkScript(ctx, span, script, dirs, workspace) {
   }
   for (const dir of dirs) {
     const pkg = pkgIn(ctx, dir);
-    if (pkg === "broken") return blocked(span, `${join6(dir, "package.json")} does not parse: ${ctx.repo.brokenManifest(join6(dir, "package.json"))}`);
+    if (pkg === "broken") return blocked(span, `${join8(dir, "package.json")} does not parse: ${ctx.repo.brokenManifest(join8(dir, "package.json"))}`);
     if (!pkg) continue;
     if (script in pkg.scripts) return verified(span, "definition", [{ ref: `${pkg.file} scripts.${script}`, excerpt: pkg.scripts[script], level: "definition" }], `script "${script}" in ${pkg.file}`);
     const elsewhere = ctx.repo.packages.filter((p) => script in p.scripts && p !== pkg);
@@ -19981,18 +20241,18 @@ function packageManager(ctx, span, argv, dirs) {
 function fileArg(ctx, span, file, dirs) {
   if (file.startsWith("/") || file.startsWith("~") || file.includes("$")) return notChecked(span, `runs ${file}, outside the repository`);
   for (const dir of dirs) {
-    const rel = join6(dir, file);
+    const rel = join8(dir, file);
     if (ctx.repo.exists(rel)) return verified(span, "definition", [{ ref: rel, level: "definition" }], `${rel} exists`);
   }
-  const ignoredBy = ctx.repo.ignored(join6(dirs[0], file));
+  const ignoredBy = ctx.repo.ignored(join8(dirs[0], file));
   if (ignoredBy) return notChecked(span, `git ignores ${ignoredBy}: built output, not committed`);
-  return stale(span, `${join6(dirs[0], file)} does not exist`);
+  return stale(span, `${join8(dirs[0], file)} does not exist`);
 }
 async function shellScript(ctx, span, file, sub, dirs) {
-  const ignoredBy = ctx.repo.ignored(join6(dirs[0], file.replace(/^\.\//, "")));
-  if (ignoredBy && !dirs.some((d) => ctx.repo.exists(join6(d, file)))) return notChecked(span, `git ignores ${ignoredBy}: built output, not committed`);
-  const rel = dirs.map((d) => join6(d, file)).find((r) => ctx.repo.exists(r));
-  if (!rel) return stale(span, `${join6(dirs[0], file)} does not exist`);
+  const ignoredBy = ctx.repo.ignored(join8(dirs[0], file.replace(/^\.\//, "")));
+  if (ignoredBy && !dirs.some((d) => ctx.repo.exists(join8(d, file)))) return notChecked(span, `git ignores ${ignoredBy}: built output, not committed`);
+  const rel = dirs.map((d) => join8(d, file)).find((r) => ctx.repo.exists(r));
+  if (!rel) return stale(span, `${join8(dirs[0], file)} does not exist`);
   if (!sub || sub.startsWith("-") || sub.includes("$") || /^["']/.test(sub)) return verified(span, "definition", [{ ref: rel, level: "definition" }], `${rel} exists`);
   const text4 = ctx.repo.read(rel) ?? "";
   const isShell = /\.(sh|bash|zsh)$/.test(rel) || /^#!.*\b(ba|z)?sh\b/.test(text4) || !/^#!/.test(text4);
@@ -20019,14 +20279,14 @@ function make(ctx, span, argv, dirs) {
   const targets = [];
   for (let i = 0; i < args.length; i++) {
     const a2 = args[i] ?? "";
-    if (a2 === "-C" || a2 === "--directory") dirsHere = dirs.map((d) => join6(d, args[++i] ?? ""));
-    else if (a2.startsWith("-C")) dirsHere = dirs.map((d) => join6(d, a2.slice(2)));
+    if (a2 === "-C" || a2 === "--directory") dirsHere = dirs.map((d) => join8(d, args[++i] ?? ""));
+    else if (a2.startsWith("-C")) dirsHere = dirs.map((d) => join8(d, a2.slice(2)));
     else if (a2 === "-f" || a2 === "--file") file = args[++i];
     else if (a2.startsWith("-") || a2.includes("=")) continue;
     else targets.push(a2);
   }
   const names = file ? [file] : ["GNUmakefile", "makefile", "Makefile"];
-  const here = dirsHere.flatMap((d) => names.map((n) => join6(d, n))).find((f) => ctx.repo.exists(f));
+  const here = dirsHere.flatMap((d) => names.map((n) => join8(d, n))).find((f) => ctx.repo.exists(f));
   const all2 = ctx.repo.find(/(^|\/)(GNUmakefile|makefile|Makefile)$/);
   if (!here) {
     if (!all2.length) return stale(span, `no Makefile${dirsHere[0] ? ` in ${dirsHere[0]}/` : ""} or anywhere in the repository`);
@@ -20046,7 +20306,7 @@ function make(ctx, span, argv, dirs) {
 }
 function just(ctx, span, argv, dirs) {
   const recipe = argv.slice(1).find((a2) => !a2.startsWith("-"));
-  const file = dirs.flatMap((d) => ["justfile", "Justfile", ".justfile"].map((n) => join6(d, n))).find((f) => ctx.repo.exists(f));
+  const file = dirs.flatMap((d) => ["justfile", "Justfile", ".justfile"].map((n) => join8(d, n))).find((f) => ctx.repo.exists(f));
   if (!file) return stale(span, "no justfile where this runs");
   if (!recipe) return verified(span, "definition", [{ ref: file, level: "definition" }], `${file} exists`);
   const lines = (ctx.repo.read(file) ?? "").split("\n");
@@ -20055,7 +20315,7 @@ function just(ctx, span, argv, dirs) {
 }
 function task(ctx, span, argv, dirs) {
   const name = argv.slice(1).find((a2) => !a2.startsWith("-"));
-  const file = dirs.flatMap((d) => ["Taskfile.yml", "Taskfile.yaml", "taskfile.yml", "taskfile.yaml"].map((n) => join6(d, n))).find((f) => ctx.repo.exists(f));
+  const file = dirs.flatMap((d) => ["Taskfile.yml", "Taskfile.yaml", "taskfile.yml", "taskfile.yaml"].map((n) => join8(d, n))).find((f) => ctx.repo.exists(f));
   if (!file) return stale(span, "no Taskfile where this runs");
   const data = ctx.repo.structured(file);
   if (!data) return blocked(span, `${file} does not parse`);
@@ -20065,7 +20325,7 @@ function task(ctx, span, argv, dirs) {
 function pythonModule(ctx, mod, dirs) {
   const p = mod.replace(/\./g, "/");
   for (const d of [...dirs, "src", ...ctx.repo.projectDirs]) {
-    for (const c of [`${p}.py`, `${p}/__init__.py`, `${p}/__main__.py`]) if (ctx.repo.exists(join6(d, c))) return join6(d, c);
+    for (const c of [`${p}.py`, `${p}/__init__.py`, `${p}/__main__.py`]) if (ctx.repo.exists(join8(d, c))) return join8(d, c);
   }
   return null;
 }
@@ -20084,7 +20344,7 @@ function python(ctx, span, argv, dirs) {
 }
 function pyprojectScripts(ctx, dirs) {
   for (const d of dirs) {
-    const file = join6(d, "pyproject.toml");
+    const file = join8(d, "pyproject.toml");
     const data = ctx.repo.structured(file);
     if (!data) continue;
     const names = /* @__PURE__ */ new Set([
@@ -20111,7 +20371,7 @@ function pythonRunner(ctx, span, argv, dirs) {
   return notChecked(span, `runs ${target} from the environment${py ? ` (not a script in ${py.file})` : ""}`);
 }
 function tox(ctx, span, argv, dirs) {
-  const file = dirs.map((d) => join6(d, "tox.ini")).find((f) => ctx.repo.exists(f));
+  const file = dirs.map((d) => join8(d, "tox.ini")).find((f) => ctx.repo.exists(f));
   if (!file) return stale(span, "no tox.ini where this runs");
   const e = argv.indexOf("-e");
   const env = e >= 0 ? argv[e + 1] : void 0;
@@ -20121,7 +20381,7 @@ function tox(ctx, span, argv, dirs) {
   return ok3 ? verified(span, "definition", [{ ref: file, level: "definition" }], `env ${env} in ${file}`) : stale(span, `${file} defines no ${env} env`);
 }
 function nox(ctx, span, argv, dirs) {
-  const file = dirs.map((d) => join6(d, "noxfile.py")).find((f) => ctx.repo.exists(f));
+  const file = dirs.map((d) => join8(d, "noxfile.py")).find((f) => ctx.repo.exists(f));
   if (!file) return stale(span, "no noxfile.py where this runs");
   const s = argv.findIndex((a2) => a2 === "-s" || a2 === "--session");
   const session = s >= 0 ? argv[s + 1] : void 0;
@@ -20132,19 +20392,19 @@ function nox(ctx, span, argv, dirs) {
 }
 var GO_VALUE_FLAGS = /* @__PURE__ */ new Set(["-o", "-C", "-p", "-ldflags", "-gcflags", "-asmflags", "-tags", "-mod", "-modfile", "-pkgdir", "-toolexec", "-overlay", "-pgo", "-run", "-skip", "-bench", "-benchtime", "-count", "-cpu", "-timeout", "-parallel", "-coverprofile", "-covermode", "-coverpkg", "-cpuprofile", "-memprofile", "-blockprofile", "-mutexprofile", "-trace", "-outputdir", "-exec", "-json", "-vet", "-shuffle", "-fuzz", "-fuzztime"]);
 function goCmd(ctx, span, argv, dirs) {
-  const mod = [...dirs, ...ctx.repo.projectDirs].map((d) => join6(d, "go.mod")).find((f) => ctx.repo.exists(f));
+  const mod = [...dirs, ...ctx.repo.projectDirs].map((d) => join8(d, "go.mod")).find((f) => ctx.repo.exists(f));
   if (!mod) return stale(span, "no go.mod in this repository");
   const sub = argv[1];
   const pkgs = argv.slice(2).filter((a2, i, all2) => /^\.{1,2}(\/|$)/.test(a2) && !GO_VALUE_FLAGS.has(all2[i - 1] ?? ""));
   for (const p of pkgs) {
     const clean = p.replace(/\/\.\.\.$/, "").replace(/^\.\/?/, "");
     if (clean === "" || clean === "...") continue;
-    if (!dirs.some((d) => ctx.repo.exists(join6(d, clean)))) return stale(span, `go package ${p} does not exist`);
+    if (!dirs.some((d) => ctx.repo.exists(join8(d, clean)))) return stale(span, `go package ${p} does not exist`);
   }
   return verified(span, pkgs.length ? "definition" : "reference", [{ ref: mod, level: "reference" }], `go ${sub ?? ""}${pkgs.length ? ` on ${pkgs.join(" ")}` : ""} in a Go module (${mod})`);
 }
 function cargo(ctx, span, argv, dirs) {
-  const manifest = [...dirs, ...ctx.repo.projectDirs].map((d) => join6(d, "Cargo.toml")).find((f) => ctx.repo.exists(f));
+  const manifest = [...dirs, ...ctx.repo.projectDirs].map((d) => join8(d, "Cargo.toml")).find((f) => ctx.repo.exists(f));
   if (!manifest) return stale(span, "no Cargo.toml in this repository");
   const sub = argv[1] ?? "";
   const aliases = [".cargo/config.toml", ".cargo/config"].map((f) => ctx.repo.structured(f)).flatMap((c) => Object.keys(c?.alias ?? {}));
@@ -20162,8 +20422,8 @@ function compose(ctx, span, argv, dirs) {
   const files = [];
   for (let i = 0; i < args.length; i++) if (args[i] === "-f" || args[i] === "--file") files.push(args[++i] ?? "");
   const candidates = files.length ? files : ["compose.yaml", "compose.yml", "docker-compose.yaml", "docker-compose.yml"];
-  const found = dirs.flatMap((d) => candidates.map((n) => join6(d, n))).filter((f) => ctx.repo.exists(f));
-  if (files.length && found.length < files.length) return stale(span, `compose file ${files.find((f) => !dirs.some((d) => ctx.repo.exists(join6(d, f))))} does not exist`);
+  const found = dirs.flatMap((d) => candidates.map((n) => join8(d, n))).filter((f) => ctx.repo.exists(f));
+  if (files.length && found.length < files.length) return stale(span, `compose file ${files.find((f) => !dirs.some((d) => ctx.repo.exists(join8(d, f))))} does not exist`);
   if (!found.length) return stale(span, "no compose file where this runs");
   const rest = args.filter((a2, i) => !a2.startsWith("-") && args[i - 1] !== "-f" && args[i - 1] !== "--file" && args[i - 1] !== "-p" && args[i - 1] !== "--profile");
   const sub = rest[0];
@@ -20176,7 +20436,7 @@ function compose(ctx, span, argv, dirs) {
 }
 function rake(ctx, span, argv, dirs) {
   const name = argv.slice(argv[0] === "bundle" ? 3 : 1).find((a2) => !a2.startsWith("-"))?.split("[")[0];
-  const files = [...dirs.map((d) => join6(d, "Rakefile")), ...ctx.repo.find(/\.rake$/)].filter((f) => ctx.repo.exists(f));
+  const files = [...dirs.map((d) => join8(d, "Rakefile")), ...ctx.repo.find(/\.rake$/)].filter((f) => ctx.repo.exists(f));
   if (!files.length) return stale(span, "no Rakefile where this runs");
   if (!name) return verified(span, "definition", [{ ref: files[0] ?? "", level: "definition" }], "Rakefile exists");
   const leaf = name.split(":").pop() ?? name;
@@ -20189,7 +20449,7 @@ function rake(ctx, span, argv, dirs) {
 }
 function composer(ctx, span, argv, dirs) {
   const sub = argv[1] === "run" || argv[1] === "run-script" ? argv[2] : argv[1];
-  const file = dirs.map((d) => join6(d, "composer.json")).find((f) => ctx.repo.exists(f));
+  const file = dirs.map((d) => join8(d, "composer.json")).find((f) => ctx.repo.exists(f));
   if (!file) return stale(span, "no composer.json where this runs");
   const data = ctx.repo.structured(file);
   if (!data) return blocked(span, `${file} does not parse`);
@@ -20222,7 +20482,7 @@ function projectBinaries(ctx) {
     const cargo2 = ctx.repo.structured(f, { quiet: true });
     for (const b of cargo2?.bin ?? []) if (b.name) out.set(b.name, f);
     const dir = posix5.dirname(f) === "." ? "" : posix5.dirname(f);
-    if (cargo2?.package?.name && ctx.repo.exists(join6(dir, "src/main.rs"))) out.set(cargo2.package.name, f);
+    if (cargo2?.package?.name && ctx.repo.exists(join8(dir, "src/main.rs"))) out.set(cargo2.package.name, f);
   }
   binCache.set(ctx.repo, out);
   return out;
@@ -20320,7 +20580,7 @@ async function checkCommand(ctx, span) {
       return composer(ctx, span, argv, dirs);
     case "mvn":
     case "./mvnw": {
-      const pom = dirs.map((d) => join6(d, "pom.xml")).find((f) => ctx.repo.exists(f));
+      const pom = dirs.map((d) => join8(d, "pom.xml")).find((f) => ctx.repo.exists(f));
       if (!pom) return stale(span, "no pom.xml where this runs");
       const goals = argv.slice(1).filter((a2) => !a2.startsWith("-"));
       const unknown = goals.filter((g) => !MAVEN_PHASES.has(g));
@@ -20329,8 +20589,8 @@ async function checkCommand(ctx, span) {
     case "./gradlew":
     case "gradle":
     case "gradlew": {
-      const build = dirs.flatMap((d) => ["build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts"].map((n) => join6(d, n))).find((f) => ctx.repo.exists(f));
-      if (bin === "./gradlew" && !dirs.some((d) => ctx.repo.exists(join6(d, "gradlew")))) return stale(span, "no gradlew wrapper where this runs");
+      const build = dirs.flatMap((d) => ["build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts"].map((n) => join8(d, n))).find((f) => ctx.repo.exists(f));
+      if (bin === "./gradlew" && !dirs.some((d) => ctx.repo.exists(join8(d, "gradlew")))) return stale(span, "no gradlew wrapper where this runs");
       if (!build) return stale(span, "no Gradle build file where this runs");
       return unconfirmed(span, "Gradle task names are not read mechanically", [{ ref: build, level: "reference" }]);
     }
@@ -20498,8 +20758,8 @@ function checkEnv(ctx, span) {
 
 // src/verify/paths.ts
 import { homedir as homedir4 } from "node:os";
-import { existsSync as existsSync5 } from "node:fs";
-import { isAbsolute as isAbsolute2, join as joinFs, posix as posix6 } from "node:path";
+import { existsSync as existsSync6 } from "node:fs";
+import { isAbsolute as isAbsolute3, join as joinFs, posix as posix6 } from "node:path";
 
 // src/core/glob.ts
 var BRACE_BUDGET = 1e3;
@@ -20565,7 +20825,7 @@ function matchGlob(pattern, files, base = "") {
 // src/verify/paths.ts
 function matches(ctx, base, pattern) {
   const wantDir = pattern.endsWith("/");
-  const clean = join6(base, pattern.replace(/^\.\//, "").replace(/\/$/, ""));
+  const clean = join8(base, pattern.replace(/^\.\//, "").replace(/\/$/, ""));
   if (clean === "" || clean === ".") return [""];
   if (!/[*?]/.test(clean)) {
     if (!ctx.repo.exists(clean)) return [];
@@ -20635,8 +20895,8 @@ function checkPath(ctx, span) {
   }
   const pkg = ctx.repo.packages.find((p) => first in p.deps);
   if (pkg) return verified(span, "declaration", [{ ref: `${pkg.file} ${first}`, level: "declaration" }], `an import path into ${first}, which ${pkg.file} declares`);
-  const anchored = segments.length === 1 || candidates.some((b) => ctx.repo.exists(join6(b, first)));
-  if (anchored) return stale(span, `not found: ${join6(primary, t)}`);
+  const anchored = segments.length === 1 || candidates.some((b) => ctx.repo.exists(join8(b, first)));
+  if (anchored) return stale(span, `not found: ${join8(primary, t)}`);
   const homes = /^[\w-]+$/.test(first) ? [...ctx.repo.dirs].filter((d) => posix6.basename(d) === first) : [];
   if (homes.length) return stale(span, `not found: no ${segments.slice(1).join("/")} under any ${first}/ folder (${shown(homes)})`);
   if (/^@?[a-z][\w-]*\/[a-z][\w-]*$/.test(t)) return notChecked(span, `reads as "${t.replace("/", " or ")}" or a rule id, not a path`);
@@ -20654,8 +20914,8 @@ function checkLink(ctx, span) {
 }
 function checkImport(ctx, span) {
   const t = span.text.trim();
-  const abs = t.startsWith("~/") ? joinFs(homedir4(), t.slice(2)) : isAbsolute2(t) ? t : null;
-  if (abs) return notChecked(span, existsSync5(abs) ? "imports a file outside the repository (exists on this machine)" : "imports a file outside the repository (not on this machine)");
+  const abs = t.startsWith("~/") ? joinFs(homedir4(), t.slice(2)) : isAbsolute3(t) ? t : null;
+  if (abs) return notChecked(span, existsSync6(abs) ? "imports a file outside the repository (exists on this machine)" : "imports a file outside the repository (not on this machine)");
   const rel = ctx.repo.rel(t, ctx.docDir);
   if (rel === null) return notChecked(span, "imports a file outside the repository");
   if (ctx.repo.exists(rel)) return verified(span, "definition", [{ ref: rel, level: "definition" }], `imports ${rel}`);
@@ -20973,6 +21233,14 @@ function verdictOf(statements) {
   if (has("OVERRIDDEN") || referenceOnly) return "PROVEN WITH OVERRIDES";
   return "PROVEN";
 }
+function improves(edited, original) {
+  if (edited.status !== "UNVERIFIED_WITH_REASON" || edited.agent?.verdict === "stale") return false;
+  const typed = edited.results.filter((r) => r.kind !== "prose");
+  if (typed.some((r) => r.status === "STALE" || r.status === "UNCONFIRMED" || r.blocked)) return false;
+  const before = new Set((original?.results ?? []).map((r) => r.text));
+  const introduced = typed.filter((r) => !before.has(r.text));
+  return introduced.length > 0 && introduced.every((r) => r.status === "VERIFIED");
+}
 function tally(r) {
   const counts = emptyCounts();
   const levels = emptyLevels();
@@ -20988,6 +21256,31 @@ function tally(r) {
     r.reason = `the verifier answered ${r.agent.answered} of ${r.agent.sent} open statements: ${r.agent.failures.join("; ") || "no verdict for the rest"}`;
   }
   r.verdict = r.ownVerdict;
+}
+function annotateFixes(reports, fixes, dryRun) {
+  for (const r of reports) {
+    const f = fixes.get(r.file);
+    if (!f) continue;
+    r.diff = unifiedDiff(r.file, f.before, f.after);
+    const outcomeOf = (e) => e.refused ? "refused" : f.rejected.includes(e) ? "rejected" : dryRun ? "dry-run" : "applied";
+    r.fixes = f.proposed.map((e) => ({ statement_id: e.statementId, line: e.line, tier: e.tier, action: e.action, old: e.old, new: e.new, outcome: outcomeOf(e), reverify: f.reverified.get(e)?.verdict ?? "", refused: e.refused }));
+    for (const e of f.proposed) {
+      const outcome = outcomeOf(e);
+      const base = { tier: e.tier, action: e.action, old: e.old, new: e.new, reason: e.reason, evidence: e.evidence, outcome, reverify: e.refused ?? f.reverified.get(e)?.verdict ?? "" };
+      if (outcome === "applied") {
+        const ids = new Set((f.reverified.get(e)?.statements ?? []).map((s) => s.id));
+        r.statements = r.statements.map((s) => ids.has(s.id) ? s.status === "VERIFIED" || s.status === "DECIDED" ? { ...s, status: "FIXED", reason: `fixed (tier ${e.tier}) and re-verified`, fix: { ...base, was: e.was } } : { ...s, fix: { ...base, was: e.was } } : s);
+        continue;
+      }
+      r.statements = r.statements.map((s) => {
+        if (s.id !== e.statementId) return s;
+        if (outcome === "rejected") return { ...s, status: "FIX_REJECTED", reason: `the fix was reverted: ${base.reverify}`, fix: base };
+        return { ...s, fix: base };
+      });
+    }
+    tally(r);
+  }
+  combineVerdicts(reports);
 }
 function combineVerdicts(reports) {
   const byFile = new Map(reports.map((r) => [r.file, r]));
@@ -21031,12 +21324,12 @@ var Run = class {
   }
   /** A path as the report names it: repository-relative inside the repository, absolute outside. */
   key(file, base = "") {
-    const abs = file.startsWith("~/") ? join7(homedir5(), file.slice(2)) : isAbsolute3(file) ? file : resolve2(this.repo.root, base, file);
+    const abs = file.startsWith("~/") ? join9(homedir5(), file.slice(2)) : isAbsolute4(file) ? file : resolve2(this.repo.root, base, file);
     return this.repo.rel(abs) ?? abs;
   }
   real(key) {
     try {
-      return realpathSync2(isAbsolute3(key) ? key : join7(this.repo.root, key));
+      return realpathSync2(isAbsolute4(key) ? key : join9(this.repo.root, key));
     } catch {
       return key;
     }
@@ -21055,6 +21348,74 @@ var Run = class {
     }
     combineVerdicts(reports);
     return reports;
+  }
+  /** Mechanical results for every statement of `text`, read as the file `rel`. */
+  async checkText(rel, text4) {
+    const doc = parseDocument(text4, rel);
+    const dir = posix7.dirname(rel);
+    const docDir = dir === "." ? "" : dir;
+    const ctx = { repo: this.repo, syntax: this.syntax, docFile: rel, docDir, pathBase: isAbsolute4(rel) ? "" : pathBaseOf(rel, docDir) };
+    const out = [];
+    for (const st of doc.statements) out.push(await checkStatement(ctx, st));
+    return out;
+  }
+  /**
+   * The fix stage (spec 3.5 to 3.7): the fixer proposes an edit per stale statement, proof vets it against
+   * the autofix policy, a fresh verifier re-checks each edited statement on its own, and only edits it
+   * accepts are written. Every applied and rejected fix is recorded in the sidecar with tree and head.
+   */
+  async fix(reports, opts) {
+    const out = /* @__PURE__ */ new Map();
+    for (const r of reports) {
+      const stale2 = r.statements.filter((s) => s.status === "STALE");
+      if (!stale2.length) continue;
+      const source = this.repo.read(r.file) ?? "";
+      const proposed = await proposeFixes(this.repo, r.file, r.scope, stale2, r.decisions, opts);
+      const outcome = { proposed: proposed.edits, accepted: [], rejected: [], failure: proposed.failure, costUsd: proposed.costUsd, before: source, after: source, reverified: /* @__PURE__ */ new Map() };
+      out.set(r.file, outcome);
+      const vetted = proposed.edits.filter((e) => !e.refused);
+      const trial = /* @__PURE__ */ new Map();
+      for (const e of vetted) {
+        const candidate = applyEdits(source, [e]);
+        const delta = candidate.split("\n").length - source.split("\n").length;
+        const oldIds = new Set(r.statements.map((s) => s.id));
+        const produced = (await this.checkText(r.file, candidate)).filter((s) => s.line >= e.line && s.line <= Math.max(e.line, e.endLine + delta) && !oldIds.has(s.id));
+        trial.set(e, produced);
+      }
+      const toVerify = [...trial.values()].flat();
+      if (toVerify.length) {
+        const note = `These statements are proposed corrections that are not written yet: ${r.file} on disk still has the old text. Judge each statement exactly as given here against the repository; do not judge the file on disk.`;
+        const cov = await verifyFiles(this.repo, [{ file: r.file, why: r.why, statements: toVerify, note }], reports.map((x) => x.file), { ...opts.verify, budgetUsd: Math.min(opts.verify.budgetUsd, toVerify.length * opts.verify.perStatementUsd + 0.5) });
+        outcome.costUsd += cov.get(r.file)?.costUsd ?? 0;
+      }
+      for (const e of vetted) {
+        const produced = (trial.get(e) ?? []).map((s) => toVerify.find((t) => t.id === s.id && t.line === s.line) ?? s);
+        const original = r.statements.find((s) => s.id === e.statementId);
+        const failed = produced.find((s) => s.status !== "VERIFIED" && s.status !== "DECIDED" && s.status !== "NOT_CHECKED" && !improves(s, original));
+        const cited = failed?.agent?.evidence.find((x) => x.valid) ?? failed?.results.find((x) => x.status === "STALE")?.evidence[0];
+        const verdict = failed ? `${failed.status.toLowerCase().replace(/_/g, " ")}: ${failed.agent?.rejected ?? failed.agent?.reason ?? failed.reason}${cited ? ` (${cited.ref}${"excerpt" in cited && cited.excerpt ? ` "${cited.excerpt.slice(0, 80)}"` : ""})` : ""}` : produced.length ? "verified" : "removed, with evidence of absence";
+        outcome.reverified.set(e, { verdict, statements: produced });
+        if (failed || e.action === "replace" && !produced.length) outcome.rejected.push(e);
+        else outcome.accepted.push(e);
+      }
+      outcome.after = applyEdits(source, outcome.accepted);
+      if (!opts.dryRun && outcome.after !== source) writeFileSync4(isAbsolute4(r.file) ? r.file : join9(this.repo.root, r.file), outcome.after);
+      if (!opts.dryRun) {
+        const at = (/* @__PURE__ */ new Date()).toISOString();
+        const tree = this.git?.tree ?? null;
+        const head = this.git?.head ?? null;
+        const by = `proof ${VERSION} (${opts.model})`;
+        const byId = new Map(r.statements.map((s) => [s.id, s]));
+        appendDecisions(this.repo.root, r.file, [
+          ...outcome.accepted.flatMap((e) => {
+            const produced = outcome.reverified.get(e)?.statements ?? [];
+            return (produced.length ? produced : [null]).map((p) => ({ statement_id: p?.id ?? e.statementId, text: p?.text ?? "", kind: "fixed", reason: e.reason, evidence: e.evidence.filter((x) => x.valid).map(({ kind, ref, excerpt }) => ({ kind, ref, excerpt })), by, at, tree, head, previous: byId.get(e.statementId)?.text, tier: e.tier, edit: { old: e.old, new: e.new }, line: e.line }));
+          }),
+          ...outcome.rejected.map((e) => ({ statement_id: e.statementId, text: byId.get(e.statementId)?.text ?? "", kind: "fix-rejected", reason: `re-verifier: ${outcome.reverified.get(e)?.verdict ?? "rejected"}`, evidence: [], by, at, tree, head, previous: byId.get(e.statementId)?.text, tier: e.tier, edit: { old: e.old, new: e.new } }))
+        ]);
+      }
+    }
+    return out;
   }
   /**
    * Check the targets and every instruction file they import, depth first, so each importer's verdict
@@ -21077,7 +21438,7 @@ var Run = class {
       if (importer) report.importedBy.push(importer);
       for (const imp of report.imports) {
         if (!imp.resolved) continue;
-        const outside = isAbsolute3(imp.resolved);
+        const outside = isAbsolute4(imp.resolved);
         if (!INSTRUCTION_EXT.test(imp.resolved)) imp.note = "loaded as is; not an instruction file to check";
         else if (outside && !opts.user) imp.note = "outside the repository: pass --user to check it";
         else if (hops + 1 > MAX_IMPORT_HOPS) imp.note = `beyond ${MAX_IMPORT_HOPS} hops: Claude Code does not load it from here`;
@@ -21112,27 +21473,32 @@ var Run = class {
       run: { started, finished: started, version: VERSION }
     };
     const text4 = this.repo.read(rel);
-    if (text4 === null) return { ...base, verdict: "UNTESTED", ownVerdict: "UNTESTED", reason: `${rel} cannot be read`, coverage: { statements: 0, withResult: 0 }, degraded: [...this.repo.degraded], statements: [] };
+    if (text4 === null) return { ...base, verdict: "UNTESTED", ownVerdict: "UNTESTED", reason: `${rel} cannot be read`, coverage: { statements: 0, withResult: 0 }, degraded: [...this.repo.degraded], statements: [], decisions: [], reopened: [] };
     const doc = parseDocument(text4, rel);
     if (doc.frontmatterError) this.repo.degrade(rel, `frontmatter does not parse (${doc.frontmatterError}); Claude Code loads this rule as if it had no paths`);
     const dir = posix7.dirname(rel);
     const docDir = dir === "." ? "" : dir;
-    const ctx = { repo: this.repo, syntax: this.syntax, docFile: rel, docDir, pathBase: isAbsolute3(rel) ? "" : pathBaseOf(rel, docDir) };
+    const ctx = { repo: this.repo, syntax: this.syntax, docFile: rel, docDir, pathBase: isAbsolute4(rel) ? "" : pathBaseOf(rel, docDir) };
     this.repo.primeIgnored(doc.statements.flatMap((s) => s.spans.filter((sp) => sp.kind === "path" || sp.kind === "link").map((sp) => sp.text.replace(/^\.\//, ""))));
-    const statements = [];
-    for (const st of doc.statements) statements.push(await checkStatement(ctx, st));
+    const checked = [];
+    for (const st of doc.statements) checked.push(await checkStatement(ctx, st));
+    const sidecar = loadDecisions(this.repo.root, rel);
+    if (sidecar.error) this.repo.degrade(sidecarPath(rel), `${sidecar.error}; recorded decisions are not replayed`);
+    const { statements, reopened } = replayDecisions(this.repo.root, checked, sidecar.records);
     for (const s of statements) {
       counts[s.status] += 1;
       for (const r of s.results) if (r.status === "VERIFIED" || r.status === "UNCONFIRMED") evidenceLevels[r.level] += 1;
     }
     const imports = doc.imports.map((imp) => {
-      const key = this.key(imp.path, isAbsolute3(rel) ? dir : ctx.docDir);
-      const exists = existsSync6(isAbsolute3(key) ? key : join7(this.repo.root, key));
+      const key = this.key(imp.path, isAbsolute4(rel) ? dir : ctx.docDir);
+      const exists = existsSync7(isAbsolute4(key) ? key : join9(this.repo.root, key));
       return { path: imp.path, line: imp.line, resolved: exists ? key : null, followed: false, note: exists ? "" : "does not resolve to a file" };
     });
     const ownVerdict = verdictOf(statements);
     return {
       ...base,
+      decisions: sidecar.records,
+      reopened,
       imports,
       verdict: ownVerdict,
       ownVerdict,
@@ -21143,6 +21509,101 @@ var Run = class {
     };
   }
 };
+
+// src/config.ts
+var DEFAULT_CONFIG = { instructionFiles: [], ownership: {}, autofix: { A: true, B: true, C: true }, budgetUsd: null };
+function loadConfig(repo) {
+  const raw = repo.structured(".proof.yaml");
+  if (!raw || typeof raw !== "object") return DEFAULT_CONFIG;
+  const tiers = raw.autofix ?? {};
+  const tier = (k) => typeof tiers[k] === "boolean" ? tiers[k] : typeof tiers[k.toLowerCase()] === "boolean" ? tiers[k.toLowerCase()] : true;
+  const own4 = raw.ownership && typeof raw.ownership === "object" ? Object.fromEntries(Object.entries(raw.ownership).filter(([, v]) => typeof v === "string")) : {};
+  return {
+    instructionFiles: Array.isArray(raw.instruction_files) ? raw.instruction_files.map(String) : [],
+    ownership: own4,
+    autofix: { A: tier("A"), B: tier("B"), C: tier("C") },
+    budgetUsd: typeof raw.budget_usd === "number" && raw.budget_usd > 0 ? raw.budget_usd : null
+  };
+}
+
+// src/human.ts
+import { spawnSync as spawnSync6 } from "node:child_process";
+import { writeFileSync as writeFileSync5 } from "node:fs";
+import { isAbsolute as isAbsolute5, join as join10 } from "node:path";
+var HumanError = class extends Error {
+};
+function whoAmI(root) {
+  const res = spawnSync6("git", ["config", "user.name"], { cwd: root, encoding: "utf8" });
+  return res.status === 0 && res.stdout.trim() || process.env.USER || "unknown";
+}
+function pick2(statements, which) {
+  const line = /^L?(\d+)$/i.exec(which);
+  const found = line ? statements.filter((s) => s.line === Number(line[1])) : statements.filter((s) => which.length >= 6 && s.id.startsWith(which));
+  if (!found.length) throw new HumanError(`no statement ${which}; list them with: proof decide <file>`);
+  if (found.length > 1) throw new HumanError(`${which} matches ${found.length} statements; use the id: ${found.map((s) => s.id.slice(0, 10)).join(", ")}`);
+  return found[0];
+}
+var OPEN = /* @__PURE__ */ new Set(["UNCONFIRMED", "UNVERIFIED_WITH_REASON"]);
+async function listOpen(run2, file) {
+  const [report] = await run2.checkTargets([{ file, why: "named on the command line", scope: "project" }]);
+  const open = (report?.statements ?? []).filter((s) => OPEN.has(s.status));
+  if (!open.length) return `${file}: no open statements to decide.
+`;
+  return `${open.map((s) => `L${s.line}  ${s.id.slice(0, 10)}  ${s.text.slice(0, 120)}
+    ${s.agent?.reason ?? s.reason}`).join("\n")}
+
+Decide one: proof decide ${file} L<line> --rule --reason "\u2026"  or  --fact --evidence <path:line> --reason "\u2026"
+`;
+}
+async function decide2(run2, file, which, opts) {
+  if (!opts.reason.trim()) throw new HumanError('a decision needs --reason "\u2026"');
+  const [report] = await run2.checkTargets([{ file, why: "named on the command line", scope: "project" }]);
+  if (!report || !report.statements.length) throw new HumanError(`${file} has no statements`);
+  const st = pick2(report.statements, which);
+  if (st.status === "STALE" || st.status === "FIX_REJECTED") throw new HumanError(`L${st.line} is stale: the repository contradicts it (${st.reason}). Fix or delete the line instead of deciding it.`);
+  if (st.status === "VERIFIED" || st.status === "DECIDED") throw new HumanError(`L${st.line} is already ${st.status.toLowerCase()}; nothing to decide`);
+  const evidence = opts.evidence.map((ref) => checkEvidence(run2.repo, { kind: /:\d+(-\d+)?$/.test(ref) ? "file_line" : "command_output", ref }));
+  if (opts.kind === "fact") {
+    if (!evidence.length) throw new HumanError("a fact needs --evidence <path:line>; never decide a fact without evidence");
+    const bad = evidence.find((e) => !e.valid);
+    if (bad) throw new HumanError(`--evidence ${bad.ref} does not check out: ${bad.problem}`);
+  }
+  const record = {
+    statement_id: st.id,
+    text: st.text,
+    kind: opts.kind,
+    reason: opts.reason.trim(),
+    evidence: evidence.map(({ kind, ref }) => ({ kind, ref })),
+    by: opts.by ?? whoAmI(run2.repo.root),
+    at: (/* @__PURE__ */ new Date()).toISOString(),
+    tree: run2.git?.tree ?? null,
+    head: run2.git?.head ?? null
+  };
+  appendDecisions(run2.repo.root, report.file, [record]);
+  return record;
+}
+function revert(run2, file, id, by) {
+  const rel = run2.repo.rel(file) ?? file;
+  const { records } = loadDecisions(run2.repo.root, rel);
+  const fixed = [...records].reverse().find((r) => r.kind === "fixed" && id.length >= 6 && r.statement_id.startsWith(id));
+  if (!fixed?.edit) throw new HumanError(`no applied fix for ${id} in the sidecar of ${rel}`);
+  const text4 = run2.repo.read(rel) ?? "";
+  const { old, new: next } = fixed.edit;
+  let reverted;
+  if (next) {
+    const count = text4.split(next).length - 1;
+    if (count !== 1) throw new HumanError(count ? "the fixed text appears more than once; revert it by hand" : "the fixed text is no longer in the file; it was edited since");
+    reverted = text4.replace(next, old);
+  } else {
+    const lines = text4.split("\n");
+    const at = Math.max(0, Math.min(lines.length, (fixed.line ?? 1) - 1));
+    reverted = [...lines.slice(0, at), old, ...lines.slice(at)].join("\n");
+  }
+  writeFileSync5(isAbsolute5(rel) ? rel : join10(run2.repo.root, rel), reverted);
+  const record = { statement_id: fixed.statement_id, text: fixed.previous ?? "", kind: "fix-rejected", reason: `reverted by ${by ?? whoAmI(run2.repo.root)}`, evidence: [], by: by ?? whoAmI(run2.repo.root), at: (/* @__PURE__ */ new Date()).toISOString(), tree: run2.git?.tree ?? null, head: run2.git?.head ?? null, previous: fixed.previous, tier: fixed.tier, edit: fixed.edit };
+  appendDecisions(run2.repo.root, rel, [record]);
+  return record;
+}
 
 // src/report.ts
 var MARK = { VERIFIED: "\u2713", STALE: "\u2717", UNCONFIRMED: "?", NOT_CHECKED: "\xB7" };
@@ -21177,9 +21638,20 @@ function agentLines(s) {
   const proposal = a2.proposedText && s.status === "STALE" ? [`  - proposed: ${clip2(a2.proposedText, 300)}`] : [];
   return [head, ...evidence, ...proposal];
 }
+function fixLines(s) {
+  const f = s.fix;
+  if (!f) return [];
+  const id = s.id.slice(0, 10);
+  if (f.outcome === "applied") return [`  - fixed (tier ${f.tier}, id ${id})${s.status === "FIXED" ? "" : "; what it changed is proven, the rest is still open"}: was "${clip2(f.was ?? f.old, 200)}"`, ...f.evidence.filter((e) => e.valid).slice(0, 2).map((e) => `    - \u2713 ${e.kind} \`${clip2(e.ref, 100)}\`${e.excerpt ? ` "${clip2(e.excerpt, 90)}"` : ""}`)];
+  const proposal = f.action === "delete" ? "delete the statement" : `"${clip2(f.old, 120)}" \u2192 "${clip2(f.new, 160)}"`;
+  if (f.outcome === "rejected") return [`  - fix rejected and reverted (tier ${f.tier}): ${proposal}`, `    - re-verifier: ${clip2(f.reverify, 220)}`];
+  if (f.outcome === "refused") return [`  - fix not applied: ${f.reverify}`, `    - proposed: ${proposal}`];
+  return [`  - would fix (tier ${f.tier}): ${proposal}`, `    - re-verifier: ${clip2(f.reverify, 220)}`];
+}
 function item(s, withSpans) {
   const lines = [`- **L${s.line}** ${clip2(s.text)}${s.section ? ` _(${s.section})_` : ""}`];
-  if ((s.status === "UNVERIFIED_WITH_REASON" || s.status === "OVERRIDDEN") && !s.agent) lines.push(`  - ${s.reason}`);
+  if ((s.status === "UNVERIFIED_WITH_REASON" || s.status === "OVERRIDDEN" || s.status === "DECIDED") && !s.agent) lines.push(`  - ${s.reason}`);
+  lines.push(...fixLines(s));
   lines.push(...agentLines(s));
   if (withSpans) for (const r of s.results.filter((x) => x.kind !== "prose")) lines.push(spanLine(r));
   return lines;
@@ -21213,12 +21685,14 @@ function toMarkdown(r, opts = {}) {
   for (const i of r.imports) lines.push(`imports: @${i.path} (L${i.line}) \u2014 ${i.note || (i.followed ? "checked" : "not checked")}`);
   if (r.verdict !== r.ownVerdict) lines.push(`own statements: ${r.ownVerdict}; with what it imports: ${r.verdict}`);
   if (r.agent) {
-    lines.push(`verifier: ${r.agent.answered}/${r.agent.sent} open statements answered${r.agent.cached ? ` (${r.agent.cached} cached)` : ""} \xB7 $${r.agent.costUsd.toFixed(2)} \xB7 ${r.agent.model}`);
+    lines.push(`verifier: ${r.agent.answered}/${r.agent.sent} open statements answered${r.agent.cached ? ` (${r.agent.cached} cached)` : ""} \xB7 ${r.agent.model}${r.run.budgetUsedUsd !== void 0 ? ` \xB7 run spent $${r.run.budgetUsedUsd.toFixed(2)}` : ""}`);
     for (const f of r.agent.failures) lines.push(`verifier failed: ${f}`);
   }
   lines.push("");
   for (const d of r.degraded) lines.push(`degraded: ${d.subject} \u2014 ${d.reason}`);
   if (r.degraded.length) lines.push("");
+  for (const d of r.reopened) lines.push(`reopened: the ${d.kind} decision on "${clip2(d.text, 120)}" (by ${d.by}) no longer matches a line; the edited line is open again`);
+  if (r.reopened.length) lines.push("");
   if (r.git) {
     lines.push(`branch \`${r.git.branch ?? "detached"}\` \xB7 head \`${r.git.head?.slice(0, 12) ?? "none"}\` \xB7 tree \`${r.git.tree.slice(0, 12)}\` \xB7 proof ${r.run.version}`, "");
     if (r.git.behind) lines.push(`> **This checkout is ${r.git.behind} commits behind ${r.git.upstream}.** The file and the code were read as checked out here; check the branch people actually work on.`, "");
@@ -21236,6 +21710,10 @@ function toMarkdown(r, opts = {}) {
     for (const s of rows) lines.push(...item(s, sec.status !== "NOT_CHECKED" || Boolean(opts.verbose)));
     lines.push("");
   }
+  const deleted = (r.fixes ?? []).filter((f) => f.action === "delete" && f.outcome === "applied");
+  if (deleted.length) lines.push(`## Deleted (${deleted.length})`, "", "Removed with evidence that the thing is gone.", "", ...deleted.map((f) => `- **L${f.line}** ${clip2(f.old)}`), "");
+  if (r.gaps?.length) lines.push("## Gap proposals (not applied)", "", "Asked for with --gaps. Each cites its evidence; add one by hand if you want it.", "", ...r.gaps.flatMap((g) => [`- ${g.section ? `_${g.section}_: ` : ""}${clip2(g.text, 200)}`, ...g.evidence.filter((e) => e.valid).slice(0, 2).map((e) => `  - \u2713 ${e.kind} \`${clip2(e.ref, 100)}\`${e.excerpt ? ` "${clip2(e.excerpt, 90)}"` : ""}`)]), "");
+  if (r.diff) lines.push(`## Diff${r.fixes?.some((f) => f.outcome === "dry-run") ? " (dry run: not written)" : ""}`, "", "```diff", r.diff.trimEnd(), "```", "");
   lines.push("next:", ...nextLines(r, opts.mode ?? "check").map((l) => `  ${l}`));
   return `${lines.join("\n").trimEnd()}
 `;
@@ -21244,10 +21722,18 @@ function nextLines(r, mode = "check") {
   const c = r.counts;
   const out = [];
   const open = c.UNCONFIRMED + c.UNVERIFIED_WITH_REASON;
-  if (c.STALE) out.push(`Fix ${c.STALE} stale line${c.STALE === 1 ? "" : "s"}: edit ${r.file} by the reasons above${r.statements.some((s) => s.agent?.proposedText) ? " and the proposed text" : ""}`);
+  const applied = (r.fixes ?? []).filter((f) => f.outcome === "applied");
+  if (applied.length) {
+    out.push(`Review the diff: git diff -- ${r.file}`);
+    out.push(`Revert one fix: proof revert ${r.file} --id <id shown on the fixed line>`);
+  }
+  if ((r.fixes ?? []).some((f) => f.outcome === "dry-run")) out.push(`Apply the fixes: proof run ${r.file}`);
+  if (c.STALE && mode === "check") out.push(`Fix ${c.STALE} stale line${c.STALE === 1 ? "" : "s"}: proof run ${r.file}, or edit ${r.file} by the reasons above`);
+  else if (c.STALE) out.push(`Fix ${c.STALE} stale line${c.STALE === 1 ? "" : "s"} by hand: ${r.file}, by the reasons and the refused proposals above`);
+  if (c.FIX_REJECTED) out.push(`${c.FIX_REJECTED} fix${c.FIX_REJECTED === 1 ? " was" : "es were"} rejected by the re-verifier: correct ${c.FIX_REJECTED === 1 ? "that line" : "those lines"} by hand`);
   if (r.agent && r.agent.answered < r.agent.sent) out.push(`Finish verification: proof run ${r.file}${r.agent.failures.some((f) => f.includes("budget")) ? " --budget-usd <more>" : ""}`);
   else if (open && mode === "check") out.push(`Verify ${open} open statement${open === 1 ? "" : "s"} with the verifier agent: proof run ${r.file}`);
-  else if (open) out.push(`Decide ${open} open statement${open === 1 ? "" : "s"}: each reason says what evidence is missing`);
+  else if (open) out.push(`Decide ${open} open item${open === 1 ? "" : "s"}: proof decide ${r.file}`);
   if (r.statements.some((s) => s.kind === "marker")) out.push('Give each proof:ignore marker a reason: <!-- proof:ignore reason="\u2026" -->');
   out.push(`Re-run: proof ${mode} ${r.file}`);
   return out;
@@ -21258,14 +21744,21 @@ var HELP = `proof ${VERSION}: is your CLAUDE.md still true?
 
 Usage:
   proof check [file...] [--user] [--json] [--out <dir>] [--verbose]
-  proof run   [file...] [--user] [--model <id>] [--effort <lvl>] [--budget-usd <n>] [--jobs <n>] [--no-cache] [--json] [--out <dir>]
+  proof run   [file...] [--user] [--no-fix] [--dry-run] [--commit] [--fix-rounds <n>] [--gaps] [--model <id>] [--effort <lvl>] [--budget-usd <n>]
+              [--jobs <n>] [--no-cache] [--json] [--out <dir>]
+  proof decide <file> [L<line>|<id> (--rule | --fact --evidence <path:line>) --reason "\u2026"]
+  proof revert <file> --id <statement id>
 
 check   Checks every statement in CLAUDE.md, AGENTS.md and the other instruction files an agent loads
         against the repository with deterministic parsers, follows their @imports, and prints a report.
         With no files, checks every instruction file it discovers.
 run     Does the same, then hands every statement the checks left open to a verifier agent (the
         claude CLI, read-only tools), keeps only verdicts whose citations check out, and reports coverage.
-        A run can take many minutes; it is working, not stalled.
+        Then it fixes the stale lines: a fixer proposes each edit, a fresh verifier re-checks it, and only
+        edits it accepts are written. Review the diff afterwards. A run can take many minutes.
+decide  Lists the open statements of a file, or records a person's decision on one in <file>.proof.json,
+        so later runs show it as decided instead of asking again.
+revert  Puts back the text a fix replaced and records the rejection, so it is not proposed again.
 
   --user          Also check ~/.claude/CLAUDE.md, ~/.claude/rules/ and this machine's managed policy file,
                   and follow imports outside the repository (reported, never edited)
@@ -21274,6 +21767,11 @@ run     Does the same, then hands every statement the checks left open to a veri
   --budget-usd    Total spend for the verifier across the run (default ${DEFAULT_VERIFY.budgetUsd})
   --jobs <n>      Verifier calls in parallel (default ${DEFAULT_VERIFY.jobs})
   --no-cache      Ask again even when the code and the statement are unchanged since the last run
+  --no-fix        Verify only; change nothing
+  --dry-run       Show the diff the fixes would make, without writing it
+  --commit        Commit the fixed files and their sidecars (nothing is committed without it)
+  --fix-rounds    Fix rounds, each re-verified (default 1); a later round sees why earlier edits were rejected
+  --gaps          Also propose up to five missing lines per file, with evidence; never written
   --json          Print JSON (an array, one object per file) instead of markdown
   --out <dir>     Also write <name>.md and <name>.json reports into <dir>
   --verbose       List verified, decided and not-checked statements too
@@ -21302,7 +21800,11 @@ async function pipeline(mode, argv) {
       jobs: { type: "string" },
       "batch-size": { type: "string" },
       "no-cache": { type: "boolean" },
-      "no-fix": { type: "boolean" }
+      "no-fix": { type: "boolean" },
+      "dry-run": { type: "boolean" },
+      "fix-rounds": { type: "string" },
+      gaps: { type: "boolean" },
+      commit: { type: "boolean" }
     }
   });
   const run2 = new Run(process.cwd());
@@ -21328,19 +21830,87 @@ async function pipeline(mode, argv) {
     };
     if (!values.json) console.error(`verifying open statements with ${opts.model} (budget $${opts.budgetUsd.toFixed(2)}); this can take minutes`);
     reports = await run2.verify(reports, opts);
+    let spent = reports.reduce((n, r) => n + (r.agent?.costUsd ?? 0), 0);
+    const rounds = NUMBER("fix-rounds", values["fix-rounds"], 1);
+    const dryRun = Boolean(values["dry-run"]);
+    const config = loadConfig(run2.repo);
+    let current = run2;
+    const merged = /* @__PURE__ */ new Map();
+    for (let round = 1; round <= rounds && !values["no-fix"] && reports.some((r) => r.counts.STALE); round++) {
+      const stale2 = reports.reduce((n, r) => n + r.counts.STALE, 0);
+      if (!values.json) console.error(`fixing ${stale2} stale statement(s)${rounds > 1 ? ` (round ${round} of ${rounds})` : ""}${dryRun ? " (dry run: nothing is written)" : ""}`);
+      const fixes = await current.fix(reports, { model: opts.model, effort: opts.effort, budgetUsd: Math.min(Math.max(0.1, opts.budgetUsd - spent), Math.max(1, stale2 * opts.perStatementUsd * 2)), timeoutMs: opts.timeoutMs, user: Boolean(values.user), config, dryRun, verify: opts });
+      spent += [...fixes.values()].reduce((n, x) => n + x.costUsd, 0);
+      const changed = [...fixes.values()].some((f) => f.after !== f.before || f.accepted.length || f.rejected.length);
+      if (changed && !dryRun) {
+        current = new Run(process.cwd());
+        reports = await current.verify(await current.checkTargets(targets, { user: Boolean(values.user) }), opts);
+        spent += reports.reduce((n, r) => n + (r.agent?.costUsd ?? 0), 0);
+        if (values.commit) commitFixes(current.repo.root, [...fixes.entries()].filter(([, f]) => f.after !== f.before || f.rejected.length).map(([file]) => file), fixes);
+      }
+      for (const [file, f] of fixes) {
+        const prev = merged.get(file);
+        merged.set(file, prev ? { ...f, before: prev.before, proposed: [...prev.proposed, ...f.proposed], accepted: [...prev.accepted, ...f.accepted], rejected: [...prev.rejected, ...f.rejected], costUsd: prev.costUsd + f.costUsd, reverified: new Map([...prev.reverified, ...f.reverified]) } : f);
+      }
+      if (dryRun || !fixes.size || ![...fixes.values()].some((f) => f.rejected.length)) break;
+    }
+    if (merged.size) annotateFixes(reports, merged, dryRun);
+    if (values.gaps) {
+      for (const r of reports.filter((x) => x.scope !== "managed" && x.statements.length)) {
+        const g = await proposeGaps(current.repo, r.file, current.repo.read(r.file) ?? "", { model: opts.model, effort: opts.effort, budgetUsd: Math.min(1, Math.max(0.1, opts.budgetUsd - spent)), timeoutMs: opts.timeoutMs });
+        spent += g.costUsd;
+        r.gaps = g.proposals;
+        if (g.failure) r.degraded.push({ subject: "gaps", reason: `gap proposals failed: ${g.failure}` });
+      }
+    }
+    for (const r of reports) r.run.budgetUsedUsd = spent;
+    if (!values.json) console.error(`spent $${spent.toFixed(2)} of $${opts.budgetUsd.toFixed(2)}`);
   }
   if (values.out) {
     mkdirSync2(values.out, { recursive: true });
     for (const r of reports) {
       const name = r.file.replace(/[^a-z0-9._-]+/gi, "-").toLowerCase();
-      writeFileSync2(join8(values.out, `${name}.md`), toMarkdown(r, { verbose: true, mode }));
-      writeFileSync2(join8(values.out, `${name}.json`), `${JSON.stringify(r, null, 2)}
+      writeFileSync6(join11(values.out, `${name}.md`), toMarkdown(r, { verbose: true, mode }));
+      writeFileSync6(join11(values.out, `${name}.json`), `${JSON.stringify(r, null, 2)}
 `);
     }
   }
   if (values.json) console.log(JSON.stringify(reports, null, 2));
   else console.log(reports.map((r) => toMarkdown(r, { verbose: Boolean(values.verbose), mode })).join("\n---\n\n"));
   return Math.max(...reports.map((r) => EXIT_CODE[r.verdict]));
+}
+function commitFixes(root, files, fixes) {
+  const paths = files.flatMap((f) => [f, sidecarPath(f)]).filter((p) => existsSync8(join11(root, p)));
+  if (!paths.length) return;
+  const applied = [...fixes.values()].reduce((n, f) => n + f.accepted.length, 0);
+  spawnSync7("git", ["add", "--", ...paths], { cwd: root });
+  const res = spawnSync7("git", ["commit", "-q", "-m", `docs: proof fixed ${applied} stale statement${applied === 1 ? "" : "s"} in ${files.join(", ")}`, "--", ...paths], { cwd: root, encoding: "utf8" });
+  if (res.status !== 0) console.error(`commit failed: ${res.stderr.trim()}. The fixes are in the working tree.`);
+}
+async function decideCommand(argv) {
+  const { values, positionals } = parseArgs({ args: argv, allowPositionals: true, options: { rule: { type: "boolean" }, fact: { type: "boolean" }, reason: { type: "string" }, evidence: { type: "string", multiple: true }, by: { type: "string" } } });
+  const [file, which] = positionals;
+  if (!file) throw new UsageError("proof decide needs a file");
+  const run2 = new Run(process.cwd());
+  if (!which) {
+    process.stdout.write(await listOpen(run2, file));
+    return 0;
+  }
+  if (values.rule === values.fact) throw new UsageError("pass exactly one of --rule or --fact");
+  const record = await decide2(run2, file, which, { kind: values.rule ? "rule" : "fact", reason: values.reason ?? "", evidence: (values.evidence ?? []).flatMap((e) => e.split(",")), ...values.by ? { by: values.by } : {} });
+  console.log(`decided ${record.kind}: ${record.text}
+recorded in ${sidecarPath(run2.repo.rel(file) ?? file)}`);
+  return 0;
+}
+function revertCommand(argv) {
+  const { values, positionals } = parseArgs({ args: argv, allowPositionals: true, options: { id: { type: "string" }, by: { type: "string" } } });
+  const [file] = positionals;
+  if (!file || !values.id) throw new UsageError("proof revert needs a file and --id <statement id>");
+  const run2 = new Run(process.cwd());
+  const record = revert(run2, file, values.id, values.by);
+  console.log(`reverted: ${record.edit?.new || "(deleted text)"} \u2192 ${record.edit?.old}
+recorded as fix-rejected in ${sidecarPath(run2.repo.rel(file) ?? file)}`);
+  return 0;
 }
 async function main(argv) {
   const [first, ...rest] = argv;
@@ -21354,8 +21924,14 @@ async function main(argv) {
   }
   try {
     if (first === "check" || first === "run") return await pipeline(first, rest);
+    if (first === "decide") return await decideCommand(rest);
+    if (first === "revert") return revertCommand(rest);
     if (!first || first.startsWith("-") || /\.(md|mdc)$|rules$/i.test(first)) return await pipeline("check", argv);
   } catch (err) {
+    if (err instanceof HumanError) {
+      console.error(err.message);
+      return 2;
+    }
     if (err instanceof UsageError || err instanceof TypeError && "code" in err && String(err.code).startsWith("ERR_PARSE_ARGS")) {
       console.error(`${err.message}. Run: proof help`);
       return 2;

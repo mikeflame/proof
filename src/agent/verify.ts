@@ -10,7 +10,7 @@ import { type AgentEvidence, checkEvidence } from './evidence.ts';
 import { ACTIONS, VERIFIER_RULES, VERIFIER_SCHEMA, VERIFIER_VERDICTS } from './rules.ts';
 
 /** Bumped when the prompt or the rules change, so cached verdicts from older rules are not reused. */
-export const PROMPT_VERSION = '2';
+export const PROMPT_VERSION = '3';
 
 export interface VerifyOptions {
   model: string;
@@ -51,7 +51,7 @@ const TOOLS = ['Read', 'Grep', 'Glob', 'Bash'];
 const ALLOWED = ['Read', 'Grep', 'Glob', 'Bash(git log:*)', 'Bash(git grep:*)', 'Bash(git ls-files:*)', 'Bash(git show:*)', 'Bash(git blame:*)', 'Bash(git rev-list:*)', 'Bash(ls:*)', 'Bash(wc:*)', 'Bash(find:*)', 'Bash(grep:*)', 'Bash(rg:*)', 'Bash(head:*)', 'Bash(cat:*)', 'Bash(sort:*)', 'Bash(uniq:*)', 'Bash(jq:*)'];
 
 /** The prompt for one batch: the rules, then every statement with what the mechanical stage found. */
-export function buildPrompt(file: string, why: string, batch: { key: string; st: CheckedStatement }[]): string {
+export function buildPrompt(file: string, why: string, batch: { key: string; st: CheckedStatement }[], note?: string): string {
   const items = batch.map(({ key, st }) => ({
     statement_id: key,
     line: st.line,
@@ -66,6 +66,7 @@ export function buildPrompt(file: string, why: string, batch: { key: string; st:
   }));
   return [
     `You verify statements from the instruction file ${file} (${why}) against the repository in your working directory.`,
+    ...(note ? ['', note] : []),
     '',
     'Rules:',
     ...VERIFIER_RULES.map((r, i) => `${i + 1}. ${r}`),
@@ -122,6 +123,22 @@ export function applyVerdict(st: CheckedStatement, v: AgentVerdict): CheckedStat
   return { ...out, status: st.status === 'STALE' ? 'STALE' : 'UNVERIFIED_WITH_REASON', reason: st.status === 'STALE' ? st.reason : v.reason, settled: false };
 }
 
+const treeMemo = new WeakMap<object, Map<string, string>>();
+
+/** The working tree without the instruction files and sidecars, hashed once per run: what verdicts are about. */
+function codeTreeOf(repo: RepoContext, instructionFiles: string[]): string {
+  if (!repo.isGit) return 'no-git';
+  const excluded = [...new Set(instructionFiles.filter((f) => !f.startsWith('/')))].sort();
+  const key = excluded.join('\0');
+  const memo = treeMemo.get(repo) ?? new Map<string, string>();
+  treeMemo.set(repo, memo);
+  const known = memo.get(key);
+  if (known) return known;
+  const tree = workingTreeHash(repo.root, [...excluded, ':(glob)**/*.proof.json']);
+  memo.set(key, tree);
+  return tree;
+}
+
 type Cache = Record<string, { raw: RawResult; at: string }>;
 
 function cacheDir(root: string): string {
@@ -150,6 +167,8 @@ export interface FileToVerify {
   file: string;
   why: string;
   statements: CheckedStatement[];
+  /** Said to the verifier before the rules, for example that the text is a proposed edit not yet written. */
+  note?: string;
 }
 
 /**
@@ -159,7 +178,7 @@ export interface FileToVerify {
 export async function verifyFiles(repo: RepoContext, files: FileToVerify[], instructionFiles: string[], opts: VerifyOptions): Promise<Map<string, AgentCoverage>> {
   const coverage = new Map<string, AgentCoverage>();
   const version = claudeVersion();
-  const codeTree = repo.isGit ? workingTreeHash(repo.root, [...instructionFiles.filter((f) => !f.startsWith('/')), ':(glob)**/*.proof.json']) : 'no-git';
+  const codeTree = codeTreeOf(repo, instructionFiles);
   const cache = opts.cache ? loadCache(repo.root) : {};
   let spent = 0;
 
@@ -172,7 +191,7 @@ export async function verifyFiles(repo: RepoContext, files: FileToVerify[], inst
     cov.sent = open.length;
     const fresh: { st: CheckedStatement; index: number; cacheKey: string }[] = [];
     for (const { st, index } of open) {
-      const cacheKey = createHash('sha1').update([PROMPT_VERSION, opts.model, codeTree, f.file, st.id, st.status, st.reason].join('\0')).digest('hex');
+      const cacheKey = createHash('sha1').update([PROMPT_VERSION, opts.model, codeTree, f.file, st.id, st.status, st.reason, f.note ?? ''].join('\0')).digest('hex');
       const hit = cache[cacheKey];
       const v = hit ? judge(repo, hit.raw, opts.model, true) : null;
       if (v) {
@@ -197,7 +216,7 @@ export async function verifyFiles(repo: RepoContext, files: FileToVerify[], inst
       job.cov.failures.push(`budget of $${opts.budgetUsd.toFixed(2)} spent before L${job.batch[0]?.st.line}–L${job.batch[job.batch.length - 1]?.st.line} were verified`);
       return;
     }
-    const prompt = buildPrompt(job.file.file, job.file.why, job.batch);
+    const prompt = buildPrompt(job.file.file, job.file.why, job.batch, job.file.note);
     let result: ClaudeResult = await runClaude({ cwd: repo.root, prompt, schema: VERIFIER_SCHEMA, model: opts.model, effort: opts.effort, budgetUsd: ceiling, tools: TOOLS, allowedTools: ALLOWED, timeoutMs: opts.timeoutMs });
     spent += result.costUsd;
     job.cov.costUsd += result.costUsd;

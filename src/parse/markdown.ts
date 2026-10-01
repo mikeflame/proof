@@ -192,7 +192,11 @@ export function residualOf(text: string): string[] {
   const rule = prose.match(RULE_WORDS);
   if (rule) out.push(`rule "${rule[0]}"`);
   // Two or more content words describe something ("route aggregation"); a script cannot check a description.
-  const words = contentWords(prose.replace(/\[[^\]]*\]/g, ' ').replace(/@\S+/g, ' '));
+  // Version claims and product names are spans of their own, checked already: they describe nothing more.
+  let described = prose.replace(/\[[^\]]*\]/g, ' ').replace(/@\S+/g, ' ');
+  for (const v of versionSpans(described)) described = described.replace(v.text, ' ');
+  for (const d of dependencySpans(described)) described = described.replace(new RegExp(`\\b${d.text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'g'), ' ');
+  const words = contentWords(described);
   if (words.length >= 2) out.push(`description "${words.slice(0, 6).join(' ')}${words.length > 6 ? ' …' : ''}"`);
   return out;
 }
