@@ -11,7 +11,9 @@ const STALE = new Set(['STALE', 'FIX_REJECTED']);
 
 /** Gold label for a reported statement: by id, else by text near the same line. */
 function goldFor(labels, st) {
-  return labels.find((l) => l.id === st.id) ?? labels.find((l) => norm(l.text) === norm(st.text) && Math.abs(l.line - st.line) <= 3) ?? null;
+  const l = labels.find((x) => x.id === st.id) ?? labels.find((x) => norm(x.text) === norm(st.text) && Math.abs(x.line - st.line) <= 3) ?? null;
+  // A second reviewer's adjudication, with its evidence, replaces the first label.
+  return l?.adjudicated ? { ...l, label: l.adjudicated.label } : l;
 }
 
 function tally(rows) {
@@ -67,7 +69,8 @@ for (const stageName of ['check', 'run']) for (const split of ['tune', 'heldout'
   const rows = perRepo.filter((x) => x.stage === stageName && (split === 'all' || x.split === split));
   if (rows.length) groups[`${stageName}/${split}`] = summary(tally(rows));
 }
-const metrics = { generated: new Date().toISOString().slice(0, 10), labeler: 'independent agent labels with cited evidence; a second, human review is pending', groups, perRepo };
+const adjudicated = corpus().reduce((n, r) => n + (load(join(here, 'labels', `${r.name}.json`))?.labels.filter((l) => l.adjudicated).length ?? 0), 0);
+const metrics = { adjudicated, generated: new Date().toISOString().slice(0, 10), labeler: 'independent agent labels with cited evidence; a second, human review is pending', groups, perRepo };
 writeFileSync(join(here, 'metrics.json'), `${JSON.stringify(metrics, null, 1)}\n`);
 for (const [k, v] of Object.entries(groups)) console.log(k.padEnd(14), JSON.stringify(v));
 for (const r of perRepo) if (r.misses.length || r.falseAlarms.length || r.wrongVerified.length) console.log(`\n${r.name} ${r.stage}:`, JSON.stringify({ misses: r.misses, falseAlarms: r.falseAlarms, wrongVerified: r.wrongVerified }, null, 1));

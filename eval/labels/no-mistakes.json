@@ -1,839 +1,849 @@
 {
-  "repo": "kunchenguid/no-mistakes",
-  "sha": "f4b85ae161cef8f14e289cc90aebae044ed570b9",
-  "file": "AGENTS.md",
-  "labeler": "agent (independent of proof's output)",
-  "labels": [
-    {
-      "id": "bfa622cf248a5b70e047e86da233569d620ff30e",
-      "line": 3,
-      "text": "This file is for agentic coding tools working in this repo.",
-      "label": "judgment",
-      "evidence": [
-        "CLAUDE.md:1-2 '<!-- Points Claude at AGENTS.md via import; edit AGENTS.md, not this file. --> @AGENTS.md'"
-      ],
-      "note": "Statement of the file's audience/purpose; consistent with CLAUDE.md importing it but not something the repo can verify."
-    },
-    {
-      "id": "3c8177638936f9bd21147362d0ae710f2f25bba7",
-      "line": 5,
-      "text": "This repository is a Go CLI app named `no-mistakes`.",
-      "label": "true",
-      "evidence": [
-        "go.mod:1 'module github.com/kunchenguid/no-mistakes'",
-        "cmd/no-mistakes/main.go exists",
-        "Makefile:22 'go build ... -o bin/no-mistakes ./cmd/no-mistakes'"
-      ],
-      "note": "Go module whose binary is no-mistakes."
-    },
-    {
-      "id": "5ac53ad2bee6ec3ce333d1a5f658b3958f49ced4",
-      "line": 6,
-      "text": "The binary entrypoint is `cmd/no-mistakes`; implementation code lives under `internal/`, and the package names there are the layout map (CLI in `internal/cli`, daemon in `internal/daemon`, pipeline and steps in `internal/pipeline`, agent adapters in `internal/agent`, terminal UI in `internal/tui`, shared infrastructure in `internal/git`, `internal/ipc`, `internal/config`, `internal/db`, `internal/paths`, `internal/types`).",
-      "label": "true",
-      "evidence": [
-        "ls cmd => fakeagent genskill no-mistakes publish-channels recordfixture",
-        "test -d internal/{cli,daemon,pipeline,agent,tui,git,ipc,config,db,paths,types} => all present"
-      ],
-      "note": "Entrypoint and every listed package directory exist."
-    },
-    {
-      "id": "f1c530c42cfe7f982f633c1b57b25543e5929210",
-      "line": 7,
-      "text": "Build, test, and release commands are owned by the `Makefile`; read it for the full target list instead of relying on a copy here.",
-      "label": "true",
-      "evidence": [
-        "Makefile:16 '.PHONY: build dist install test e2e e2e-record lint fmt clean docs docs-build docs-preview demo skill skill-check'",
-        "Makefile:24 'dist:' builds the release archives for 6 OS/arch targets",
-        "Makefile:51-52 'test: go test -race ./...'"
-      ],
-      "note": "Makefile holds build, test, lint, e2e and dist (release packaging) targets; CI's release.yml runs its own go build, but the Makefile still owns the local command list."
-    },
-    {
-      "id": "70769d4c641c395e67e8bf05065e4ec6fee1d49e",
-      "line": 11,
-      "text": "`gofmt -w .`",
-      "label": "true",
-      "evidence": [
-        "Makefile:91-92 'fmt: gofmt -w .'",
-        ".github/workflows/ci.yml:24-31 'Format check: output=$(gofmt -l .) ... exit 1'"
-      ],
-      "note": "gofmt is a Makefile target and CI enforces formatting."
-    },
-    {
-      "id": "37bd5be408693fb5053b039cdd8d65fe6012d19c",
-      "line": 12,
-      "text": "`make lint` (generated-skill drift check plus `go vet`)",
-      "label": "true",
-      "evidence": [
-        "Makefile:85-86 'skill-check: go run ./cmd/genskill --check'",
-        "Makefile:88-89 'lint: skill-check / go vet ./...'"
-      ],
-      "note": "make lint is exactly the generated-skill drift check plus go vet."
-    },
-    {
-      "id": "665c83927b053135fa35063daf014d5d993e7713",
-      "line": 13,
-      "text": "`go test -race ./...` (the e2e suite is behind the `e2e` build tag and excluded)",
-      "label": "true",
-      "evidence": [
-        "Makefile:51-52 'test: go test -race ./...'",
-        "Makefile:58-59 'Excluded from `make test` because it is behind the `e2e` build tag'",
-        "grep -rl '^//go:build e2e' --include=*.go . | wc -l => 42 (internal/e2e/*)",
-        ".github/workflows/ci.yml:106 'run: go test -race ./...'"
-      ],
-      "note": "Race test command matches Makefile/CI and the e2e suite is tag-gated."
-    },
-    {
-      "id": "e9d156f5ccc3f1b636e07d8e6606734182f367e4",
-      "line": 14,
-      "text": "`make e2e` when touching agent integrations, the e2e harness, or recorded fixtures",
-      "label": "true",
-      "evidence": [
-        "Makefile:65-66 'e2e: @bash scripts/e2e.sh'",
-        "Makefile:54-57 'End-to-end suite: drives the real no-mistakes binary against a fake agent ...'",
-        "Makefile:72-76 'e2e-record' re-records internal/e2e/fixtures",
-        ".github/workflows/ci.yml:149-150 'name: End-to-end suite / run: make e2e'"
-      ],
-      "note": "make e2e exists, covers agent backends and fixtures, and CI runs it."
-    },
-    {
-      "id": "2f669e75b4b5b7bb154c2ec9c56facc6a2b7b12c",
-      "line": 15,
-      "text": "`go build -o ./bin/no-mistakes ./cmd/no-mistakes`",
-      "label": "true",
-      "evidence": [
-        "Makefile:21-22 'build: go build -ldflags \"$(LDFLAGS)\" -o bin/no-mistakes ./cmd/no-mistakes'",
-        "cmd/no-mistakes/main.go exists"
-      ],
-      "note": "Build command and output path match the Makefile build target (minus ldflags)."
-    },
-    {
-      "id": "6aec09a1b5ba6a5dfad5f3480d70a0677a525480",
-      "line": 19,
-      "text": "User-facing semantics: the docs site under `docs/src/content/docs/` (`reference/repo-config.md` and `reference/global-config.md` own config keys, `reference/pipeline-steps.md` owns step behavior, `reference/environment.md` owns env vars and telemetry, `concepts/gate-model.md` and `concepts/daemon.md` own those models).",
-      "label": "true",
-      "evidence": [
-        "ls docs/src/content/docs/reference => cli.md environment.md eval.md global-config.md pipeline-steps.md repo-config.md",
-        "ls docs/src/content/docs/concepts => auto-fix.md daemon.md gate-model.md pipeline.md review-conversation.md",
-        "docs/src/content/docs/reference/repo-config.md:127 '## Fields'; environment.md:262 '### What stays local and what leaves the machine'"
-      ],
-      "note": "All named docs pages exist and hold the described content."
-    },
-    {
-      "id": "48aeee94c439518ee82224cd6997ef2135876dc2",
-      "line": 20,
-      "text": "Per-area implementation maps (owning functions, invariants, regression lists): `.agents/skills/<area>/SKILL.md` (`.claude/skills` is a symlink to it). Read the matching skill before changing that area.",
-      "label": "true",
-      "evidence": [
-        "readlink .claude/skills => ../.agents/skills",
-        "for d in .agents/skills/*/ => every one of 15 dirs has SKILL.md"
-      ],
-      "note": "Skills live at .agents/skills/<area>/SKILL.md and .claude/skills is a symlink to it."
-    },
-    {
-      "id": "d0305efc9bca77e1f709a1d2be98a6789daf76e4",
-      "line": 21,
-      "text": "Provider CLI traps (glab flag drift, tea JSON shapes, GitHub user-attachments, opencode failure wire shape and retry gating) are owned by the comments in `internal/scm/gitlab/gitlab.go`, `internal/scm/gitea/gitea.go`, `internal/scm/github/attachments.go`, and `internal/agent/opencode*.go`; extend them there when you hit new drift.",
-      "label": "true",
-      "evidence": [
-        "internal/scm/gitlab/gitlab.go:308-310 'Unlike `glab mr create`, `glab mr update` (glab v1.5x) has no -y/--yes confirmation-skip flag at all'",
-        "internal/scm/gitea/gitea.go:104-107 'the two shapes are deliberately separate structs; do not unify them.'",
-        "internal/scm/github/attachments.go:322-324 'Callers must treat any error as fail-closed'",
-        "ls internal/agent/opencode*.go => opencode.go opencode_failure.go opencode_http.go opencode_stream.go opencode_types.go (+tests)"
-      ],
-      "note": "Each named file exists and carries the trap comments described."
-    },
-    {
-      "id": "998abc4d437751c671503f1e4473854f697ad817",
-      "line": 22,
-      "text": "`skills/no-mistakes/SKILL.md` is generated from `internal/skill/skill.go`; never hand-edit it, `CHANGELOG.md`, or other generated files.",
-      "label": "true",
-      "evidence": [
-        "cmd/genskill/main.go:1-4 'renders the canonical no-mistakes SKILL.md from the internal/skill package into skills/no-mistakes/SKILL.md'",
-        "Makefile:85-89 lint depends on skill-check (go run ./cmd/genskill --check)",
-        "workflow_guard_generated_files_test.go:18-21 guarded paths 'CHANGELOG.md', '.release-please-manifest.json' in .github/workflows/guard-generated-files.yml"
-      ],
-      "note": "SKILL.md is generated from internal/skill and hand edits to it and CHANGELOG.md are blocked by lint and the guard workflow."
-    },
-    {
-      "id": "46574086bc11b11cec7d29f71dbd8f14da63d332",
-      "line": 26,
-      "text": "Repo config trust boundary (security): `commands.*` and `agent` come from the trusted default branch at a pinned, freshly fetched SHA and the run fails closed when that config cannot be read; `allow_repo_commands` is trusted-only and defaults false. Every other trusted-only field listed in `reference/repo-config.md` stays trusted-only regardless of `allow_repo_commands` (`pr.base_branch` is the one opt-in exception). No trusted-config selection may depend on a pushed-branch field, and `review.path_instructions` matches the complete changed-file set, never the `ignore_patterns`-filtered one. Owner: `repository-routing-security` skill.",
-      "label": "true",
-      "evidence": [
-        "internal/daemon/manager.go:713-718 'Reading at a pinned SHA, rather than the origin/<defaultBranch> remote-tracking ref, closes the stale-ref hole ... without a fresh fetch + resolve'",
-        "internal/daemon/manager.go:766-773 assertGateTrustedConfigReadable returns 'refusing to run without reading the trusted config'",
-        "internal/config/config.go:300 'AllowRepoCommands bool `yaml:\"allow_repo_commands\"`'; repo-config.md:149-158 'Default | `false`' and 'read only from the trusted default-branch copy'",
-        "repo-config.md:11-12 trusted-only field list; 'pr.base_branch ... follows the same allow_repo_commands: true opt-in exception'",
-        "internal/pipeline/steps/review_path_instructions.go:34 'changed is the COMPLETE changed-file set, never the ignore-filtered subset'"
-      ],
-      "note": "Trusted pinned-SHA config, fail-closed read, allow_repo_commands default false, pr.base_branch exception and complete-set path matching all match code and docs."
-    },
-    {
-      "id": "120d21a0b5cc6621531c0926bd9e3aabf749e5b5",
-      "line": 27,
-      "text": "Under `disable_project_settings`, only adapters with verified effective suppression of the target repo's project instructions may launch; anything unverified fails closed (Grok is refused, and an `acp_registry_overrides` entry for `omp` fails closed). Owner: `repository-routing-security` skill.",
-      "label": "true",
-      "evidence": [
-        "internal/agent/agent.go:197-218 EnsureGateNeutralized 'fails closed when the agent ... does not neutralize ... Only codex, claude, pi, and acp:omp ... (and only when it is not overridden by agent_args_override or an acp_registry_overrides entry)'",
-        "internal/agent/grok.go:47-55 'NeutralizesGateInstructions deliberately fails closed ... return false'",
-        "internal/agent/acpx.go:51 'return neutralizesOMPGate(a.target, a.rawCommand, a.disableProjectSettings)'"
-      ],
-      "note": "Unverified adapters are refused, Grok always refused, omp with registry override fails closed."
-    },
-    {
-      "id": "2862decdf6d39509319444af6285f9a511b23639",
-      "line": 28,
-      "text": "An existing PR's live forge base outranks a since-changed `pr.base_branch`, and PR lookup matches by branch alone so a base change never opens a duplicate PR. Owner: `pr.base_branch` in `reference/repo-config.md`.",
-      "label": "true",
-      "evidence": [
-        "internal/pipeline/steps/pr.go:113 'existing, err := host.FindPR(ctx, branch, \"\")'",
-        "internal/pipeline/steps/ci_fix.go:169-171 'baseBranch := effectivePRBaseBranch(sctx); if pr != nil && ... pr.BaseBranch != \"\" { baseBranch = ... pr.BaseBranch }'",
-        "docs/src/content/docs/reference/repo-config.md:216 'PR lookup matches an existing PR by branch alone, never filtered by base'"
-      ],
-      "note": "PR lookup passes an empty base and the live PR base overrides pr.base_branch in the CI step."
-    },
-    {
-      "id": "75056c6fd93881748d01a7d273c92185ecfccc27",
-      "line": 29,
-      "text": "Repository `gates` can never skip, reorder, or replace a core step, and `--skip` refuses gate names. Only `rebase`, `review`, `test`, `document`, and `lint` are anchors; a run's gate list is pinned once and an unparseable pin fails recovery closed. Owner: `repository-routing-security` skill.",
-      "label": "true",
-      "evidence": [
-        "internal/types/types.go:135-139 IsCustomGateAnchor: 'case StepRebase, StepReview, StepTest, StepDocument, StepLint: return true'",
-        "internal/cli/daemon_cmd.go:221-229 parseSkipSteps rejects anything not in types.AllSteps() ('unknown step %q'); validStep at :466",
-        "internal/daemon/manager.go:276-290 pinnedRunGates: 'an unusable one fails its caller closed ... pinned gates are unusable'",
-        "repo-config.md:524 'Gates are inserted into the run's step sequence and never replace, reorder, or remove a core step'"
-      ],
-      "note": "Anchor list, skip refusal, pinned gate list and fail-closed recovery all match."
-    },
-    {
-      "id": "5c41768e4886f6e8988d2aad32fd621d9a7dede4",
-      "line": 30,
-      "text": "A per-run Pi pin is immutable and fully validated before it supersedes an active run.",
-      "label": "true",
-      "evidence": [
-        "internal/daemon/manager.go:1358-1366 'pin, err = globalCfg.ResolvePiProfile(request) ... validatePiProfileAgentsBeforeCancel'",
-        "internal/daemon/manager.go:885 'conflicting launch_nonce: Pi profile differs from run pin'",
-        "docs/src/content/docs/reference/global-config.md:314-315 'stores runs.pi_profile atomically with run creation. That field cannot be changed or cleared.'; :307-308 'That check runs before any active validation is cancelled.'"
-      ],
-      "note": "Pin is validated before the active run is cancelled and is immutable once stored."
-    },
-    {
-      "id": "915378302a11b307637fba97e64ef8ef12cd39e0",
-      "line": 31,
-      "text": "Test: pass/fail scenarios must be live and untested ones need a reason; `untested` never parks; the evidence turn is unconditional; the analyzer correction turn stays correction-only (no tools, scenario reruns, or external operations). Do not weaken these to avoid the analyzer correction retry.",
-      "label": "true",
-      "evidence": [
-        "internal/pipeline/steps/common.go:196-199 scenarioContractIssues rejects a pass/fail with live=false and an untested result without a reason",
-        "internal/pipeline/steps/test.go:471-474 'Untested scenarios never produce a finding at any verdict'",
-        "internal/pipeline/steps/test.go:180-188 the agent is asked to gather live evidence after the configured command both passes and fails",
-        "internal/pipeline/steps/test.go:422 'This is a correction-only turn ... Do not use tools, execute commands, start or modify the product, rerun scenarios, or perform any external operation.'"
-      ],
-      "note": "Scenario contract, non-parking untested, unconditional evidence turn and correction-only analyzer turn match."
-    },
-    {
-      "id": "a27ed491ee64dc5cb3a10d5ebf89972e6e14b511",
-      "line": 32,
-      "text": "Test verdicts: `no-surface` and `inconclusive` park for an operator decision, a `fail` scenario with any verdict but `no-go` is rejected, `no-surface` with any live or pass/fail scenario is rejected, and the attestation omits `live_validation` once the head moves past the validated one. Owner: `pipeline-review-and-agents` skill.",
-      "label": "true",
-      "evidence": [
-        "internal/pipeline/steps/test.go:485-496 verdictFindings: inconclusive and no-surface return ActionAskUser warnings (park)",
-        "internal/pipeline/steps/common.go:126-131 'verdict %q contradicts failed scenario ... a fail scenario requires verdict no-go'",
-        "internal/pipeline/steps/common.go:136-146 no-surface with any live or non-untested scenario is rejected",
-        "internal/pipeline/steps/prsummary.go:233-247 attestedLiveValidation returns nil (field omitted) when 'findings.TestedHeadSHA != headSHA'"
-      ],
-      "note": "All four verdict rules and the head-bound live_validation omission match the code."
-    },
-    {
-      "id": "9b647e9460cefaeccccb0553e5af66131dc038df",
-      "line": 33,
-      "text": "A Test `no-go` verdict parks as an auto-fixable error. Owner: `.agents/skills/pipeline-review-and-agents/SKILL.md`.",
-      "label": "true",
-      "evidence": [
-        "internal/pipeline/steps/test.go:479-484 'case types.TestVerdictNoGo: ... Severity: types.FindingSeverityError, Action: types.ActionAutoFix'",
-        ".agents/skills/pipeline-review-and-agents/SKILL.md exists and mentions no-go (3 hits)"
-      ],
-      "note": "no-go becomes an auto-fixable error finding."
-    },
-    {
-      "id": "dd0248b710bfc43de27baa0b0eb7ef273ee56554",
-      "line": 34,
-      "text": "Review: an unreadable review never passes (bounded schema reruns, fix-mode turns never retried); a clean review certifies the head only with `reviewed_paths` covering every trusted reviewable path; a selected finding leaves the append-only outstanding set only on positive coverage or an explicit operator decision, except a selected finding with no file anchor, which can never match coverage and clears only on a positive verification round covering every reviewable path that no longer reports it (upgrade compat for pre-removal recorded-decision findings). Recovery never lets a reused positional finding ID alias an unrelated finding as selected (`retainFindingIDsByIdentity`). The loop is bounded only by `auto_fix.review` and the gate.",
-      "label": "true",
-      "evidence": [
-        "internal/pipeline/steps/review.go:417-421 'rerun ... up to reviewAnalyzerMaxAttempts. Findings come only from the attempt that validates. Every other failure returns at once'",
-        "internal/pipeline/findings.go:512-542 resolveVerifiedFindingsJSON: 'the only way a selected-and-fixed finding leaves the outstanding set besides an explicit operator action' plus the file-less compat carve-out",
-        "internal/pipeline/findings.go:392-398 retainFindingIDsByIdentity; used at executor.go:392 and :733",
-        "internal/pipeline/executor.go:971-974 'The loop itself is bounded only by auto_fix.review ... and the human/agent gate'"
-      ],
-      "note": "Unreadable-review handling, coverage-gated clearing, ID identity retention and loop bound all match."
-    },
-    {
-      "id": "e67bf5253859a4f54411ff6293863bdf02b91e92",
-      "line": 35,
-      "text": "Review retries: findings come only from the attempt that validates; Claude's `error_max_structured_output_retries` fails the step with no second retry layer; a crash-resumed fix round fails closed, and a validation restart at Review starts a fresh carry set. Owner: `pipeline-review-and-agents` skill.",
-      "label": "true",
-      "evidence": [
-        "internal/pipeline/steps/review.go:463-477 attempt loop reruns only on agent.IsStructuredOutputRejected and keeps findings from the validating attempt",
-        "internal/agent/claude.go:151-152 'if result.IsError || result.Subtype != \"success\" { return ..., fmt.Errorf(\"claude error: subtype=%s\" ...)' (not a rejection); claude_test.go:466 TestClaudeAgent_FinalizeResult_ErrorSubtypeNotRetryable",
-        "docs/src/content/docs/reference/pipeline-steps.md:100 'reports exhaustion as error_max_structured_output_retries; that result is not marked as a rejection, so it fails the step'",
-        ".agents/skills/pipeline-review-and-agents/SKILL.md:116 'A crash-resumed fix round fails closed the same way. A validation restart at Review starts a fresh carry set'; internal/pipeline/executor_test.go:195 TestExecutor_RevalidationClearsReviewCarry"
-      ],
-      "note": "Retry rules match the code and the owning skill."
-    },
-    {
-      "id": "cc0352918f346451c14e9814c24ac85f8705b75d",
-      "line": 36,
-      "text": "An approval override is never a silent clean pass: CI overrides and qualifying Test exceptions record their unresolved condition and surface as `passed-with-override`; do not reuse the configured-command `override_reason` for every Test approval. `verify.py` refuses a configured-command Test override unless trusted `test.allow_approve_over_failure` records a reason, and a CI-repair restamp never copies a previous `allow_test_command_override`. Owner: `pipeline-review-and-agents` skill.",
-      "label": "true",
-      "evidence": [
-        "internal/cli/axi_drive.go:110 'return \"passed-with-override\"'; internal/ipc/protocol.go:441-442 ci_override_reason / test_override_reason",
-        ".github/actions/require-no-mistakes/verify.py:346-372 refuses a test override_reason unless allow_test_command_override is set ('Set test.allow_approve_over_failure in the trusted default-branch ...')",
-        "internal/pipeline/steps/ci_fix.go:835-840 attestationPolicyFrom reads AllowTestCommandOverride from current trusted config (sctx.Config.Test.AllowApproveOverFailure), not the previous attestation"
-      ],
-      "note": "Override outcome, verify.py refusal and restamp policy source match."
-    },
-    {
-      "id": "a6aae4895e14854fd153f71d6ee9a99d4cb71a22",
-      "line": 37,
-      "text": "The CI step never counts or limits fix rounds (the executor enforces `auto_fix.ci`); review-bot checks park as ask-user and never spend a round; a published repair must call `sctx.MarkRunning()`. Classification reads provider structure only, an empty check `App` is never a review bot, and `step_results.ci_fix_attempts` is never read. Owner: `ci-monitor` skill.",
-      "label": "true",
-      "evidence": [
-        "internal/pipeline/steps/ci.go:44-46 'auto-fix findings enter the auto_fix.ci loop as fix rounds ... rounds itself; the executor does, durably, from the round history'",
-        "internal/pipeline/steps/ci_fix.go:139-140 'if sctx.MarkRunning != nil { if err := sctx.MarkRunning(); ...'",
-        "internal/scm/host.go:228-234 ReviewBotForApp: 'An empty slug never matches'",
-        "internal/db/step.go:48-51 'The ci_fix_attempts column is no longer read'"
-      ],
-      "note": "CI round counting, MarkRunning, review-bot classification and unread column match."
-    },
-    {
-      "id": "bffbca5fe99276585ad50449c5cc9b18d8f123cb",
-      "line": 38,
-      "text": "After a CI repair, a still-red check without fresh evidence keeps the monitor waiting rather than re-escalating. Owner: `.agents/skills/ci-monitor/SKILL.md`.",
-      "label": "true",
-      "evidence": [
-        "internal/pipeline/steps/ci.go:672-678 'if s.lastRepairStillUnverified(checks, mergeConflict) { ... Escalating them again would spend a fix round on stale evidence, so the monitor keeps waiting for the re-run.'",
-        ".agents/skills/ci-monitor/SKILL.md exists"
-      ],
-      "note": "Still-red checks without a re-run keep the monitor waiting."
-    },
-    {
-      "id": "a809f2bc9eb0bfb2853199ebdb2106c3e79f400b",
-      "line": 39,
-      "text": "`types.Finding` fields are copied explicitly by `Finding.UnmarshalJSON` and `findingWire`; a new field must be added there or it drops on every parse.",
-      "label": "true",
-      "evidence": [
-        "internal/types/findings.go:267-281 'type findingWire struct { ID ... Check ... CheckID ... RequiresHumanReview }'",
-        "internal/types/findings.go:608-622 'func (f *Finding) UnmarshalJSON ... f.ID = wire.ID ... f.CheckID = wire.CheckID' (explicit per-field copy)"
-      ],
-      "note": "Finding decoding copies each field explicitly through findingWire."
-    },
-    {
-      "id": "e0c2491afc699b26ba70efa1c155a9cba6240ee1",
-      "line": 40,
-      "text": "`rebase.strategy: merge` proves the merge (`mergeWithAgent`) rather than trusting the agent, and a rejected attempt is restored to the pre-merge head, fail-closed; its additive resolver prompt must not be unified with the rebase prompt. The merge target is resolved to a SHA before `git merge`, an unrecognized `rebase.strategy` fails the config closed, and a fast-forward publishes without `--force`. Owner: `branch-sync-and-push-safety` skill.",
-      "label": "true",
-      "evidence": [
-        "internal/pipeline/steps/rebase.go:555 'func mergeWithAgent(...)' snapshots preMergeHead and resolves 'targetSHA, err := git.Run(..., \"rev-parse\", targetRef)' before the merge ('The target is pinned to a SHA here')",
-        "internal/pipeline/steps/rebase.go (mergeWithAgent) proves the merge via isAncestor(preMergeHead, head) and isAncestor(targetSHA, head); rejections go through restorePreMergeHead (fail-closed)",
-        "internal/config/config.go:2997-3005 validateRebaseRaw 'fails the config closed on an unrecognized rebase.strategy'",
-        "internal/pipeline/steps/forcepush.go:89-90 fastForward decision; push.go:173 'case decision.newBranch, decision.fastForward:' pushes without force/lease",
-        ".agents/skills/branch-sync-and-push-safety/SKILL.md mentions mergeWithAgent (2 hits)"
-      ],
-      "note": "Merge proof, SHA pinning, restore, fail-closed strategy parse and non-force fast-forward all match."
-    },
-    {
-      "id": "a2d9fc2c0f232d70831ed9707daaf9c7817a59c6",
-      "line": 41,
-      "text": "Push attests the proposed head in an existing PR before pushing, and an attestation write failure aborts the push; the protocol is single-publisher by design (no cross-publisher coordination without a separate requirement). Private-mirror reconciliation bypasses patch proof in exactly two cases, both owned by `concepts/gate-model.md`: (a) the run's exact submitted or last-pushed head (Decision 41-A), and (b) a private-only commit reachable from a `refs/no-mistakes/recover/<run>` anchor (issue #1233). (b) is a PRESERVATION credit only - never containment evidence and never a head exception: containment is still proven only by ancestry, patch-ID or tree survival, Decision 41-A remains the only head exception, archive-before-delete is unchanged, and a symbolic or non-commit anchor credits nothing; ownership never proves containment.",
-      "label": "true",
-      "evidence": [
-        "internal/pipeline/steps/push.go:165-170 attestHeadBeforePush(...) error returned before the push switch; comment 'This protocol has single-publisher scope'",
-        "internal/pipeline/steps/ci_fix.go:796-833 attestation find/restamp failures return errAttestationWriteFailed",
-        "docs/src/content/docs/concepts/gate-model.md:107 'Recovery-anchor preservation credit (issue #1233): a private-only commit that a refs/no-mistakes/recover/<run> anchor reaches is preserved'; :117 'preservation credit, not containment evidence ... Decision 41-A below remains the only head exception'",
-        "internal/gate/reconcile.go:324-345 listRecoveryAnchors skips 'a symbolic, zero, or non-commit target'"
-      ],
-      "note": "Attest-before-push, single-publisher scope and the two documented bypasses match."
-    },
-    {
-      "id": "17fc06af296b36e0c9b79609936fde1a4f6b00dd",
-      "line": 42,
-      "text": "Private-mirror reconciliation archives a branch's exact head before deleting its ref and restores that archive when settlement fails and no intervening ref appeared; `push.go` settles shared gate/worktree refs only once. Owner: `concepts/gate-model.md`.",
-      "label": "true",
-      "evidence": [
-        "internal/gate/reconcile.go:217-264 ApplyStaleBranchReconciliation 'archives the planned head and then removes the branch ref'",
-        "internal/gate/reconcile.go:267-289 RestoreReconciledBranch is create-only and skips when an intervening ref exists",
-        "internal/pipeline/steps/push.go:313-323 deferred restore on settlement error",
-        "internal/pipeline/steps/common_fix.go:539-548 updateNonSharedBranchRef returns early when worktreeSharesGateRefs",
-        "docs/src/content/docs/concepts/gate-model.md:156,171 archive-before-delete and restore-on-failed-settlement"
-      ],
-      "note": "Archive/restore and settle-once behavior match code and gate-model docs."
-    },
-    {
-      "id": "1be6ec95d53171b0db3957710c0aeb797026895f",
-      "line": 43,
-      "text": "OpenCode: a failed turn that already ran a tool is never retried or sent through the prompt-only fallback (both replay its side effects in a fresh session), and retry trusts opencode's `isRetryable`, never substring matching. Errors decode from the nested `data` payload, and the general `info.error` branch stays after the tool-choice conflict checks that trigger the fallback. Owner: comments in `internal/agent/opencode*.go`.",
-      "label": "true",
-      "evidence": [
-        "internal/agent/opencode.go:151-157 'a turn that already invoked a tool would replay its side effects' -> 'if opencodeReplayUnsafe(err) { return result, err }' before the prompt-only fallback",
-        "internal/agent/opencode_failure.go:97-123 classifyOpencodeTransient: opencode-reported failure is the authority; 'a non-retryable one stops here rather than falling through to the substring matching'",
-        "internal/agent/opencode_types.go:83-86 'opencode serializes every NamedError as {\"name\": ..., \"data\": {...}}, so the payload fields live under Data'; :200-202 retryable() returns *e.Data.IsRetryable",
-        "internal/agent/opencode.go:365-388 tool-choice conflict checks precede the general 'if mr.resp.Info.Error != nil' branch"
-      ],
-      "note": "OpenCode retry/fallback gating and decode order match the code comments."
-    },
-    {
-      "id": "251ddd6459c7f67276dd387baf31595f11809d03",
-      "line": 44,
-      "text": "Provider CLIs: glab's auth check is host-scoped and `glab mr update` never gets `-y`; every tea call carries `--login`, tea's list and single-PR JSON shapes stay separate structs, retargeting uses `tea api --method PATCH`, `CreatePR` re-lists instead of scraping stdout, Gitea runs are picked by highest run ID, and Gitea `MergeableState` stays declined. Owner: comments in `internal/scm/gitlab/gitlab.go` and `internal/scm/gitea/gitea.go`.",
-      "label": "true",
-      "evidence": [
-        "internal/scm/gitlab/gitlab.go:136-144 'Scope the auth check to this repo's host ... authArgs = append(authArgs, \"--hostname\", h.host)'",
-        "internal/scm/gitlab/gitlab.go:308-317 'glab mr update ... has no -y/--yes ... args := []string{\"mr\", \"update\", id}'",
-        "internal/scm/gitea/gitea.go:120,157,200,228,259,301,527 every tea invocation passes '--login', h.login; :104-107 list vs single-PR structs 'deliberately separate'",
-        "internal/scm/gitea/gitea.go:228 'args := []string{\"api\", \"--login\", h.login, \"--method\", \"PATCH\", ...}'; :167-171 CreatePR re-lists via FindPR instead of scraping",
-        "internal/scm/gitea/gitea.go:387 runsByIDDesc 'orders runs by highest numeric ID first'; :74-78 'MergeableState is declined ... MergeableState: false'"
-      ],
-      "note": "Every glab/tea trap listed is implemented and commented in the named files."
-    },
-    {
-      "id": "dc249139e0c46cfb7b8d5c6ca236a875a29a1f59",
-      "line": 45,
-      "text": "GitHub user-attachment uploads fail closed: any error or refusal keeps the prior PR rendering, never a dead attachment URL. Owners: `internal/scm/github/attachments.go`, `test.evidence.attach_media` in `reference/global-config.md`.",
-      "label": "true",
-      "evidence": [
-        "internal/scm/github/attachments.go:322-324 'Callers must treat any error as fail-closed: keep today's PR rendering rather than inventing a URL.'",
-        "internal/scm/github/attachments.go:215-217 URL checked so 'a surprising payload cannot become a dead link in a PR body'",
-        "internal/pipeline/steps/evidence_attach.go:159-166 on upload error or empty URL logs 'keeping today's rendering' and continues",
-        "docs/src/content/docs/reference/global-config.md:999 'Upload is fail-closed ... rather than a dead attachment URL'"
-      ],
-      "note": "Attachment uploads fail closed exactly as described."
-    },
-    {
-      "id": "dec32e430968226b29986131fa4fce996ff20f3b",
-      "line": 46,
-      "text": "Custody recovery fails closed without Git mutation on any missing, moved, or ambiguous evidence; plain `--recover` still refuses (`--recover --keep-local` is the explicit discard), and keep-local never selects an archive. Owner: `branch-sync-and-push-safety` skill.",
-      "label": "true",
-      "evidence": [
-        "internal/branchsync/sync.go:648-652 'Plain --recover refuses this source before any ref write; only the reported --recover --keep-local action can use it.'",
-        "internal/branchsync/sync.go (~811-816) blocked_recover_archive_requires_keep_local with Command 'no-mistakes axi sync --recover --keep-local'",
-        "internal/branchsync/sync.go:1037-1040 recoverKeepLocalFromArchive 'never selects or replays the archived head'",
-        "internal/branchsync/recover_test.go TestBoundArchiveProofMatrixFailsClosedWithoutGitMutation"
-      ],
-      "note": "Custody recovery refusal paths and keep-local semantics match."
-    },
-    {
-      "id": "2edc6e931927399645c4c372e3963ad2fef75825",
-      "line": 47,
-      "text": "`require-no-mistakes` reads PR facts from a live API lookup and fails closed when it cannot, never from a possibly stale replayed event.",
-      "label": "true",
-      "evidence": [
-        ".github/actions/require-no-mistakes/verify.py:27-43 'main() fails the whole gate closed rather than falling back to the cached event payload'",
-        ".github/actions/require-no-mistakes/verify.py:108 live_pr_facts() calls '{api_url}/repos/{repo}/pulls/{number}'; :402-421 fail() when the live lookup was attempted but not used",
-        "require_no_mistakes_action_test.go:557 TestRequireActionLiveLookupOverridesStaleArchivedEvent; :619 TestRequireActionFailsClosedWhenLiveLookupUnavailable"
-      ],
-      "note": "The action reads live PR facts and fails closed when it cannot."
-    },
-    {
-      "id": "276e327f48ce10dd864a58a60b1a543f884d3be2",
-      "line": 48,
-      "text": "`axi status` and `axi logs` resolve an implicit run from the caller's current branch only; there is no repo-wide fallback, and every explicit `--run <id>` selection is observation-only (no bare `axi respond` command, since a newer run on that branch could receive it). Owner: `resolveRun` and the status comments in `internal/cli/axi_query.go`.",
-      "label": "true",
-      "evidence": [
-        "internal/cli/axi_query.go:324-335 resolveRun: 'It deliberately does NOT fall back to the repository's active or most recent run on some other branch'",
-        "internal/cli/axi_query.go:336-364 resolveRun body only matches run.Branch == branch",
-        "internal/cli/axi_query.go:98-99 '`axi respond` has no run selector. Keep every explicit selection inspection-only'"
-      ],
-      "note": "Branch-only resolution and inspection-only explicit --run match resolveRun and its comments."
-    },
-    {
-      "id": "6349c72455e99019d6113e576e14e49eccb3e58d",
-      "line": 49,
-      "text": "`agent.MemoryFilesRule` limits independently initiated memory-file edits, not review of those files or prompted fixes; the document step may only correct factually wrong content, and conflict resolvers use `agent.MemoryFilesConflictRule`. Do not reintroduce exhaustive doc-sweep language into the document prompt. Owner: `documentation-guidance` skill.",
-      "label": "true",
-      "evidence": [
-        "internal/agent/memory_files.go:3-11 'MemoryFilesRule limits edits a pipeline agent initiates on its own ... the rebase/merge conflict resolvers use MemoryFilesConflictRule'",
-        "internal/pipeline/steps/document.go:33 'Edit them only to correct or remove information that is factually wrong'",
-        "internal/pipeline/steps/rebase.go:465,608 'prompt += \"\\n\" + agent.MemoryFilesConflictRule'",
-        ".agents/skills/documentation-guidance/SKILL.md mentions MemoryFilesRule and MemoryFilesConflictRule"
-      ],
-      "note": "Memory-file rules and their placement match the code."
-    },
-    {
-      "id": "c6c3ed11960087f2b14ca45e36e8abede018bf36",
-      "line": 50,
-      "text": "The combined document+lint pass never silently drops the lint duty (any doubt falls back to lint's own pass), uncategorized findings fail safe to the stricter documentation gate, and a configured `commands.lint` stays a deterministic gate.",
-      "label": "true",
-      "evidence": [
-        "internal/pipeline/steps/document.go:104-107 'Combine the agent-driven lint duty into this pass when no deterministic lint command is configured ... combinedLint := sctx.Config.Commands.Lint == \"\"'",
-        "internal/pipeline/steps/document.go:112-114 'No lint result is stashed, so the lint step falls back to its own pass - neither duty is ever silently skipped.'",
-        "internal/pipeline/steps/document.go:297-299 'An uncategorized finding counts as documentation - the stricter gate ... so miscategorization fails safe.'"
-      ],
-      "note": "Combined pass fallback, fail-safe categorization and deterministic commands.lint all match."
-    },
-    {
-      "id": "82af96d9bd6e1206684c6f40a046080ec480ae55",
-      "line": 51,
-      "text": "`runs.awaiting_agent_since` is observability only and never changes gate resolution.",
-      "label": "stale",
-      "evidence": [
-        "internal/pipeline/executor.go:407-411 ValidateRecoveredRun: 'if run == nil || run.Status != types.RunRunning || run.AwaitingAgentSince == nil { return fmt.Errorf(\"run is not a recoverable parked run\") }' (called first by Resume)",
-        "internal/daemon/manager.go:139-141 prepareRecoveredRun: 'run.AwaitingAgentSince == nil ... \"run is not a parked running run\"'",
-        "internal/daemon/daemon.go:428-442 only plans from recoverableParkedRuns are preserved; every other active run goes to d.RecoverStaleRunsExcept(\"daemon crashed during execution\", preserved), which fails it"
-      ],
-      "note": "The field is not observability-only: whether a parked gate is resumed after a daemon restart or the run is failed depends on awaiting_agent_since being non-nil."
-    },
-    {
-      "id": "2c997e7671ce079cc1eac4cbf7132abd5274321d",
-      "line": 52,
-      "text": "`runs.awaiting_agent_since` is set exactly while a gate is parked. Owner: `.agents/skills/pipeline-review-and-agents/SKILL.md`.",
-      "label": "true",
-      "evidence": [
-        "internal/db/step.go:170-197 ParkStepForApproval sets 'UPDATE runs SET awaiting_agent_since = ?' in the same transaction that parks the step",
-        "internal/db/run.go:934-939 ClearRunAwaitingAgent: 'so awaiting_agent_since is non-nil exactly while a gate is actually parked'",
-        "internal/pipeline/executor.go:491,497,526,1334 CompleteRunAwaitingAgent when the park ends",
-        ".agents/skills/pipeline-review-and-agents/SKILL.md:123 'non-nil iff a step is actually parked'"
-      ],
-      "note": "Set atomically on park and cleared when the gate is released."
-    },
-    {
-      "id": "8895778d6438eb3ceb661e34545f4feac8ec9705",
-      "line": 53,
-      "text": "The daemon's effective environment comes from the login-shell probe at startup, never from the service definition's bootstrap `PATH`; only a missing shell binary is waited for, and only at startup. The probe runs in its own session (Setsid); do not fold it into `ConfigureShellCommand` (Setpgid and Setsid cannot be combined). Owner: `daemon-runtime` skill.",
-      "label": "true",
-      "evidence": [
-        "internal/daemon/daemon.go:46-48 'return shellenv.ApplyToProcessWithShellRetryExcept(shellenv.DefaultShellRetryWindow, excluded...)' at daemon startup",
-        "internal/shellenv/shellenv.go:159-168 retry loop only while shellBinaryMissing(err); :33-40 DefaultShellRetryWindow 'how long a daemon startup keeps re-probing while the login shell binary itself is missing'",
-        "internal/shellenv/shellenv.go:403-405 'ConfigureShellCommand(cmd); detachFromTerminal(cmd)' (separate); shell_command_unix.go:169-174 'Setpgid must not be combined with it because setpgid(2) fails for a session leader ... Setsid: true'",
-        ".agents/skills/daemon-runtime/SKILL.md:40-42 'The managed service definition's PATH ... is the deterministic bootstrap list, never a probe result'"
-      ],
-      "note": "Startup probe, missing-shell-only wait and separate Setsid detach match."
-    },
-    {
-      "id": "fd855d923a3397a30bf584b1d24884462afc2fbf",
-      "line": 54,
-      "text": "Telemetry: read-only surfaces (`axi` home/status/logs, `status`, `runs`) emit no remote telemetry. Performance detail stays local; prompts, outputs, diffs, and raw command arguments are never stored (`TestAgentInvocations_PrivacySafeShape`), and run IDs, paths, and session identities are never sent remotely; a not-reported metric is stored as NULL, never a fabricated zero. Owner: `reference/environment.md`.",
-      "label": "true",
-      "evidence": [
-        "docs/src/content/docs/reference/environment.md:257 'Read-only surfaces (axi home, axi status, axi logs, status, runs) emit no telemetry at all'",
-        "internal/cli/axi_query.go:41-42 'It is a read-only query: it does not emit telemetry.'",
-        "docs/src/content/docs/reference/environment.md (What stays local) 'Run IDs, repository paths, branch names, session identities, prompts, model outputs, diffs ... are never sent'; 'nullable and read back as unknown ... rather than a fabricated zero'",
-        "internal/db/agent_invocation_test.go:131 'func TestAgentInvocations_PrivacySafeShape'"
-      ],
-      "note": "Telemetry boundaries match environment.md and the named privacy test exists."
-    },
-    {
-      "id": "ad1dba43e1fb3e389909161462fd9af038961ec4",
-      "line": 55,
-      "text": "`no-mistakes update` reads only `channels.json` from the release-asset CDN, never `api.github.com`, and `release.yml` must call the channel publisher after `finalize`. Owner: `release-signing` skill.",
-      "label": "true",
-      "evidence": [
-        "internal/update/channels.go:13-20 channelsAssetName = \"channels.json\"; defaultManifestURL 'https://github.com/' + repo + '/releases/download/channels/channels.json'",
-        "internal/update/channels.go:22-25 'read over the GitHub download CDN ... so version discovery does not use the rate-limited REST API'",
-        ".github/workflows/release.yml:357-365 'publish-channels: needs: - finalize ... uses: ./.github/workflows/publish-channels.yml'",
-        "grep -rn 'api.github.com' internal/update (non-test) => no hits"
-      ],
-      "note": "Updater reads channels.json from the release CDN and release.yml calls the publisher after finalize."
-    },
-    {
-      "id": "e88be8c34a93caab89db1e6b0c8e081ee115582a",
-      "line": 56,
-      "text": "The retired `jev` config key stays a parse-only tombstone; do not repurpose it.",
-      "label": "true",
-      "evidence": [
-        "internal/config/config.go:242-250 'Jev is the retired jev.review_assist pre-brief block ... Jev retiredJev `yaml:\"jev\"`'",
-        "internal/config/config.go:971-976 'Do not repurpose the jev key.'",
-        "internal/config/config_jev_test.go:17-21 TestRetiredJevKeysParseWithoutEffect"
-      ],
-      "note": "jev is a parse-only, warning-emitting tombstone."
-    },
-    {
-      "id": "b4169fa9bea1929882ccc5aa3f309c4c6d92a453",
-      "line": 60,
-      "text": "Pipeline-step tests put the non-race `internal/pipeline/fakecli` helper on PATH as `gh`/`glab`/`git`, and use `internal/testgit.RealGit` for the real binary. Never re-exec the race-instrumented test binary as those names.",
-      "label": "true",
-      "evidence": [
-        "internal/pipeline/fakecli/main.go:1-4 'the tiny helper that pipeline-step tests place on PATH as gh/glab/git ... instead of re-execing that binary (~0.8s under -race)'",
-        "internal/pipeline/steps/internal/stepstest/helpers.go:319 'exec.Command(\"go\", \"build\", \"-trimpath\", \"-ldflags=-s -w\", \"-o\", path, \"./internal/pipeline/fakecli\")' (no -race)",
-        "internal/testgit/testgit.go:18-25 'RealGit resolves the system git binary by absolute path only'"
-      ],
-      "note": "fakecli is built without -race and RealGit exists for the real binary."
-    },
-    {
-      "id": "0ea6cd3c0e245b70c0ff24f14f8af83b9cd3dd6f",
-      "line": 61,
-      "text": "CI-monitor tests live in `internal/pipeline/steps/citest`; keep both packages under `go test ./...`, not behind the `e2e` tag.",
-      "label": "true",
-      "evidence": [
-        "ls internal/pipeline/steps/citest => ci_gitlab_test.go ci_mergeable_test.go ci_test.go helpers_test.go main_test.go",
-        "head -3 internal/pipeline/steps/citest/*.go | grep -c 'go:build' => 0 (no e2e tag)",
-        ".github/workflows/ci.yml:106 'go test -race ./...'; :120 'go test -v -timeout=15m ./internal/pipeline/steps/...'"
-      ],
-      "note": "citest exists, has no build tag, and is covered by go test ./...."
-    },
-    {
-      "id": "2ca79ccf57b0b8ae3432e13cb58ec5760c0bf4cd",
-      "line": 62,
-      "text": "The rest is owned by the `testing-conventions` skill.",
-      "label": "true",
-      "evidence": [
-        ".agents/skills/testing-conventions/SKILL.md exists (mentions fakecli)"
-      ],
-      "note": "The testing-conventions skill exists to own the remaining conventions."
-    },
-    {
-      "id": "90c54315ad736487a67429bbaa95ee55ce247f92",
-      "line": 64,
-      "text": "The Review Conversation (`internal/reviewqa`, `internal/pipeline/steps/review_questions.go`)",
-      "label": "true",
-      "evidence": [
-        "test -d internal/reviewqa => ok",
-        "test -f internal/pipeline/steps/review_questions.go => ok"
-      ],
-      "note": "Section header names two paths that exist."
-    },
-    {
-      "id": "09f193db03cb85e896ab0fafd9ad9152020ec74c",
-      "line": 66,
-      "text": "The whole feature is OPT-IN and off by default: trusted `review.conversation` (repository-only, like `document.instructions`; `internal/config`). `reviewConversationEnabled` in `internal/pipeline/steps/review_questions.go` is the one owner of that condition, and `reviewConversationDir` returning \"\" is the ASK-side off-switch every consumer keys on. The READ side is separate and keyed on the conversation being on disk (`reviewConversationReadDir`, and `Executor.ReviewConversationAnswerDir` for the daemon's answer handler): a question asked while the channel was open stays answerable even after the setting is turned off, or after a trusted-config fetch fails and recovery resolves it the same way, which otherwise stranded a parked run for good. Both read-side halves move together - the answer path AND the review step's finalize turn - because opening only the write side lands the answer on disk, releases the gate, and runs a finalize turn that never sees it while `axi answer` reports `reviewer_resumed: true`. Emitting a question finding stays ASK-keyed, because that is what parks the step. The off-state guarantee holds because a repository that never opted in cannot have a questions file. Regressions: `TestReviewStep_FinalizeTurnDeliversAnswersEvenWithTheSettingOff` (mutation-checked), `TestAnswerReviewQuestionOnDiskQuestionSurvivesTheSettingBeingTurnedOff`, `TestReviewStep_ResumeApprovalGateOnlyWhenTheConversationIsSettled` - prompt protocol, the ndjson files, question findings, the settled-questions and superseded-rounds sections, the reviewer session, the PR body's group, and (via `Executor.ReviewConversationEnabled`) `axi answer`'s refusal. A new part of the protocol must key on the same condition; `TestReviewStep_ConversationOffIsTodaysReview` asserts the off prompt is the on prompt minus the protocol and nothing else, so a missed gate fails there. Regressions: `TestEffectiveRepoConfig_ReviewConversationTrustedOnly`, `TestMerge_ReviewConversationDefaultsOffAndComesFromTheRepo`, `TestReviewStep_ConversationOffIgnoresQuestionsAlreadyOnDisk`, `TestAnswerReviewQuestionRefusesWhenTheConversationIsOff`, `TestReviewStep_SupersedeCarriesThePreviousRunsReviewRounds/conversation_off`.",
-      "label": "stale",
-      "evidence": [
-        "internal/daemon/manager.go:232-246 loadRecoveredConfig: on a fetch failure trustedSHA stays \"\" and then 'SECURITY: a trusted-config fetch failure must abort ... if err := assertGateTrustedConfigReadable(...); err != nil { return nil, err }'",
-        "internal/daemon/manager.go:770-772 'if trustedSHA == \"\" { return fmt.Errorf(\"cannot evaluate disable_project_settings: failed to fetch or resolve trusted default branch %q (refusing to run without reading the trusted config)\"...'",
-        "internal/daemon/manager.go:129-133 recoverableParkedRuns: 'active run cannot be safely resumed' -> continue (run is not preserved, so RecoverStaleRunsExcept fails it, daemon.go:428-442)",
-        "internal/daemon/manager_trust_test.go:18,53-55 TestLoadRecoveredConfig_BoundsFetchAndFailsClosed: 'expected loadRecoveredConfig to abort on trusted-config fetch failure'",
-        "internal/pipeline/decisions.go:66 and internal/pipeline/executor.go:2191 read Config.Review.Conversation directly; review_questions.go:23-25 limits reviewConversationEnabled to 'the one owner of that question inside this package'",
-        "Supported parts: config.go:2628 'effective.Review = trusted.Review'; review_questions.go:27,45,75 reviewConversationEnabled/Dir/ReadDir; executor.go:2230 ReviewConversationAnswerDir; all named tests exist (review_conversation_test.go:738,843,893,390 'conversation off')"
-      ],
-      "note": "A trusted-config fetch failure during recovery does not resolve review.conversation to off: recovery aborts, so the parked run is failed and its question cannot be answered. reviewConversationEnabled is also not the only reader of the setting."
-    },
-    {
-      "id": "d6b21720a8183d38c5c623e2d030219920861aaf",
-      "line": 67,
-      "text": "The reviewer emits each substantiated larger question mid-turn to two append-only ndjson files in the run's evidence dir (`reviewqa.Dir(sctx.EvidenceDir)`), keeps reviewing, and re-reads answers at its own checkpoints. That directory is shared with the run's PUBLISHABLE test evidence, so the conversation is excluded from the publication walk by name (`reviewqa.DirName` -> `evidence.Request.ExcludeDirs` -> `collectFiles`, which skips it WHOLE so it is never published and never counted against the size/file budgets either): the only published copy is the bounded, home-path-redacted PR-body rendering, never the raw questions, answers and `answered_by`. Regressions: `TestPublish_ExcludedDirectoryIsNeverCollected`, `TestPublish_ExcludedDirectoryAlonePublishesNothing`, `TestPublishRunEvidence_NeverPublishesTheReviewConversation`. `internal/reviewqa` is the only parser; the reviewer writes with its own file tools, so there is deliberately no MCP server. That package therefore owns `AppendAnswer` (the daemon's answer handler) and NO question writer at all: a Go one would default `kind` and `weight`, so every fixture through it left the reader's absent-field branches unexercised while the agent's real lines omit them. Tests append the raw line instead (`appendAgentQuestionLine`, one per package) and self-check that the seed read back, because \"nothing is open\" is also true of a conversation the reader discarded. Design, state machine, and rationale are owned by `docs/src/content/docs/concepts/review-conversation.md`; per-step behavior by `docs/src/content/docs/reference/pipeline-steps.md`.",
-      "label": "true",
-      "evidence": [
-        "internal/reviewqa/reviewqa.go:235 'const DirName = \"review\"'; :240-244 Dir(evidenceDir); :54-55 questions.ndjson / answers.ndjson",
-        "internal/pipeline/steps/evidence_publish.go:78 'ExcludeDirs: []string{reviewqa.DirName}'; internal/evidence/publish.go:108 'collectFiles(req.SourceDir, req.ExcludeDirs)'; :309-333 excluded dir skipped WHOLE via fs.SkipDir before the size/count checks",
-        "internal/reviewqa/reviewqa.go:9-19 no MCP server; writes ANSWERS only (AppendAnswer), never questions",
-        "internal/evidence/publish_test.go:384,416 and internal/pipeline/steps/evidence_publish_test.go:238 (the three named tests); appendAgentQuestionLine at steps/review_conversation_test.go:57 and daemon/answer_review_question_test.go:52",
-        "docs/src/content/docs/concepts/review-conversation.md and reference/pipeline-steps.md exist"
-      ],
-      "note": "Storage, publication exclusion, answer-only writer and tests match (reviewqa's own test helper is named appendQuestionLine)."
-    },
-    {
-      "id": "de109996c37aec9ee520f2ad13a1f0d2803dcb2d",
-      "line": 68,
-      "text": "`axi` renders an open question as an ORDINARY finding row (`question-<id>` plus the reviewer's own description) and nothing else: the structured `review_questions`/`waiting_on` block was deleted (captain's ruling), because reconstructing question and options by string-splitting the prose `openReviewQuestionFindings` had just formatted was a lossy round trip that rendered a wrong row for any question whose text contained its own `Options: ` line. Both surviving affordances - the gate help and the home-view help - key on `pipeline.HasUnansweredReviewQuestion`, never on the ID prefix or the prose. AXI never bounds a finding description, so a long question's options line always survives in its row. Regressions: `TestReviewQuestionGate_LeadsWithAnswering`, `TestReviewQuestionGateHelpKeysOnTheCategory`, `TestAxiHomeLeadsWithAnsweringWhenTheGateHasAnOpenQuestion`.",
-      "label": "true",
-      "evidence": [
-        "rg 'review_questions|waiting_on' over Go sources => no structured block (only the db table name review_questions in internal/db)",
-        "internal/cli/axi_render.go:620-630 findingRows copies f.Description verbatim; :28 'Finding descriptions are deliberately never bounded'",
-        "internal/cli/axi_render.go:559 'if pipeline.HasUnansweredReviewQuestion(gate.FindingsJSON)'; internal/cli/axi.go:218 'gatedOnAnswers = pipeline.HasUnansweredReviewQuestion(...)'",
-        "internal/cli/axi_review_questions_test.go:47,72 and internal/cli/axi_test.go:1223 (named tests)"
-      ],
-      "note": "Ordinary-row rendering, deleted structured block and category-keyed help match; note the step itself caps a question description at 2000 runes (review_questions.go:395)."
-    },
-    {
-      "id": "eba8f306948c904505e88aaf71be1accf48e505b",
-      "line": 69,
-      "text": "An unanswered question becomes one ask-user warning per question (`types.FindingCategoryReviewQuestion`, finding ID `question-<qid>`), which reuses the EXISTING approval park - so `awaiting_agent_since`, `parked_ms`, IPC, TUI and `axi` all work unchanged, and `review_agent_timeout` cannot count the wait because the agent turn already ended. Do not add a durable \"waiting-on-answers\" step status.",
-      "label": "true",
-      "evidence": [
-        "internal/pipeline/steps/review_questions.go:486-505 each open question -> ID reviewQuestionFindingID(e.ID) ('question-' + id, :416), Severity warning, Action ActionAskUser, Category types.FindingCategoryReviewQuestion",
-        "internal/pipeline/steps/review_questions.go:422-427 'reuses the existing approval park ... review_agent_timeout cannot count the wait'",
-        "internal/pipeline/steps/review.go:933-940 review timeout wraps only the agent call",
-        "internal/types/types.go:260-267 step statuses: pending, running, awaiting_approval, fixing, fix_review, completed, skipped, failed (no waiting-on-answers status)"
-      ],
-      "note": "Questions become ask-user warnings on the existing park, and there is no extra step status."
-    },
-    {
-      "id": "af9da2c54a1ec7d4d9befe5b3549fc76d514c366",
-      "line": 70,
-      "text": "Reusing the approval park has one cost, and `pipeline.ApprovalGateResumer` pays it: the park is released by a response, and an answer landing between `Execute` returning its question findings and the executor registering the gate as waiting cannot release anything, so the gate parked on a stale snapshot with no reviewer left. `ReviewStep.ResumeApprovalGate` re-checks the conversation on the `gate_reconcile_interval` timer and returns `types.ActionAnswer` - it RESUMES, and must never resolve/complete, because `ApprovalGateReconciler`'s `true` completes the step and would approve the head off that stale snapshot. Its three guards are all load-bearing: a conversation may be READ (the ask/read split above), the gate really carries review-question findings (else an operator's verdict on ordinary findings is stolen), nothing open. `CIStep`'s completion semantics are untouched. A resumer resolves the conversation from `sctx.EvidenceDir`, so `Resume`'s own recovered-gate `StepContext` must set it too or the resumer declines silently on every tick of exactly the restart park it exists for. Regressions: `TestReviewStep_AnswerRacingTheParkStillReachesTheReviewer`, `TestReviewStep_ResumeApprovalGateOnlyWhenTheConversationIsSettled`, `TestReviewStep_ResumeApprovalGateFailsClosedOnUnreadableFindings`, `TestExecutor_RecoveredGateResumerReceivesTheRunsEvidenceDir`.",
-      "label": "true",
-      "evidence": [
-        "internal/pipeline/pipeline.go:194-200 ApprovalGateReconciler ('A true result completes the step'); :219-221 ApprovalGateResumer.ResumeApprovalGate(...) (action, resume bool, err)",
-        "internal/pipeline/steps/review_questions.go:598-623 three guards (read dir, HasReviewQuestion, no open) then 'return types.ActionAnswer, true, nil'",
-        "internal/pipeline/executor.go:1752-1770 gate_reconcile_interval timer calls resumeApprovalGate and returns approvalResponse{action: action}",
-        "internal/pipeline/executor.go:465-483 Resume's reconcile StepContext sets 'EvidenceDir: e.runEvidenceDir(run.ID)'",
-        "internal/pipeline/steps/review_gate_resume_test.go:24,115,139; internal/pipeline/executor_resume_evidence_test.go:64 (named tests)"
-      ],
-      "note": "Resumer contract, three guards, resume-not-complete and EvidenceDir on Resume all match."
-    },
-    {
-      "id": "81d51457b30060eb4f8c6c4d46055f394cce7cbb",
-      "line": 71,
-      "text": "`no-mistakes axi answer` (never `axi respond --action answer`; the CLI refuses that action, and answer itself takes no `--run` - its run is the current branch's active run, because a second selection path on a mutating command is what the branch-scoping prevents, so it must be run from a clone of the repository whose run it answers) goes through `ipc.MethodAnswerReview` -> `RunManager.HandleAnswerReviewQuestion`, which appends the answer and releases the gate with `types.ActionAnswer` only when nothing is open. The answer that closes the last open question then follows the run like `axi respond` (`followAnsweredReview`), keyed on `AnswerReviewQuestionResult.ClosedLast` or `Resumed` - `Resumed` alone cannot carry it (it is false for an answer that lands before the park registers and is released by the gate's resumer instead), and it is accepted only so a daemon older than `closed_last` still follows; that late park briefly still lists the answered question, so a question park seen right after the answer gets one `gate_reconcile_timeout` (owning root's global config) to leave before it is returned as a new question. Regressions: `internal/cli/axi_answer_follow_test.go`, `TestAnswerReviewQuestionClosingAnswerOnAParkedGateResumesAndClosesLast`. `Executor.ReviewConversationAnswerDir` is the single owner of the path the answer handler appends to, because it depends on effective config AND on what is already on disk. An answer round's trigger is `\"answer\"`, is not an `IsFixRound()`, and records NO round selection - a selection would read as the human declining the round's findings. A question can be asked by a rereview INSIDE a fix round, so its gate parks as `fix_review`, and BOTH answer paths (the live loop and `Resume`) must hand the finalize turn that gate's `Fixing` plus `SkipFixExecution`: the status is what the auto-resolvers branch on, so a recovered path that dropped it re-parked as `awaiting_approval` and cost an extra pipeline-authored fix round. `FinalizingAnswers` and `Fixing` are therefore NOT mutually exclusive, `SkipFixExecution` is what keeps the fixer off already-fixed code, and `executeStep`'s trigger switch must test `answering` BEFORE `fixing` or a human's answer persists as an `auto_fix` round. Regressions: `TestExecutor_RecoveredAnswerRoundIsTriggeredAsAnAnswer`, `TestExecutor_RecoveredAnswerRoundInheritsAFixReviewGatesContext`.",
-      "label": "true",
-      "evidence": [
-        "internal/cli/axi_answer.go:76-79 flags are --question, --answer, --by, --wait (no --run); :107-116 run resolved from git.CurrentBranch + MethodGetActiveRun",
-        "internal/cli/axi_drive.go:1300-1308 respond accepts only approve|fix|skip: 'unknown action %q' / 'Valid actions: approve, fix, skip'",
-        "internal/cli/axi_answer.go:131 ipc.MethodAnswerReview; :153 'if result.ClosedLast || result.Resumed {'; :164-167 grace := env.cfg.GateReconcileTimeout",
-        "internal/daemon/manager.go:1956 RunManager.HandleAnswerReviewQuestion -> exec.ReviewConversationAnswerDir (:1978), reviewqa.AppendAnswer (:2041), result.ClosedLast = true + exec.Respond(types.StepReview, types.ActionAnswer, nil) (:2070-2071)",
-        "internal/pipeline/executor.go:1092-1099 'case state.answering: nextTrigger = \"answer\"' before 'case sctx.Fixing:'; :586-612 Resume sets fixing+skipFixExecution for StepStatusFixReview; internal/db/round.go:84-85 IsFixRound is auto_fix or user_fix only",
-        "internal/cli/axi_answer_follow_test.go; internal/daemon/answer_review_question_test.go:431; internal/pipeline/executor_answer_trigger_test.go:30,188 (named tests)"
-      ],
-      "note": "Answer command, IPC path, follow logic and answer-round trigger/fix_review inheritance all match."
-    },
-    {
-      "id": "3a8f4cc9e04b67c9a56af29b04d3e7b2ab0419b1",
-      "line": 72,
-      "text": "The review conversation meets upstream's append-only outstanding finding set in three places, and all three carve-outs are narrow and deliberate. A review-question finding never joins the carry-forward at all (`dropReviewQuestionFindingsJSON`, keyed on `types.FindingCategoryReviewQuestion`, never the `question-` prefix): a question is resolved by its ANSWER and not by a coverage record, and every review turn re-emits every still-open question from the live conversation, so dropping it loses nothing. The same helper is applied to the round's own output before it becomes `resolveVerifiedFindingsJSON`'s verification input, because a question's file is optional and the omission marker never has one, so leaving them in made `hasUnanchoredFinding` true and refused to clear ANY selected finding while a question was open. And an answer round NEVER earns `pendingVerificationIDs`: a fix round earns them when a selection is DISPATCHED, because the code then changed and coverage silence is evidence the change worked, while an answer changes only what the reviewer knows, so the same silence proves nothing - seeding the carried set there (the earlier rule) let a finalize turn clear any carried finding whose file it happened to cover, including one the answers had no bearing on. Instead the carried set rides the PROMPT on both paths (`StepContext.CarriedFindings`, set in the live loop's `ActionAnswer` case and in `Resume`) and the turn re-adjudicates it item by item: still holds -> report it again, disproved -> name it in `withdrawn_findings` with a reason, and anything left out of both is KEPT. `dropWithdrawnFindingsJSON` is the only way a finding the answer round merely CARRIED leaves; a finding an earlier fix round dispatched keeps its pending-verification entry and can still clear on a coverage record, because that code did change and the finalize turn is its rereview. The coverage rule itself is untouched for every other round type. Rationale is owned by `docs/src/content/docs/concepts/review-conversation.md` (The finalize turn re-adjudicates what it carried in). Regressions: `TestExecutor_ReviewCarryForward_AnOpenQuestionDoesNotBlockVerification`, `TestExecutor_ReviewCarryForward_AnAnswerRoundWithdrawsByName`, `TestExecutor_ReviewCarryForward_AnAnswerRoundSilenceKeepsAnUnrelatedFinding`, `TestExecutor_RecoveredAnswerRoundKeepsTheOutstandingFindings`.",
-      "label": "true",
-      "evidence": [
-        "internal/pipeline/findings.go:788 dropReviewQuestionFindingsJSON keys on 'item.Category == types.FindingCategoryReviewQuestion || item.ID == ReviewQuestionsUnreadableFindingID' (no question- prefix)",
-        "internal/pipeline/executor.go:1164-1170 'verificationFindings := dropReviewQuestionFindingsJSON(roundFindings)' feeds resolveVerifiedFindingsJSON",
-        "internal/pipeline/executor.go:981-994 pendingVerificationIDs seeded only from selections; an answer round 'does NOT earn pending-verification entries'",
-        "internal/pipeline/pipeline.go:59 StepContext.CarriedFindings, set at executor.go:1465 (ActionAnswer) and :1058 (Resume via answerRoundCarriedFindings)",
-        "internal/types/findings.go:311 withdrawn_findings; internal/pipeline/findings.go:827 dropWithdrawnFindingsJSON; review-conversation.md:366 '### The finalize turn re-adjudicates what it carried in'",
-        "internal/pipeline/review_carry_forward_test.go:583,717,774; executor_answer_trigger_test.go:305 (named tests)"
-      ],
-      "note": "All three carry-forward carve-outs and the withdrawal path match."
-    },
-    {
-      "id": "54cf3f8f99c19c758c2304af22402613cd077a0d",
-      "line": 73,
-      "text": "`SessionRoleReviewer` spans one review PASS (asking turn + finalize turn) and never a code change, and only when a conversation may be READ (the ask/read split above) and `session_reuse` is on - otherwise every review turn is session-free as before: `review.go` calls `Sessions.Forget(SessionRoleReviewer)` before any fix round, and a new run gets a new `RunSessions`. The finalize prompt is the WHOLE review prompt plus the answers, so a failed resume degrades to a cold review instead of a meaningless one.",
-      "label": "true",
-      "evidence": [
-        "internal/pipeline/sessions.go:23-29 SessionRoleReviewer spans one review pass; :44 RunSessions",
-        "internal/pipeline/steps/review.go:76-79 'resumingAnswers := sctx.FinalizingAnswers && !sctx.Fixing && convDir != \"\"' else 'sctx.Sessions.Forget(pipeline.SessionRoleReviewer)'",
-        "internal/pipeline/steps/review.go:424-428 reviewer role only 'if convDir != \"\" && !sctx.Fixing' (convDir = reviewConversationReadDir)",
-        "internal/pipeline/executor.go:336-338 sessions enabled only with e.config.SessionReuse; fresh NewRunSessions per run",
-        "internal/pipeline/steps/review.go:410-415 'The finalize turn's prompt is the WHOLE review prompt plus the answers'"
-      ],
-      "note": "Reviewer session scope and cold-review fallback match."
-    },
-    {
-      "id": "ca58193519cdcec01bb9a3184013e74d1b8306b3",
-      "line": 74,
-      "text": "Answers persist per branch in `review_questions` (`db.RecordReviewAnswer` / `GetBranchReviewAnswers`), which feeds the reviewer's \"Settled questions on this branch (do not re-raise)\" section - rendered separately from acceptance criteria - and the PR body's `### Review conversation` group inside the Pipeline section. The store is keyed `(repo, branch, question_id, run_id, ask_ordinal)` - one row per settled ASK, written from `reviewqa.Conversation.SettledAsks()`, because `Entry` collapses an id to its LATEST state and so cannot supply an earlier ask's pairing - and `reviewqa.Load` settles an ask ONLY with an answer stamped with that ask's own `ask_ordinal` (`reviewqa.settlingAnswer`), both for the same reason: question ids are the reviewer's own and unique only by accident, so a re-used `q1` used to arrive pre-answered (no park, question discarded) and used to overwrite an earlier run's settled decision. The binding comes from the writer - the daemon stamps the ordinal at append time and is the only writer of `answers.ndjson` - rather than from comparing timestamps, because the two files are appended independently and `asked_at`/`answered_at` are optional; an unstamped answer (an id nobody asked) settles nothing ever, so it fails toward OPEN. A correction to the same ask still replaces. Regressions: `TestLoadSupersedingQuestionReopensAnAnsweredEntry`, `TestLoadReAskAfterRetractionComesBackOpen`, `TestReviewAnswersAreKeyedByBranchAndSurviveANewRun`, `TestReviewAnswersAreKeyedPerAskWithinOneRun`, `TestSettledAsksKeepEveryDecisionForAReusedID`, `TestSettledAsksTreatASurplusAnswerAsACorrection`, `TestSettledAsksLeaveAReAskShortOfAnAnswerOpen`.",
-      "label": "true",
-      "evidence": [
-        "internal/db/schema.go:203-218 review_questions 'PRIMARY KEY (repo_id, branch, question_id, run_id, ask_ordinal)'",
-        "internal/db/review_questions.go:60 RecordReviewAnswer, :109 GetBranchReviewAnswers; upsert ON CONFLICT on the same key (correction replaces)",
-        "internal/pipeline/steps/review_questions.go:353-354 'for _, ask := range conv.SettledAsks() { ... sctx.DB.RecordReviewAnswer('; :283 'Settled questions on this branch (do not re-raise):'",
-        "internal/reviewqa/reviewqa.go:451-459 settlingAnswer matches only 'a.AskOrdinal == ordinal'; :444 daemon is the only writer of answers",
-        "internal/pipeline/steps/prsummary_conversation.go:57 '### Review conversation'; steps/pr.go:606-607 appended to pipelineMD",
-        "internal/reviewqa/reviewqa_test.go:254,310,336,371,398; internal/db/review_questions_test.go:10,289 (named tests)"
-      ],
-      "note": "Per-ask storage key, ordinal-bound settling and PR body group match (repo is the repo_id column)."
-    },
-    {
-      "id": "a903f73719ccad14c98f7aa3280b4cd3b503a0d1",
-      "line": 75,
-      "text": "An open review question is resolved by an ANSWER, never by a verdict, so EVERY automatic resolver stands aside at such a gate and they all read ONE predicate to do it: `pipeline.HasUnansweredReviewQuestion` (the JSON-string sibling of `types.HasReviewQuestion`, keyed on the category, never the `question-` ID prefix), the same carve-out shape `HasProtectedPathRefusal` has. There are two such paths, `axi --yes` in `driveRunWithReconciler` and the TUI's yolo in `maybeAutoApproveCmd`, and the carve-out first landed on only the first - which left the property true of `axi` and false of the TUI, where the question was selected as ordinary work, handed to the FIXER, and the fix_review gate then approved as already-fixed. A third path must read the same predicate rather than restate the condition. A human's explicit approve or fix is deliberately still allowed, which is why the guard is never in `respondCmd`/`RespondWithOverrides`. Regressions: `TestDriveRun_YesLeavesAnOpenReviewQuestionAwaitingAnAnswer`, `TestModel_Yolo_OpenReviewQuestionSendsNoAutomaticResponse`, `TestModel_Yolo_OrdinaryReviewFindingsAreStillFixed`.",
-      "label": "true",
-      "evidence": [
-        "internal/pipeline/protected_paths.go:57-62 HasUnansweredReviewQuestion -> types.HasReviewQuestion; internal/types/findings.go:534-537 keyed on Category, 'never on the finding ID's \"question-\" prefix'",
-        "internal/cli/axi_drive.go:956 HasUnansweredReviewQuestion check inside driveRunWithReconciler (:919) under autoApprove",
-        "internal/tui/commands.go:118 check inside maybeAutoApproveCmd (:99) 'which is why the guard is here and not in respondCmd'",
-        "rg HasUnansweredReviewQuestion => no hit in respondCmd (tui/commands.go:141) or RespondWithOverrides (pipeline/executor.go:167)",
-        "internal/cli/axi_drive_test.go:860; internal/tui/yolo_test.go:70,132 (named tests)"
-      ],
-      "note": "One shared predicate guards both automatic resolvers and is absent from explicit-response paths."
-    },
-    {
-      "id": "5933ecea2a0ab63320a508d69a56601c6a1f7f1e",
-      "line": 76,
-      "text": "The open questions are bounded on every channel they do not own (`maxReviewQuestionFindings`/`maxReviewQuestionDescription` for the findings, `maxReviewQuestionPromptEntries`/`maxReviewQuestionPromptChars` for the two prompt sections), by RUNES not bytes, for the reason `maxReviewBotCommentFindings` records: the findings payload rides the IPC event stream and one oversized frame kills the whole subscription. `reviewqa`'s own `maxLines`/`maxLineBytes` do NOT contain this - 2000 accepted lines are a bounded conversation and an unbounded findings payload. Dropping a question ROW is safe, dropping its id is not: both release paths require the conversation to have nothing open and a dropped question is never re-emitted as a row (that needs a review turn, which needs zero open), so the omission marker NAMES the omitted ids and they are answered by id like any other. The marker carries the question category (so the gate still parks and no resolver treats it as work) but not a `question-<id>` ID (so it is never itself an answerable row). Regressions: `TestOpenReviewQuestionFindingsAreBounded`, `TestReviewQuestionPromptSectionsAreBounded`.",
-      "label": "true",
-      "evidence": [
-        "internal/pipeline/steps/review_questions.go:393-398 maxReviewQuestionFindings = 50, maxReviewQuestionDescription = 2000, maxReviewQuestionPromptEntries = 50, maxReviewQuestionPromptChars = 2000",
-        "internal/pipeline/steps/review_questions.go:400-410 boundReviewQuestionText 'bounds one rendered question by RUNES, not bytes' (runes := []rune(s))",
-        "internal/pipeline/steps/ci_findings.go:14-20 maxReviewBotCommentFindings 'rides the IPC event stream, and one oversized frame kills the whole subscription'",
-        "internal/reviewqa/reviewqa.go:68-72 maxLines = 2000, maxLineBytes = 64 << 10",
-        "internal/pipeline/steps/review_questions.go:509-532 omission marker ID 'review-questions-omitted', Category types.FindingCategoryReviewQuestion, text 'Omitted question ids: %s'",
-        "internal/pipeline/steps/review_conversation_test.go:1029 TestOpenReviewQuestionFindingsAreBounded; :1086 TestReviewQuestionPromptSectionsAreBounded"
-      ],
-      "note": "All bounds, the 2000-line cap, rune counting and the id-naming omission marker match."
-    },
-    {
-      "id": "606706141dedc96af4f55283d5b579841d6cd240",
-      "line": 77,
-      "text": "An INCOMPLETE question history (`reviewqa.Conversation.QuestionsIncomplete`, set by the `maxFileBytes`/scanner cut OR a question line dropped by `maxLines`) settles nothing, makes `HandleAnswerReviewQuestion` refuse the answer by name, and makes `openReviewQuestionFindings` emit the single `review-questions-unreadable` warning IN PLACE of every `question-<id>` row, whatever remains open, naming the open ids and their count - each row would otherwise instruct an `axi answer` the daemon is guaranteed to refuse. The marker carries NO review-question category on purpose, so `ResumeApprovalGate` declines and the answer-first help in `axi_render.go`/`axi.go` is not summoned; both automatic resolvers stand aside via `pipeline.HasUnreadableReviewQuestionHistory`, the ID-keyed sibling of `HasProtectedPathRefusal`. It carries no `File`, so `dropReviewQuestionFindingsJSON` drops it from the carry-forward input alongside the review-question category - otherwise `hasUnanchoredFinding` would refuse to clear ANY selected finding for as long as the append-only history stayed incomplete. Because a dropped question line is now the same condition, `readLines` reports the cap as a bool and no ask-ordinal offset survives it. Regressions: `TestUnreadableQuestionHistoryParksEvenWithNothingOpen`, `TestUnreadableQuestionHistoryReplacesTheAnswerableRows`, `TestDriveRun_YesLeavesAnUnreadableQuestionHistoryAwaitingAHuman`, `TestModel_Yolo_UnreadableQuestionHistorySendsNoAutomaticResponse`, `TestExecutor_ReviewCarryForward_AnUnreadableHistoryDoesNotBlockVerification`, `TestLineCapDroppingAQuestionLineSettlesNothing`.",
-      "label": "true",
-      "evidence": [
-        "internal/reviewqa/reviewqa.go:157-163 QuestionsIncomplete field; :275 'questionsIncomplete = questionsIncomplete || droppedQuestionLine'; :379 settlingAnswer only 'if !questionsIncomplete'",
-        "internal/reviewqa/reviewqa.go:509 'func readLines(path string) (kept []string, dropped, incomplete bool, err error)'",
-        "internal/pipeline/steps/review_questions.go:456-472 single ReviewQuestionsUnreadableFindingID finding with no Category and no File, naming open ids and count",
-        "internal/pipeline/protected_paths.go:19 ReviewQuestionsUnreadableFindingID = \"review-questions-unreadable\"; :77-88 HasUnreadableReviewQuestionHistory keyed on finding.ID; used at internal/cli/axi_drive.go:966 and internal/tui/commands.go:126",
-        "internal/pipeline/findings.go:788 dropReviewQuestionFindingsJSON drops 'item.Category == ...ReviewQuestion || item.ID == ReviewQuestionsUnreadableFindingID'",
-        "internal/daemon/manager.go HandleAnswerReviewQuestion: 'if before.QuestionsIncomplete { return nil, fmt.Errorf(...question history could not be read to the end...) }'"
-      ],
-      "note": "Incomplete-history handling matches in reviewqa, steps, pipeline, daemon, CLI and TUI; all six tests exist."
-    },
-    {
-      "id": "1911d041acb0c54f63d14e221ed60ae23f61ca54",
-      "line": 78,
-      "text": "`RunManager.HandleAnswerReviewQuestion` releases the gate only when the answer closed a question that was OPEN before the append (snapshot-then-append); an orphan or duplicate answer is recorded and never touches the gate, or it could steal the verdict from a gate parked on ordinary ask-user findings. Regressions: `TestAnswerReviewQuestionOrphanAnswerLeavesAParkedGateAlone`, `TestAnswerReviewQuestionDuplicateAnswerLeavesAParkedGateAlone`.",
-      "label": "true",
-      "evidence": [
-        "internal/daemon/manager.go HandleAnswerReviewQuestion: 'before, err := reviewqa.Load(dir)' and the wasOpen loop over before.Open() run before reviewqa.AppendAnswer(...)",
-        "internal/daemon/manager.go: 'if !wasOpen { result.Note = \"recorded; it answered no open question, so no review gate was released\"; return }'",
-        "internal/daemon/answer_review_question_test.go:362 TestAnswerReviewQuestionOrphanAnswerLeavesAParkedGateAlone; :392 TestAnswerReviewQuestionDuplicateAnswerLeavesAParkedGateAlone"
-      ],
-      "note": "Snapshot-then-append release rule and both regressions exist."
-    },
-    {
-      "id": "bfbee7228afbfc7db738050555d2cb6dd7c0e6fc",
-      "line": 79,
-      "text": "`db.GetPreviousRunReviewRounds` + `pipeline.BindPreviousRunReviewRounds` carry the superseded run's review rounds into the run an author's own fix push started. That section carries NO fix-round provenance clause and must not characterise the authorship of those commits in either direction: the adversarial framing is only ever ADDED by `fixRoundProvenanceClause`, which returns \"\" when neither `sctx.Fixing` nor an uncertified range applies, so there is nothing to correct - and the selector is unfiltered by run status on purpose, so a previous run that took a fix round and COMPLETED has its range certified, leaves `UncertifiedSourceRunID` empty so `BindPreviousRunReviewRounds` does not skip it, and puts the fixer's commits inside this run's own `base..head` scope. Regression: `TestSupersededRoundsDoNotClaimTheCommitsAreTheAuthors`.",
-      "label": "true",
-      "evidence": [
-        "internal/db/previous_review.go:43 GetPreviousRunReviewRounds; SQL 'WHERE r.repo_id = ? AND r.branch = ? AND r.id != ? AND res.step_name = ?' (no status filter)",
-        "internal/pipeline/decisions.go:58-82 BindPreviousRunReviewRounds skips only when previous.RunID == sctx.UncertifiedSourceRunID",
-        "internal/pipeline/steps/review.go:842-861 fixRoundProvenanceClause returns the clause if sctx.Fixing, else \"\" when UncertifiedToSHA is empty",
-        "internal/pipeline/steps/review_test.go:2102 TestSupersededRoundsDoNotClaimTheCommitsAreTheAuthors"
-      ],
-      "note": "Superseded-round carry, provenance clause and unfiltered selector match."
-    },
-    {
-      "id": "60863c6ae800d2e6d1bd82174edb6cd23a40c151",
-      "line": 80,
-      "text": "There is NO review round cap and none may be added (captain's ruling 2026-09-15). The question protocol section is appended LAST, after `pathInstructions` and `agent.MemoryFilesRule`, because the off-state guarantee is append-only: the on-prompt must be the off-prompt plus that section and nothing else (`TestReviewStep_ConversationOffIsTodaysReview`). It used to sit at the end of `historySection`, which upstream's later `MemoryFilesRule` then followed, inserting it mid-prompt and breaking the prefix property.",
-      "label": "true",
-      "evidence": [
-        "internal/pipeline/steps/review.go:387-396 format args 'historySection, pathInstructions, agent.MemoryFilesRule, // LAST ... reviewQuestionProtocolSection(askDir, asked)'",
-        "internal/pipeline/executor.go:971-974 'bounded only by auto_fix.review ... rather than receiving a separate code-level round cap'",
-        "internal/pipeline/steps/review_conversation_test.go:738 TestReviewStep_ConversationOffIsTodaysReview",
-        "rg -i 'max_?review_?rounds|maxRounds|max_fix_rounds|roundCap' over non-test Go => no hits"
-      ],
-      "note": "No round cap exists and the protocol section is the last prompt argument after pathInstructions and MemoryFilesRule."
-    },
-    {
-      "id": "a030b133bf2a0dbf74680506f550b54bbfdc97a1",
-      "line": 85,
-      "text": "Keep this file for knowledge useful to almost every future agent session in this project.",
-      "label": "judgment",
-      "evidence": [],
-      "note": "Guidance on what belongs in this file; a maintenance preference the repository cannot verify."
-    },
-    {
-      "id": "339c6b51f4c1a53cc1c629558072c1a6842ab6e1",
-      "line": 86,
-      "text": "Do not repeat what the codebase already shows; point to the authoritative file or command instead.",
-      "label": "judgment",
-      "evidence": [],
-      "note": "Authoring preference for this file; not something code or tooling enforces."
-    },
-    {
-      "id": "87de210b91968d629e0f75d065a0f05fc5f6b553",
-      "line": 87,
-      "text": "Prefer rewriting or pruning existing entries over appending new ones.",
-      "label": "judgment",
-      "evidence": [],
-      "note": "Editing preference for this file; not checkable against the repository."
-    },
-    {
-      "id": "e98a0736d5d51a39cc495db7b2ce7f9304aa9681",
-      "line": 88,
-      "text": "When updating this file, preserve this bar for all agents and keep entries concise.",
-      "label": "judgment",
-      "evidence": [],
-      "note": "Process instruction for future edits; not checkable against the repository."
-    }
-  ]
+ "repo": "kunchenguid/no-mistakes",
+ "sha": "f4b85ae161cef8f14e289cc90aebae044ed570b9",
+ "file": "AGENTS.md",
+ "labeler": "agent (independent of proof's output)",
+ "labels": [
+  {
+   "id": "bfa622cf248a5b70e047e86da233569d620ff30e",
+   "line": 3,
+   "text": "This file is for agentic coding tools working in this repo.",
+   "label": "judgment",
+   "evidence": [
+    "CLAUDE.md:1-2 '<!-- Points Claude at AGENTS.md via import; edit AGENTS.md, not this file. --> @AGENTS.md'"
+   ],
+   "note": "Statement of the file's audience/purpose; consistent with CLAUDE.md importing it but not something the repo can verify."
+  },
+  {
+   "id": "3c8177638936f9bd21147362d0ae710f2f25bba7",
+   "line": 5,
+   "text": "This repository is a Go CLI app named `no-mistakes`.",
+   "label": "true",
+   "evidence": [
+    "go.mod:1 'module github.com/kunchenguid/no-mistakes'",
+    "cmd/no-mistakes/main.go exists",
+    "Makefile:22 'go build ... -o bin/no-mistakes ./cmd/no-mistakes'"
+   ],
+   "note": "Go module whose binary is no-mistakes."
+  },
+  {
+   "id": "5ac53ad2bee6ec3ce333d1a5f658b3958f49ced4",
+   "line": 6,
+   "text": "The binary entrypoint is `cmd/no-mistakes`; implementation code lives under `internal/`, and the package names there are the layout map (CLI in `internal/cli`, daemon in `internal/daemon`, pipeline and steps in `internal/pipeline`, agent adapters in `internal/agent`, terminal UI in `internal/tui`, shared infrastructure in `internal/git`, `internal/ipc`, `internal/config`, `internal/db`, `internal/paths`, `internal/types`).",
+   "label": "true",
+   "evidence": [
+    "ls cmd => fakeagent genskill no-mistakes publish-channels recordfixture",
+    "test -d internal/{cli,daemon,pipeline,agent,tui,git,ipc,config,db,paths,types} => all present"
+   ],
+   "note": "Entrypoint and every listed package directory exist."
+  },
+  {
+   "id": "f1c530c42cfe7f982f633c1b57b25543e5929210",
+   "line": 7,
+   "text": "Build, test, and release commands are owned by the `Makefile`; read it for the full target list instead of relying on a copy here.",
+   "label": "true",
+   "evidence": [
+    "Makefile:16 '.PHONY: build dist install test e2e e2e-record lint fmt clean docs docs-build docs-preview demo skill skill-check'",
+    "Makefile:24 'dist:' builds the release archives for 6 OS/arch targets",
+    "Makefile:51-52 'test: go test -race ./...'"
+   ],
+   "note": "Makefile holds build, test, lint, e2e and dist (release packaging) targets; CI's release.yml runs its own go build, but the Makefile still owns the local command list."
+  },
+  {
+   "id": "70769d4c641c395e67e8bf05065e4ec6fee1d49e",
+   "line": 11,
+   "text": "`gofmt -w .`",
+   "label": "true",
+   "evidence": [
+    "Makefile:91-92 'fmt: gofmt -w .'",
+    ".github/workflows/ci.yml:24-31 'Format check: output=$(gofmt -l .) ... exit 1'"
+   ],
+   "note": "gofmt is a Makefile target and CI enforces formatting."
+  },
+  {
+   "id": "37bd5be408693fb5053b039cdd8d65fe6012d19c",
+   "line": 12,
+   "text": "`make lint` (generated-skill drift check plus `go vet`)",
+   "label": "true",
+   "evidence": [
+    "Makefile:85-86 'skill-check: go run ./cmd/genskill --check'",
+    "Makefile:88-89 'lint: skill-check / go vet ./...'"
+   ],
+   "note": "make lint is exactly the generated-skill drift check plus go vet."
+  },
+  {
+   "id": "665c83927b053135fa35063daf014d5d993e7713",
+   "line": 13,
+   "text": "`go test -race ./...` (the e2e suite is behind the `e2e` build tag and excluded)",
+   "label": "true",
+   "evidence": [
+    "Makefile:51-52 'test: go test -race ./...'",
+    "Makefile:58-59 'Excluded from `make test` because it is behind the `e2e` build tag'",
+    "grep -rl '^//go:build e2e' --include=*.go . | wc -l => 42 (internal/e2e/*)",
+    ".github/workflows/ci.yml:106 'run: go test -race ./...'"
+   ],
+   "note": "Race test command matches Makefile/CI and the e2e suite is tag-gated."
+  },
+  {
+   "id": "e9d156f5ccc3f1b636e07d8e6606734182f367e4",
+   "line": 14,
+   "text": "`make e2e` when touching agent integrations, the e2e harness, or recorded fixtures",
+   "label": "true",
+   "evidence": [
+    "Makefile:65-66 'e2e: @bash scripts/e2e.sh'",
+    "Makefile:54-57 'End-to-end suite: drives the real no-mistakes binary against a fake agent ...'",
+    "Makefile:72-76 'e2e-record' re-records internal/e2e/fixtures",
+    ".github/workflows/ci.yml:149-150 'name: End-to-end suite / run: make e2e'"
+   ],
+   "note": "make e2e exists, covers agent backends and fixtures, and CI runs it."
+  },
+  {
+   "id": "2f669e75b4b5b7bb154c2ec9c56facc6a2b7b12c",
+   "line": 15,
+   "text": "`go build -o ./bin/no-mistakes ./cmd/no-mistakes`",
+   "label": "true",
+   "evidence": [
+    "Makefile:21-22 'build: go build -ldflags \"$(LDFLAGS)\" -o bin/no-mistakes ./cmd/no-mistakes'",
+    "cmd/no-mistakes/main.go exists"
+   ],
+   "note": "Build command and output path match the Makefile build target (minus ldflags)."
+  },
+  {
+   "id": "6aec09a1b5ba6a5dfad5f3480d70a0677a525480",
+   "line": 19,
+   "text": "User-facing semantics: the docs site under `docs/src/content/docs/` (`reference/repo-config.md` and `reference/global-config.md` own config keys, `reference/pipeline-steps.md` owns step behavior, `reference/environment.md` owns env vars and telemetry, `concepts/gate-model.md` and `concepts/daemon.md` own those models).",
+   "label": "true",
+   "evidence": [
+    "ls docs/src/content/docs/reference => cli.md environment.md eval.md global-config.md pipeline-steps.md repo-config.md",
+    "ls docs/src/content/docs/concepts => auto-fix.md daemon.md gate-model.md pipeline.md review-conversation.md",
+    "docs/src/content/docs/reference/repo-config.md:127 '## Fields'; environment.md:262 '### What stays local and what leaves the machine'"
+   ],
+   "note": "All named docs pages exist and hold the described content."
+  },
+  {
+   "id": "48aeee94c439518ee82224cd6997ef2135876dc2",
+   "line": 20,
+   "text": "Per-area implementation maps (owning functions, invariants, regression lists): `.agents/skills/<area>/SKILL.md` (`.claude/skills` is a symlink to it). Read the matching skill before changing that area.",
+   "label": "true",
+   "evidence": [
+    "readlink .claude/skills => ../.agents/skills",
+    "for d in .agents/skills/*/ => every one of 15 dirs has SKILL.md"
+   ],
+   "note": "Skills live at .agents/skills/<area>/SKILL.md and .claude/skills is a symlink to it."
+  },
+  {
+   "id": "d0305efc9bca77e1f709a1d2be98a6789daf76e4",
+   "line": 21,
+   "text": "Provider CLI traps (glab flag drift, tea JSON shapes, GitHub user-attachments, opencode failure wire shape and retry gating) are owned by the comments in `internal/scm/gitlab/gitlab.go`, `internal/scm/gitea/gitea.go`, `internal/scm/github/attachments.go`, and `internal/agent/opencode*.go`; extend them there when you hit new drift.",
+   "label": "true",
+   "evidence": [
+    "internal/scm/gitlab/gitlab.go:308-310 'Unlike `glab mr create`, `glab mr update` (glab v1.5x) has no -y/--yes confirmation-skip flag at all'",
+    "internal/scm/gitea/gitea.go:104-107 'the two shapes are deliberately separate structs; do not unify them.'",
+    "internal/scm/github/attachments.go:322-324 'Callers must treat any error as fail-closed'",
+    "ls internal/agent/opencode*.go => opencode.go opencode_failure.go opencode_http.go opencode_stream.go opencode_types.go (+tests)"
+   ],
+   "note": "Each named file exists and carries the trap comments described."
+  },
+  {
+   "id": "998abc4d437751c671503f1e4473854f697ad817",
+   "line": 22,
+   "text": "`skills/no-mistakes/SKILL.md` is generated from `internal/skill/skill.go`; never hand-edit it, `CHANGELOG.md`, or other generated files.",
+   "label": "true",
+   "evidence": [
+    "cmd/genskill/main.go:1-4 'renders the canonical no-mistakes SKILL.md from the internal/skill package into skills/no-mistakes/SKILL.md'",
+    "Makefile:85-89 lint depends on skill-check (go run ./cmd/genskill --check)",
+    "workflow_guard_generated_files_test.go:18-21 guarded paths 'CHANGELOG.md', '.release-please-manifest.json' in .github/workflows/guard-generated-files.yml"
+   ],
+   "note": "SKILL.md is generated from internal/skill and hand edits to it and CHANGELOG.md are blocked by lint and the guard workflow."
+  },
+  {
+   "id": "46574086bc11b11cec7d29f71dbd8f14da63d332",
+   "line": 26,
+   "text": "Repo config trust boundary (security): `commands.*` and `agent` come from the trusted default branch at a pinned, freshly fetched SHA and the run fails closed when that config cannot be read; `allow_repo_commands` is trusted-only and defaults false. Every other trusted-only field listed in `reference/repo-config.md` stays trusted-only regardless of `allow_repo_commands` (`pr.base_branch` is the one opt-in exception). No trusted-config selection may depend on a pushed-branch field, and `review.path_instructions` matches the complete changed-file set, never the `ignore_patterns`-filtered one. Owner: `repository-routing-security` skill.",
+   "label": "true",
+   "evidence": [
+    "internal/daemon/manager.go:713-718 'Reading at a pinned SHA, rather than the origin/<defaultBranch> remote-tracking ref, closes the stale-ref hole ... without a fresh fetch + resolve'",
+    "internal/daemon/manager.go:766-773 assertGateTrustedConfigReadable returns 'refusing to run without reading the trusted config'",
+    "internal/config/config.go:300 'AllowRepoCommands bool `yaml:\"allow_repo_commands\"`'; repo-config.md:149-158 'Default | `false`' and 'read only from the trusted default-branch copy'",
+    "repo-config.md:11-12 trusted-only field list; 'pr.base_branch ... follows the same allow_repo_commands: true opt-in exception'",
+    "internal/pipeline/steps/review_path_instructions.go:34 'changed is the COMPLETE changed-file set, never the ignore-filtered subset'"
+   ],
+   "note": "Trusted pinned-SHA config, fail-closed read, allow_repo_commands default false, pr.base_branch exception and complete-set path matching all match code and docs."
+  },
+  {
+   "id": "120d21a0b5cc6621531c0926bd9e3aabf749e5b5",
+   "line": 27,
+   "text": "Under `disable_project_settings`, only adapters with verified effective suppression of the target repo's project instructions may launch; anything unverified fails closed (Grok is refused, and an `acp_registry_overrides` entry for `omp` fails closed). Owner: `repository-routing-security` skill.",
+   "label": "true",
+   "evidence": [
+    "internal/agent/agent.go:197-218 EnsureGateNeutralized 'fails closed when the agent ... does not neutralize ... Only codex, claude, pi, and acp:omp ... (and only when it is not overridden by agent_args_override or an acp_registry_overrides entry)'",
+    "internal/agent/grok.go:47-55 'NeutralizesGateInstructions deliberately fails closed ... return false'",
+    "internal/agent/acpx.go:51 'return neutralizesOMPGate(a.target, a.rawCommand, a.disableProjectSettings)'"
+   ],
+   "note": "Unverified adapters are refused, Grok always refused, omp with registry override fails closed."
+  },
+  {
+   "id": "2862decdf6d39509319444af6285f9a511b23639",
+   "line": 28,
+   "text": "An existing PR's live forge base outranks a since-changed `pr.base_branch`, and PR lookup matches by branch alone so a base change never opens a duplicate PR. Owner: `pr.base_branch` in `reference/repo-config.md`.",
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/steps/pr.go:113 'existing, err := host.FindPR(ctx, branch, \"\")'",
+    "internal/pipeline/steps/ci_fix.go:169-171 'baseBranch := effectivePRBaseBranch(sctx); if pr != nil && ... pr.BaseBranch != \"\" { baseBranch = ... pr.BaseBranch }'",
+    "docs/src/content/docs/reference/repo-config.md:216 'PR lookup matches an existing PR by branch alone, never filtered by base'"
+   ],
+   "note": "PR lookup passes an empty base and the live PR base overrides pr.base_branch in the CI step."
+  },
+  {
+   "id": "75056c6fd93881748d01a7d273c92185ecfccc27",
+   "line": 29,
+   "text": "Repository `gates` can never skip, reorder, or replace a core step, and `--skip` refuses gate names. Only `rebase`, `review`, `test`, `document`, and `lint` are anchors; a run's gate list is pinned once and an unparseable pin fails recovery closed. Owner: `repository-routing-security` skill.",
+   "label": "true",
+   "evidence": [
+    "internal/types/types.go:135-139 IsCustomGateAnchor: 'case StepRebase, StepReview, StepTest, StepDocument, StepLint: return true'",
+    "internal/cli/daemon_cmd.go:221-229 parseSkipSteps rejects anything not in types.AllSteps() ('unknown step %q'); validStep at :466",
+    "internal/daemon/manager.go:276-290 pinnedRunGates: 'an unusable one fails its caller closed ... pinned gates are unusable'",
+    "repo-config.md:524 'Gates are inserted into the run's step sequence and never replace, reorder, or remove a core step'"
+   ],
+   "note": "Anchor list, skip refusal, pinned gate list and fail-closed recovery all match."
+  },
+  {
+   "id": "5c41768e4886f6e8988d2aad32fd621d9a7dede4",
+   "line": 30,
+   "text": "A per-run Pi pin is immutable and fully validated before it supersedes an active run.",
+   "label": "true",
+   "evidence": [
+    "internal/daemon/manager.go:1358-1366 'pin, err = globalCfg.ResolvePiProfile(request) ... validatePiProfileAgentsBeforeCancel'",
+    "internal/daemon/manager.go:885 'conflicting launch_nonce: Pi profile differs from run pin'",
+    "docs/src/content/docs/reference/global-config.md:314-315 'stores runs.pi_profile atomically with run creation. That field cannot be changed or cleared.'; :307-308 'That check runs before any active validation is cancelled.'"
+   ],
+   "note": "Pin is validated before the active run is cancelled and is immutable once stored."
+  },
+  {
+   "id": "915378302a11b307637fba97e64ef8ef12cd39e0",
+   "line": 31,
+   "text": "Test: pass/fail scenarios must be live and untested ones need a reason; `untested` never parks; the evidence turn is unconditional; the analyzer correction turn stays correction-only (no tools, scenario reruns, or external operations). Do not weaken these to avoid the analyzer correction retry.",
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/steps/common.go:196-199 scenarioContractIssues rejects a pass/fail with live=false and an untested result without a reason",
+    "internal/pipeline/steps/test.go:471-474 'Untested scenarios never produce a finding at any verdict'",
+    "internal/pipeline/steps/test.go:180-188 the agent is asked to gather live evidence after the configured command both passes and fails",
+    "internal/pipeline/steps/test.go:422 'This is a correction-only turn ... Do not use tools, execute commands, start or modify the product, rerun scenarios, or perform any external operation.'"
+   ],
+   "note": "Scenario contract, non-parking untested, unconditional evidence turn and correction-only analyzer turn match."
+  },
+  {
+   "id": "a27ed491ee64dc5cb3a10d5ebf89972e6e14b511",
+   "line": 32,
+   "text": "Test verdicts: `no-surface` and `inconclusive` park for an operator decision, a `fail` scenario with any verdict but `no-go` is rejected, `no-surface` with any live or pass/fail scenario is rejected, and the attestation omits `live_validation` once the head moves past the validated one. Owner: `pipeline-review-and-agents` skill.",
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/steps/test.go:485-496 verdictFindings: inconclusive and no-surface return ActionAskUser warnings (park)",
+    "internal/pipeline/steps/common.go:126-131 'verdict %q contradicts failed scenario ... a fail scenario requires verdict no-go'",
+    "internal/pipeline/steps/common.go:136-146 no-surface with any live or non-untested scenario is rejected",
+    "internal/pipeline/steps/prsummary.go:233-247 attestedLiveValidation returns nil (field omitted) when 'findings.TestedHeadSHA != headSHA'"
+   ],
+   "note": "All four verdict rules and the head-bound live_validation omission match the code."
+  },
+  {
+   "id": "9b647e9460cefaeccccb0553e5af66131dc038df",
+   "line": 33,
+   "text": "A Test `no-go` verdict parks as an auto-fixable error. Owner: `.agents/skills/pipeline-review-and-agents/SKILL.md`.",
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/steps/test.go:479-484 'case types.TestVerdictNoGo: ... Severity: types.FindingSeverityError, Action: types.ActionAutoFix'",
+    ".agents/skills/pipeline-review-and-agents/SKILL.md exists and mentions no-go (3 hits)"
+   ],
+   "note": "no-go becomes an auto-fixable error finding."
+  },
+  {
+   "id": "dd0248b710bfc43de27baa0b0eb7ef273ee56554",
+   "line": 34,
+   "text": "Review: an unreadable review never passes (bounded schema reruns, fix-mode turns never retried); a clean review certifies the head only with `reviewed_paths` covering every trusted reviewable path; a selected finding leaves the append-only outstanding set only on positive coverage or an explicit operator decision, except a selected finding with no file anchor, which can never match coverage and clears only on a positive verification round covering every reviewable path that no longer reports it (upgrade compat for pre-removal recorded-decision findings). Recovery never lets a reused positional finding ID alias an unrelated finding as selected (`retainFindingIDsByIdentity`). The loop is bounded only by `auto_fix.review` and the gate.",
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/steps/review.go:417-421 'rerun ... up to reviewAnalyzerMaxAttempts. Findings come only from the attempt that validates. Every other failure returns at once'",
+    "internal/pipeline/findings.go:512-542 resolveVerifiedFindingsJSON: 'the only way a selected-and-fixed finding leaves the outstanding set besides an explicit operator action' plus the file-less compat carve-out",
+    "internal/pipeline/findings.go:392-398 retainFindingIDsByIdentity; used at executor.go:392 and :733",
+    "internal/pipeline/executor.go:971-974 'The loop itself is bounded only by auto_fix.review ... and the human/agent gate'"
+   ],
+   "note": "Unreadable-review handling, coverage-gated clearing, ID identity retention and loop bound all match."
+  },
+  {
+   "id": "e67bf5253859a4f54411ff6293863bdf02b91e92",
+   "line": 35,
+   "text": "Review retries: findings come only from the attempt that validates; Claude's `error_max_structured_output_retries` fails the step with no second retry layer; a crash-resumed fix round fails closed, and a validation restart at Review starts a fresh carry set. Owner: `pipeline-review-and-agents` skill.",
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/steps/review.go:463-477 attempt loop reruns only on agent.IsStructuredOutputRejected and keeps findings from the validating attempt",
+    "internal/agent/claude.go:151-152 'if result.IsError || result.Subtype != \"success\" { return ..., fmt.Errorf(\"claude error: subtype=%s\" ...)' (not a rejection); claude_test.go:466 TestClaudeAgent_FinalizeResult_ErrorSubtypeNotRetryable",
+    "docs/src/content/docs/reference/pipeline-steps.md:100 'reports exhaustion as error_max_structured_output_retries; that result is not marked as a rejection, so it fails the step'",
+    ".agents/skills/pipeline-review-and-agents/SKILL.md:116 'A crash-resumed fix round fails closed the same way. A validation restart at Review starts a fresh carry set'; internal/pipeline/executor_test.go:195 TestExecutor_RevalidationClearsReviewCarry"
+   ],
+   "note": "Retry rules match the code and the owning skill."
+  },
+  {
+   "id": "cc0352918f346451c14e9814c24ac85f8705b75d",
+   "line": 36,
+   "text": "An approval override is never a silent clean pass: CI overrides and qualifying Test exceptions record their unresolved condition and surface as `passed-with-override`; do not reuse the configured-command `override_reason` for every Test approval. `verify.py` refuses a configured-command Test override unless trusted `test.allow_approve_over_failure` records a reason, and a CI-repair restamp never copies a previous `allow_test_command_override`. Owner: `pipeline-review-and-agents` skill.",
+   "label": "true",
+   "evidence": [
+    "internal/cli/axi_drive.go:110 'return \"passed-with-override\"'; internal/ipc/protocol.go:441-442 ci_override_reason / test_override_reason",
+    ".github/actions/require-no-mistakes/verify.py:346-372 refuses a test override_reason unless allow_test_command_override is set ('Set test.allow_approve_over_failure in the trusted default-branch ...')",
+    "internal/pipeline/steps/ci_fix.go:835-840 attestationPolicyFrom reads AllowTestCommandOverride from current trusted config (sctx.Config.Test.AllowApproveOverFailure), not the previous attestation"
+   ],
+   "note": "Override outcome, verify.py refusal and restamp policy source match."
+  },
+  {
+   "id": "a6aae4895e14854fd153f71d6ee9a99d4cb71a22",
+   "line": 37,
+   "text": "The CI step never counts or limits fix rounds (the executor enforces `auto_fix.ci`); review-bot checks park as ask-user and never spend a round; a published repair must call `sctx.MarkRunning()`. Classification reads provider structure only, an empty check `App` is never a review bot, and `step_results.ci_fix_attempts` is never read. Owner: `ci-monitor` skill.",
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/steps/ci.go:44-46 'auto-fix findings enter the auto_fix.ci loop as fix rounds ... rounds itself; the executor does, durably, from the round history'",
+    "internal/pipeline/steps/ci_fix.go:139-140 'if sctx.MarkRunning != nil { if err := sctx.MarkRunning(); ...'",
+    "internal/scm/host.go:228-234 ReviewBotForApp: 'An empty slug never matches'",
+    "internal/db/step.go:48-51 'The ci_fix_attempts column is no longer read'"
+   ],
+   "note": "CI round counting, MarkRunning, review-bot classification and unread column match."
+  },
+  {
+   "id": "bffbca5fe99276585ad50449c5cc9b18d8f123cb",
+   "line": 38,
+   "text": "After a CI repair, a still-red check without fresh evidence keeps the monitor waiting rather than re-escalating. Owner: `.agents/skills/ci-monitor/SKILL.md`.",
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/steps/ci.go:672-678 'if s.lastRepairStillUnverified(checks, mergeConflict) { ... Escalating them again would spend a fix round on stale evidence, so the monitor keeps waiting for the re-run.'",
+    ".agents/skills/ci-monitor/SKILL.md exists"
+   ],
+   "note": "Still-red checks without a re-run keep the monitor waiting."
+  },
+  {
+   "id": "a809f2bc9eb0bfb2853199ebdb2106c3e79f400b",
+   "line": 39,
+   "text": "`types.Finding` fields are copied explicitly by `Finding.UnmarshalJSON` and `findingWire`; a new field must be added there or it drops on every parse.",
+   "label": "true",
+   "evidence": [
+    "internal/types/findings.go:267-281 'type findingWire struct { ID ... Check ... CheckID ... RequiresHumanReview }'",
+    "internal/types/findings.go:608-622 'func (f *Finding) UnmarshalJSON ... f.ID = wire.ID ... f.CheckID = wire.CheckID' (explicit per-field copy)"
+   ],
+   "note": "Finding decoding copies each field explicitly through findingWire."
+  },
+  {
+   "id": "e0c2491afc699b26ba70efa1c155a9cba6240ee1",
+   "line": 40,
+   "text": "`rebase.strategy: merge` proves the merge (`mergeWithAgent`) rather than trusting the agent, and a rejected attempt is restored to the pre-merge head, fail-closed; its additive resolver prompt must not be unified with the rebase prompt. The merge target is resolved to a SHA before `git merge`, an unrecognized `rebase.strategy` fails the config closed, and a fast-forward publishes without `--force`. Owner: `branch-sync-and-push-safety` skill.",
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/steps/rebase.go:555 'func mergeWithAgent(...)' snapshots preMergeHead and resolves 'targetSHA, err := git.Run(..., \"rev-parse\", targetRef)' before the merge ('The target is pinned to a SHA here')",
+    "internal/pipeline/steps/rebase.go (mergeWithAgent) proves the merge via isAncestor(preMergeHead, head) and isAncestor(targetSHA, head); rejections go through restorePreMergeHead (fail-closed)",
+    "internal/config/config.go:2997-3005 validateRebaseRaw 'fails the config closed on an unrecognized rebase.strategy'",
+    "internal/pipeline/steps/forcepush.go:89-90 fastForward decision; push.go:173 'case decision.newBranch, decision.fastForward:' pushes without force/lease",
+    ".agents/skills/branch-sync-and-push-safety/SKILL.md mentions mergeWithAgent (2 hits)"
+   ],
+   "note": "Merge proof, SHA pinning, restore, fail-closed strategy parse and non-force fast-forward all match."
+  },
+  {
+   "id": "a2d9fc2c0f232d70831ed9707daaf9c7817a59c6",
+   "line": 41,
+   "text": "Push attests the proposed head in an existing PR before pushing, and an attestation write failure aborts the push; the protocol is single-publisher by design (no cross-publisher coordination without a separate requirement). Private-mirror reconciliation bypasses patch proof in exactly two cases, both owned by `concepts/gate-model.md`: (a) the run's exact submitted or last-pushed head (Decision 41-A), and (b) a private-only commit reachable from a `refs/no-mistakes/recover/<run>` anchor (issue #1233). (b) is a PRESERVATION credit only - never containment evidence and never a head exception: containment is still proven only by ancestry, patch-ID or tree survival, Decision 41-A remains the only head exception, archive-before-delete is unchanged, and a symbolic or non-commit anchor credits nothing; ownership never proves containment.",
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/steps/push.go:165-170 attestHeadBeforePush(...) error returned before the push switch; comment 'This protocol has single-publisher scope'",
+    "internal/pipeline/steps/ci_fix.go:796-833 attestation find/restamp failures return errAttestationWriteFailed",
+    "docs/src/content/docs/concepts/gate-model.md:107 'Recovery-anchor preservation credit (issue #1233): a private-only commit that a refs/no-mistakes/recover/<run> anchor reaches is preserved'; :117 'preservation credit, not containment evidence ... Decision 41-A below remains the only head exception'",
+    "internal/gate/reconcile.go:324-345 listRecoveryAnchors skips 'a symbolic, zero, or non-commit target'"
+   ],
+   "note": "Attest-before-push, single-publisher scope and the two documented bypasses match."
+  },
+  {
+   "id": "17fc06af296b36e0c9b79609936fde1a4f6b00dd",
+   "line": 42,
+   "text": "Private-mirror reconciliation archives a branch's exact head before deleting its ref and restores that archive when settlement fails and no intervening ref appeared; `push.go` settles shared gate/worktree refs only once. Owner: `concepts/gate-model.md`.",
+   "label": "true",
+   "evidence": [
+    "internal/gate/reconcile.go:217-264 ApplyStaleBranchReconciliation 'archives the planned head and then removes the branch ref'",
+    "internal/gate/reconcile.go:267-289 RestoreReconciledBranch is create-only and skips when an intervening ref exists",
+    "internal/pipeline/steps/push.go:313-323 deferred restore on settlement error",
+    "internal/pipeline/steps/common_fix.go:539-548 updateNonSharedBranchRef returns early when worktreeSharesGateRefs",
+    "docs/src/content/docs/concepts/gate-model.md:156,171 archive-before-delete and restore-on-failed-settlement"
+   ],
+   "note": "Archive/restore and settle-once behavior match code and gate-model docs."
+  },
+  {
+   "id": "1be6ec95d53171b0db3957710c0aeb797026895f",
+   "line": 43,
+   "text": "OpenCode: a failed turn that already ran a tool is never retried or sent through the prompt-only fallback (both replay its side effects in a fresh session), and retry trusts opencode's `isRetryable`, never substring matching. Errors decode from the nested `data` payload, and the general `info.error` branch stays after the tool-choice conflict checks that trigger the fallback. Owner: comments in `internal/agent/opencode*.go`.",
+   "label": "true",
+   "evidence": [
+    "internal/agent/opencode.go:151-157 'a turn that already invoked a tool would replay its side effects' -> 'if opencodeReplayUnsafe(err) { return result, err }' before the prompt-only fallback",
+    "internal/agent/opencode_failure.go:97-123 classifyOpencodeTransient: opencode-reported failure is the authority; 'a non-retryable one stops here rather than falling through to the substring matching'",
+    "internal/agent/opencode_types.go:83-86 'opencode serializes every NamedError as {\"name\": ..., \"data\": {...}}, so the payload fields live under Data'; :200-202 retryable() returns *e.Data.IsRetryable",
+    "internal/agent/opencode.go:365-388 tool-choice conflict checks precede the general 'if mr.resp.Info.Error != nil' branch"
+   ],
+   "note": "OpenCode retry/fallback gating and decode order match the code comments."
+  },
+  {
+   "id": "251ddd6459c7f67276dd387baf31595f11809d03",
+   "line": 44,
+   "text": "Provider CLIs: glab's auth check is host-scoped and `glab mr update` never gets `-y`; every tea call carries `--login`, tea's list and single-PR JSON shapes stay separate structs, retargeting uses `tea api --method PATCH`, `CreatePR` re-lists instead of scraping stdout, Gitea runs are picked by highest run ID, and Gitea `MergeableState` stays declined. Owner: comments in `internal/scm/gitlab/gitlab.go` and `internal/scm/gitea/gitea.go`.",
+   "label": "true",
+   "evidence": [
+    "internal/scm/gitlab/gitlab.go:136-144 'Scope the auth check to this repo's host ... authArgs = append(authArgs, \"--hostname\", h.host)'",
+    "internal/scm/gitlab/gitlab.go:308-317 'glab mr update ... has no -y/--yes ... args := []string{\"mr\", \"update\", id}'",
+    "internal/scm/gitea/gitea.go:120,157,200,228,259,301,527 every tea invocation passes '--login', h.login; :104-107 list vs single-PR structs 'deliberately separate'",
+    "internal/scm/gitea/gitea.go:228 'args := []string{\"api\", \"--login\", h.login, \"--method\", \"PATCH\", ...}'; :167-171 CreatePR re-lists via FindPR instead of scraping",
+    "internal/scm/gitea/gitea.go:387 runsByIDDesc 'orders runs by highest numeric ID first'; :74-78 'MergeableState is declined ... MergeableState: false'"
+   ],
+   "note": "Every glab/tea trap listed is implemented and commented in the named files."
+  },
+  {
+   "id": "dc249139e0c46cfb7b8d5c6ca236a875a29a1f59",
+   "line": 45,
+   "text": "GitHub user-attachment uploads fail closed: any error or refusal keeps the prior PR rendering, never a dead attachment URL. Owners: `internal/scm/github/attachments.go`, `test.evidence.attach_media` in `reference/global-config.md`.",
+   "label": "true",
+   "evidence": [
+    "internal/scm/github/attachments.go:322-324 'Callers must treat any error as fail-closed: keep today's PR rendering rather than inventing a URL.'",
+    "internal/scm/github/attachments.go:215-217 URL checked so 'a surprising payload cannot become a dead link in a PR body'",
+    "internal/pipeline/steps/evidence_attach.go:159-166 on upload error or empty URL logs 'keeping today's rendering' and continues",
+    "docs/src/content/docs/reference/global-config.md:999 'Upload is fail-closed ... rather than a dead attachment URL'"
+   ],
+   "note": "Attachment uploads fail closed exactly as described."
+  },
+  {
+   "id": "dec32e430968226b29986131fa4fce996ff20f3b",
+   "line": 46,
+   "text": "Custody recovery fails closed without Git mutation on any missing, moved, or ambiguous evidence; plain `--recover` still refuses (`--recover --keep-local` is the explicit discard), and keep-local never selects an archive. Owner: `branch-sync-and-push-safety` skill.",
+   "label": "true",
+   "evidence": [
+    "internal/branchsync/sync.go:648-652 'Plain --recover refuses this source before any ref write; only the reported --recover --keep-local action can use it.'",
+    "internal/branchsync/sync.go (~811-816) blocked_recover_archive_requires_keep_local with Command 'no-mistakes axi sync --recover --keep-local'",
+    "internal/branchsync/sync.go:1037-1040 recoverKeepLocalFromArchive 'never selects or replays the archived head'",
+    "internal/branchsync/recover_test.go TestBoundArchiveProofMatrixFailsClosedWithoutGitMutation"
+   ],
+   "note": "Custody recovery refusal paths and keep-local semantics match."
+  },
+  {
+   "id": "2edc6e931927399645c4c372e3963ad2fef75825",
+   "line": 47,
+   "text": "`require-no-mistakes` reads PR facts from a live API lookup and fails closed when it cannot, never from a possibly stale replayed event.",
+   "label": "true",
+   "evidence": [
+    ".github/actions/require-no-mistakes/verify.py:27-43 'main() fails the whole gate closed rather than falling back to the cached event payload'",
+    ".github/actions/require-no-mistakes/verify.py:108 live_pr_facts() calls '{api_url}/repos/{repo}/pulls/{number}'; :402-421 fail() when the live lookup was attempted but not used",
+    "require_no_mistakes_action_test.go:557 TestRequireActionLiveLookupOverridesStaleArchivedEvent; :619 TestRequireActionFailsClosedWhenLiveLookupUnavailable"
+   ],
+   "note": "The action reads live PR facts and fails closed when it cannot."
+  },
+  {
+   "id": "276e327f48ce10dd864a58a60b1a543f884d3be2",
+   "line": 48,
+   "text": "`axi status` and `axi logs` resolve an implicit run from the caller's current branch only; there is no repo-wide fallback, and every explicit `--run <id>` selection is observation-only (no bare `axi respond` command, since a newer run on that branch could receive it). Owner: `resolveRun` and the status comments in `internal/cli/axi_query.go`.",
+   "label": "true",
+   "evidence": [
+    "internal/cli/axi_query.go:324-335 resolveRun: 'It deliberately does NOT fall back to the repository's active or most recent run on some other branch'",
+    "internal/cli/axi_query.go:336-364 resolveRun body only matches run.Branch == branch",
+    "internal/cli/axi_query.go:98-99 '`axi respond` has no run selector. Keep every explicit selection inspection-only'"
+   ],
+   "note": "Branch-only resolution and inspection-only explicit --run match resolveRun and its comments."
+  },
+  {
+   "id": "6349c72455e99019d6113e576e14e49eccb3e58d",
+   "line": 49,
+   "text": "`agent.MemoryFilesRule` limits independently initiated memory-file edits, not review of those files or prompted fixes; the document step may only correct factually wrong content, and conflict resolvers use `agent.MemoryFilesConflictRule`. Do not reintroduce exhaustive doc-sweep language into the document prompt. Owner: `documentation-guidance` skill.",
+   "label": "true",
+   "evidence": [
+    "internal/agent/memory_files.go:3-11 'MemoryFilesRule limits edits a pipeline agent initiates on its own ... the rebase/merge conflict resolvers use MemoryFilesConflictRule'",
+    "internal/pipeline/steps/document.go:33 'Edit them only to correct or remove information that is factually wrong'",
+    "internal/pipeline/steps/rebase.go:465,608 'prompt += \"\\n\" + agent.MemoryFilesConflictRule'",
+    ".agents/skills/documentation-guidance/SKILL.md mentions MemoryFilesRule and MemoryFilesConflictRule"
+   ],
+   "note": "Memory-file rules and their placement match the code."
+  },
+  {
+   "id": "c6c3ed11960087f2b14ca45e36e8abede018bf36",
+   "line": 50,
+   "text": "The combined document+lint pass never silently drops the lint duty (any doubt falls back to lint's own pass), uncategorized findings fail safe to the stricter documentation gate, and a configured `commands.lint` stays a deterministic gate.",
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/steps/document.go:104-107 'Combine the agent-driven lint duty into this pass when no deterministic lint command is configured ... combinedLint := sctx.Config.Commands.Lint == \"\"'",
+    "internal/pipeline/steps/document.go:112-114 'No lint result is stashed, so the lint step falls back to its own pass - neither duty is ever silently skipped.'",
+    "internal/pipeline/steps/document.go:297-299 'An uncategorized finding counts as documentation - the stricter gate ... so miscategorization fails safe.'"
+   ],
+   "note": "Combined pass fallback, fail-safe categorization and deterministic commands.lint all match."
+  },
+  {
+   "id": "82af96d9bd6e1206684c6f40a046080ec480ae55",
+   "line": 51,
+   "text": "`runs.awaiting_agent_since` is observability only and never changes gate resolution.",
+   "label": "stale",
+   "evidence": [
+    "internal/pipeline/executor.go:407-411 ValidateRecoveredRun: 'if run == nil || run.Status != types.RunRunning || run.AwaitingAgentSince == nil { return fmt.Errorf(\"run is not a recoverable parked run\") }' (called first by Resume)",
+    "internal/daemon/manager.go:139-141 prepareRecoveredRun: 'run.AwaitingAgentSince == nil ... \"run is not a parked running run\"'",
+    "internal/daemon/daemon.go:428-442 only plans from recoverableParkedRuns are preserved; every other active run goes to d.RecoverStaleRunsExcept(\"daemon crashed during execution\", preserved), which fails it"
+   ],
+   "note": "The field is not observability-only: whether a parked gate is resumed after a daemon restart or the run is failed depends on awaiting_agent_since being non-nil."
+  },
+  {
+   "id": "2c997e7671ce079cc1eac4cbf7132abd5274321d",
+   "line": 52,
+   "text": "`runs.awaiting_agent_since` is set exactly while a gate is parked. Owner: `.agents/skills/pipeline-review-and-agents/SKILL.md`.",
+   "label": "true",
+   "evidence": [
+    "internal/db/step.go:170-197 ParkStepForApproval sets 'UPDATE runs SET awaiting_agent_since = ?' in the same transaction that parks the step",
+    "internal/db/run.go:934-939 ClearRunAwaitingAgent: 'so awaiting_agent_since is non-nil exactly while a gate is actually parked'",
+    "internal/pipeline/executor.go:491,497,526,1334 CompleteRunAwaitingAgent when the park ends",
+    ".agents/skills/pipeline-review-and-agents/SKILL.md:123 'non-nil iff a step is actually parked'"
+   ],
+   "note": "Set atomically on park and cleared when the gate is released."
+  },
+  {
+   "id": "8895778d6438eb3ceb661e34545f4feac8ec9705",
+   "line": 53,
+   "text": "The daemon's effective environment comes from the login-shell probe at startup, never from the service definition's bootstrap `PATH`; only a missing shell binary is waited for, and only at startup. The probe runs in its own session (Setsid); do not fold it into `ConfigureShellCommand` (Setpgid and Setsid cannot be combined). Owner: `daemon-runtime` skill.",
+   "label": "true",
+   "evidence": [
+    "internal/daemon/daemon.go:46-48 'return shellenv.ApplyToProcessWithShellRetryExcept(shellenv.DefaultShellRetryWindow, excluded...)' at daemon startup",
+    "internal/shellenv/shellenv.go:159-168 retry loop only while shellBinaryMissing(err); :33-40 DefaultShellRetryWindow 'how long a daemon startup keeps re-probing while the login shell binary itself is missing'",
+    "internal/shellenv/shellenv.go:403-405 'ConfigureShellCommand(cmd); detachFromTerminal(cmd)' (separate); shell_command_unix.go:169-174 'Setpgid must not be combined with it because setpgid(2) fails for a session leader ... Setsid: true'",
+    ".agents/skills/daemon-runtime/SKILL.md:40-42 'The managed service definition's PATH ... is the deterministic bootstrap list, never a probe result'"
+   ],
+   "note": "Startup probe, missing-shell-only wait and separate Setsid detach match."
+  },
+  {
+   "id": "fd855d923a3397a30bf584b1d24884462afc2fbf",
+   "line": 54,
+   "text": "Telemetry: read-only surfaces (`axi` home/status/logs, `status`, `runs`) emit no remote telemetry. Performance detail stays local; prompts, outputs, diffs, and raw command arguments are never stored (`TestAgentInvocations_PrivacySafeShape`), and run IDs, paths, and session identities are never sent remotely; a not-reported metric is stored as NULL, never a fabricated zero. Owner: `reference/environment.md`.",
+   "label": "true",
+   "evidence": [
+    "docs/src/content/docs/reference/environment.md:257 'Read-only surfaces (axi home, axi status, axi logs, status, runs) emit no telemetry at all'",
+    "internal/cli/axi_query.go:41-42 'It is a read-only query: it does not emit telemetry.'",
+    "docs/src/content/docs/reference/environment.md (What stays local) 'Run IDs, repository paths, branch names, session identities, prompts, model outputs, diffs ... are never sent'; 'nullable and read back as unknown ... rather than a fabricated zero'",
+    "internal/db/agent_invocation_test.go:131 'func TestAgentInvocations_PrivacySafeShape'"
+   ],
+   "note": "Telemetry boundaries match environment.md and the named privacy test exists."
+  },
+  {
+   "id": "ad1dba43e1fb3e389909161462fd9af038961ec4",
+   "line": 55,
+   "text": "`no-mistakes update` reads only `channels.json` from the release-asset CDN, never `api.github.com`, and `release.yml` must call the channel publisher after `finalize`. Owner: `release-signing` skill.",
+   "label": "true",
+   "evidence": [
+    "internal/update/channels.go:13-20 channelsAssetName = \"channels.json\"; defaultManifestURL 'https://github.com/' + repo + '/releases/download/channels/channels.json'",
+    "internal/update/channels.go:22-25 'read over the GitHub download CDN ... so version discovery does not use the rate-limited REST API'",
+    ".github/workflows/release.yml:357-365 'publish-channels: needs: - finalize ... uses: ./.github/workflows/publish-channels.yml'",
+    "grep -rn 'api.github.com' internal/update (non-test) => no hits"
+   ],
+   "note": "Updater reads channels.json from the release CDN and release.yml calls the publisher after finalize."
+  },
+  {
+   "id": "e88be8c34a93caab89db1e6b0c8e081ee115582a",
+   "line": 56,
+   "text": "The retired `jev` config key stays a parse-only tombstone; do not repurpose it.",
+   "label": "true",
+   "evidence": [
+    "internal/config/config.go:242-250 'Jev is the retired jev.review_assist pre-brief block ... Jev retiredJev `yaml:\"jev\"`'",
+    "internal/config/config.go:971-976 'Do not repurpose the jev key.'",
+    "internal/config/config_jev_test.go:17-21 TestRetiredJevKeysParseWithoutEffect"
+   ],
+   "note": "jev is a parse-only, warning-emitting tombstone."
+  },
+  {
+   "id": "b4169fa9bea1929882ccc5aa3f309c4c6d92a453",
+   "line": 60,
+   "text": "Pipeline-step tests put the non-race `internal/pipeline/fakecli` helper on PATH as `gh`/`glab`/`git`, and use `internal/testgit.RealGit` for the real binary. Never re-exec the race-instrumented test binary as those names.",
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/fakecli/main.go:1-4 'the tiny helper that pipeline-step tests place on PATH as gh/glab/git ... instead of re-execing that binary (~0.8s under -race)'",
+    "internal/pipeline/steps/internal/stepstest/helpers.go:319 'exec.Command(\"go\", \"build\", \"-trimpath\", \"-ldflags=-s -w\", \"-o\", path, \"./internal/pipeline/fakecli\")' (no -race)",
+    "internal/testgit/testgit.go:18-25 'RealGit resolves the system git binary by absolute path only'"
+   ],
+   "note": "fakecli is built without -race and RealGit exists for the real binary."
+  },
+  {
+   "id": "0ea6cd3c0e245b70c0ff24f14f8af83b9cd3dd6f",
+   "line": 61,
+   "text": "CI-monitor tests live in `internal/pipeline/steps/citest`; keep both packages under `go test ./...`, not behind the `e2e` tag.",
+   "label": "true",
+   "evidence": [
+    "ls internal/pipeline/steps/citest => ci_gitlab_test.go ci_mergeable_test.go ci_test.go helpers_test.go main_test.go",
+    "head -3 internal/pipeline/steps/citest/*.go | grep -c 'go:build' => 0 (no e2e tag)",
+    ".github/workflows/ci.yml:106 'go test -race ./...'; :120 'go test -v -timeout=15m ./internal/pipeline/steps/...'"
+   ],
+   "note": "citest exists, has no build tag, and is covered by go test ./...."
+  },
+  {
+   "id": "2ca79ccf57b0b8ae3432e13cb58ec5760c0bf4cd",
+   "line": 62,
+   "text": "The rest is owned by the `testing-conventions` skill.",
+   "label": "true",
+   "evidence": [
+    ".agents/skills/testing-conventions/SKILL.md exists (mentions fakecli)"
+   ],
+   "note": "The testing-conventions skill exists to own the remaining conventions."
+  },
+  {
+   "id": "90c54315ad736487a67429bbaa95ee55ce247f92",
+   "line": 64,
+   "text": "The Review Conversation (`internal/reviewqa`, `internal/pipeline/steps/review_questions.go`)",
+   "label": "true",
+   "evidence": [
+    "test -d internal/reviewqa => ok",
+    "test -f internal/pipeline/steps/review_questions.go => ok"
+   ],
+   "note": "Section header names two paths that exist."
+  },
+  {
+   "id": "09f193db03cb85e896ab0fafd9ad9152020ec74c",
+   "line": 66,
+   "text": "The whole feature is OPT-IN and off by default: trusted `review.conversation` (repository-only, like `document.instructions`; `internal/config`). `reviewConversationEnabled` in `internal/pipeline/steps/review_questions.go` is the one owner of that condition, and `reviewConversationDir` returning \"\" is the ASK-side off-switch every consumer keys on. The READ side is separate and keyed on the conversation being on disk (`reviewConversationReadDir`, and `Executor.ReviewConversationAnswerDir` for the daemon's answer handler): a question asked while the channel was open stays answerable even after the setting is turned off, or after a trusted-config fetch fails and recovery resolves it the same way, which otherwise stranded a parked run for good. Both read-side halves move together - the answer path AND the review step's finalize turn - because opening only the write side lands the answer on disk, releases the gate, and runs a finalize turn that never sees it while `axi answer` reports `reviewer_resumed: true`. Emitting a question finding stays ASK-keyed, because that is what parks the step. The off-state guarantee holds because a repository that never opted in cannot have a questions file. Regressions: `TestReviewStep_FinalizeTurnDeliversAnswersEvenWithTheSettingOff` (mutation-checked), `TestAnswerReviewQuestionOnDiskQuestionSurvivesTheSettingBeingTurnedOff`, `TestReviewStep_ResumeApprovalGateOnlyWhenTheConversationIsSettled` - prompt protocol, the ndjson files, question findings, the settled-questions and superseded-rounds sections, the reviewer session, the PR body's group, and (via `Executor.ReviewConversationEnabled`) `axi answer`'s refusal. A new part of the protocol must key on the same condition; `TestReviewStep_ConversationOffIsTodaysReview` asserts the off prompt is the on prompt minus the protocol and nothing else, so a missed gate fails there. Regressions: `TestEffectiveRepoConfig_ReviewConversationTrustedOnly`, `TestMerge_ReviewConversationDefaultsOffAndComesFromTheRepo`, `TestReviewStep_ConversationOffIgnoresQuestionsAlreadyOnDisk`, `TestAnswerReviewQuestionRefusesWhenTheConversationIsOff`, `TestReviewStep_SupersedeCarriesThePreviousRunsReviewRounds/conversation_off`.",
+   "label": "stale",
+   "evidence": [
+    "internal/daemon/manager.go:232-246 loadRecoveredConfig: on a fetch failure trustedSHA stays \"\" and then 'SECURITY: a trusted-config fetch failure must abort ... if err := assertGateTrustedConfigReadable(...); err != nil { return nil, err }'",
+    "internal/daemon/manager.go:770-772 'if trustedSHA == \"\" { return fmt.Errorf(\"cannot evaluate disable_project_settings: failed to fetch or resolve trusted default branch %q (refusing to run without reading the trusted config)\"...'",
+    "internal/daemon/manager.go:129-133 recoverableParkedRuns: 'active run cannot be safely resumed' -> continue (run is not preserved, so RecoverStaleRunsExcept fails it, daemon.go:428-442)",
+    "internal/daemon/manager_trust_test.go:18,53-55 TestLoadRecoveredConfig_BoundsFetchAndFailsClosed: 'expected loadRecoveredConfig to abort on trusted-config fetch failure'",
+    "internal/pipeline/decisions.go:66 and internal/pipeline/executor.go:2191 read Config.Review.Conversation directly; review_questions.go:23-25 limits reviewConversationEnabled to 'the one owner of that question inside this package'",
+    "Supported parts: config.go:2628 'effective.Review = trusted.Review'; review_questions.go:27,45,75 reviewConversationEnabled/Dir/ReadDir; executor.go:2230 ReviewConversationAnswerDir; all named tests exist (review_conversation_test.go:738,843,893,390 'conversation off')"
+   ],
+   "note": "A trusted-config fetch failure during recovery does not resolve review.conversation to off: recovery aborts, so the parked run is failed and its question cannot be answered. reviewConversationEnabled is also not the only reader of the setting."
+  },
+  {
+   "id": "d6b21720a8183d38c5c623e2d030219920861aaf",
+   "line": 67,
+   "text": "The reviewer emits each substantiated larger question mid-turn to two append-only ndjson files in the run's evidence dir (`reviewqa.Dir(sctx.EvidenceDir)`), keeps reviewing, and re-reads answers at its own checkpoints. That directory is shared with the run's PUBLISHABLE test evidence, so the conversation is excluded from the publication walk by name (`reviewqa.DirName` -> `evidence.Request.ExcludeDirs` -> `collectFiles`, which skips it WHOLE so it is never published and never counted against the size/file budgets either): the only published copy is the bounded, home-path-redacted PR-body rendering, never the raw questions, answers and `answered_by`. Regressions: `TestPublish_ExcludedDirectoryIsNeverCollected`, `TestPublish_ExcludedDirectoryAlonePublishesNothing`, `TestPublishRunEvidence_NeverPublishesTheReviewConversation`. `internal/reviewqa` is the only parser; the reviewer writes with its own file tools, so there is deliberately no MCP server. That package therefore owns `AppendAnswer` (the daemon's answer handler) and NO question writer at all: a Go one would default `kind` and `weight`, so every fixture through it left the reader's absent-field branches unexercised while the agent's real lines omit them. Tests append the raw line instead (`appendAgentQuestionLine`, one per package) and self-check that the seed read back, because \"nothing is open\" is also true of a conversation the reader discarded. Design, state machine, and rationale are owned by `docs/src/content/docs/concepts/review-conversation.md`; per-step behavior by `docs/src/content/docs/reference/pipeline-steps.md`.",
+   "label": "true",
+   "evidence": [
+    "internal/reviewqa/reviewqa.go:235 'const DirName = \"review\"'; :240-244 Dir(evidenceDir); :54-55 questions.ndjson / answers.ndjson",
+    "internal/pipeline/steps/evidence_publish.go:78 'ExcludeDirs: []string{reviewqa.DirName}'; internal/evidence/publish.go:108 'collectFiles(req.SourceDir, req.ExcludeDirs)'; :309-333 excluded dir skipped WHOLE via fs.SkipDir before the size/count checks",
+    "internal/reviewqa/reviewqa.go:9-19 no MCP server; writes ANSWERS only (AppendAnswer), never questions",
+    "internal/evidence/publish_test.go:384,416 and internal/pipeline/steps/evidence_publish_test.go:238 (the three named tests); appendAgentQuestionLine at steps/review_conversation_test.go:57 and daemon/answer_review_question_test.go:52",
+    "docs/src/content/docs/concepts/review-conversation.md and reference/pipeline-steps.md exist"
+   ],
+   "note": "Storage, publication exclusion, answer-only writer and tests match (reviewqa's own test helper is named appendQuestionLine)."
+  },
+  {
+   "id": "de109996c37aec9ee520f2ad13a1f0d2803dcb2d",
+   "line": 68,
+   "text": "`axi` renders an open question as an ORDINARY finding row (`question-<id>` plus the reviewer's own description) and nothing else: the structured `review_questions`/`waiting_on` block was deleted (captain's ruling), because reconstructing question and options by string-splitting the prose `openReviewQuestionFindings` had just formatted was a lossy round trip that rendered a wrong row for any question whose text contained its own `Options: ` line. Both surviving affordances - the gate help and the home-view help - key on `pipeline.HasUnansweredReviewQuestion`, never on the ID prefix or the prose. AXI never bounds a finding description, so a long question's options line always survives in its row. Regressions: `TestReviewQuestionGate_LeadsWithAnswering`, `TestReviewQuestionGateHelpKeysOnTheCategory`, `TestAxiHomeLeadsWithAnsweringWhenTheGateHasAnOpenQuestion`.",
+   "label": "true",
+   "evidence": [
+    "rg 'review_questions|waiting_on' over Go sources => no structured block (only the db table name review_questions in internal/db)",
+    "internal/cli/axi_render.go:620-630 findingRows copies f.Description verbatim; :28 'Finding descriptions are deliberately never bounded'",
+    "internal/cli/axi_render.go:559 'if pipeline.HasUnansweredReviewQuestion(gate.FindingsJSON)'; internal/cli/axi.go:218 'gatedOnAnswers = pipeline.HasUnansweredReviewQuestion(...)'",
+    "internal/cli/axi_review_questions_test.go:47,72 and internal/cli/axi_test.go:1223 (named tests)"
+   ],
+   "note": "Ordinary-row rendering, deleted structured block and category-keyed help match; note the step itself caps a question description at 2000 runes (review_questions.go:395).",
+   "adjudicated": {
+    "label": "stale",
+    "by": "second reviewer (the maintainer's agent), 2026-10-01",
+    "evidence": [
+     "internal/pipeline/steps/review_questions.go:404-409 boundReviewQuestionText cuts runes[:limit] and appends \"\u2026 (truncated \u2026)\"",
+     "internal/pipeline/steps/review_questions.go:395 maxReviewQuestionDescription = 2000",
+     "internal/pipeline/steps/review_questions.go:486-504 the Options line is written after the question text, then the whole description is bounded"
+    ],
+    "note": "\"a long question's options line always survives in its row\" is false: a question over 2000 runes loses the options line before AXI renders it."
+   }
+  },
+  {
+   "id": "eba8f306948c904505e88aaf71be1accf48e505b",
+   "line": 69,
+   "text": "An unanswered question becomes one ask-user warning per question (`types.FindingCategoryReviewQuestion`, finding ID `question-<qid>`), which reuses the EXISTING approval park - so `awaiting_agent_since`, `parked_ms`, IPC, TUI and `axi` all work unchanged, and `review_agent_timeout` cannot count the wait because the agent turn already ended. Do not add a durable \"waiting-on-answers\" step status.",
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/steps/review_questions.go:486-505 each open question -> ID reviewQuestionFindingID(e.ID) ('question-' + id, :416), Severity warning, Action ActionAskUser, Category types.FindingCategoryReviewQuestion",
+    "internal/pipeline/steps/review_questions.go:422-427 'reuses the existing approval park ... review_agent_timeout cannot count the wait'",
+    "internal/pipeline/steps/review.go:933-940 review timeout wraps only the agent call",
+    "internal/types/types.go:260-267 step statuses: pending, running, awaiting_approval, fixing, fix_review, completed, skipped, failed (no waiting-on-answers status)"
+   ],
+   "note": "Questions become ask-user warnings on the existing park, and there is no extra step status."
+  },
+  {
+   "id": "af9da2c54a1ec7d4d9befe5b3549fc76d514c366",
+   "line": 70,
+   "text": "Reusing the approval park has one cost, and `pipeline.ApprovalGateResumer` pays it: the park is released by a response, and an answer landing between `Execute` returning its question findings and the executor registering the gate as waiting cannot release anything, so the gate parked on a stale snapshot with no reviewer left. `ReviewStep.ResumeApprovalGate` re-checks the conversation on the `gate_reconcile_interval` timer and returns `types.ActionAnswer` - it RESUMES, and must never resolve/complete, because `ApprovalGateReconciler`'s `true` completes the step and would approve the head off that stale snapshot. Its three guards are all load-bearing: a conversation may be READ (the ask/read split above), the gate really carries review-question findings (else an operator's verdict on ordinary findings is stolen), nothing open. `CIStep`'s completion semantics are untouched. A resumer resolves the conversation from `sctx.EvidenceDir`, so `Resume`'s own recovered-gate `StepContext` must set it too or the resumer declines silently on every tick of exactly the restart park it exists for. Regressions: `TestReviewStep_AnswerRacingTheParkStillReachesTheReviewer`, `TestReviewStep_ResumeApprovalGateOnlyWhenTheConversationIsSettled`, `TestReviewStep_ResumeApprovalGateFailsClosedOnUnreadableFindings`, `TestExecutor_RecoveredGateResumerReceivesTheRunsEvidenceDir`.",
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/pipeline.go:194-200 ApprovalGateReconciler ('A true result completes the step'); :219-221 ApprovalGateResumer.ResumeApprovalGate(...) (action, resume bool, err)",
+    "internal/pipeline/steps/review_questions.go:598-623 three guards (read dir, HasReviewQuestion, no open) then 'return types.ActionAnswer, true, nil'",
+    "internal/pipeline/executor.go:1752-1770 gate_reconcile_interval timer calls resumeApprovalGate and returns approvalResponse{action: action}",
+    "internal/pipeline/executor.go:465-483 Resume's reconcile StepContext sets 'EvidenceDir: e.runEvidenceDir(run.ID)'",
+    "internal/pipeline/steps/review_gate_resume_test.go:24,115,139; internal/pipeline/executor_resume_evidence_test.go:64 (named tests)"
+   ],
+   "note": "Resumer contract, three guards, resume-not-complete and EvidenceDir on Resume all match."
+  },
+  {
+   "id": "81d51457b30060eb4f8c6c4d46055f394cce7cbb",
+   "line": 71,
+   "text": "`no-mistakes axi answer` (never `axi respond --action answer`; the CLI refuses that action, and answer itself takes no `--run` - its run is the current branch's active run, because a second selection path on a mutating command is what the branch-scoping prevents, so it must be run from a clone of the repository whose run it answers) goes through `ipc.MethodAnswerReview` -> `RunManager.HandleAnswerReviewQuestion`, which appends the answer and releases the gate with `types.ActionAnswer` only when nothing is open. The answer that closes the last open question then follows the run like `axi respond` (`followAnsweredReview`), keyed on `AnswerReviewQuestionResult.ClosedLast` or `Resumed` - `Resumed` alone cannot carry it (it is false for an answer that lands before the park registers and is released by the gate's resumer instead), and it is accepted only so a daemon older than `closed_last` still follows; that late park briefly still lists the answered question, so a question park seen right after the answer gets one `gate_reconcile_timeout` (owning root's global config) to leave before it is returned as a new question. Regressions: `internal/cli/axi_answer_follow_test.go`, `TestAnswerReviewQuestionClosingAnswerOnAParkedGateResumesAndClosesLast`. `Executor.ReviewConversationAnswerDir` is the single owner of the path the answer handler appends to, because it depends on effective config AND on what is already on disk. An answer round's trigger is `\"answer\"`, is not an `IsFixRound()`, and records NO round selection - a selection would read as the human declining the round's findings. A question can be asked by a rereview INSIDE a fix round, so its gate parks as `fix_review`, and BOTH answer paths (the live loop and `Resume`) must hand the finalize turn that gate's `Fixing` plus `SkipFixExecution`: the status is what the auto-resolvers branch on, so a recovered path that dropped it re-parked as `awaiting_approval` and cost an extra pipeline-authored fix round. `FinalizingAnswers` and `Fixing` are therefore NOT mutually exclusive, `SkipFixExecution` is what keeps the fixer off already-fixed code, and `executeStep`'s trigger switch must test `answering` BEFORE `fixing` or a human's answer persists as an `auto_fix` round. Regressions: `TestExecutor_RecoveredAnswerRoundIsTriggeredAsAnAnswer`, `TestExecutor_RecoveredAnswerRoundInheritsAFixReviewGatesContext`.",
+   "label": "true",
+   "evidence": [
+    "internal/cli/axi_answer.go:76-79 flags are --question, --answer, --by, --wait (no --run); :107-116 run resolved from git.CurrentBranch + MethodGetActiveRun",
+    "internal/cli/axi_drive.go:1300-1308 respond accepts only approve|fix|skip: 'unknown action %q' / 'Valid actions: approve, fix, skip'",
+    "internal/cli/axi_answer.go:131 ipc.MethodAnswerReview; :153 'if result.ClosedLast || result.Resumed {'; :164-167 grace := env.cfg.GateReconcileTimeout",
+    "internal/daemon/manager.go:1956 RunManager.HandleAnswerReviewQuestion -> exec.ReviewConversationAnswerDir (:1978), reviewqa.AppendAnswer (:2041), result.ClosedLast = true + exec.Respond(types.StepReview, types.ActionAnswer, nil) (:2070-2071)",
+    "internal/pipeline/executor.go:1092-1099 'case state.answering: nextTrigger = \"answer\"' before 'case sctx.Fixing:'; :586-612 Resume sets fixing+skipFixExecution for StepStatusFixReview; internal/db/round.go:84-85 IsFixRound is auto_fix or user_fix only",
+    "internal/cli/axi_answer_follow_test.go; internal/daemon/answer_review_question_test.go:431; internal/pipeline/executor_answer_trigger_test.go:30,188 (named tests)"
+   ],
+   "note": "Answer command, IPC path, follow logic and answer-round trigger/fix_review inheritance all match."
+  },
+  {
+   "id": "3a8f4cc9e04b67c9a56af29b04d3e7b2ab0419b1",
+   "line": 72,
+   "text": "The review conversation meets upstream's append-only outstanding finding set in three places, and all three carve-outs are narrow and deliberate. A review-question finding never joins the carry-forward at all (`dropReviewQuestionFindingsJSON`, keyed on `types.FindingCategoryReviewQuestion`, never the `question-` prefix): a question is resolved by its ANSWER and not by a coverage record, and every review turn re-emits every still-open question from the live conversation, so dropping it loses nothing. The same helper is applied to the round's own output before it becomes `resolveVerifiedFindingsJSON`'s verification input, because a question's file is optional and the omission marker never has one, so leaving them in made `hasUnanchoredFinding` true and refused to clear ANY selected finding while a question was open. And an answer round NEVER earns `pendingVerificationIDs`: a fix round earns them when a selection is DISPATCHED, because the code then changed and coverage silence is evidence the change worked, while an answer changes only what the reviewer knows, so the same silence proves nothing - seeding the carried set there (the earlier rule) let a finalize turn clear any carried finding whose file it happened to cover, including one the answers had no bearing on. Instead the carried set rides the PROMPT on both paths (`StepContext.CarriedFindings`, set in the live loop's `ActionAnswer` case and in `Resume`) and the turn re-adjudicates it item by item: still holds -> report it again, disproved -> name it in `withdrawn_findings` with a reason, and anything left out of both is KEPT. `dropWithdrawnFindingsJSON` is the only way a finding the answer round merely CARRIED leaves; a finding an earlier fix round dispatched keeps its pending-verification entry and can still clear on a coverage record, because that code did change and the finalize turn is its rereview. The coverage rule itself is untouched for every other round type. Rationale is owned by `docs/src/content/docs/concepts/review-conversation.md` (The finalize turn re-adjudicates what it carried in). Regressions: `TestExecutor_ReviewCarryForward_AnOpenQuestionDoesNotBlockVerification`, `TestExecutor_ReviewCarryForward_AnAnswerRoundWithdrawsByName`, `TestExecutor_ReviewCarryForward_AnAnswerRoundSilenceKeepsAnUnrelatedFinding`, `TestExecutor_RecoveredAnswerRoundKeepsTheOutstandingFindings`.",
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/findings.go:788 dropReviewQuestionFindingsJSON keys on 'item.Category == types.FindingCategoryReviewQuestion || item.ID == ReviewQuestionsUnreadableFindingID' (no question- prefix)",
+    "internal/pipeline/executor.go:1164-1170 'verificationFindings := dropReviewQuestionFindingsJSON(roundFindings)' feeds resolveVerifiedFindingsJSON",
+    "internal/pipeline/executor.go:981-994 pendingVerificationIDs seeded only from selections; an answer round 'does NOT earn pending-verification entries'",
+    "internal/pipeline/pipeline.go:59 StepContext.CarriedFindings, set at executor.go:1465 (ActionAnswer) and :1058 (Resume via answerRoundCarriedFindings)",
+    "internal/types/findings.go:311 withdrawn_findings; internal/pipeline/findings.go:827 dropWithdrawnFindingsJSON; review-conversation.md:366 '### The finalize turn re-adjudicates what it carried in'",
+    "internal/pipeline/review_carry_forward_test.go:583,717,774; executor_answer_trigger_test.go:305 (named tests)"
+   ],
+   "note": "All three carry-forward carve-outs and the withdrawal path match."
+  },
+  {
+   "id": "54cf3f8f99c19c758c2304af22402613cd077a0d",
+   "line": 73,
+   "text": "`SessionRoleReviewer` spans one review PASS (asking turn + finalize turn) and never a code change, and only when a conversation may be READ (the ask/read split above) and `session_reuse` is on - otherwise every review turn is session-free as before: `review.go` calls `Sessions.Forget(SessionRoleReviewer)` before any fix round, and a new run gets a new `RunSessions`. The finalize prompt is the WHOLE review prompt plus the answers, so a failed resume degrades to a cold review instead of a meaningless one.",
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/sessions.go:23-29 SessionRoleReviewer spans one review pass; :44 RunSessions",
+    "internal/pipeline/steps/review.go:76-79 'resumingAnswers := sctx.FinalizingAnswers && !sctx.Fixing && convDir != \"\"' else 'sctx.Sessions.Forget(pipeline.SessionRoleReviewer)'",
+    "internal/pipeline/steps/review.go:424-428 reviewer role only 'if convDir != \"\" && !sctx.Fixing' (convDir = reviewConversationReadDir)",
+    "internal/pipeline/executor.go:336-338 sessions enabled only with e.config.SessionReuse; fresh NewRunSessions per run",
+    "internal/pipeline/steps/review.go:410-415 'The finalize turn's prompt is the WHOLE review prompt plus the answers'"
+   ],
+   "note": "Reviewer session scope and cold-review fallback match."
+  },
+  {
+   "id": "ca58193519cdcec01bb9a3184013e74d1b8306b3",
+   "line": 74,
+   "text": "Answers persist per branch in `review_questions` (`db.RecordReviewAnswer` / `GetBranchReviewAnswers`), which feeds the reviewer's \"Settled questions on this branch (do not re-raise)\" section - rendered separately from acceptance criteria - and the PR body's `### Review conversation` group inside the Pipeline section. The store is keyed `(repo, branch, question_id, run_id, ask_ordinal)` - one row per settled ASK, written from `reviewqa.Conversation.SettledAsks()`, because `Entry` collapses an id to its LATEST state and so cannot supply an earlier ask's pairing - and `reviewqa.Load` settles an ask ONLY with an answer stamped with that ask's own `ask_ordinal` (`reviewqa.settlingAnswer`), both for the same reason: question ids are the reviewer's own and unique only by accident, so a re-used `q1` used to arrive pre-answered (no park, question discarded) and used to overwrite an earlier run's settled decision. The binding comes from the writer - the daemon stamps the ordinal at append time and is the only writer of `answers.ndjson` - rather than from comparing timestamps, because the two files are appended independently and `asked_at`/`answered_at` are optional; an unstamped answer (an id nobody asked) settles nothing ever, so it fails toward OPEN. A correction to the same ask still replaces. Regressions: `TestLoadSupersedingQuestionReopensAnAnsweredEntry`, `TestLoadReAskAfterRetractionComesBackOpen`, `TestReviewAnswersAreKeyedByBranchAndSurviveANewRun`, `TestReviewAnswersAreKeyedPerAskWithinOneRun`, `TestSettledAsksKeepEveryDecisionForAReusedID`, `TestSettledAsksTreatASurplusAnswerAsACorrection`, `TestSettledAsksLeaveAReAskShortOfAnAnswerOpen`.",
+   "label": "true",
+   "evidence": [
+    "internal/db/schema.go:203-218 review_questions 'PRIMARY KEY (repo_id, branch, question_id, run_id, ask_ordinal)'",
+    "internal/db/review_questions.go:60 RecordReviewAnswer, :109 GetBranchReviewAnswers; upsert ON CONFLICT on the same key (correction replaces)",
+    "internal/pipeline/steps/review_questions.go:353-354 'for _, ask := range conv.SettledAsks() { ... sctx.DB.RecordReviewAnswer('; :283 'Settled questions on this branch (do not re-raise):'",
+    "internal/reviewqa/reviewqa.go:451-459 settlingAnswer matches only 'a.AskOrdinal == ordinal'; :444 daemon is the only writer of answers",
+    "internal/pipeline/steps/prsummary_conversation.go:57 '### Review conversation'; steps/pr.go:606-607 appended to pipelineMD",
+    "internal/reviewqa/reviewqa_test.go:254,310,336,371,398; internal/db/review_questions_test.go:10,289 (named tests)"
+   ],
+   "note": "Per-ask storage key, ordinal-bound settling and PR body group match (repo is the repo_id column)."
+  },
+  {
+   "id": "a903f73719ccad14c98f7aa3280b4cd3b503a0d1",
+   "line": 75,
+   "text": "An open review question is resolved by an ANSWER, never by a verdict, so EVERY automatic resolver stands aside at such a gate and they all read ONE predicate to do it: `pipeline.HasUnansweredReviewQuestion` (the JSON-string sibling of `types.HasReviewQuestion`, keyed on the category, never the `question-` ID prefix), the same carve-out shape `HasProtectedPathRefusal` has. There are two such paths, `axi --yes` in `driveRunWithReconciler` and the TUI's yolo in `maybeAutoApproveCmd`, and the carve-out first landed on only the first - which left the property true of `axi` and false of the TUI, where the question was selected as ordinary work, handed to the FIXER, and the fix_review gate then approved as already-fixed. A third path must read the same predicate rather than restate the condition. A human's explicit approve or fix is deliberately still allowed, which is why the guard is never in `respondCmd`/`RespondWithOverrides`. Regressions: `TestDriveRun_YesLeavesAnOpenReviewQuestionAwaitingAnAnswer`, `TestModel_Yolo_OpenReviewQuestionSendsNoAutomaticResponse`, `TestModel_Yolo_OrdinaryReviewFindingsAreStillFixed`.",
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/protected_paths.go:57-62 HasUnansweredReviewQuestion -> types.HasReviewQuestion; internal/types/findings.go:534-537 keyed on Category, 'never on the finding ID's \"question-\" prefix'",
+    "internal/cli/axi_drive.go:956 HasUnansweredReviewQuestion check inside driveRunWithReconciler (:919) under autoApprove",
+    "internal/tui/commands.go:118 check inside maybeAutoApproveCmd (:99) 'which is why the guard is here and not in respondCmd'",
+    "rg HasUnansweredReviewQuestion => no hit in respondCmd (tui/commands.go:141) or RespondWithOverrides (pipeline/executor.go:167)",
+    "internal/cli/axi_drive_test.go:860; internal/tui/yolo_test.go:70,132 (named tests)"
+   ],
+   "note": "One shared predicate guards both automatic resolvers and is absent from explicit-response paths."
+  },
+  {
+   "id": "5933ecea2a0ab63320a508d69a56601c6a1f7f1e",
+   "line": 76,
+   "text": "The open questions are bounded on every channel they do not own (`maxReviewQuestionFindings`/`maxReviewQuestionDescription` for the findings, `maxReviewQuestionPromptEntries`/`maxReviewQuestionPromptChars` for the two prompt sections), by RUNES not bytes, for the reason `maxReviewBotCommentFindings` records: the findings payload rides the IPC event stream and one oversized frame kills the whole subscription. `reviewqa`'s own `maxLines`/`maxLineBytes` do NOT contain this - 2000 accepted lines are a bounded conversation and an unbounded findings payload. Dropping a question ROW is safe, dropping its id is not: both release paths require the conversation to have nothing open and a dropped question is never re-emitted as a row (that needs a review turn, which needs zero open), so the omission marker NAMES the omitted ids and they are answered by id like any other. The marker carries the question category (so the gate still parks and no resolver treats it as work) but not a `question-<id>` ID (so it is never itself an answerable row). Regressions: `TestOpenReviewQuestionFindingsAreBounded`, `TestReviewQuestionPromptSectionsAreBounded`.",
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/steps/review_questions.go:393-398 maxReviewQuestionFindings = 50, maxReviewQuestionDescription = 2000, maxReviewQuestionPromptEntries = 50, maxReviewQuestionPromptChars = 2000",
+    "internal/pipeline/steps/review_questions.go:400-410 boundReviewQuestionText 'bounds one rendered question by RUNES, not bytes' (runes := []rune(s))",
+    "internal/pipeline/steps/ci_findings.go:14-20 maxReviewBotCommentFindings 'rides the IPC event stream, and one oversized frame kills the whole subscription'",
+    "internal/reviewqa/reviewqa.go:68-72 maxLines = 2000, maxLineBytes = 64 << 10",
+    "internal/pipeline/steps/review_questions.go:509-532 omission marker ID 'review-questions-omitted', Category types.FindingCategoryReviewQuestion, text 'Omitted question ids: %s'",
+    "internal/pipeline/steps/review_conversation_test.go:1029 TestOpenReviewQuestionFindingsAreBounded; :1086 TestReviewQuestionPromptSectionsAreBounded"
+   ],
+   "note": "All bounds, the 2000-line cap, rune counting and the id-naming omission marker match."
+  },
+  {
+   "id": "606706141dedc96af4f55283d5b579841d6cd240",
+   "line": 77,
+   "text": "An INCOMPLETE question history (`reviewqa.Conversation.QuestionsIncomplete`, set by the `maxFileBytes`/scanner cut OR a question line dropped by `maxLines`) settles nothing, makes `HandleAnswerReviewQuestion` refuse the answer by name, and makes `openReviewQuestionFindings` emit the single `review-questions-unreadable` warning IN PLACE of every `question-<id>` row, whatever remains open, naming the open ids and their count - each row would otherwise instruct an `axi answer` the daemon is guaranteed to refuse. The marker carries NO review-question category on purpose, so `ResumeApprovalGate` declines and the answer-first help in `axi_render.go`/`axi.go` is not summoned; both automatic resolvers stand aside via `pipeline.HasUnreadableReviewQuestionHistory`, the ID-keyed sibling of `HasProtectedPathRefusal`. It carries no `File`, so `dropReviewQuestionFindingsJSON` drops it from the carry-forward input alongside the review-question category - otherwise `hasUnanchoredFinding` would refuse to clear ANY selected finding for as long as the append-only history stayed incomplete. Because a dropped question line is now the same condition, `readLines` reports the cap as a bool and no ask-ordinal offset survives it. Regressions: `TestUnreadableQuestionHistoryParksEvenWithNothingOpen`, `TestUnreadableQuestionHistoryReplacesTheAnswerableRows`, `TestDriveRun_YesLeavesAnUnreadableQuestionHistoryAwaitingAHuman`, `TestModel_Yolo_UnreadableQuestionHistorySendsNoAutomaticResponse`, `TestExecutor_ReviewCarryForward_AnUnreadableHistoryDoesNotBlockVerification`, `TestLineCapDroppingAQuestionLineSettlesNothing`.",
+   "label": "true",
+   "evidence": [
+    "internal/reviewqa/reviewqa.go:157-163 QuestionsIncomplete field; :275 'questionsIncomplete = questionsIncomplete || droppedQuestionLine'; :379 settlingAnswer only 'if !questionsIncomplete'",
+    "internal/reviewqa/reviewqa.go:509 'func readLines(path string) (kept []string, dropped, incomplete bool, err error)'",
+    "internal/pipeline/steps/review_questions.go:456-472 single ReviewQuestionsUnreadableFindingID finding with no Category and no File, naming open ids and count",
+    "internal/pipeline/protected_paths.go:19 ReviewQuestionsUnreadableFindingID = \"review-questions-unreadable\"; :77-88 HasUnreadableReviewQuestionHistory keyed on finding.ID; used at internal/cli/axi_drive.go:966 and internal/tui/commands.go:126",
+    "internal/pipeline/findings.go:788 dropReviewQuestionFindingsJSON drops 'item.Category == ...ReviewQuestion || item.ID == ReviewQuestionsUnreadableFindingID'",
+    "internal/daemon/manager.go HandleAnswerReviewQuestion: 'if before.QuestionsIncomplete { return nil, fmt.Errorf(...question history could not be read to the end...) }'"
+   ],
+   "note": "Incomplete-history handling matches in reviewqa, steps, pipeline, daemon, CLI and TUI; all six tests exist."
+  },
+  {
+   "id": "1911d041acb0c54f63d14e221ed60ae23f61ca54",
+   "line": 78,
+   "text": "`RunManager.HandleAnswerReviewQuestion` releases the gate only when the answer closed a question that was OPEN before the append (snapshot-then-append); an orphan or duplicate answer is recorded and never touches the gate, or it could steal the verdict from a gate parked on ordinary ask-user findings. Regressions: `TestAnswerReviewQuestionOrphanAnswerLeavesAParkedGateAlone`, `TestAnswerReviewQuestionDuplicateAnswerLeavesAParkedGateAlone`.",
+   "label": "true",
+   "evidence": [
+    "internal/daemon/manager.go HandleAnswerReviewQuestion: 'before, err := reviewqa.Load(dir)' and the wasOpen loop over before.Open() run before reviewqa.AppendAnswer(...)",
+    "internal/daemon/manager.go: 'if !wasOpen { result.Note = \"recorded; it answered no open question, so no review gate was released\"; return }'",
+    "internal/daemon/answer_review_question_test.go:362 TestAnswerReviewQuestionOrphanAnswerLeavesAParkedGateAlone; :392 TestAnswerReviewQuestionDuplicateAnswerLeavesAParkedGateAlone"
+   ],
+   "note": "Snapshot-then-append release rule and both regressions exist."
+  },
+  {
+   "id": "bfbee7228afbfc7db738050555d2cb6dd7c0e6fc",
+   "line": 79,
+   "text": "`db.GetPreviousRunReviewRounds` + `pipeline.BindPreviousRunReviewRounds` carry the superseded run's review rounds into the run an author's own fix push started. That section carries NO fix-round provenance clause and must not characterise the authorship of those commits in either direction: the adversarial framing is only ever ADDED by `fixRoundProvenanceClause`, which returns \"\" when neither `sctx.Fixing` nor an uncertified range applies, so there is nothing to correct - and the selector is unfiltered by run status on purpose, so a previous run that took a fix round and COMPLETED has its range certified, leaves `UncertifiedSourceRunID` empty so `BindPreviousRunReviewRounds` does not skip it, and puts the fixer's commits inside this run's own `base..head` scope. Regression: `TestSupersededRoundsDoNotClaimTheCommitsAreTheAuthors`.",
+   "label": "true",
+   "evidence": [
+    "internal/db/previous_review.go:43 GetPreviousRunReviewRounds; SQL 'WHERE r.repo_id = ? AND r.branch = ? AND r.id != ? AND res.step_name = ?' (no status filter)",
+    "internal/pipeline/decisions.go:58-82 BindPreviousRunReviewRounds skips only when previous.RunID == sctx.UncertifiedSourceRunID",
+    "internal/pipeline/steps/review.go:842-861 fixRoundProvenanceClause returns the clause if sctx.Fixing, else \"\" when UncertifiedToSHA is empty",
+    "internal/pipeline/steps/review_test.go:2102 TestSupersededRoundsDoNotClaimTheCommitsAreTheAuthors"
+   ],
+   "note": "Superseded-round carry, provenance clause and unfiltered selector match."
+  },
+  {
+   "id": "60863c6ae800d2e6d1bd82174edb6cd23a40c151",
+   "line": 80,
+   "text": "There is NO review round cap and none may be added (captain's ruling 2026-09-15). The question protocol section is appended LAST, after `pathInstructions` and `agent.MemoryFilesRule`, because the off-state guarantee is append-only: the on-prompt must be the off-prompt plus that section and nothing else (`TestReviewStep_ConversationOffIsTodaysReview`). It used to sit at the end of `historySection`, which upstream's later `MemoryFilesRule` then followed, inserting it mid-prompt and breaking the prefix property.",
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/steps/review.go:387-396 format args 'historySection, pathInstructions, agent.MemoryFilesRule, // LAST ... reviewQuestionProtocolSection(askDir, asked)'",
+    "internal/pipeline/executor.go:971-974 'bounded only by auto_fix.review ... rather than receiving a separate code-level round cap'",
+    "internal/pipeline/steps/review_conversation_test.go:738 TestReviewStep_ConversationOffIsTodaysReview",
+    "rg -i 'max_?review_?rounds|maxRounds|max_fix_rounds|roundCap' over non-test Go => no hits"
+   ],
+   "note": "No round cap exists and the protocol section is the last prompt argument after pathInstructions and MemoryFilesRule."
+  },
+  {
+   "id": "a030b133bf2a0dbf74680506f550b54bbfdc97a1",
+   "line": 85,
+   "text": "Keep this file for knowledge useful to almost every future agent session in this project.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Guidance on what belongs in this file; a maintenance preference the repository cannot verify."
+  },
+  {
+   "id": "339c6b51f4c1a53cc1c629558072c1a6842ab6e1",
+   "line": 86,
+   "text": "Do not repeat what the codebase already shows; point to the authoritative file or command instead.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Authoring preference for this file; not something code or tooling enforces."
+  },
+  {
+   "id": "87de210b91968d629e0f75d065a0f05fc5f6b553",
+   "line": 87,
+   "text": "Prefer rewriting or pruning existing entries over appending new ones.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Editing preference for this file; not checkable against the repository."
+  },
+  {
+   "id": "e98a0736d5d51a39cc495db7b2ce7f9304aa9681",
+   "line": 88,
+   "text": "When updating this file, preserve this bar for all agents and keep entries concise.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Process instruction for future edits; not checkable against the repository."
+  }
+ ]
 }

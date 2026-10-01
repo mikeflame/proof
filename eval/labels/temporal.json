@@ -1,0 +1,782 @@
+{
+ "repo": "temporalio/temporal",
+ "sha": "fc4372605ce23f333b7e1a43eef303ff002c2ef1",
+ "file": "AGENTS.md",
+ "labeler": "agent (independent of proof's output)",
+ "labels": [
+  {
+   "id": "2a05ef760dc497f875e5747a4498fd50fa17f40b",
+   "line": 1,
+   "text": "You are an experienced developer working on the temporal project.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Persona framing for the agent; not a repository fact."
+  },
+  {
+   "id": "4971d7dd3a98f50b23b4bc8427de898ee9f878b7",
+   "line": 1,
+   "text": "Your task is to fix a bug or implement a new feature while adhering to the project's best practices and development guidelines.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Task framing/intent; repository cannot settle it."
+  },
+  {
+   "id": "be06755acbeb7865b21a79b680a9388c43f3b2c6",
+   "line": 1,
+   "text": "Your background is in distributed systems, database engines, and scalable platforms.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Persona framing; not verifiable against the repository."
+  },
+  {
+   "id": "6d2bc99937139cdc94715012e46d2c212a372581",
+   "line": 2,
+   "text": "Before starting the implementation of any request, you MUST REVIEW the following development guide and best practices.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Process instruction for the agent; not checkable in the repo."
+  },
+  {
+   "id": "8dcf36644c829a990f99797fffc242f70d805620",
+   "line": 5,
+   "text": "Conventions: Rigorously adhere to existing project conventions when reading or modifying code. Analyze surrounding code, tests, and configuration first.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "General agent process rule; no tooling enforces 'analyze surrounding code first'."
+  },
+  {
+   "id": "60a5bfed89a9f68050793344d81bd80787b7418c",
+   "line": 6,
+   "text": "Libraries/Frameworks: NEVER assume a library/framework is available or appropriate. Verify its established usage within the project (check imports, and 'go.mod') before employing it.",
+   "label": "judgment",
+   "evidence": [
+    "go.mod exists at repo root (ls => go.mod)"
+   ],
+   "note": "Agent process rule; go.mod exists but nothing enforces checking it before using a library."
+  },
+  {
+   "id": "18bfffcece690c939b3755d32885a718895adb7c",
+   "line": 7,
+   "text": "Style & Structure: Mimic the style (formatting, naming), structure, framework choices, typing, and architectural patterns of existing code in the project.",
+   "label": "judgment",
+   "evidence": [
+    ".github/.golangci.yml:3-6 formatters: gci, goimports"
+   ],
+   "note": "Broad style guidance; formatters enforce only part of it (formatting), the rest is reviewer judgment."
+  },
+  {
+   "id": "253247d585fafbf28671e16ba206fdae09a435c3",
+   "line": 8,
+   "text": "Idiomatic Changes: When editing, understand the local context (imports, functions/classes) to ensure your changes integrate naturally and idiomatically.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Agent process guidance; not verifiable in the repo."
+  },
+  {
+   "id": "94b8f9dd71d12fc55dd1f22b9b9a545362f9d248",
+   "line": 9,
+   "text": "Comments: Add code comments sparingly. Focus on why something is done, especially for complex logic, rather than what is done. Only add high-value comments if necessary for clarity or if requested by the user. Do not edit comments that are separate from the code you are changing. NEVER talk to the user or describe your changes through comments.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Comment-writing guidance; no lint rule enforces it (godox only flags FIXME)."
+  },
+  {
+   "id": "2f2456987a96b9bc1f317783a2fcbb3a7fbd1a0c",
+   "line": 10,
+   "text": "Proactiveness: Fulfill the user's request thoroughly, including reasonable, directly implied follow-up actions.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Agent behavior instruction; not a repo fact."
+  },
+  {
+   "id": "baf203360259d1ab25c8922fa544035329807683",
+   "line": 11,
+   "text": "Confirm Ambiguity/Expansion: Do not take significant actions beyond the clear scope of the request without confirming with the user. If asked how to do something, explain first, don't just do it.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Agent interaction rule; not verifiable in the repo."
+  },
+  {
+   "id": "5a2d9fc0376709184c347fe2242db6747c613723",
+   "line": 12,
+   "text": "Explaining Changes: After completing a code modification or file operation provide summaries.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Agent interaction rule; not verifiable in the repo."
+  },
+  {
+   "id": "5ca032546e74e5e08c50f23b48711ba29ba5355b",
+   "line": 13,
+   "text": "Do Not revert changes: Do not revert changes to the codebase unless asked to do so by the user. Only revert changes made by you if they have resulted in an error or if the user has explicitly asked you to revert the changes.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Agent behavior rule; not verifiable in the repo."
+  },
+  {
+   "id": "91bfb8d601e4cca17db2b9623c116a84115bfbf8",
+   "line": 16,
+   "text": "Concise & Direct: Adopt a professional, direct, and concise tone suitable for a chat environment.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Chat tone/output style instruction for the agent; the repository cannot settle it."
+  },
+  {
+   "id": "f1c963d29b40a5192a8650a31a60fcbfa409646b",
+   "line": 17,
+   "text": "Minimal Output: Aim for fewer than 3 lines of text output (excluding tool use/code generation) per response whenever practical. Focus strictly on the user's query.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Chat tone/output style instruction for the agent; the repository cannot settle it."
+  },
+  {
+   "id": "51ea98eb6f1be396a211c58b514cf8311664f4d8",
+   "line": 18,
+   "text": "Clarity over Brevity (When Needed): While conciseness is key, prioritize clarity for essential explanations or when seeking necessary clarification if a request is ambiguous.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Chat tone/output style instruction for the agent; the repository cannot settle it."
+  },
+  {
+   "id": "c30961a4280ba71bbba4c3a72c0792c10ac727ce",
+   "line": 19,
+   "text": "No Chitchat: Avoid conversational filler, preambles (\"Okay, I will now...\"), or postambles (\"I have finished the changes...\"). Get straight to the action or answer.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Chat tone/output style instruction for the agent; the repository cannot settle it."
+  },
+  {
+   "id": "733d460292b2bc194b3bb765aa40638785afdf4c",
+   "line": 20,
+   "text": "Formatting: Use GitHub-flavored Markdown. Responses will be rendered in monospace.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Chat tone/output style instruction for the agent; the repository cannot settle it."
+  },
+  {
+   "id": "d09a996989227d8ef8ad4d2c6c1cbe10ba7dc44f",
+   "line": 21,
+   "text": "Tools vs. Text: Use tools for actions, text output only for communication. Do not add explanatory comments within tool calls or code blocks unless specifically part of the required code/command itself.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Chat tone/output style instruction for the agent; the repository cannot settle it."
+  },
+  {
+   "id": "ae52e119ded103e5ceb53aa1098e5633bfc06ad0",
+   "line": 22,
+   "text": "Handling Inability: If unable/unwilling to fulfill a request, state so briefly (1-2 sentences) without excessive justification. Offer alternatives if appropriate.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Chat tone/output style instruction for the agent; the repository cannot settle it."
+  },
+  {
+   "id": "a090cff71b9beaa8346b8b50f33188f8f7a6bc12",
+   "line": 27,
+   "text": "`/api`: proto definitions and generated code",
+   "label": "stale",
+   "evidence": [
+    "find api -name '*.proto' | wc -l => 0 (api/ holds only generated Go, e.g. api/historyservice/v1/service.pb.go:1 '// Code generated by protoc-gen-go. DO NOT EDIT.')",
+    "Makefile:103 'PROTO_ROOT := proto' and Makefile:112 'PROTO_OUT := api' (proto sources live in proto/, api/ is only the codegen output)",
+    "find proto -name '*.proto' | wc -l => 56",
+    "git log --all -- 'api/**/*.proto' => (no commits; api/ never contained .proto files)"
+   ],
+   "note": "/api contains no proto definitions at all, only generated code; the proto definitions are in /proto (and chasm/lib), so the 'proto definitions' half of the description is wrong."
+  },
+  {
+   "id": "4d0b2e102c04a264ac77a33e44010b97d1865397",
+   "line": 28,
+   "text": "`/chasm`: library for Chasm (Coordinated Heterogeneous Application State Machines)",
+   "label": "true",
+   "evidence": [
+    "docs/architecture/chasm.md:1 '# CHASM: Coordinated Heterogeneous Application State Machines'",
+    "ls chasm => component.go engine.go library.go registry.go lib/ ..."
+   ],
+   "note": "chasm/ exists and is the CHASM library; the acronym expansion matches the architecture doc."
+  },
+  {
+   "id": "ceae1e67551b9dd4ca4e6fb5f674e60cde8a7925",
+   "line": 29,
+   "text": "`/client`: client libraries for inter-service communication between frontend/history/matching etc.",
+   "label": "true",
+   "evidence": [
+    "ls client => admin client_bean.go clientfactory.go frontend history matching operator"
+   ],
+   "note": "client/ holds per-service clients (frontend, history, matching, admin, operator) used for inter-service calls."
+  },
+  {
+   "id": "dd040bb612bcba6f2f02afe3fd30c7420df85b5a",
+   "line": 30,
+   "text": "`/cmd`: CLI commands and main applications",
+   "label": "true",
+   "evidence": [
+    "ls cmd/server => main.go; ls cmd/tools => cassandra sql tdbg protogen codegen ..."
+   ],
+   "note": "cmd/ contains the server main and CLI tools."
+  },
+  {
+   "id": "7b313e72f155b89ee1c8d666295ec9b082f076d1",
+   "line": 31,
+   "text": "`/common`: modules shared across all services",
+   "label": "true",
+   "evidence": [
+    "ls common => activityoptions api archiver auth backoff cache ... (shared packages imported by service/*)"
+   ],
+   "note": "common/ exists and holds shared modules."
+  },
+  {
+   "id": "aa868c6a77d57fc920edfd9f49e82b9e575de27f",
+   "line": 32,
+   "text": "`/common/dynamicconfig`: dynamic configuration library",
+   "label": "true",
+   "evidence": [
+    "ls common/dynamicconfig => client.go collection.go file_based_client.go constants.go ..."
+   ],
+   "note": "Directory exists and is the dynamic config library."
+  },
+  {
+   "id": "43a828d4a8944d59f1eb39b30f9d7bdbdac31b3e",
+   "line": 33,
+   "text": "`/common/membership`: cluster membership management",
+   "label": "true",
+   "evidence": [
+    "common/membership/interfaces.go:36 'Monitor interface {' and :67 '// ServiceResolver provides membership information for a specific temporal service.'",
+    "ls common/membership => ringpop static grpc_resolver.go hostinfo.go"
+   ],
+   "note": "Directory exists and implements cluster membership."
+  },
+  {
+   "id": "0298368c3699a72a451a924345e41b9112c60e38",
+   "line": 34,
+   "text": "`/common/metrics`: metrics definition and library",
+   "label": "true",
+   "evidence": [
+    "ls common/metrics => metric_defs.go defs.go metrics.go config.go ..."
+   ],
+   "note": "Directory exists with metric definitions and the metrics library."
+  },
+  {
+   "id": "1dc61881935ff5c4e42c5310a82d21d6f1216339",
+   "line": 35,
+   "text": "`/common/namespace`: namespace cache and utilities",
+   "label": "true",
+   "evidence": [
+    "common/namespace/registry.go:30 '// in-memory cache. May lag persistence ...'",
+    "ls common/namespace => namespace.go registry.go nsregistry nsmanager nsreplication"
+   ],
+   "note": "Directory exists and provides the namespace registry/cache and utilities."
+  },
+  {
+   "id": "8d22974a310ad4cd93eb62ffdae3ee0e9a47b815",
+   "line": 36,
+   "text": "`/common/nexus`: Nexus service client and utilities",
+   "label": "true",
+   "evidence": [
+    "common/nexus/nexusrpc/client.go:146 'type HTTPClient struct {' and :154 'func NewHTTPClient(...)'",
+    "ls common/nexus => callback_token.go endpoint_registry.go failure.go links.go nexusrpc nexustest ..."
+   ],
+   "note": "Directory exists with the Nexus client (nexusrpc) and utilities."
+  },
+  {
+   "id": "1fa7047c0bfbb8fcf361ad23058154e743f8c50c",
+   "line": 37,
+   "text": "`/common/persistence`: persistence layer abstractions and implementations",
+   "label": "true",
+   "evidence": [
+    "ls common/persistence => cassandra sql client data_interfaces.go execution_manager.go faultinjection ..."
+   ],
+   "note": "Directory exists with persistence interfaces and Cassandra/SQL implementations."
+  },
+  {
+   "id": "f4b57a42bef71a230e14999e71c78c4380d96ad8",
+   "line": 38,
+   "text": "`/components`: nexus components",
+   "label": "stale",
+   "evidence": [
+    "ls components => No such file or directory (test -d components fails at HEAD)",
+    "git show --name-status 2a63a6f85 (2026-09-01 'Move legacy HSM implementations under history service (#11836)') => R100 components/callbacks/fx.go -> service/history/hsm/callbacks/fx.go, components/nexusoperations/* -> service/history/hsm/nexusoperations/*, components/dummy/* -> service/history/hsm/dummy/* (32 files)",
+    ".github/.golangci.yml: 'SA1019: go.temporal.io/server/service/history/hsm/(callbacks|nexusoperations) is deprecated'"
+   ],
+   "note": "The /components directory no longer exists; its nexus/callback components were moved to service/history/hsm (and CHASM equivalents live in chasm/lib)."
+  },
+  {
+   "id": "222c59c313df634913d4db98aa359108e96ed01c",
+   "line": 39,
+   "text": "`/config`: configuration files and templates",
+   "label": "true",
+   "evidence": [
+    "ls config => development*.yaml docker.yaml dynamicconfig/ jwt/",
+    "config/docker.yaml:1 '# enable-template' (215 lines with '{{' template syntax)"
+   ],
+   "note": "config/ holds config files plus the docker.yaml template."
+  },
+  {
+   "id": "fc4a4bbefc77f8595f373eb77d5d8f5081642603",
+   "line": 40,
+   "text": "`/docs`: documentation",
+   "label": "true",
+   "evidence": [
+    "ls docs => admin architecture _assets development README.md"
+   ],
+   "note": "docs/ exists and contains documentation."
+  },
+  {
+   "id": "b4a6e9834d01365770e15b7e684d46539fc26975",
+   "line": 41,
+   "text": "`/proto`: proto definitions for internal services",
+   "label": "true",
+   "evidence": [
+    "proto/internal/temporal/server/api/... (56 .proto files, e.g. proto/internal/temporal/server/api/batch/v1/request_response.proto)",
+    "Makefile:103 'PROTO_ROOT := proto'"
+   ],
+   "note": "proto/ holds the internal service proto definitions."
+  },
+  {
+   "id": "69e14eabaa5dc41f1e85135b17dc2f818db09cf8",
+   "line": 42,
+   "text": "`/schema`: database schema definitions for core databases store and visibility store",
+   "label": "true",
+   "evidence": [
+    "ls schema/mysql/v8 schema/postgresql/v12 schema/sqlite/v3 => temporal visibility; schema/cassandra/temporal; schema/elasticsearch/visibility"
+   ],
+   "note": "schema/ holds core (temporal) and visibility store schemas per database."
+  },
+  {
+   "id": "741ad98352b9f0a55ed48aca8100e79fe5e19e48",
+   "line": 43,
+   "text": "`/service`: main services (frontend, history, matching, worker, etc.)",
+   "label": "true",
+   "evidence": [
+    "ls service => frontend fx.go history matching worker"
+   ],
+   "note": "service/ contains the main services."
+  },
+  {
+   "id": "72f33dd17223ce58a8c8ab85d286c414c70b048c",
+   "line": 44,
+   "text": "`/service/frontend`: frontend service implementation",
+   "label": "true",
+   "evidence": [
+    "ls service/frontend => admin_handler.go namespace_handler.go http_api_server.go fx.go ..."
+   ],
+   "note": "Directory exists with the frontend service implementation."
+  },
+  {
+   "id": "f484c43eeb46845d2a227d0f8af257ab4cd69747",
+   "line": 45,
+   "text": "`/service/history`: history service implementation",
+   "label": "true",
+   "evidence": [
+    "ls service/history => api archival chasm_engine.go configs consts ..."
+   ],
+   "note": "Directory exists with the history service implementation."
+  },
+  {
+   "id": "116e85a8c34100bfb500f711120d4d187e4c658d",
+   "line": 46,
+   "text": "`/service/matching`: matching service implementation",
+   "label": "true",
+   "evidence": [
+    "ls service/matching => ack_manager.go backlog_manager.go config.go db.go ..."
+   ],
+   "note": "Directory exists with the matching service implementation."
+  },
+  {
+   "id": "8fbb9fd7820dc2dcc77cabbc81d67c8dc7674bae",
+   "line": 47,
+   "text": "`/service/worker`: worker service implementation",
+   "label": "true",
+   "evidence": [
+    "ls service/worker => batcher scanner scheduler replicator fx.go README.md ..."
+   ],
+   "note": "Directory exists with the worker service implementation."
+  },
+  {
+   "id": "ec5c9fe293db0ee97d17f0c087ad8435c1d0b72b",
+   "line": 50,
+   "text": "Fast Go linting (changed packages): `make lint-code-fast`",
+   "label": "true",
+   "evidence": [
+    "Makefile:409 'lint-code-fast:' diffs '*.go' vs merge-base of GOLANGCI_LINT_BASE_REV and runs lint-code with LINT_CODE_TARGETS=<changed package dirs> (Makefile:414-423)"
+   ],
+   "note": "Target exists and lints only changed packages."
+  },
+  {
+   "id": "dd2e4c09ded3112cf5e021ffa97f947377aab318",
+   "line": 51,
+   "text": "Full Go linting (all packages): `make lint-code`",
+   "label": "true",
+   "evidence": [
+    "Makefile:426 'lint-code: $(GOLANGCI_LINT) $(ERRORTYPE)' runs golangci-lint on $(LINT_CODE_TARGETS)",
+    "Makefile:176 'LINT_CODE_TARGETS ?= ./...'"
+   ],
+   "note": "Target exists and by default analyzes all packages (./...)."
+  },
+  {
+   "id": "aebcbc24d4ff47a13c3ad75c245f8c8675f3de8f",
+   "line": 52,
+   "text": "Formatting imports: `make fmt-imports`",
+   "label": "true",
+   "evidence": [
+    "Makefile:490 'fmt-imports: $(GCI)' -> '@$(GCI) write --skip-generated -s standard -s default ./*'"
+   ],
+   "note": "Target exists and formats imports with gci."
+  },
+  {
+   "id": "7963e4ebdd29c82c0ded177626a750cf0a66d906",
+   "line": 53,
+   "text": "Code generation: `make proto`",
+   "label": "true",
+   "evidence": [
+    "Makefile:27 'proto: lint-protos lint-api protoc proto-codegen'",
+    "Makefile:341 'proto-codegen:' runs go generate for client wrappers, interceptors, search attribute helpers"
+   ],
+   "note": "make proto regenerates proto code and related generated code."
+  },
+  {
+   "id": "d91bc7571fb51bb599f799fb7d565ec1e0e71b60",
+   "line": 54,
+   "text": "Update API proto: `make update-go-api`",
+   "label": "true",
+   "evidence": [
+    "Makefile:351-353 'update-go-api:' -> '@go get -u go.temporal.io/api@master'"
+   ],
+   "note": "Target exists and updates the go.temporal.io/api proto module."
+  },
+  {
+   "id": "3686754b033d080571d6ff2b1547db6649ca5b21",
+   "line": 55,
+   "text": "Unit Testing: `make unit-test`",
+   "label": "true",
+   "evidence": [
+    "Makefile:537 'unit-test: clean-test-output' -> 'go test $(UNIT_TEST_DIRS) $(COMPILED_TEST_ARGS)'"
+   ],
+   "note": "Target exists and runs unit tests."
+  },
+  {
+   "id": "144da5c7bd25c6225281f5f7aa4beb5cbcf9301a",
+   "line": 58,
+   "text": "Mimic the style (formatting, naming), structure, framework choices, typing, and architectural patterns of existing code in the project",
+   "label": "judgment",
+   "evidence": [
+    ".github/.golangci.yml:3-6 formatters gci, goimports"
+   ],
+   "note": "Broad style guidance; formatting is tool-enforced but naming/structure/architecture mimicry is not checkable."
+  },
+  {
+   "id": "637b80dc42b6b9120e959e9a4d90a81ac17381ed",
+   "line": 59,
+   "text": "Do not litter our codebase with unnecessary comments. Comments should describe WHY something was done, never WHAT was done",
+   "label": "judgment",
+   "evidence": [
+    ".github/.golangci.yml godox keywords: [FIXME] (no lint for comment content)"
+   ],
+   "note": "Comment-quality rule; no tooling enforces WHY-not-WHAT comments."
+  },
+  {
+   "id": "916872eb6dfb54f5903356c824240caef804fe43",
+   "line": 60,
+   "text": "Implement tests for both best-case scenarios and failure modes",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Testing practice; the repo cannot settle whether every change covers failure modes."
+  },
+  {
+   "id": "bb9b1fb2ee97df710e47e59247842e28dafc5851",
+   "line": 61,
+   "text": "Handle errors appropriately",
+   "label": "judgment",
+   "evidence": [],
+   "note": "'Appropriately' is a judgment call the repository cannot verify."
+  },
+  {
+   "id": "e59edc2b1bb1678b40cbc9a08e7f8cfb40e59ad4",
+   "line": 62,
+   "text": "errors MUST be handled, not ignored",
+   "label": "true",
+   "evidence": [
+    ".github/.golangci.yml:11 'errcheck' enabled",
+    ".github/.golangci.yml:164 revive rule 'unhandled-error' (only fmt.*, bytes.Buffer.*, strings.Builder.* exempted)",
+    "Makefile:436 go vet -vettool=$(ERRORTYPE) in lint-code",
+    ".github/workflows/linters.yml:175 'make GOLANGCI_LINT_FIX=false GOLANGCI_LINT_BASE_REV=HEAD~ lint-code'"
+   ],
+   "note": "Ignored errors are flagged by errcheck and revive unhandled-error, run in CI."
+  },
+  {
+   "id": "5be05932bfaa1db6be10fff0f4abd88f292373d2",
+   "line": 63,
+   "text": "Leave `CONSIDER(name):` comments for future design considerations",
+   "label": "true",
+   "evidence": [
+    "chasm/lib/scheduler/completion.go:72 '// CONSIDER(scheduler): Callback reattachment does not yet follow a'",
+    "service/matching/scale_manager.go:444 '// CONSIDER(carlydf): Emit a metric ...'",
+    "service/matching/task_validation.go:94 '// CONSIDER(fretz12): ...'",
+    "grep -rn 'CONSIDER(' --include='*.go' . | wc -l => 5"
+   ],
+   "note": "The CONSIDER(name): convention is used by several authors in the codebase."
+  },
+  {
+   "id": "4275cc71eea84e8a3090a14c36d0be2d6461a7f3",
+   "line": 64,
+   "text": "Regenerate code when interface definitions change",
+   "label": "true",
+   "evidence": [
+    "common/log/interface.go:1 '//go:generate mockgen -package $GOPACKAGE -source $GOFILE -destination interface_mock.go'",
+    "Makefile:12-21 'ci-build-misc: ... proto go-generate ... ensure-no-changes'",
+    "Makefile:813 '... \"Above files are not regenerated properly. Regenerate them and try again.\"'",
+    ".github/workflows/run-tests.yml:263 'make clean-bins ci-build-misc'"
+   ],
+   "note": "CI regenerates protos/mocks and fails if generated files differ, enforcing regeneration."
+  },
+  {
+   "id": "a80cae9f22bc8b0b7ea8f0d99786a47f25d80ad2",
+   "line": 65,
+   "text": "Always include `-tags test_dep` when running tests",
+   "label": "true",
+   "evidence": [
+    "Makefile:51 'ALL_TEST_TAGS := $(ALL_BUILD_TAGS),test_dep,$(TEST_TAG)'",
+    "Makefile:53 'TEST_TAG_FLAG := -tags $(ALL_TEST_TAGS)' used by COMPILED_TEST_ARGS (Makefile:75) for unit/integration/functional tests",
+    "docs/development/testing.md GoLand args '-tags disable_grpc_modules,test_dep'"
+   ],
+   "note": "All Makefile test targets and lint pass the test_dep tag."
+  },
+  {
+   "id": "22b1bba7500c66198900cec6ba2e311886fa03e4",
+   "line": 66,
+   "text": "Include the `integration` tag only for integration tests",
+   "label": "stale",
+   "evidence": [
+    "grep -rnE '(go:build|\\+build).*\\bintegration\\b' --include='*.go' . => (no matches; no Go file uses an integration build tag)",
+    "Makefile:51 'ALL_TEST_TAGS := $(ALL_BUILD_TAGS),test_dep,$(TEST_TAG)' (no integration tag)",
+    "Makefile:128 'INTEGRATION_TEST_DIRS := $(DB_INTEGRATION_TEST_ROOT) $(DB_TOOL_INTEGRATION_TEST_ROOT) ./temporaltest' (integration tests selected by directory)",
+    "docs/development/testing.md 'Build tags' lists only test_dep, TEMPORAL_DEBUG, disable_grpc_modules"
+   ],
+   "note": "There is no `integration` build tag in the repository; integration tests are chosen by directory via `make integration-test`."
+  },
+  {
+   "id": "149b46c53474043d0f3772078f4ea88a7d944cec",
+   "line": 67,
+   "text": "Do not introduce new third party libraries unless specifically requested.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Dependency policy; no tooling blocks new go.mod requirements (depguard only bans pborman/uuid)."
+  },
+  {
+   "id": "e85cb59854032cae41bd082b3b083ac9af5bfe40",
+   "line": 70,
+   "text": "Check and handle all errors",
+   "label": "true",
+   "evidence": [
+    ".github/.golangci.yml:11 'errcheck' enabled",
+    ".github/.golangci.yml:164 revive 'unhandled-error' rule enabled",
+    ".github/workflows/linters.yml:175 'make GOLANGCI_LINT_FIX=false GOLANGCI_LINT_BASE_REV=HEAD~ lint-code' in CI"
+   ],
+   "note": "Unchecked errors are flagged by errcheck/revive in CI."
+  },
+  {
+   "id": "ab1b7d8981162f297aafe56d1ea35757cb908af7",
+   "line": 71,
+   "text": "Use appropriate logging methods based on error severity",
+   "label": "judgment",
+   "evidence": [
+    "common/log/interface.go:19-26 Logger has Debug/Info/Warn/Error/DPanic/Panic/Fatal"
+   ],
+   "note": "Choosing a level 'appropriately' is a judgment call."
+  },
+  {
+   "id": "243b0d39da994bfbeb063ba327bc24f75e2d538e",
+   "line": 72,
+   "text": "Use `logger.Fatal` for core invariant violations",
+   "label": "judgment",
+   "evidence": [
+    "common/log/interface.go:25 'Fatal(msg string, tags ...tag.Tag)'",
+    "common/persistence/visibility/store/elasticsearch/processor.go:170 'p.logger.Fatal(fmt.Sprintf(\"mapToAckFuture has item of a wrong type ...'",
+    "common/softassert/softassert.go:8 '- Use it to check for programming errors and invariants.'"
+   ],
+   "note": "Fatal exists and is sometimes used for invariant breaks, but most uses are startup failures and softassert is also documented for invariants, so the repo neither confirms nor contradicts the rule."
+  },
+  {
+   "id": "f2b3ea8176e18ed38075a669ad29ee899c692e4d",
+   "line": 73,
+   "text": "Use `logger.DPanic` for issues that are important but should not crash production",
+   "label": "true",
+   "evidence": [
+    "common/log/config.go:16-18 '// Development determines whether the logger is run in Development (== Test) or in Production mode. Default is Production. Production-stage disables panics from DPanic logging.'",
+    "common/serviceerror/service_error_with_dpanic.go:8 '// NewInternalErrorWithDPanic is a wrapper for service error that will panic if it's in dev environment'"
+   ],
+   "note": "DPanic exists and is used exactly as described: panics in dev/test, only logs in production."
+  },
+  {
+   "id": "da77b5dcd93e7f16392ec060076f4cb38d6cc291",
+   "line": 76,
+   "text": "Write tests for new functionality",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Testing practice; not verifiable from the repo."
+  },
+  {
+   "id": "dad5e44ce8da7772e664157b44da8273d8e7d7d4",
+   "line": 77,
+   "text": "Run tests after altering code or tests",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Agent process instruction; not verifiable from the repo."
+  },
+  {
+   "id": "ab811243c287597ce774a2a4f03a361206e7ea37",
+   "line": 78,
+   "text": "Start with unit tests for fastest feedback",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Workflow advice; not verifiable from the repo."
+  },
+  {
+   "id": "8b2dfe07ec02666bd5b0f0103593e8b1e54035ef",
+   "line": 79,
+   "text": "Prefer `require` over `assert`, avoid testify suites in unit tests (functional tests require suites for test cluster setup), use `require.Eventually` instead of `time.Sleep` (forbidden by linter)",
+   "label": "stale",
+   "evidence": [
+    ".github/.golangci.yml forbidigo: pattern '(^|\\.)(Eventually|Eventuallyf|EventuallyWithT|EventuallyWithTf)(\\(|$)' msg 'Use await.Require / s.Await for assertion conditions, or await.RequireTrue / s.AwaitTrue for bool predicates, instead of testify Eventually helpers'",
+    ".github/.golangci.yml forbidigo: pattern time.Sleep msg 'Please use await.Require / s.Await unless there's no better option'",
+    "git log -S'EventuallyWithTf' -- .github/.golangci.yml => 7c022fbdb 2026-05-15 add `await.Require` and `await.RequireTrue` (#9490)",
+    ".github/.golangci.yml forbidigo: pattern FunctionalTestBase msg 'FunctionalTestBase is deprecated. Use testcore.NewEnv(t) instead.' (added 26a2a22e7 2026-02-04)",
+    "tests/testcore/test_env.go:258 'func NewEnv(t *testing.T, opts ...TestOption) *TestEnv' (used in 86 files under tests/)",
+    "docs/development/testing.md 'parallelsuite ... It replaces all use of testify's Suite.'"
+   ],
+   "note": "require.Eventually is now itself forbidden by the linter (use await.Require/RequireTrue instead), and functional tests no longer require testify suites (testcore.NewEnv / parallelsuite); only the 'prefer require over assert' part still holds."
+  },
+  {
+   "id": "466a58ce08c5676ca4d96e465e453df1052a9f21",
+   "line": 80,
+   "text": "For float comparisons in tests, use `InDelta` or `InEpsilon` instead of `Equal` (enforced by `testifylint`)",
+   "label": "true",
+   "evidence": [
+    ".github/.golangci.yml:21 'testifylint' enabled; settings disable only 'suite-method-signature' (float-compare is a default-on checker)",
+    "git grep -nE '\\.(InDelta|InEpsilon)\\(' -- '*_test.go' | wc -l => 200"
+   ],
+   "note": "testifylint with default checkers (incl. float-compare) runs in lint-code."
+  },
+  {
+   "id": "dfb98a085f810809f233a9b4c787f982c2a15188",
+   "line": 81,
+   "text": "For error assertions in testify suites, use `s.Require().NoError(err)` instead of `s.NoError(err)` (enforced by `testifylint`)",
+   "label": "true",
+   "evidence": [
+    ".github/.golangci.yml:21 'testifylint' enabled; only 'suite-method-signature' disabled (require-error is a default-on checker)",
+    "git grep -n 's.Require().NoError(' -- '*_test.go' | wc -l => 603"
+   ],
+   "note": "testifylint's default require-error checker enforces s.Require().NoError in testify suites, and the code follows it widely."
+  },
+  {
+   "id": "444f3da010db15d0e2eae0b16a8fdace2d921a41",
+   "line": 86,
+   "text": "Understand: Think about the user's request and the relevant codebase context.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Agent workflow step; not verifiable in the repo."
+  },
+  {
+   "id": "e3a7ea67623c9442f55c93a7453e454a5350b945",
+   "line": 87,
+   "text": "Plan: Build a coherent and grounded (based on the understanding in step 1) plan for how you intend to resolve the user's task. Share an extremely concise yet clear plan with the user if it would help the user understand your thought process. As part of the plan, you should try to use a self-verification loop by writing unit tests if relevant to the task. Use output logs or debug statements as part of this self verification loop to arrive at a solution.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Agent workflow step; not verifiable in the repo."
+  },
+  {
+   "id": "0d228e333e14e00dc98240d9810786645d544d52",
+   "line": 88,
+   "text": "Implement: Use the available tools to act on the plan, strictly adhering to the project's established conventions (detailed under 'Core Mandates').",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Agent workflow step; refers to Core Mandates in the same file."
+  },
+  {
+   "id": "c04270166002217a7453db181181658fd62db8e0",
+   "line": 89,
+   "text": "Regenerate: If necessary, regenerate code based on your changes. If you alter anything annotated with `//go:generate` or in a `.proto` file you will need to do this.",
+   "label": "true",
+   "evidence": [
+    "common/log/interface.go:1 '//go:generate mockgen ...' (go:generate directives exist)",
+    "Makefile:805-807 'go-generate: ... go generate ./...'",
+    "Makefile:12-21 ci-build-misc runs proto, go-generate, ensure-no-changes; .github/workflows/run-tests.yml:263 'make clean-bins ci-build-misc'"
+   ],
+   "note": "CI regenerates from //go:generate and .proto sources and fails on diffs, so regeneration is required."
+  },
+  {
+   "id": "de8efb8bce5b32de1e2e221be490d9887cf0d210",
+   "line": 90,
+   "text": "Verify (Tests): If applicable and feasible, verify the changes using the project's testing procedures. Identify the correct test commands and frameworks by examining 'README' files, build/package configuration (e.g., 'Makefile'), or existing test execution patterns. NEVER assume standard test commands.",
+   "label": "judgment",
+   "evidence": [
+    "Makefile:537 unit-test, :542 integration-test, functional-test targets exist"
+   ],
+   "note": "Process advice to discover test commands; the Makefile/READMEs exist but the instruction itself is not checkable."
+  },
+  {
+   "id": "377cd56ca0b5834e0fe8222f00322c893e25c2dc",
+   "line": 91,
+   "text": "Verify (Standards): VERY IMPORTANT: After making code changes, execute the project-specific build, linting and type-checking commands (`make lint-code-fast` for development)",
+   "label": "true",
+   "evidence": [
+    "Makefile:409 'lint-code-fast:' exists",
+    ".github/workflows/linters.yml:175 'make GOLANGCI_LINT_FIX=false GOLANGCI_LINT_BASE_REV=HEAD~ lint-code' (CI enforces lint on changes)"
+   ],
+   "note": "The named command exists and linting is enforced in CI."
+  },
+  {
+   "id": "603019b3f5b3b89932f54699fb9c39b15801a1f7",
+   "line": 95,
+   "text": "Break down the feature into smaller, manageable tasks.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Planning-output instruction for the agent; the repository cannot settle it."
+  },
+  {
+   "id": "7d5d7d9bcefe9820e90ded6b70e117143990f844",
+   "line": 96,
+   "text": "Consider potential challenges for each task and how to address them.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Planning-output instruction for the agent; the repository cannot settle it."
+  },
+  {
+   "id": "0a689e879d09d2cbf11adfae29b28454fdb8a37f",
+   "line": 97,
+   "text": "Provide a high-level outline of the code structure, including function names and their purposes.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Planning-output instruction for the agent; the repository cannot settle it."
+  },
+  {
+   "id": "d38026fb66d4808d7aefaea380fdd24d977f2f72",
+   "line": 98,
+   "text": "List specific test cases you plan to implement.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Planning-output instruction for the agent; the repository cannot settle it."
+  },
+  {
+   "id": "2a82f34dbb7037f56ac48e46cd6b21cf611466bf",
+   "line": 99,
+   "text": "State which error handling approaches you will use for different scenarios.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Planning-output instruction for the agent; the repository cannot settle it."
+  },
+  {
+   "id": "d2613222c0dca0e0182f7f59a9d87023c14a8d42",
+   "line": 100,
+   "text": "Discuss the trade-offs inherent in your design decisions, including: a. Performance trade-offs b. Scalability trade-offs c. Complexity trade-offs d. Security trade-offs",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Planning-output instruction for the agent; the repository cannot settle it."
+  },
+  {
+   "id": "9e7c0b1bcec2a297eb9d46fe3bf88ca0f77560ea",
+   "line": 105,
+   "text": "Reason about the failure modes of your design. How does it handle crashes? A 10x increase in load?",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Planning-output instruction for the agent; the repository cannot settle it."
+  }
+ ]
+}

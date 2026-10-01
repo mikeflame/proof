@@ -1,0 +1,892 @@
+{
+  "repo": "astral-sh/ruff",
+  "sha": "ccba26cc3af909b7f19060f48f53daeab5070f9d",
+  "file": "AGENTS.md",
+  "labeler": "agent (independent of proof's output)",
+  "labels": [
+    {
+      "id": "7ff29e069e102b5a77a04c510958e85d2e4cbf0a",
+      "line": 3,
+      "text": "This repository contains both Ruff (a Python linter and formatter) and ty (a Python type checker).",
+      "label": "true",
+      "evidence": [
+        "crates/ruff/Cargo.toml:4 description = \"An extremely fast Python linter and code formatter\"",
+        "crates/ty/README.md:3 ty is an extremely fast type checker."
+      ],
+      "note": "Both the ruff and ty crates live in this workspace."
+    },
+    {
+      "id": "16e8e84266425931c77928bb251bcfd5c3721e5a",
+      "line": 3,
+      "text": "The crates follow a naming convention: `ruff_*` for Ruff-specific code and `ty_*` for ty-specific code. ty reuses several Ruff crates, including the Python parser (`ruff_python_parser`) and AST definitions (`ruff_python_ast`).",
+      "label": "true",
+      "evidence": [
+        "ls crates => ruff, ruff_* (e.g. ruff_linter, ruff_python_parser) and ty, ty_* (ty_python_semantic, ty_ide, ...) plus shared crate mdtest",
+        "crates/ty_python_semantic/Cargo.toml:19 ruff_python_ast = { workspace = true, features = [\"salsa\"] }",
+        "crates/ty_python_semantic/Cargo.toml:24 ruff_python_parser = { workspace = true }"
+      ],
+      "note": "Naming convention holds (only the shared `mdtest` crate has neither prefix) and ty crates depend on ruff_python_parser/ruff_python_ast."
+    },
+    {
+      "id": "37f62409acc56db6d79b301aa97c655145b179be",
+      "line": 7,
+      "text": "Before starting work on an issue and again before opening a pull request, follow the [guidance on avoiding duplicate work](CONTRIBUTING.md#avoiding-duplicate-work).",
+      "label": "true",
+      "evidence": [
+        "CONTRIBUTING.md:40 ### Avoiding duplicate work",
+        "CONTRIBUTING.md:42 Before starting on an issue, take a look at the discussion and any linked pull requests"
+      ],
+      "note": "The linked anchor exists and contains the referenced guidance; following it is a process step."
+    },
+    {
+      "id": "60321753cc84eadb46ee59d173bcdee99b946a94",
+      "line": 8,
+      "text": "If an open pull request already addresses the issue, do not submit a competing one without maintainer agreement.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Contribution etiquette rule that the repository cannot enforce."
+    },
+    {
+      "id": "33845c765cefa840ed3ee613fafc529fd7937de9",
+      "line": 13,
+      "text": "Before opening a PR, inspect the repository's available GitHub labels and the current Rooster configuration, including required and ignored labels, in the `[tool.rooster]` and `[tool.rooster.section-labels]` sections of [Ruff's `pyproject.toml`](pyproject.toml) and [ty's `pyproject.toml`](https://github.com/astral-sh/ty/blob/main/pyproject.toml).",
+      "label": "true",
+      "evidence": [
+        "pyproject.toml:301 [tool.rooster]",
+        "pyproject.toml:305 ignore_labels = [\"internal\", \"ci\", \"testing\", \"ty\"]",
+        "pyproject.toml:326 [tool.rooster.section-labels]"
+      ],
+      "note": "Both referenced Rooster sections exist in Ruff's pyproject.toml (ty's pyproject is external and not checkable here; Ruff's has no required-labels key, which does not contradict the instruction)."
+    },
+    {
+      "id": "c3c0a68831aa39fb4e9b55e8e0081eee213d4889",
+      "line": 17,
+      "text": "Decide whether and how the change should appear in each changelog, then select appropriate labels.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Process instruction about choosing changelog labels."
+    },
+    {
+      "id": "f5d982d7f0ef881406c5a9f22168e47af905966e",
+      "line": 20,
+      "text": "When working on ty, PR titles should start with `[ty]`.",
+      "label": "true",
+      "evidence": [
+        ".github/PULL_REQUEST_TEMPLATE.md:5 (Please prefix with `[ty]` for ty pull requests.)",
+        "crates/ty/CONTRIBUTING.md:78 Include the text `[ty]` at the beginning of your pull request title",
+        "git log -300 => 153 of 153 commits touching only crates/ty* have titles starting with [ty]"
+      ],
+      "note": "PR template, ty contributing guide, and history all follow the [ty] title prefix."
+    },
+    {
+      "id": "2385069b3a236a68f312b66c3d66d3c3744e1fab",
+      "line": 20,
+      "text": "Add the `ty` GitHub label.",
+      "label": "true",
+      "evidence": [
+        ".github/workflows/sync_typeshed.yaml:321 gh pr create ... --title \"[ty] Sync vendored typeshed stubs\" ... --label \"ty\"",
+        "pyproject.toml:305 ignore_labels = [\"internal\", \"ci\", \"testing\", \"ty\"]"
+      ],
+      "note": "A `ty` label exists and is applied to ty PRs by repo automation."
+    },
+    {
+      "id": "a2d2b3f4480657565caa224aba448a6e32f919bf",
+      "line": 22,
+      "text": "If you have permission, apply the selected labels when creating the PR or afterward, then verify that the PR's actual labels include them and have the intended effect on each changelog.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Agent process instruction about applying and verifying labels on GitHub."
+    },
+    {
+      "id": "e8f69db9d9517b37037f59e8a01545bc47735a06",
+      "line": 23,
+      "text": "If the available labels or a Rooster configuration could not be inspected, say so when reporting the PR.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Reporting instruction for the agent."
+    },
+    {
+      "id": "44f4c0598ef67d1be1c2dabf54b761c5d356dffa",
+      "line": 32,
+      "text": "When reviewing a branch or pull request, be deliberately nitpicky.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Review style preference."
+    },
+    {
+      "id": "b73e24be56ee7736a3e4898045d4fdd8b7fd2016",
+      "line": 32,
+      "text": "Report not only bugs and regressions, but also architectural and maintenance risks, weak test coverage, unclear code, unnecessary complexity, and meaningful style or consistency issues.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Review scope preference."
+    },
+    {
+      "id": "5a4c4f3ff46483039c576a8431ef884af3b14a26",
+      "line": 35,
+      "text": "Order findings by severity, cite files and lines, and distinguish blockers from non-blocking improvements.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Review formatting preference."
+    },
+    {
+      "id": "f3239d32b2bbcbbd48be3d19b586fe29986500de",
+      "line": 36,
+      "text": "Number each review point for easy reference in subsequent review discussion.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Review formatting preference."
+    },
+    {
+      "id": "b8f37d95d291a37579f3c30d9efe39ac7c7d5c7c",
+      "line": 39,
+      "text": "During code review, check the proposed changes against all applicable code, test, documentation, and architectural conventions in this `AGENTS.md`.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Review process rule; the repository cannot settle it."
+    },
+    {
+      "id": "e711aaf13939067962d206bdf2cfb4d92e666f4b",
+      "line": 44,
+      "text": "For security reviews of repository, CI, and release changes, use the [repository threat model](agents/references/repository-threat-model.md) to assess trust boundaries and calibrate severity.",
+      "label": "true",
+      "evidence": [
+        "agents/references/repository-threat-model.md:1 # GitHub repository threat model",
+        "agents/references/repository-threat-model.md:26 ## CI and releases",
+        "agents/references/threat-models.md: [GitHub repository](repository-threat-model.md): CI, releases, publishing, ecosystem jobs, and maintainer automation."
+      ],
+      "note": "The referenced threat model exists and covers repository, CI, and release changes."
+    },
+    {
+      "id": "2aeeb2412184d5142995b0cea682228f63fe9fe3",
+      "line": 50,
+      "text": "Write every mdtest paragraph, code comment, piece of documentation, PR description, and GitHub issue for its eventual reader, not for the current Codex conversation.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Writing-style rule."
+    },
+    {
+      "id": "08122ed2c5efa3aa9072c229efaf6199818d361b",
+      "line": 50,
+      "text": "Determine the reader's knowledge, purpose, and likely questions privately; do not add an audience-analysis section to the artifact.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Writing-style rule."
+    },
+    {
+      "id": "21c083ba4bf0e203dd81462ac798d635d8d4b8e8",
+      "line": 52,
+      "text": "Base public-facing text on the final code, complete final diff, relevant issue, and verified evidence.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Writing-style rule."
+    },
+    {
+      "id": "fbf951775afd2276a354a7a67637d25fc7f65f71",
+      "line": 52,
+      "text": "Explain the observable behavior or problem before implementation details.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Writing-style rule."
+    },
+    {
+      "id": "35048f2bb2cf34295675026ef2c58720b1e32ad3",
+      "line": 54,
+      "text": "Do not mention discarded alternatives, intermediate edits, private instructions, tool usage, branch or draft status, local test commands, or session history unless the reader needs that information to understand the final result.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Writing-style rule."
+    },
+    {
+      "id": "e25b2c239894fc208f184be8b6c18232af9770ca",
+      "line": 54,
+      "text": "Do not describe reverted changes as part of the final change.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Writing-style rule."
+    },
+    {
+      "id": "d9741eada7dd058d95eb233c4c5b5e35c752fd4e",
+      "line": 56,
+      "text": "Preserve useful human-written comments unless the code change makes them inaccurate.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Editing preference."
+    },
+    {
+      "id": "1b047ce4113727a6bd8301108c0a3ea0322512f0",
+      "line": 56,
+      "text": "Before finishing, reread each changed artifact as someone with no access to the Codex session and remove or explain anything that would surprise or confuse that reader.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Agent self-review process."
+    },
+    {
+      "id": "9b85c10531fb819ade593d019eb9a2823eb5f313",
+      "line": 60,
+      "text": "Run all tests (using `nextest` for faster execution and setting `INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1` to ensure all snapshots are updated):",
+      "label": "true",
+      "evidence": [
+        "pyproject.toml:64 \"astral-dev-toolchain-cargo-nextest>=0.9.143\" (dev group)",
+        "crates/mdtest/src/lib.rs:25-26 /// If set to a value other than \"0\", updates the content of inline snapshots. const MDTEST_UPDATE_SNAPSHOTS",
+        "pyproject.toml:63 \"astral-dev-toolchain-cargo-insta>=1.48.0\""
+      ],
+      "note": "nextest is part of the dev toolchain and the snapshot env vars are recognized by insta and mdtest."
+    },
+    {
+      "id": "a49631d1c6de09cf70386ee8ef9184eb36ce4063",
+      "line": 66,
+      "text": "File-watcher tests do not work inside the sandbox.",
+      "label": "judgment",
+      "evidence": [
+        ".config/nextest.toml:7 filter = 'binary(file_watching)'",
+        "crates/ty/tests/file_watching.rs exists"
+      ],
+      "note": "File-watcher tests exist, but whether they work in a sandbox is environment-dependent."
+    },
+    {
+      "id": "1206ce6d824e0f1c425612d771687a28b00680b4",
+      "line": 66,
+      "text": "It is usually unnecessary to run them locally before filing a change unless you are certain that the change affects file-watching behavior.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Advice about when to run file-watcher tests."
+    },
+    {
+      "id": "b62aa0c3d6bf7fec51fcba7fade1f9059dc329f7",
+      "line": 71,
+      "text": "INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo nextest run -p ty_python_semantic",
+      "label": "true",
+      "evidence": [
+        "crates/ty_python_semantic/Cargo.toml exists (package ty_python_semantic)",
+        "pyproject.toml:64 astral-dev-toolchain-cargo-nextest"
+      ],
+      "note": "Valid crate name and test runner."
+    },
+    {
+      "id": "d31a8b92faf959e226641e49c1afe69f62822b8b",
+      "line": 74,
+      "text": "Run a single mdtest file.",
+      "label": "true",
+      "evidence": [
+        "crates/ty_python_semantic/Cargo.toml:81-83 [[test]] name = \"mdtest\" harness = false",
+        "crates/ty_python_semantic/tests/mdtest.rs:83 { test = mdtest, root = \"./resources/mdtest\", pattern = r\"\\.md$\" }"
+      ],
+      "note": "A dedicated mdtest test target with one test per Markdown file exists."
+    },
+    {
+      "id": "181a087bbb6b99f5f6f233edd30af05162273249",
+      "line": 74,
+      "text": "The path to the mdtest file should be relative to the `crates/ty_python_semantic/resources/mdtest` folder.",
+      "label": "true",
+      "evidence": [
+        "crates/ty_python_semantic/tests/mdtest.rs:83 root = \"./resources/mdtest\"",
+        "crates/ty_python_semantic/mdtest.py:192 test_name = f\"{test_function}::{markdown_file}\" (markdown_file relative to the mdtest dir)"
+      ],
+      "note": "Test names are the file path relative to resources/mdtest."
+    },
+    {
+      "id": "81cbe32f9fef77c04d98b1f7546e242f401f246d",
+      "line": 77,
+      "text": "INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo nextest run -p ty_python_semantic --test mdtest -- mdtest::<path/to/mdtest_file.md>",
+      "label": "true",
+      "evidence": [
+        "crates/ty_python_semantic/Cargo.toml:81-83 [[test]] name = \"mdtest\"",
+        "crates/ty_python_semantic/mdtest.py:192 test_name = f\"{test_function}::{markdown_file}\" with test function `mdtest`"
+      ],
+      "note": "Target name and `mdtest::<relative path>` test-name format match the harness."
+    },
+    {
+      "id": "4159aa6946482f749193fe4348eed866d8b87877",
+      "line": 80,
+      "text": "To run a specific mdtest within a file, use a substring of the Markdown header text as `MDTEST_TEST_FILTER`.",
+      "label": "true",
+      "evidence": [
+        "crates/mdtest/src/lib.rs:23 const MDTEST_TEST_FILTER: &str = \"MDTEST_TEST_FILTER\";",
+        "crates/mdtest/src/lib.rs:68-71 skips tests unless test.uncontracted_name().contains(f)",
+        "crates/ty_test/README.md:268-272 MDTEST_TEST_FILTER ... case-sensitive substring ... parent headers joined together with hyphens"
+      ],
+      "note": "Filter is a substring match on names built from the header text."
+    },
+    {
+      "id": "f4898a5c96a2692306ce76c99f805a4059da9fe1",
+      "line": 83,
+      "text": "MDTEST_TEST_FILTER=\"<filter>\" INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo nextest run -p ty_python_semantic --test mdtest -- mdtest::<path/to/mdtest_file.md>",
+      "label": "true",
+      "evidence": [
+        "crates/mdtest/src/lib.rs:65 let filter = std::env::var(MDTEST_TEST_FILTER).ok();",
+        "crates/ty_python_semantic/mdtest.py:192 f\"{test_function}::{markdown_file}\""
+      ],
+      "note": "Env var and test-name format are valid."
+    },
+    {
+      "id": "42715d5f12ce05a093bc3853b2c9b2af9dd2f689",
+      "line": 88,
+      "text": "If `cargo nextest` is not available, use `cargo test` with the same environment variables:",
+      "label": "true",
+      "evidence": [
+        "crates/ty_test/README.md:181 MDTEST_UPDATE_SNAPSHOTS=1 cargo test -p ty_python_semantic --test mdtest -- diagnostics/missing_argument.md",
+        "crates/ty_test/README.md:524 All Markdown-based tests are executed in a normal `cargo test` / `cargo nextest run` invocation."
+      ],
+      "note": "cargo test works with the same env vars."
+    },
+    {
+      "id": "e25424678cb74700951769d070a68cac6e0fa2bb",
+      "line": 92,
+      "text": "INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo test",
+      "label": "true",
+      "evidence": [
+        "crates/ty_test/README.md:524 normal `cargo test` / `cargo nextest run` invocation"
+      ],
+      "note": "Plain cargo test runs the suite."
+    },
+    {
+      "id": "11ecab7b08c72e5995247fd1302c482979657529",
+      "line": 98,
+      "text": "INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo test -p ty_python_semantic --test mdtest -- <path/to/mdtest_file.md>",
+      "label": "true",
+      "evidence": [
+        "crates/ty_test/README.md:181 MDTEST_UPDATE_SNAPSHOTS=1 cargo test -p ty_python_semantic --test mdtest -- diagnostics/missing_argument.md"
+      ],
+      "note": "Same form is documented in the mdtest README."
+    },
+    {
+      "id": "3945a672bb59d1cc50ecfc126579402abca2cbc7",
+      "line": 101,
+      "text": "MDTEST_TEST_FILTER=\"<filter>\" INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo test -p ty_python_semantic --test mdtest -- <path/to/mdtest_file.md>",
+      "label": "true",
+      "evidence": [
+        "crates/mdtest/src/lib.rs:142 \"{MDTEST_TEST_FILTER}='{escaped_test_name}' cargo test -p {crate_name} --test mdtest -- {test_name}\""
+      ],
+      "note": "The harness itself prints this rerun command form."
+    },
+    {
+      "id": "7fb801687a3722a5caad619f68bf4a08a81e995b",
+      "line": 106,
+      "text": "After running the tests, always review the contents of any snapshots that have been added or updated.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Process rule about reviewing snapshots."
+    },
+    {
+      "id": "dc12d4e3182ccc1e0c1ab2c4a3a1b28c9cff9f47",
+      "line": 108,
+      "text": "When running tests with `INSTA_FORCE_PASS=1`, check for `.pending-snap` files if any affected tests use inline snapshots.",
+      "label": "true",
+      "evidence": [
+        ".gitignore:33 *.rs.pending-snap",
+        "rg '@\"' crates => inline insta snapshots in e.g. crates/ty/tests/cli/python_environment.rs"
+      ],
+      "note": "Inline insta snapshots are used and their .pending-snap files are an expected artifact (gitignored)."
+    },
+    {
+      "id": "326807b21bb20c653a22ca384465b03b371d05b1",
+      "line": 110,
+      "text": "Never edit snapshot files or inline snapshot bodies manually.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Practice rule that tooling does not enforce."
+    },
+    {
+      "id": "3c6e35b1956b4b62438190206ea1cc52648e36a3",
+      "line": 114,
+      "text": "Write mdtests as readable, literate specifications, and minimize the context a reader must hold in mind. Prefer short, focused code blocks, and define types, fixtures, and helpers close to the assertions that use them. Sections and subsections can be long when they develop a coherent topic through many short examples interspersed with prose. Do not split a subsection, or flag it in review, solely because of its length. Give independent scenarios separate sibling Markdown test headings at the same level; only introduce child headings if any existing code beneath their parent is first moved into child sections. When scenarios need shared setup, interleave short prose-and-code blocks under the same heading.",
+      "label": "judgment",
+      "evidence": [
+        "crates/ty_test/README.md:305-307 A header-demarcated section must either be a test or a grouping header; it cannot be both."
+      ],
+      "note": "Mostly mdtest style preference; the child-heading part is consistent with the framework rule."
+    },
+    {
+      "id": "2f58e5d9764daccb2f3a8589eb9b6e32aab290ca",
+      "line": 115,
+      "text": "Code blocks for the same file within a section are concatenated into one file. For inline snapshots, keep each example's code block close to its `# snapshot` block. Ideally, any given code block only has one snapshot in it, but one codeblock containing several snapshots is also acceptable. Repeating a short, independent function definition, including one with the same name, is fine if it keeps the code triggering a snapshot close to the snapshot demonstrating the expected diagnostic on that code. Reuse shared setup when clearer, and check that repeated names do not affect other examples.",
+      "label": "true",
+      "evidence": [
+        "crates/ty_test/README.md:120-121 If multiple code blocks (without an explicit path...) are present in a single test, they will be merged into a single file",
+        "crates/ty_test/README.md:147 Add `# snapshot: <code?>` to the lines you want to snapshot",
+        "crates/mdtest/src/parser.rs:925-929 explicit duplicate paths error: \"Test `{test_name}` has duplicate files named\""
+      ],
+      "note": "Unnamed code blocks in a test are concatenated and `# snapshot` markers exist; blocks with the same explicit path error out rather than merge, a nuance the item glosses over; the rest is style guidance."
+    },
+    {
+      "id": "b6284e3f1170d5e8b1ae56705b7cd4aae4c7e37f",
+      "line": 116,
+      "text": "When a Python statement in an mdtest is included only or primarily to check that ty does not emit a diagnostic for it, normally add a `# no diagnostic` comment on or above the statement. Statements used as setup for later assertions do not necessarily need such comments.",
+      "label": "judgment",
+      "evidence": [
+        "crates/ty_python_semantic/resources/mdtest/abstract.md:103 ConcreteOrdered()  # no diagnostic",
+        "14 mdtest files use `# no diagnostic`"
+      ],
+      "note": "A comment convention, used in some files but not enforced by the framework."
+    },
+    {
+      "id": "e98c38f3ae24a6e08062e6e027a8eb1be37808d4",
+      "line": 117,
+      "text": "Prioritize document structure and readability over avoiding duplicated setup. Add a test to an existing section when its heading accurately describes the new scenario, adding or improving introductory prose as needed; otherwise, create a separate sibling section, even if that requires repeating a small fixture.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "mdtest organization preference."
+    },
+    {
+      "id": "9530362b34a7998f958f474c9bc9f1b85539ca53",
+      "line": 118,
+      "text": "Order mdtests from basic, common behavior to more specialized cases. Place narrow regression tests alongside closely related examples when they fit naturally; otherwise, put them near the end of the relevant section or file. Do not put an obscure special case at the beginning simply because it is the newest regression.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "mdtest ordering preference."
+    },
+    {
+      "id": "950128b9cdb60068708337e5068265d2fe16790d",
+      "line": 120,
+      "text": "Prefer examples whose purpose is understandable without following issue links. For narrow regressions, a brief issue reference can be enough when additional explanation would merely restate the code or obscure the relevant behavior.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "mdtest writing preference."
+    },
+    {
+      "id": "eac0cb18473cb25bf900e8bba866bb81741da353",
+      "line": 121,
+      "text": "Prefer direct, present-tense descriptions of behavior over abstract requirements: write \"We reject this assignment\" rather than \"We must reject this assignment.\"",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Prose-style preference."
+    },
+    {
+      "id": "68feba5e95c1de781478dcda9380e4df4db7018c",
+      "line": 122,
+      "text": "Keep each code example as simple as possible while still demonstrating the key behavior. When adapting real-world code or an issue reproducer, remove incidental types, methods, type parameters, imports, and domain-specific details. Preserve complexity only when necessary to reproduce the regression or distinguish the intended behavior, and reuse nearby fixtures or simple built-in types when doing so keeps the test easy to understand.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Test-simplicity preference."
+    },
+    {
+      "id": "5a3318094926830f8a9db7862610335b89146bd7",
+      "line": 123,
+      "text": "Prefer a minimal, purpose-built custom type over a standard-library type when a regression depends on particular attributes, methods, bounds, or constraints. Define the relevant behavior in the test so readers do not need to look up the standard-library type to understand the scenario. For commonly used standard-library types, consider adding a separate regression using the real type to protect against changes in typeshed.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Test-design preference."
+    },
+    {
+      "id": "a781b6b6ab79bda9fc888a86a8a67359ae31ee3e",
+      "line": 124,
+      "text": "Place each mdtest in a file for the behavior it actually tests, and assert that behavior directly. Prefer an existing file when one already covers that behavior; create a new file when no existing file is a good fit. Do not choose a file solely because its directive or helper can express the assertion.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Test-placement preference."
+    },
+    {
+      "id": "deca35739b00fd5542c357ae36ce0182ff993bee",
+      "line": 130,
+      "text": "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+      "label": "true",
+      "evidence": [
+        ".github/workflows/ci.yaml:338 run: cargo clippy --workspace --all-targets --all-features --locked -- -D warnings"
+      ],
+      "note": "CI runs the same clippy invocation (plus --locked)."
+    },
+    {
+      "id": "6dce0bc632e7d5577b890602285d015fe425e906",
+      "line": 135,
+      "text": "Use debug builds (not `--release`) when developing, as release builds lack debug assertions and have slower compile times.",
+      "label": "true",
+      "evidence": [
+        "Cargo.toml:319-321 [profile.release] lto = \"fat\" codegen-units = 16",
+        "rg debug-assertions Cargo.toml => no matches (release keeps Cargo's default debug-assertions = false)",
+        "Cargo.toml:339-343 [profile.dev] opt-level = 1 ... lto = \"off\""
+      ],
+      "note": "Release uses fat LTO (slow compiles) and no debug assertions; dev profile is tuned for iteration."
+    },
+    {
+      "id": "d55c03f810c262c33ed491e9559da842afe0920d",
+      "line": 137,
+      "text": "Run Ruff:",
+      "label": "true",
+      "evidence": [
+        "crates/ruff/src/main.rs exists (binary `ruff`)"
+      ],
+      "note": "Heading for a valid command."
+    },
+    {
+      "id": "78f05c743ee166a6d176fa7fc004622c02c654ef",
+      "line": 140,
+      "text": "cargo run --bin ruff -- check path/to/file.py",
+      "label": "true",
+      "evidence": [
+        "crates/ruff/Cargo.toml:2 name = \"ruff\"; crates/ruff/src/main.rs exists",
+        "crates/ruff/src/args.rs defines the `check` subcommand"
+      ],
+      "note": "Binary `ruff` with `check` subcommand exists."
+    },
+    {
+      "id": "1987916696f9486fed2502ed9c6de9cd8c2468da",
+      "line": 146,
+      "text": "cargo run --bin ty -- check path/to/file.py",
+      "label": "true",
+      "evidence": [
+        "crates/ty/Cargo.toml:2 name = \"ty\"; crates/ty/src/main.rs exists",
+        ".github/workflows/ci.yaml:431 cargo run --quiet -p ty check scripts/*.py"
+      ],
+      "note": "Binary `ty` with `check` subcommand exists."
+    },
+    {
+      "id": "a6055fdfa0cc6f8702e917aa3d1abf1be52802c3",
+      "line": 157,
+      "text": "Adding new ty rules, changing diagnostics or diagnostic messages, or reviewing diagnostics: `.agents/skills/adding-ty-diagnostics/SKILL.md`.",
+      "label": "true",
+      "evidence": [
+        ".agents/skills/adding-ty-diagnostics/SKILL.md:3 description: Use when a user says \"add a ty rule\", \"add a ty diagnostic\" ... \"review ty diagnostics\""
+      ],
+      "note": "Skill file exists and matches the described use."
+    },
+    {
+      "id": "f187e31b1c2790f1e3f0ef804c87b86dfdc19145",
+      "line": 158,
+      "text": "Ecosystem report summaries: `.agents/skills/summarise-ecosystem-results/SKILL.md`.",
+      "label": "true",
+      "evidence": [
+        ".agents/skills/summarise-ecosystem-results/SKILL.md:2 name: summarise-ecosystem-results"
+      ],
+      "note": "Skill file exists."
+    },
+    {
+      "id": "082ddcc38b498765ed2f0017a10f3a88ad6fafb4",
+      "line": 159,
+      "text": "Reproducing, investigating, or minimizing ecosystem or primer differences: `.agents/skills/minimizing-ty-ecosystem-changes/SKILL.md`.",
+      "label": "true",
+      "evidence": [
+        ".agents/skills/minimizing-ty-ecosystem-changes/SKILL.md:3 description: ... reproduce, investigate, or minimize behavior changes in ty ecosystem/primer ..."
+      ],
+      "note": "Skill file exists and matches."
+    },
+    {
+      "id": "c58eaa592d2da8fa79dfb65946c9f1349b9ab8f0",
+      "line": 163,
+      "text": "When changing ty autocomplete ranking, add or update evaluation fixtures under `crates/ty_completion_eval/truth/`.",
+      "label": "true",
+      "evidence": [
+        "ls crates/ty_completion_eval/truth => 30 fixture projects (e.g. auto-import-includes-modules, exact-over-fuzzy)"
+      ],
+      "note": "Fixture directory exists as described."
+    },
+    {
+      "id": "1814e5868846b94bd3fa822b031c7d2cf0d204ae",
+      "line": 163,
+      "text": "Extend an existing project when it is a good fit for the behavior being tested; otherwise, add a new one.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Fixture-organization preference."
+    },
+    {
+      "id": "a928e8e808d4f62506fbc4feef9c38267bcf8631",
+      "line": 163,
+      "text": "Add `completion.rs` unit tests only when the evaluation fixtures cannot adequately cover the behavior.",
+      "label": "judgment",
+      "evidence": [
+        "crates/ty_ide/src/completion.rs exists"
+      ],
+      "note": "The referenced file exists; when to add unit tests there is a practice rule."
+    },
+    {
+      "id": "001fc5d51887bcacae4003deb42a515066ba3618",
+      "line": 168,
+      "text": "CARGO_PROFILE_DEV_OPT_LEVEL=1 CARGO_PROFILE_DEV_LTO=off CARGO_PROFILE_DEV_DEBUG=\"line-tables-only\" cargo run --package ty_completion_eval -- all --threshold 0.4 --tasks crates/ty_completion_eval/completion-evaluation-tasks.csv",
+      "label": "true",
+      "evidence": [
+        "crates/ty_completion_eval/src/main.rs:52-69 AllCommand with --threshold and --tasks",
+        "crates/ty_completion_eval/completion-evaluation-tasks.csv exists",
+        ".github/workflows/ci.yaml:948 cargo run --profile profiling --package ty_completion_eval -- all --threshold 0.4 --tasks /tmp/completion-evaluation-tasks.csv"
+      ],
+      "note": "Subcommand, flags, threshold and tasks file match the CI invocation (the env overrides mirror Cargo.toml [profile.dev])."
+    },
+    {
+      "id": "492f2bbe44cf68d882d829e40a151af653b2cac1",
+      "line": 171,
+      "text": "To inspect one evaluation task, run `cargo run --package ty_completion_eval -- show-one <fixture-name> --file-name <file-name> --index <cursor-index>`.",
+      "label": "true",
+      "evidence": [
+        "crates/ty_completion_eval/src/main.rs:48 ShowOne(ShowOneCommand)",
+        "crates/ty_completion_eval/src/main.rs:91-92 #[arg(long ...)] file_name",
+        "crates/ty_completion_eval/src/main.rs:95-100 #[arg(long ...)] index",
+        "crates/ty_completion_eval/README.md: cargo r -q -p ty_completion_eval show-one higher-level-symbols-preferred --index 1"
+      ],
+      "note": "show-one with a task name, --file-name and --index exists."
+    },
+    {
+      "id": "67833b1ccb3d25a0c5a95e13067aed9cbeae31d2",
+      "line": 175,
+      "text": "When running ty against a temporary Python reproduction file, create it outside the Ruff checkout (for example, under `/tmp`).",
+      "label": "true",
+      "evidence": [
+        "pyproject.toml:11 requires-python = \">=3.7\"",
+        "crates/ty_project/src/metadata/options.rs:856 1. Check for the `project.requires-python` setting in a `pyproject.toml` file"
+      ],
+      "note": "The advice is backed by ty's version inference from the root pyproject.toml."
+    },
+    {
+      "id": "7ea283f835929b4c59941d7a7c84f5c15887a3e3",
+      "line": 175,
+      "text": "A file inside the checkout discovers Ruff's root `pyproject.toml`, whose `requires-python = \">=3.7\"` causes ty to infer Python 3.7 as the default Python version.",
+      "label": "true",
+      "evidence": [
+        "pyproject.toml:11 requires-python = \">=3.7\"",
+        "crates/ty_project/src/metadata.rs:195 1. The closest `pyproject.toml`.",
+        "crates/ty_project/src/metadata/options.rs:856-857 Check for the `project.requires-python` setting ... and use the minimum version",
+        "crates/ty_project/src/metadata/python_version.rs:24-26 Py37 is a supported version"
+      ],
+      "note": "ty discovers the nearest pyproject.toml and takes the requires-python lower bound, which resolves to 3.7."
+    },
+    {
+      "id": "44c4a0db8bae6d4a9cd4b3decb10167270e5fcb0",
+      "line": 179,
+      "text": "For methods with a `self` parameter, `db` should come immediately after `self`.",
+      "label": "true",
+      "evidence": [
+        "python scan of crates/ty_*/src fn signatures => methods with self and db: 2062 have db right after self, 1 does not (types/equality/enums.rs fn overlaps(&self, other: &Self, db))"
+      ],
+      "note": "The codebase follows the convention almost without exception."
+    },
+    {
+      "id": "0d13cfa7aa6011528f6e04faae63e452d5dbc3b8",
+      "line": 185,
+      "text": "Adding `#[salsa::tracked]` to a function or method means that the Salsa framework will cache the function/method.",
+      "label": "true",
+      "evidence": [
+        "crates/ty_python_semantic/src/reachability.rs:520 This is a Salsa tracked function to enable memoization.",
+        "Cargo.toml:189 salsa = { version = \"0.28.5\" ..."
+      ],
+      "note": "In-repo docs describe tracked functions as memoized (cached)."
+    },
+    {
+      "id": "0c3727b03f3542022b51526271d5d482dbfa4098",
+      "line": 186,
+      "text": "This can sometimes be done for performance reasons, and can also be done to ensure incremental computation in an IDE context.",
+      "label": "true",
+      "evidence": [
+        "crates/ty_python_semantic/src/reachability.rs:520-522 tracked to enable memoization ... O(N^2) total work",
+        "crates/ty_python_semantic/src/types/infer/builder/suspicious_conditions/exemptions.rs:690 This Salsa-tracked query reads the definition's AST behind its own incremental boundary"
+      ],
+      "note": "Code comments show both performance and incrementality motivations."
+    },
+    {
+      "id": "43dd4c9f2c1f91cee9acc567bfd5bcfb7d604db3",
+      "line": 189,
+      "text": "Methods that access `.node()` should usually be `#[salsa::tracked]`, or ty's incrementality will suffer: we don't want to accidentally introduce a dependency on module `a`'s AST in a Salsa query that would be called when type-checking module `b`.",
+      "label": "true",
+      "evidence": [
+        "crates/ty_python_semantic/src/types/infer/builder/suspicious_conditions/exemptions.rs:690-691 This Salsa-tracked query reads the definition's AST behind its own incremental boundary, so callers do not depend directly on another file's syntax tree.",
+        "crates/ty_python_semantic/src/types.rs:10440-10443 this may introduce cross-module dependencies ... impact on the effectiveness of incremental caching",
+        "crates/ty_python_core/src/definition.rs:1195 pub fn node<'ast>(&self, module: &'ast ParsedModuleRef)"
+      ],
+      "note": "`.node()` accessors exist and code wraps AST access in tracked queries for exactly this reason."
+    },
+    {
+      "id": "c495890604d8d70368555b535b91233ebd6ffe6a",
+      "line": 191,
+      "text": "Prefer higher-level semantic APIs over raw AST access where possible, but ask for guidance from the user if this would require significant refactoring.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Design preference plus an instruction to ask the user."
+    },
+    {
+      "id": "d351ad869319675c864d3876eaff2838b2a539cd",
+      "line": 196,
+      "text": "Prefer boxed slices; otherwise shrink collections that may have spare capacity before returning them.",
+      "label": "true",
+      "evidence": [
+        "rg into_boxed_slice|Box<[ crates/ty_python_semantic/src => 252 occurrences",
+        "crates/ty_python_core/src/symbol.rs:302 table.symbols.shrink_to_fit();",
+        "crates/ty_python_semantic/src/place.rs:1795 reachable_bindings.shrink_to_fit();"
+      ],
+      "note": "The codebase uses boxed slices and shrinks cached collections."
+    },
+    {
+      "id": "8d0176f1cd8cb841bc40bf48d9a86c91f3d93220",
+      "line": 196,
+      "text": "In particular, inspect `HashMap` and `HashSet` values constructed via `extend`, `collect`, explicit reservation, or removal, since those operations can leave capacity that insert-only construction does not.",
+      "label": "judgment",
+      "evidence": [
+        "crates/ty_python_core/src/symbol.rs:191-193 fn shrink_to_fit ... map shrink_to_fit"
+      ],
+      "note": "The capacity claim is about external hash-map behavior that the repository does not settle."
+    },
+    {
+      "id": "99532a4d34dc916298827cabcebf7a224d38fe18",
+      "line": 198,
+      "text": "Salsa caching can occur due to a function/method having `#[salsa::tracked]` on it, or due to a struct with `#[salsa::interned]` being constructed.",
+      "label": "true",
+      "evidence": [
+        "rg '#[salsa::tracked' crates/ty_python_semantic/src => 215",
+        "rg '#[salsa::interned' crates/ty_python_semantic/src => 71",
+        "crates/ty_python_core/src/db.rs:19 // Salsa-cached because interning a program requires hashing all search paths."
+      ],
+      "note": "Both mechanisms are used and documented as Salsa caching."
+    },
+    {
+      "id": "b75955cd028ecab486ba044074496c61c0695568",
+      "line": 202,
+      "text": "Parts of `.github/workflows/release.yml` are generated by cargo-dist from `dist-workspace.toml`.",
+      "label": "true",
+      "evidence": [
+        ".github/workflows/release.yml:1 # This file was autogenerated by dist: https://axodotdev.github.io/cargo-dist",
+        "dist-workspace.toml:8 allow-dirty = [\"ci\"]",
+        "dist-workspace.toml:10 cargo-dist-version = \"0.31.0\""
+      ],
+      "note": "release.yml is dist-generated from dist-workspace.toml, with allowed custom edits."
+    },
+    {
+      "id": "37435bbeaea2b8e2c6a8eb46c6a002b976089c94",
+      "line": 202,
+      "text": "Before editing the release workflow, check whether the relevant section is generated.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Process instruction."
+    },
+    {
+      "id": "d216edddfc4d59ba202d470bfc38d5dd9a4022ce",
+      "line": 202,
+      "text": "After modifying cargo-dist configuration, regenerate the workflow with the cargo-dist version pinned in `dist-workspace.toml` and inspect the resulting diff to ensure the change will survive future regenerations.",
+      "label": "true",
+      "evidence": [
+        "dist-workspace.toml:10 cargo-dist-version = \"0.31.0\"",
+        ".github/workflows/release.yml:54 CARGO_DIST_VERSION: \"0.31.0\""
+      ],
+      "note": "A pinned cargo-dist version exists in dist-workspace.toml."
+    },
+    {
+      "id": "f588e1fefd4a6b8661e894635871656d488dd14a",
+      "line": 206,
+      "text": "All significant changes must be tested. Add or update focused tests for semantic changes when existing coverage does not already establish the intended behavior.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Testing policy."
+    },
+    {
+      "id": "1aed7d7c1b077ba5fae17840af429dcb7587dafe",
+      "line": 207,
+      "text": "Look to see if your tests could go in an existing file before adding a new file for your tests.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Test-placement preference."
+    },
+    {
+      "id": "593db5b1b6f390e25372a373a754c4eadadc2e18",
+      "line": 208,
+      "text": "Get your tests to pass. If you didn't run the tests, your code does not work.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Process exhortation."
+    },
+    {
+      "id": "eda23e74effb50614eb2319e237fefebd1a553c9",
+      "line": 209,
+      "text": "Follow existing code style. Check neighboring files for patterns.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "General style guidance."
+    },
+    {
+      "id": "1fe41a460449cf555e4941d8ccf0f7a099eeafdf",
+      "line": 211,
+      "text": "Rust imports should always go at the top of the file, never locally in functions.",
+      "label": "judgment",
+      "evidence": [
+        "crude scan of crates/**/src => ~99 `use` statements inside fn bodies across 51 files (e.g. crates/ruff_python_semantic/src/imports.rs:207 use ruff_python_ast::{self as ast, Stmt};)",
+        "Cargo.toml [workspace.lints] has no lint enforcing top-level imports"
+      ],
+      "note": "Not enforced by tooling, and the code has function-local imports."
+    },
+    {
+      "id": "5cb544e9a524a1c9bfddc230afb308445b800736",
+      "line": 212,
+      "text": "Run `uv run --only-dev --locked prek` at the end of a task if you changed files in the repo. This includes changes such as rebases or addressing review comments. Use `uv run --only-dev --locked prek run --files <path1> <path2>` and pass every file you changed. This keeps the hook run independent of staged state and avoids sweeping unrelated changes. Use `uv run --only-dev --locked prek run --all-files` when a full-repository hook sweep is specifically needed.",
+      "label": "true",
+      "evidence": [
+        "pyproject.toml:67 \"prek==0.5.0\" (dev group)",
+        ".pre-commit-config.yaml exists",
+        ".github/workflows/ci.yaml:1032 uv run --only-dev --locked prek run --all-files --show-diff-on-failure",
+        "CONTRIBUTING.md:89 uv run --only-dev --locked prek install"
+      ],
+      "note": "prek is a locked dev dependency, run the same way in CI."
+    },
+    {
+      "id": "0e49443b479167616f2f961400a41ee5fcbf9211",
+      "line": 213,
+      "text": "Before writing significant amounts of new code, look for existing utilities or mechanisms that could solve the problem. Avoid expanding the task to unrelated issues, but do not confuse keeping the task focused with minimizing the size of the implementation. Prefer addressing the underlying architectural problem over adding a localized workaround, even when doing so requires a substantial refactor or rearchitecture. Ask the user for guidance if in doubt about whether to attempt a larger refactor or not.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Design-approach guidance."
+    },
+    {
+      "id": "5055d7148c9b1a507d74410fe3e31658bc7e4d45",
+      "line": 214,
+      "text": "Try hard to avoid patterns that require `panic!`, `unreachable!`, `.unwrap()` or `.expect()`. Instead, try to encode those constraints in the type system. Don't be afraid to write code that's more verbose or requires largeish refactors if it enables you to avoid these unsafe calls.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Coding preference not enforced by lints (no unwrap_used/expect_used/panic lints in Cargo.toml)."
+    },
+    {
+      "id": "3b3596ada89f423883fda7371a555d0918e3d9ab",
+      "line": 215,
+      "text": "Prefer let chains (`if let` combined with `&&`) and let guards (`PAT if let ... =>`) over nested `if let` statements to reduce indentation and improve readability. At the end of a task, always check your work to see if you missed opportunities to use `let` chains or `let` guards.",
+      "label": "true",
+      "evidence": [
+        "rust-toolchain.toml:2 channel = \"1.98.0\"; Cargo.toml:7 edition = \"2024\"",
+        "rg '&& let ' crates => 691 lines with let chains vs ~100 nested `if let` blocks",
+        "crates/ty_python_semantic/src/types/narrow.rs:676 Type::NominalInstance(nominal) if let Some(tuple) = nominal.tuple_spec(db, env) => { (let guard, no feature gate)"
+      ],
+      "note": "Toolchain supports both features and the code mostly uses them."
+    },
+    {
+      "id": "09a9b0bbf16027031fa59db683ced8ffd4c01126",
+      "line": 217,
+      "text": "Don't use comments to narrate code, but do use them to explain invariants and why something unusual was done a particular way. Make sure that a comment will make sense to somebody who's reading the code for the first time. Prefer plain language, avoid jargon, and don't be afraid to be more verbose if it's necessary to explain something well. Giving examples of the kind of Python code we're trying to model at this particular point in Ruff or ty can often be very helpful for future readers of the code.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Commenting style guidance."
+    },
+    {
+      "id": "aaaea840bd0841e6a66616b6892363d6e0e7aee4",
+      "line": 218,
+      "text": "Run `cargo dev generate-all` after changing configuration options, CLI arguments, lint rules, or environment variable definitions, as these changes require regeneration of schemas, docs, and CLI references.",
+      "label": "true",
+      "evidence": [
+        ".cargo/config.toml:2 dev = \"run --package ruff_dev --bin ruff_dev\"",
+        "crates/ruff_dev/src/main.rs:47 GenerateAll(generate_all::Args)",
+        "crates/ruff_dev/src/generate_all.rs:42-51 generate_json_schema, generate_ty_schema, generate_cli_help, generate_docs, generate_ty_options, generate_ty_rules, generate_ty_cli_reference, generate_ty_env_vars_reference"
+      ],
+      "note": "The command exists and regenerates schemas, docs, and CLI/env references."
+    },
+    {
+      "id": "a1e0eb596cfb41fd28e641befb368c3fb46add5e",
+      "line": 219,
+      "text": "Don't prefix tests with `test_`.",
+      "label": "judgment",
+      "evidence": [
+        "rg -U '#[test]\\s*\\n\\s*fn test_' crates => 555 of 5412 #[test] functions use the test_ prefix"
+      ],
+      "note": "Naming rule, not enforced; about 10% of existing tests violate it."
+    },
+    {
+      "id": "b7795f8ac9ec7f1a85daf990cd6d5e217d4c5406",
+      "line": 220,
+      "text": "Don't separate struct definitions from their `impl` blocks unless the `impl` is deliberately placed in a separate file, as for large structs.",
+      "label": "judgment",
+      "evidence": [],
+      "note": "Code-organization preference."
+    },
+    {
+      "id": "caa9daeac9be358acaf3549fb539bac3c5b90a1f",
+      "line": 221,
+      "text": "Write all self-contained Python scripts as PEP 723 scripts, with inline metadata.",
+      "label": "true",
+      "evidence": [
+        "scripts/*.py: all 21 standalone scripts start with `# /// script` (e.g. scripts/add_rule.py, scripts/conformance.py)",
+        "crates/ty_python_semantic/mdtest.py and crates/ruff_python_ast/generate.py have `# /// script`",
+        "exception: crates/ruff_python_formatter/generate.py has no PEP 723 block"
+      ],
+      "note": "Standalone scripts overwhelmingly carry PEP 723 metadata (one older exception)."
+    }
+  ]
+}

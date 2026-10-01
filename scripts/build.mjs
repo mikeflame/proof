@@ -90,7 +90,7 @@ function metricsBlock(metrics, perf, corpus) {
   const tune = corpus.filter((c) => c.split === 'tune').length;
   const held = corpus.filter((c) => c.split === 'heldout').length;
   const lines = [
-    `Corpus: ${corpus.length} public repositories pinned to commits (${tune} tune, ${held} held-out, never run while tuning), one instruction file each. Labels: ${metrics.labeler}.`,
+    `Corpus: ${corpus.length} public repositories pinned to commits (${tune} tune, ${held} held-out, never run while tuning), one instruction file each. Labels: ${metrics.labeler}${metrics.adjudicated ? `; ${metrics.adjudicated} label${metrics.adjudicated === 1 ? '' : 's'} changed by a second reviewer, with the evidence in the label file` : ''}.`,
     '',
     '| Stage, split | Repos | Labeled statements | STALE precision | STALE recall | VERIFIED precision | Fixes kept |',
     '| --- | --- | --- | --- | --- | --- | --- |',

@@ -8006,7 +8006,8 @@ var VERIFIER_RULES = [
   "Evidence is inspectable: a file_line ref is `path:line` (or `path:start-end`) with an excerpt copied from that line; a command, count, git_log or absence ref is a read-only command proof re-runs, and its excerpt must appear in the output (absence: the command prints nothing).",
   "Do the work before you answer: open the files a statement names, search for what it claims, count what it counts, read the config it relies on. Every number is recounted and the command you used is the evidence. You have time and budget for this.",
   'An unverified_with_reason answer names the evidence you looked for and did not find, and where you looked. "I did not check" is never a reason.',
-  'Rules ("never", "always", "prefer", "must") are checked against the repository tooling (lint, formatter, type-checker, CI, pre-commit), never against taste. A rule the tooling contradicts is stale, with the config file cited. A rule nothing contradicts is true only with evidence that the tooling or code follows it; otherwise unverified_with_reason.',
+  "Stale means something the statement asserts is false in this repository. A statement that leaves out an exception or a detail, or is less precise than the code, is not stale: answer true if what it does state holds, and name the omission in the reason.",
+  'Rules ("never", "always", "prefer", "must") are checked against the repository tooling (lint, formatter, type-checker, CI, pre-commit), never against taste. A rule is stale only when the repository makes it wrong to follow: tooling enforces the opposite, or the thing it refers to is gone; cite the config file. Code that does not always follow a rule does not make the rule stale: answer unverified_with_reason and cite the exceptions. A rule is true only with evidence that tooling enforces it or the code follows it.',
   "Status words (active, legacy, deprecated, canonical, preferred) are checked against `git log` recency and against where new code lands.",
   "A statement that something was removed or renamed is checked for absence: cite the search that finds nothing, as kind absence with the command as ref (for example `git grep -n old_name`). The same goes for a stale path or name: an absence citation proves it is gone.",
   "Command refs run from the repository root; write paths relative to it.",
@@ -8146,7 +8147,7 @@ import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { homedir as homedir2 } from "node:os";
 import { join as join3 } from "node:path";
-var PROMPT_VERSION = "3";
+var PROMPT_VERSION = "4";
 var DEFAULT_VERIFY = { model: "claude-sonnet-5-5", effort: "high", budgetUsd: 10, perStatementUsd: 0.25, batchSize: 8, jobs: 2, cache: true, timeoutMs: 15 * 6e4 };
 function needsAgent(st) {
   if (st.kind === "marker" || st.override?.reason) return false;
