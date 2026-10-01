@@ -1,0 +1,2842 @@
+{
+ "proof": "79a431876ead",
+ "stage": "check",
+ "seconds": 4,
+ "exit": 0,
+ "report": {
+  "file": "AGENTS.md",
+  "scope": "project",
+  "why": "Claude Code reads it only when no CLAUDE.md, .claude/CLAUDE.md or CLAUDE.local.md is in the folder or above it, and Codex, Cursor and others read it always",
+  "imports": [],
+  "importedBy": [],
+  "counts": {
+   "VERIFIED": 0,
+   "STALE": 0,
+   "UNCONFIRMED": 9,
+   "UNVERIFIED_WITH_REASON": 71,
+   "DECIDED": 0,
+   "OVERRIDDEN": 0,
+   "NOT_CHECKED": 0,
+   "FIXED": 0,
+   "FIX_REJECTED": 0
+  },
+  "evidenceLevels": {
+   "definition": 9,
+   "declaration": 3,
+   "reference": 9,
+   "comment": 0,
+   "substring": 0,
+   "none": 9
+  },
+  "git": {
+   "root": "/home/ms/projects/proof-cache/corpus/temporal",
+   "tree": "db751bc563da5e568694e4daa2df705ec4f5a321",
+   "head": "fc4372605ce23f333b7e1a43eef303ff002c2ef1",
+   "branch": null,
+   "upstream": "origin/main",
+   "behind": 0
+  },
+  "run": {
+   "started": "2026-10-01T13:56:25.824Z",
+   "finished": "2026-10-01T13:56:29.528Z",
+   "version": "0.2.0"
+  },
+  "decisions": [],
+  "reopened": [],
+  "verdict": "PARTLY PROVEN",
+  "ownVerdict": "PARTLY PROVEN",
+  "coverage": {
+   "statements": 80,
+   "withResult": 80
+  },
+  "degraded": [],
+  "statements": [
+   {
+    "id": "2a05ef760dc497f875e5747a4498fd50fa17f40b",
+    "file": "AGENTS.md",
+    "line": 1,
+    "endLine": 2,
+    "section": "",
+    "kind": "sentence",
+    "text": "You are an experienced developer working on the temporal project.",
+    "spans": [],
+    "residual": [
+     "description \"You experienced developer working temporal project\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"You experienced developer working temporal project\"",
+    "settled": false
+   },
+   {
+    "id": "4971d7dd3a98f50b23b4bc8427de898ee9f878b7",
+    "file": "AGENTS.md",
+    "line": 1,
+    "endLine": 2,
+    "section": "",
+    "kind": "sentence",
+    "text": "Your task is to fix a bug or implement a new feature while adhering to the project's best practices and development guidelines.",
+    "spans": [],
+    "residual": [
+     "description \"Your task fix bug implement new …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Your task fix bug implement new …\"",
+    "settled": false
+   },
+   {
+    "id": "be06755acbeb7865b21a79b680a9388c43f3b2c6",
+    "file": "AGENTS.md",
+    "line": 1,
+    "endLine": 2,
+    "section": "",
+    "kind": "sentence",
+    "text": "Your background is in distributed systems, database engines, and scalable platforms.",
+    "spans": [],
+    "residual": [
+     "description \"Your background distributed systems database engines …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Your background distributed systems database engines …\"",
+    "settled": false
+   },
+   {
+    "id": "6d2bc99937139cdc94715012e46d2c212a372581",
+    "file": "AGENTS.md",
+    "line": 2,
+    "endLine": 2,
+    "section": "",
+    "kind": "sentence",
+    "text": "Before starting the implementation of any request, you MUST REVIEW the following development guide and best practices.",
+    "spans": [],
+    "residual": [
+     "rule \"MUST\"",
+     "description \"Before starting implementation request you REVIEW …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"MUST\", description \"Before starting implementation request you REVIEW …\"",
+    "settled": false
+   },
+   {
+    "id": "8dcf36644c829a990f99797fffc242f70d805620",
+    "file": "AGENTS.md",
+    "line": 5,
+    "endLine": 5,
+    "section": "Core Mandates",
+    "kind": "item",
+    "text": "Conventions: Rigorously adhere to existing project conventions when reading or modifying code. Analyze surrounding code, tests, and configuration first.",
+    "spans": [],
+    "residual": [
+     "description \"Conventions Rigorously adhere existing project conventions …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Conventions Rigorously adhere existing project conventions …\"",
+    "settled": false
+   },
+   {
+    "id": "60a5bfed89a9f68050793344d81bd80787b7418c",
+    "file": "AGENTS.md",
+    "line": 6,
+    "endLine": 6,
+    "section": "Core Mandates",
+    "kind": "item",
+    "text": "Libraries/Frameworks: NEVER assume a library/framework is available or appropriate. Verify its established usage within the project (check imports, and 'go.mod') before employing it.",
+    "spans": [],
+    "residual": [
+     "rule \"NEVER\"",
+     "description \"Libraries Frameworks NEVER assume library framework …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"NEVER\", description \"Libraries Frameworks NEVER assume library framework …\"",
+    "settled": false
+   },
+   {
+    "id": "18bfffcece690c939b3755d32885a718895adb7c",
+    "file": "AGENTS.md",
+    "line": 7,
+    "endLine": 7,
+    "section": "Core Mandates",
+    "kind": "item",
+    "text": "Style & Structure: Mimic the style (formatting, naming), structure, framework choices, typing, and architectural patterns of existing code in the project.",
+    "spans": [],
+    "residual": [
+     "description \"Style Structure Mimic style formatting naming …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Style Structure Mimic style formatting naming …\"",
+    "settled": false
+   },
+   {
+    "id": "253247d585fafbf28671e16ba206fdae09a435c3",
+    "file": "AGENTS.md",
+    "line": 8,
+    "endLine": 8,
+    "section": "Core Mandates",
+    "kind": "item",
+    "text": "Idiomatic Changes: When editing, understand the local context (imports, functions/classes) to ensure your changes integrate naturally and idiomatically.",
+    "spans": [],
+    "residual": [
+     "description \"Idiomatic Changes editing understand local context …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Idiomatic Changes editing understand local context …\"",
+    "settled": false
+   },
+   {
+    "id": "94b8f9dd71d12fc55dd1f22b9b9a545362f9d248",
+    "file": "AGENTS.md",
+    "line": 9,
+    "endLine": 9,
+    "section": "Core Mandates",
+    "kind": "item",
+    "text": "Comments: Add code comments sparingly. Focus on why something is done, especially for complex logic, rather than what is done. Only add high-value comments if necessary for clarity or if requested by the user. Do not edit comments that are separate from the code you are changing. NEVER talk to the user or describe your changes through comments.",
+    "spans": [],
+    "residual": [
+     "quantifier \"Only\"",
+     "rule \"Do not\"",
+     "description \"Comments Add code comments sparingly Focus …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"Only\", rule \"Do not\", description \"Comments Add code comments sparingly Focus …\"",
+    "settled": false
+   },
+   {
+    "id": "2f2456987a96b9bc1f317783a2fcbb3a7fbd1a0c",
+    "file": "AGENTS.md",
+    "line": 10,
+    "endLine": 10,
+    "section": "Core Mandates",
+    "kind": "item",
+    "text": "Proactiveness: Fulfill the user's request thoroughly, including reasonable, directly implied follow-up actions.",
+    "spans": [],
+    "residual": [
+     "description \"Proactiveness Fulfill user's request thoroughly including …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Proactiveness Fulfill user's request thoroughly including …\"",
+    "settled": false
+   },
+   {
+    "id": "baf203360259d1ab25c8922fa544035329807683",
+    "file": "AGENTS.md",
+    "line": 11,
+    "endLine": 11,
+    "section": "Core Mandates",
+    "kind": "item",
+    "text": "Confirm Ambiguity/Expansion: Do not take significant actions beyond the clear scope of the request without confirming with the user. If asked how to do something, explain first, don't just do it.",
+    "spans": [],
+    "residual": [
+     "rule \"Do not\"",
+     "description \"Confirm Ambiguity Expansion take significant actions …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"Do not\", description \"Confirm Ambiguity Expansion take significant actions …\"",
+    "settled": false
+   },
+   {
+    "id": "5a2d9fc0376709184c347fe2242db6747c613723",
+    "file": "AGENTS.md",
+    "line": 12,
+    "endLine": 12,
+    "section": "Core Mandates",
+    "kind": "item",
+    "text": "Explaining Changes: After completing a code modification or file operation provide summaries.",
+    "spans": [],
+    "residual": [
+     "description \"Explaining Changes After completing code modification …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Explaining Changes After completing code modification …\"",
+    "settled": false
+   },
+   {
+    "id": "5ca032546e74e5e08c50f23b48711ba29ba5355b",
+    "file": "AGENTS.md",
+    "line": 13,
+    "endLine": 13,
+    "section": "Core Mandates",
+    "kind": "item",
+    "text": "Do Not revert changes: Do not revert changes to the codebase unless asked to do so by the user. Only revert changes made by you if they have resulted in an error or if the user has explicitly asked you to revert the changes.",
+    "spans": [],
+    "residual": [
+     "quantifier \"Only\"",
+     "rule \"Do Not\"",
+     "description \"revert changes revert changes codebase unless …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"Only\", rule \"Do Not\", description \"revert changes revert changes codebase unless …\"",
+    "settled": false
+   },
+   {
+    "id": "91bfb8d601e4cca17db2b9623c116a84115bfbf8",
+    "file": "AGENTS.md",
+    "line": 16,
+    "endLine": 16,
+    "section": "Tone and Style",
+    "kind": "item",
+    "text": "Concise & Direct: Adopt a professional, direct, and concise tone suitable for a chat environment.",
+    "spans": [],
+    "residual": [
+     "description \"Concise Direct Adopt professional direct concise …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Concise Direct Adopt professional direct concise …\"",
+    "settled": false
+   },
+   {
+    "id": "f1c963d29b40a5192a8650a31a60fcbfa409646b",
+    "file": "AGENTS.md",
+    "line": 17,
+    "endLine": 17,
+    "section": "Tone and Style",
+    "kind": "item",
+    "text": "Minimal Output: Aim for fewer than 3 lines of text output (excluding tool use/code generation) per response whenever practical. Focus strictly on the user's query.",
+    "spans": [],
+    "residual": [
+     "description \"Minimal Output Aim fewer lines text …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Minimal Output Aim fewer lines text …\"",
+    "settled": false
+   },
+   {
+    "id": "51ea98eb6f1be396a211c58b514cf8311664f4d8",
+    "file": "AGENTS.md",
+    "line": 18,
+    "endLine": 18,
+    "section": "Tone and Style",
+    "kind": "item",
+    "text": "Clarity over Brevity (When Needed): While conciseness is key, prioritize clarity for essential explanations or when seeking necessary clarification if a request is ambiguous.",
+    "spans": [],
+    "residual": [
+     "description \"Clarity Brevity Needed While conciseness key …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Clarity Brevity Needed While conciseness key …\"",
+    "settled": false
+   },
+   {
+    "id": "c30961a4280ba71bbba4c3a72c0792c10ac727ce",
+    "file": "AGENTS.md",
+    "line": 19,
+    "endLine": 19,
+    "section": "Tone and Style",
+    "kind": "item",
+    "text": "No Chitchat: Avoid conversational filler, preambles (\"Okay, I will now...\"), or postambles (\"I have finished the changes...\"). Get straight to the action or answer.",
+    "spans": [],
+    "residual": [
+     "rule \"Avoid\"",
+     "description \"Chitchat Avoid conversational filler preambles Okay …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"Avoid\", description \"Chitchat Avoid conversational filler preambles Okay …\"",
+    "settled": false
+   },
+   {
+    "id": "733d460292b2bc194b3bb765aa40638785afdf4c",
+    "file": "AGENTS.md",
+    "line": 20,
+    "endLine": 20,
+    "section": "Tone and Style",
+    "kind": "item",
+    "text": "Formatting: Use GitHub-flavored Markdown. Responses will be rendered in monospace.",
+    "spans": [],
+    "residual": [
+     "description \"Formatting GitHub-flavored Markdown Responses rendered monospace\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Formatting GitHub-flavored Markdown Responses rendered monospace\"",
+    "settled": false
+   },
+   {
+    "id": "d09a996989227d8ef8ad4d2c6c1cbe10ba7dc44f",
+    "file": "AGENTS.md",
+    "line": 21,
+    "endLine": 21,
+    "section": "Tone and Style",
+    "kind": "item",
+    "text": "Tools vs. Text: Use tools for actions, text output only for communication. Do not add explanatory comments within tool calls or code blocks unless specifically part of the required code/command itself.",
+    "spans": [],
+    "residual": [
+     "quantifier \"only\"",
+     "rule \"Do not\"",
+     "description \"Tools Text tools actions text output …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"only\", rule \"Do not\", description \"Tools Text tools actions text output …\"",
+    "settled": false
+   },
+   {
+    "id": "ae52e119ded103e5ceb53aa1098e5633bfc06ad0",
+    "file": "AGENTS.md",
+    "line": 22,
+    "endLine": 22,
+    "section": "Tone and Style",
+    "kind": "item",
+    "text": "Handling Inability: If unable/unwilling to fulfill a request, state so briefly (1-2 sentences) without excessive justification. Offer alternatives if appropriate.",
+    "spans": [],
+    "residual": [
+     "description \"Handling Inability unable unwilling fulfill request …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Handling Inability unable unwilling fulfill request …\"",
+    "settled": false
+   },
+   {
+    "id": "a090cff71b9beaa8346b8b50f33188f8f7a6bc12",
+    "file": "AGENTS.md",
+    "line": 27,
+    "endLine": 27,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`/api`: proto definitions and generated code",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "/api",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"proto definitions generated code\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "/api",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "no command, skill or agent in this repository defines /api, and no code spells it as a URL path; fine if it comes from a user-level skill or an installed plugin"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`/api`: no command, skill or agent in this repository defines /api, and no code spells it as a URL path; fine if it comes from a user-level skill or an installed plugin",
+    "settled": false
+   },
+   {
+    "id": "4d0b2e102c04a264ac77a33e44010b97d1865397",
+    "file": "AGENTS.md",
+    "line": 28,
+    "endLine": 28,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`/chasm`: library for Chasm (Coordinated Heterogeneous Application State Machines)",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "/chasm",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"library Chasm Coordinated Heterogeneous Application State …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "/chasm",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "no command, skill or agent in this repository defines /chasm, and no code spells it as a URL path; fine if it comes from a user-level skill or an installed plugin"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`/chasm`: no command, skill or agent in this repository defines /chasm, and no code spells it as a URL path; fine if it comes from a user-level skill or an installed plugin",
+    "settled": false
+   },
+   {
+    "id": "ceae1e67551b9dd4ca4e6fb5f674e60cde8a7925",
+    "file": "AGENTS.md",
+    "line": 29,
+    "endLine": 29,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`/client`: client libraries for inter-service communication between frontend/history/matching etc.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "/client",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"client libraries inter-service communication between frontend …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "/client",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "no command, skill or agent in this repository defines /client, and no code spells it as a URL path; fine if it comes from a user-level skill or an installed plugin"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`/client`: no command, skill or agent in this repository defines /client, and no code spells it as a URL path; fine if it comes from a user-level skill or an installed plugin",
+    "settled": false
+   },
+   {
+    "id": "dd040bb612bcba6f2f02afe3fd30c7420df85b5a",
+    "file": "AGENTS.md",
+    "line": 30,
+    "endLine": 30,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`/cmd`: CLI commands and main applications",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "/cmd",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"CLI commands main applications\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "/cmd",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "no command, skill or agent in this repository defines /cmd, and no code spells it as a URL path; fine if it comes from a user-level skill or an installed plugin"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`/cmd`: no command, skill or agent in this repository defines /cmd, and no code spells it as a URL path; fine if it comes from a user-level skill or an installed plugin",
+    "settled": false
+   },
+   {
+    "id": "7b313e72f155b89ee1c8d666295ec9b082f076d1",
+    "file": "AGENTS.md",
+    "line": 31,
+    "endLine": 31,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`/common`: modules shared across all services",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "/common",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"all\"",
+     "description \"modules shared across services\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "/common",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "no command, skill or agent in this repository defines /common, and no code spells it as a URL path; fine if it comes from a user-level skill or an installed plugin"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`/common`: no command, skill or agent in this repository defines /common, and no code spells it as a URL path; fine if it comes from a user-level skill or an installed plugin",
+    "settled": false
+   },
+   {
+    "id": "aa868c6a77d57fc920edfd9f49e82b9e575de27f",
+    "file": "AGENTS.md",
+    "line": 32,
+    "endLine": 32,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`/common/dynamicconfig`: dynamic configuration library",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "/common/dynamicconfig",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"dynamic configuration library\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "/common/dynamicconfig",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "outside the repository"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"dynamic configuration library\"",
+    "settled": false
+   },
+   {
+    "id": "43a828d4a8944d59f1eb39b30f9d7bdbdac31b3e",
+    "file": "AGENTS.md",
+    "line": 33,
+    "endLine": 33,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`/common/membership`: cluster membership management",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "/common/membership",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"cluster membership management\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "/common/membership",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "outside the repository"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"cluster membership management\"",
+    "settled": false
+   },
+   {
+    "id": "0298368c3699a72a451a924345e41b9112c60e38",
+    "file": "AGENTS.md",
+    "line": 34,
+    "endLine": 34,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`/common/metrics`: metrics definition and library",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "/common/metrics",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"metrics definition library\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "/common/metrics",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "outside the repository"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"metrics definition library\"",
+    "settled": false
+   },
+   {
+    "id": "1dc61881935ff5c4e42c5310a82d21d6f1216339",
+    "file": "AGENTS.md",
+    "line": 35,
+    "endLine": 35,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`/common/namespace`: namespace cache and utilities",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "/common/namespace",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"namespace cache utilities\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "/common/namespace",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "outside the repository"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"namespace cache utilities\"",
+    "settled": false
+   },
+   {
+    "id": "8d22974a310ad4cd93eb62ffdae3ee0e9a47b815",
+    "file": "AGENTS.md",
+    "line": 36,
+    "endLine": 36,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`/common/nexus`: Nexus service client and utilities",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "/common/nexus",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Nexus service client utilities\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "/common/nexus",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "outside the repository"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Nexus service client utilities\"",
+    "settled": false
+   },
+   {
+    "id": "1fa7047c0bfbb8fcf361ad23058154e743f8c50c",
+    "file": "AGENTS.md",
+    "line": 37,
+    "endLine": 37,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`/common/persistence`: persistence layer abstractions and implementations",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "/common/persistence",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"persistence layer abstractions implementations\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "/common/persistence",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "outside the repository"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"persistence layer abstractions implementations\"",
+    "settled": false
+   },
+   {
+    "id": "f4b57a42bef71a230e14999e71c78c4380d96ad8",
+    "file": "AGENTS.md",
+    "line": 38,
+    "endLine": 38,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`/components`: nexus components",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "/components",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"nexus components\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "/components",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "no command, skill or agent in this repository defines /components, and no code spells it as a URL path; fine if it comes from a user-level skill or an installed plugin"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`/components`: no command, skill or agent in this repository defines /components, and no code spells it as a URL path; fine if it comes from a user-level skill or an installed plugin",
+    "settled": false
+   },
+   {
+    "id": "222c59c313df634913d4db98aa359108e96ed01c",
+    "file": "AGENTS.md",
+    "line": 39,
+    "endLine": 39,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`/config`: configuration files and templates",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "/config",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"configuration files templates\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "/config",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "a built-in Claude Code command"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"configuration files templates\"",
+    "settled": false
+   },
+   {
+    "id": "fc4a4bbefc77f8595f373eb77d5d8f5081642603",
+    "file": "AGENTS.md",
+    "line": 40,
+    "endLine": 40,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`/docs`: documentation",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "/docs",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "/docs",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "no command, skill or agent in this repository defines /docs, and no code spells it as a URL path; fine if it comes from a user-level skill or an installed plugin"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`/docs`: no command, skill or agent in this repository defines /docs, and no code spells it as a URL path; fine if it comes from a user-level skill or an installed plugin",
+    "settled": false
+   },
+   {
+    "id": "b4a6e9834d01365770e15b7e684d46539fc26975",
+    "file": "AGENTS.md",
+    "line": 41,
+    "endLine": 41,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`/proto`: proto definitions for internal services",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "/proto",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"proto definitions internal services\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "/proto",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "no command, skill or agent in this repository defines /proto, and no code spells it as a URL path; fine if it comes from a user-level skill or an installed plugin"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`/proto`: no command, skill or agent in this repository defines /proto, and no code spells it as a URL path; fine if it comes from a user-level skill or an installed plugin",
+    "settled": false
+   },
+   {
+    "id": "69e14eabaa5dc41f1e85135b17dc2f818db09cf8",
+    "file": "AGENTS.md",
+    "line": 42,
+    "endLine": 42,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`/schema`: database schema definitions for core databases store and visibility store",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "/schema",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"database schema definitions core databases store …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "/schema",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "no command, skill or agent in this repository defines /schema, and no code spells it as a URL path; fine if it comes from a user-level skill or an installed plugin"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`/schema`: no command, skill or agent in this repository defines /schema, and no code spells it as a URL path; fine if it comes from a user-level skill or an installed plugin",
+    "settled": false
+   },
+   {
+    "id": "741ad98352b9f0a55ed48aca8100e79fe5e19e48",
+    "file": "AGENTS.md",
+    "line": 43,
+    "endLine": 43,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`/service`: main services (frontend, history, matching, worker, etc.)",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "/service",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"main services frontend history matching worker\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "/service",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "common/rpc/interceptor/health_check.go:28",
+        "excerpt": "serviceProtoSuffix = \"/service.proto\"",
+        "level": "reference"
+       }
+      ],
+      "reason": "a URL path in code at common/rpc/interceptor/health_check.go:28"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"main services frontend history matching worker\"",
+    "settled": false
+   },
+   {
+    "id": "72f33dd17223ce58a8c8ab85d286c414c70b048c",
+    "file": "AGENTS.md",
+    "line": 44,
+    "endLine": 44,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`/service/frontend`: frontend service implementation",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "/service/frontend",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"frontend service implementation\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "/service/frontend",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "outside the repository"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"frontend service implementation\"",
+    "settled": false
+   },
+   {
+    "id": "f484c43eeb46845d2a227d0f8af257ab4cd69747",
+    "file": "AGENTS.md",
+    "line": 45,
+    "endLine": 45,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`/service/history`: history service implementation",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "/service/history",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"history service implementation\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "/service/history",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "outside the repository"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"history service implementation\"",
+    "settled": false
+   },
+   {
+    "id": "116e85a8c34100bfb500f711120d4d187e4c658d",
+    "file": "AGENTS.md",
+    "line": 46,
+    "endLine": 46,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`/service/matching`: matching service implementation",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "/service/matching",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"matching service implementation\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "/service/matching",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "outside the repository"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"matching service implementation\"",
+    "settled": false
+   },
+   {
+    "id": "8fbb9fd7820dc2dcc77cabbc81d67c8dc7674bae",
+    "file": "AGENTS.md",
+    "line": 47,
+    "endLine": 47,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`/service/worker`: worker service implementation",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "/service/worker",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"worker service implementation\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "/service/worker",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "outside the repository"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"worker service implementation\"",
+    "settled": false
+   },
+   {
+    "id": "ec5c9fe293db0ee97d17f0c087ad8435c1d0b72b",
+    "file": "AGENTS.md",
+    "line": 50,
+    "endLine": 50,
+    "section": "Important Commands:",
+    "kind": "item",
+    "text": "Fast Go linting (changed packages): `make lint-code-fast`",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "make lint-code-fast",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Fast linting changed packages\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "make lint-code-fast",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "Makefile:409",
+        "excerpt": "lint-code-fast:",
+        "level": "definition"
+       }
+      ],
+      "reason": "target lint-code-fast in Makefile"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Fast linting changed packages\"",
+    "settled": false
+   },
+   {
+    "id": "dd2e4c09ded3112cf5e021ffa97f947377aab318",
+    "file": "AGENTS.md",
+    "line": 51,
+    "endLine": 51,
+    "section": "Important Commands:",
+    "kind": "item",
+    "text": "Full Go linting (all packages): `make lint-code`",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "make lint-code",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"all\"",
+     "description \"Full linting packages\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "make lint-code",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "Makefile:426",
+        "excerpt": "lint-code: $(GOLANGCI_LINT) $(ERRORTYPE)",
+        "level": "definition"
+       }
+      ],
+      "reason": "target lint-code in Makefile"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: quantifier \"all\", description \"Full linting packages\"",
+    "settled": false
+   },
+   {
+    "id": "aebcbc24d4ff47a13c3ad75c245f8c8675f3de8f",
+    "file": "AGENTS.md",
+    "line": 52,
+    "endLine": 52,
+    "section": "Important Commands:",
+    "kind": "item",
+    "text": "Formatting imports: `make fmt-imports`",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "make fmt-imports",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Formatting imports\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "make fmt-imports",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "Makefile:490",
+        "excerpt": "fmt-imports: $(GCI) # Don't get confused, there is a single linter called gci, which is a part of the mega linter we use is called golangci-lint.",
+        "level": "definition"
+       }
+      ],
+      "reason": "target fmt-imports in Makefile"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Formatting imports\"",
+    "settled": false
+   },
+   {
+    "id": "7963e4ebdd29c82c0ded177626a750cf0a66d906",
+    "file": "AGENTS.md",
+    "line": 53,
+    "endLine": 53,
+    "section": "Important Commands:",
+    "kind": "item",
+    "text": "Code generation: `make proto`",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "make proto",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Code generation\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "make proto",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "Makefile:27",
+        "excerpt": "proto: lint-protos lint-api protoc proto-codegen",
+        "level": "definition"
+       }
+      ],
+      "reason": "target proto in Makefile"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Code generation\"",
+    "settled": false
+   },
+   {
+    "id": "d91bc7571fb51bb599f799fb7d565ec1e0e71b60",
+    "file": "AGENTS.md",
+    "line": 54,
+    "endLine": 54,
+    "section": "Important Commands:",
+    "kind": "item",
+    "text": "Update API proto: `make update-go-api`",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "make update-go-api",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Update API proto\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "make update-go-api",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "Makefile:351",
+        "excerpt": "update-go-api:",
+        "level": "definition"
+       }
+      ],
+      "reason": "target update-go-api in Makefile"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Update API proto\"",
+    "settled": false
+   },
+   {
+    "id": "3686754b033d080571d6ff2b1547db6649ca5b21",
+    "file": "AGENTS.md",
+    "line": 55,
+    "endLine": 55,
+    "section": "Important Commands:",
+    "kind": "item",
+    "text": "Unit Testing: `make unit-test`",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "make unit-test",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Unit Testing\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "make unit-test",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "Makefile:537",
+        "excerpt": "unit-test: clean-test-output",
+        "level": "definition"
+       }
+      ],
+      "reason": "target unit-test in Makefile"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Unit Testing\"",
+    "settled": false
+   },
+   {
+    "id": "144da5c7bd25c6225281f5f7aa4beb5cbcf9301a",
+    "file": "AGENTS.md",
+    "line": 58,
+    "endLine": 58,
+    "section": "Best Practices:",
+    "kind": "item",
+    "text": "Mimic the style (formatting, naming), structure, framework choices, typing, and architectural patterns of existing code in the project",
+    "spans": [],
+    "residual": [
+     "description \"Mimic style formatting naming structure framework …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Mimic style formatting naming structure framework …\"",
+    "settled": false
+   },
+   {
+    "id": "637b80dc42b6b9120e959e9a4d90a81ac17381ed",
+    "file": "AGENTS.md",
+    "line": 59,
+    "endLine": 59,
+    "section": "Best Practices:",
+    "kind": "item",
+    "text": "Do not litter our codebase with unnecessary comments. Comments should describe WHY something was done, never WHAT was done",
+    "spans": [],
+    "residual": [
+     "rule \"Do not\"",
+     "description \"litter our codebase unnecessary comments Comments …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"Do not\", description \"litter our codebase unnecessary comments Comments …\"",
+    "settled": false
+   },
+   {
+    "id": "916872eb6dfb54f5903356c824240caef804fe43",
+    "file": "AGENTS.md",
+    "line": 60,
+    "endLine": 60,
+    "section": "Best Practices:",
+    "kind": "item",
+    "text": "Implement tests for both best-case scenarios and failure modes",
+    "spans": [],
+    "residual": [
+     "description \"Implement tests both best-case scenarios failure …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Implement tests both best-case scenarios failure …\"",
+    "settled": false
+   },
+   {
+    "id": "bb9b1fb2ee97df710e47e59247842e28dafc5851",
+    "file": "AGENTS.md",
+    "line": 61,
+    "endLine": 61,
+    "section": "Best Practices:",
+    "kind": "item",
+    "text": "Handle errors appropriately",
+    "spans": [],
+    "residual": [
+     "description \"Handle errors appropriately\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Handle errors appropriately\"",
+    "settled": false
+   },
+   {
+    "id": "e59edc2b1bb1678b40cbc9a08e7f8cfb40e59ad4",
+    "file": "AGENTS.md",
+    "line": 62,
+    "endLine": 62,
+    "section": "Best Practices:",
+    "kind": "item",
+    "text": "errors MUST be handled, not ignored",
+    "spans": [],
+    "residual": [
+     "rule \"MUST\"",
+     "description \"errors handled ignored\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"MUST\", description \"errors handled ignored\"",
+    "settled": false
+   },
+   {
+    "id": "5be05932bfaa1db6be10fff0f4abd88f292373d2",
+    "file": "AGENTS.md",
+    "line": 63,
+    "endLine": 63,
+    "section": "Best Practices:",
+    "kind": "item",
+    "text": "Leave `CONSIDER(name):` comments for future design considerations",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "CONSIDER(name):",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Leave comments future design considerations\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "CONSIDER(name):",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `CONSIDER(name):`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "4275cc71eea84e8a3090a14c36d0be2d6461a7f3",
+    "file": "AGENTS.md",
+    "line": 64,
+    "endLine": 64,
+    "section": "Best Practices:",
+    "kind": "item",
+    "text": "Regenerate code when interface definitions change",
+    "spans": [],
+    "residual": [
+     "description \"Regenerate code interface definitions change\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Regenerate code interface definitions change\"",
+    "settled": false
+   },
+   {
+    "id": "a80cae9f22bc8b0b7ea8f0d99786a47f25d80ad2",
+    "file": "AGENTS.md",
+    "line": 65,
+    "endLine": 65,
+    "section": "Best Practices:",
+    "kind": "item",
+    "text": "Always include `-tags test_dep` when running tests",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "-tags test_dep",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Always\"",
+     "description \"Always include tests\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "-tags test_dep",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `-tags test_dep`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "22b1bba7500c66198900cec6ba2e311886fa03e4",
+    "file": "AGENTS.md",
+    "line": 66,
+    "endLine": 66,
+    "section": "Best Practices:",
+    "kind": "item",
+    "text": "Include the `integration` tag only for integration tests",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "integration",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"only\"",
+     "description \"Include tag integration tests\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "integration",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "cmd/tools/test/find_altered_tests.go:39",
+        "excerpt": "\"integration\": {\"./common/persistence/tests\", \"./tools/tests\", \"./temporaltest\"},",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at cmd/tools/test/find_altered_tests.go:39"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: quantifier \"only\", description \"Include tag integration tests\"",
+    "settled": false
+   },
+   {
+    "id": "149b46c53474043d0f3772078f4ea88a7d944cec",
+    "file": "AGENTS.md",
+    "line": 67,
+    "endLine": 67,
+    "section": "Best Practices:",
+    "kind": "item",
+    "text": "Do not introduce new third party libraries unless specifically requested.",
+    "spans": [],
+    "residual": [
+     "rule \"Do not\"",
+     "description \"introduce new third party libraries unless …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"Do not\", description \"introduce new third party libraries unless …\"",
+    "settled": false
+   },
+   {
+    "id": "e85cb59854032cae41bd082b3b083ac9af5bfe40",
+    "file": "AGENTS.md",
+    "line": 70,
+    "endLine": 70,
+    "section": "Error Handling:",
+    "kind": "item",
+    "text": "Check and handle all errors",
+    "spans": [],
+    "residual": [
+     "quantifier \"all\"",
+     "description \"Check handle errors\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"all\", description \"Check handle errors\"",
+    "settled": false
+   },
+   {
+    "id": "ab1b7d8981162f297aafe56d1ea35757cb908af7",
+    "file": "AGENTS.md",
+    "line": 71,
+    "endLine": 71,
+    "section": "Error Handling:",
+    "kind": "item",
+    "text": "Use appropriate logging methods based on error severity",
+    "spans": [],
+    "residual": [
+     "description \"appropriate logging methods based error severity\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"appropriate logging methods based error severity\"",
+    "settled": false
+   },
+   {
+    "id": "243b0d39da994bfbeb063ba327bc24f75e2d538e",
+    "file": "AGENTS.md",
+    "line": 72,
+    "endLine": 72,
+    "section": "Error Handling:",
+    "kind": "item",
+    "text": "Use `logger.Fatal` for core invariant violations",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "logger.Fatal",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"core invariant violations\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "logger.Fatal",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "common/metrics/config.go:297",
+        "excerpt": "logger.Fatal(\"invalid sanitize options input on prometheus config\", tag.Error(err))",
+        "level": "reference"
+       },
+       {
+        "ref": "common/metrics/config.go:414",
+        "excerpt": "logger.Fatal(\"error creating statsd client\", tag.Error(err))",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at common/metrics/config.go:297"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"core invariant violations\"",
+    "settled": false
+   },
+   {
+    "id": "f2b3ea8176e18ed38075a669ad29ee899c692e4d",
+    "file": "AGENTS.md",
+    "line": 73,
+    "endLine": 73,
+    "section": "Error Handling:",
+    "kind": "item",
+    "text": "Use `logger.DPanic` for issues that are important but should not crash production",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "logger.DPanic",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"should\"",
+     "description \"issues important crash production\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "logger.DPanic",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "common/serviceerror/service_error_with_dpanic.go:10",
+        "excerpt": "logger.DPanic(msg)",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at common/serviceerror/service_error_with_dpanic.go:10"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"should\", description \"issues important crash production\"",
+    "settled": false
+   },
+   {
+    "id": "da77b5dcd93e7f16392ec060076f4cb38d6cc291",
+    "file": "AGENTS.md",
+    "line": 76,
+    "endLine": 76,
+    "section": "Testing:",
+    "kind": "item",
+    "text": "Write tests for new functionality",
+    "spans": [],
+    "residual": [
+     "description \"Write tests new functionality\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Write tests new functionality\"",
+    "settled": false
+   },
+   {
+    "id": "dad5e44ce8da7772e664157b44da8273d8e7d7d4",
+    "file": "AGENTS.md",
+    "line": 77,
+    "endLine": 77,
+    "section": "Testing:",
+    "kind": "item",
+    "text": "Run tests after altering code or tests",
+    "spans": [],
+    "residual": [
+     "description \"tests after altering code tests\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"tests after altering code tests\"",
+    "settled": false
+   },
+   {
+    "id": "ab811243c287597ce774a2a4f03a361206e7ea37",
+    "file": "AGENTS.md",
+    "line": 78,
+    "endLine": 78,
+    "section": "Testing:",
+    "kind": "item",
+    "text": "Start with unit tests for fastest feedback",
+    "spans": [],
+    "residual": [
+     "description \"Start unit tests fastest feedback\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Start unit tests fastest feedback\"",
+    "settled": false
+   },
+   {
+    "id": "8b2dfe07ec02666bd5b0f0103593e8b1e54035ef",
+    "file": "AGENTS.md",
+    "line": 79,
+    "endLine": 79,
+    "section": "Testing:",
+    "kind": "item",
+    "text": "Prefer `require` over `assert`, avoid testify suites in unit tests (functional tests require suites for test cluster setup), use `require.Eventually` instead of `time.Sleep` (forbidden by linter)",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "require",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "assert",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "require.Eventually",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "time.Sleep",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Prefer\"",
+     "description \"Prefer avoid testify suites unit tests …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "require",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/workflows/promote-docker-image.yml:107",
+        "excerpt": "const { execSync } = require('child_process');",
+        "level": "reference"
+       },
+       {
+        "ref": "chasm/chasmtest/task_helpers_test.go:51",
+        "excerpt": "require.NoError(t, err)",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/workflows/promote-docker-image.yml:107"
+     },
+     {
+      "kind": "symbol",
+      "text": "assert",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "chasm/lib/callback/tasks_test.go:148",
+        "excerpt": "assert func(chasm.Context, *Callback),",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at chasm/lib/callback/tasks_test.go:148"
+     },
+     {
+      "kind": "symbol",
+      "text": "require.Eventually",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "common/goro/keyed_set_test.go:31",
+        "excerpt": "require.Eventually(t, func() bool {",
+        "level": "reference"
+       },
+       {
+        "ref": "common/goro/keyed_set_test.go:51",
+        "excerpt": "require.Eventually(t, func() bool {",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at common/goro/keyed_set_test.go:31"
+     },
+     {
+      "kind": "symbol",
+      "text": "time.Sleep",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/.golangci.yml:35",
+        "excerpt": "- pattern: time.Sleep",
+        "level": "reference"
+       },
+       {
+        "ref": ".github/.golangci.yml:176",
+        "excerpt": "text: \"time.Sleep\"",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/.golangci.yml:35"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"Prefer\", description \"Prefer avoid testify suites unit tests …\"",
+    "settled": false
+   },
+   {
+    "id": "466a58ce08c5676ca4d96e465e453df1052a9f21",
+    "file": "AGENTS.md",
+    "line": 80,
+    "endLine": 80,
+    "section": "Testing:",
+    "kind": "item",
+    "text": "For float comparisons in tests, use `InDelta` or `InEpsilon` instead of `Equal` (enforced by `testifylint`)",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "InDelta",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "InEpsilon",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "Equal",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "testifylint",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"float comparisons tests instead enforced\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "InDelta",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "chasm/search_attribute_test.go:54",
+        "excerpt": "require.InDelta(t, 3.14, val, 0.0001)",
+        "level": "reference"
+       },
+       {
+        "ref": "chasm/search_attribute_test.go:155",
+        "excerpt": "require.InDelta(t, 3.14, doubleVal, 0.0001)",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at chasm/search_attribute_test.go:54"
+     },
+     {
+      "kind": "symbol",
+      "text": "InEpsilon",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "common/activityoptions/merge_test.go:137",
+        "excerpt": "require.InEpsilon(t, tc.expected.RetryPolicy.GetBackoffCoefficient(), tc.mergeInto.RetryPolicy.GetBackoffCoefficient(),…",
+        "level": "reference"
+       },
+       {
+        "ref": "common/dynamicconfig/collection_test.go:122",
+        "excerpt": "s.InEpsilon(0.1, value(), 1e-10)",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at common/activityoptions/merge_test.go:137"
+     },
+     {
+      "kind": "symbol",
+      "text": "Equal",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "api/adminservice/v1/request_response.go-helpers.pb.go:27",
+        "excerpt": "func (this *RebuildMutableStateRequest) Equal(that interface{}) bool {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at api/adminservice/v1/request_response.go-helpers.pb.go:27"
+     },
+     {
+      "kind": "symbol",
+      "text": "testifylint",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": ".github/.golangci.yml:78",
+        "excerpt": "testifylint:",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at .github/.golangci.yml:78"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"float comparisons tests instead enforced\"",
+    "settled": false
+   },
+   {
+    "id": "dfb98a085f810809f233a9b4c787f982c2a15188",
+    "file": "AGENTS.md",
+    "line": 81,
+    "endLine": 81,
+    "section": "Testing:",
+    "kind": "item",
+    "text": "For error assertions in testify suites, use `s.Require().NoError(err)` instead of `s.NoError(err)` (enforced by `testifylint`)",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "s.Require().NoError(err)",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "s.NoError()",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "testifylint",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"error assertions testify suites instead enforced\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "s.Require().NoError(err)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "chasm/registry_test.go:100",
+        "excerpt": "s.Require().NoError(err)",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at chasm/registry_test.go:100; what the example illustrates is not checked",
+      "blocked": true
+     },
+     {
+      "kind": "symbol",
+      "text": "s.NoError()",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "chasm/field_test.go:49",
+        "excerpt": "s.NoError(err)",
+        "level": "reference"
+       },
+       {
+        "ref": "chasm/field_test.go:117",
+        "excerpt": "s.NoError(err)",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at chasm/field_test.go:49"
+     },
+     {
+      "kind": "symbol",
+      "text": "testifylint",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": ".github/.golangci.yml:78",
+        "excerpt": "testifylint:",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at .github/.golangci.yml:78"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `s.Require().NoError(err)`: appears verbatim in code at chasm/registry_test.go:100; what the example illustrates is not checked",
+    "settled": false
+   },
+   {
+    "id": "444f3da010db15d0e2eae0b16a8fdace2d921a41",
+    "file": "AGENTS.md",
+    "line": 86,
+    "endLine": 86,
+    "section": "Software Engineering Tasks",
+    "kind": "item",
+    "text": "Understand: Think about the user's request and the relevant codebase context.",
+    "spans": [],
+    "residual": [
+     "description \"Understand Think about user's request relevant …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Understand Think about user's request relevant …\"",
+    "settled": false
+   },
+   {
+    "id": "e3a7ea67623c9442f55c93a7453e454a5350b945",
+    "file": "AGENTS.md",
+    "line": 87,
+    "endLine": 87,
+    "section": "Software Engineering Tasks",
+    "kind": "item",
+    "text": "Plan: Build a coherent and grounded (based on the understanding in step 1) plan for how you intend to resolve the user's task. Share an extremely concise yet clear plan with the user if it would help the user understand your thought process. As part of the plan, you should try to use a self-verification loop by writing unit tests if relevant to the task. Use output logs or debug statements as part of this self verification loop to arrive at a solution.",
+    "spans": [],
+    "residual": [
+     "rule \"should\"",
+     "description \"Plan Build coherent grounded based understanding …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"should\", description \"Plan Build coherent grounded based understanding …\"",
+    "settled": false
+   },
+   {
+    "id": "0d228e333e14e00dc98240d9810786645d544d52",
+    "file": "AGENTS.md",
+    "line": 88,
+    "endLine": 88,
+    "section": "Software Engineering Tasks",
+    "kind": "item",
+    "text": "Implement: Use the available tools to act on the plan, strictly adhering to the project's established conventions (detailed under 'Core Mandates').",
+    "spans": [],
+    "residual": [
+     "description \"Implement available tools act plan strictly …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Implement available tools act plan strictly …\"",
+    "settled": false
+   },
+   {
+    "id": "c04270166002217a7453db181181658fd62db8e0",
+    "file": "AGENTS.md",
+    "line": 89,
+    "endLine": 89,
+    "section": "Software Engineering Tasks",
+    "kind": "item",
+    "text": "Regenerate: If necessary, regenerate code based on your changes. If you alter anything annotated with `//go:generate` or in a `.proto` file you will need to do this.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "//go:generate",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": ".proto",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Regenerate necessary regenerate code based your …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "//go:generate",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "outside the repository"
+     },
+     {
+      "kind": "unknown",
+      "text": ".proto",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "Makefile:104",
+        "excerpt": "PROTO_FILES = $(shell find ./$(PROTO_ROOT)/internal -name \"*.proto\")",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at Makefile:104; what the example illustrates is not checked",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `.proto`: appears verbatim in code at Makefile:104; what the example illustrates is not checked",
+    "settled": false
+   },
+   {
+    "id": "de8efb8bce5b32de1e2e221be490d9887cf0d210",
+    "file": "AGENTS.md",
+    "line": 90,
+    "endLine": 90,
+    "section": "Software Engineering Tasks",
+    "kind": "item",
+    "text": "Verify (Tests): If applicable and feasible, verify the changes using the project's testing procedures. Identify the correct test commands and frameworks by examining 'README' files, build/package configuration (e.g., 'Makefile'), or existing test execution patterns. NEVER assume standard test commands.",
+    "spans": [],
+    "residual": [
+     "rule \"NEVER\"",
+     "description \"Verify Tests applicable feasible verify changes …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"NEVER\", description \"Verify Tests applicable feasible verify changes …\"",
+    "settled": false
+   },
+   {
+    "id": "377cd56ca0b5834e0fe8222f00322c893e25c2dc",
+    "file": "AGENTS.md",
+    "line": 91,
+    "endLine": 91,
+    "section": "Software Engineering Tasks",
+    "kind": "item",
+    "text": "Verify (Standards): VERY IMPORTANT: After making code changes, execute the project-specific build, linting and type-checking commands (`make lint-code-fast` for development)",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "make lint-code-fast",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Verify Standards VERY IMPORTANT After making …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "make lint-code-fast",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "Makefile:409",
+        "excerpt": "lint-code-fast:",
+        "level": "definition"
+       }
+      ],
+      "reason": "target lint-code-fast in Makefile"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Verify Standards VERY IMPORTANT After making …\"",
+    "settled": false
+   },
+   {
+    "id": "603019b3f5b3b89932f54699fb9c39b15801a1f7",
+    "file": "AGENTS.md",
+    "line": 95,
+    "endLine": 95,
+    "section": "Planning",
+    "kind": "item",
+    "text": "Break down the feature into smaller, manageable tasks.",
+    "spans": [],
+    "residual": [
+     "description \"Break down feature smaller manageable tasks\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Break down feature smaller manageable tasks\"",
+    "settled": false
+   },
+   {
+    "id": "7d5d7d9bcefe9820e90ded6b70e117143990f844",
+    "file": "AGENTS.md",
+    "line": 96,
+    "endLine": 96,
+    "section": "Planning",
+    "kind": "item",
+    "text": "Consider potential challenges for each task and how to address them.",
+    "spans": [],
+    "residual": [
+     "quantifier \"each\"",
+     "description \"Consider potential challenges task address them\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"each\", description \"Consider potential challenges task address them\"",
+    "settled": false
+   },
+   {
+    "id": "0a689e879d09d2cbf11adfae29b28454fdb8a37f",
+    "file": "AGENTS.md",
+    "line": 97,
+    "endLine": 97,
+    "section": "Planning",
+    "kind": "item",
+    "text": "Provide a high-level outline of the code structure, including function names and their purposes.",
+    "spans": [],
+    "residual": [
+     "description \"Provide high-level outline code structure including …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Provide high-level outline code structure including …\"",
+    "settled": false
+   },
+   {
+    "id": "d38026fb66d4808d7aefaea380fdd24d977f2f72",
+    "file": "AGENTS.md",
+    "line": 98,
+    "endLine": 98,
+    "section": "Planning",
+    "kind": "item",
+    "text": "List specific test cases you plan to implement.",
+    "spans": [],
+    "residual": [
+     "description \"List specific test cases you plan …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"List specific test cases you plan …\"",
+    "settled": false
+   },
+   {
+    "id": "2a82f34dbb7037f56ac48e46cd6b21cf611466bf",
+    "file": "AGENTS.md",
+    "line": 99,
+    "endLine": 99,
+    "section": "Planning",
+    "kind": "item",
+    "text": "State which error handling approaches you will use for different scenarios.",
+    "spans": [],
+    "residual": [
+     "description \"State error handling approaches you different …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"State error handling approaches you different …\"",
+    "settled": false
+   },
+   {
+    "id": "d2613222c0dca0e0182f7f59a9d87023c14a8d42",
+    "file": "AGENTS.md",
+    "line": 100,
+    "endLine": 104,
+    "section": "Planning",
+    "kind": "item",
+    "text": "Discuss the trade-offs inherent in your design decisions, including: a. Performance trade-offs b. Scalability trade-offs c. Complexity trade-offs d. Security trade-offs",
+    "spans": [],
+    "residual": [
+     "description \"Discuss trade-offs inherent your design decisions …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Discuss trade-offs inherent your design decisions …\"",
+    "settled": false
+   },
+   {
+    "id": "9e7c0b1bcec2a297eb9d46fe3bf88ca0f77560ea",
+    "file": "AGENTS.md",
+    "line": 105,
+    "endLine": 105,
+    "section": "Planning",
+    "kind": "item",
+    "text": "Reason about the failure modes of your design. How does it handle crashes? A 10x increase in load?",
+    "spans": [],
+    "residual": [
+     "description \"Reason about failure modes your design …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Reason about failure modes your design …\"",
+    "settled": false
+   }
+  ]
+ }
+}

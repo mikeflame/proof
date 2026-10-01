@@ -1,0 +1,4779 @@
+{
+ "proof": "79a431876ead",
+ "stage": "check",
+ "seconds": 6,
+ "exit": 0,
+ "report": {
+  "file": "AGENTS.md",
+  "scope": "project",
+  "why": "Claude Code reads it only when no CLAUDE.md, .claude/CLAUDE.md or CLAUDE.local.md is in the folder or above it, and Codex, Cursor and others read it always",
+  "imports": [],
+  "importedBy": [],
+  "counts": {
+   "VERIFIED": 11,
+   "STALE": 0,
+   "UNCONFIRMED": 2,
+   "UNVERIFIED_WITH_REASON": 93,
+   "DECIDED": 0,
+   "OVERRIDDEN": 0,
+   "NOT_CHECKED": 2,
+   "FIXED": 0,
+   "FIX_REJECTED": 0
+  },
+  "evidenceLevels": {
+   "definition": 26,
+   "declaration": 14,
+   "reference": 29,
+   "comment": 0,
+   "substring": 0,
+   "none": 1
+  },
+  "git": {
+   "root": "/home/ms/projects/proof-cache/corpus/ruff",
+   "tree": "1fd689cfa960a530bb3ee2b41b66078e997c6956",
+   "head": "ccba26cc3af909b7f19060f48f53daeab5070f9d",
+   "branch": null,
+   "upstream": "origin/main",
+   "behind": 2
+  },
+  "run": {
+   "started": "2026-10-01T14:01:00.490Z",
+   "finished": "2026-10-01T14:01:06.591Z",
+   "version": "0.2.0"
+  },
+  "decisions": [],
+  "reopened": [],
+  "verdict": "PARTLY PROVEN",
+  "ownVerdict": "PARTLY PROVEN",
+  "coverage": {
+   "statements": 108,
+   "withResult": 108
+  },
+  "degraded": [],
+  "statements": [
+   {
+    "id": "7ff29e069e102b5a77a04c510958e85d2e4cbf0a",
+    "file": "AGENTS.md",
+    "line": 3,
+    "endLine": 3,
+    "section": "Ruff Repository",
+    "kind": "sentence",
+    "text": "This repository contains both Ruff (a Python linter and formatter) and ty (a Python type checker).",
+    "spans": [
+     {
+      "kind": "dependency",
+      "text": "Ruff",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"repository contains both Python linter formatter …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "dependency",
+      "text": "Ruff",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "python/py-fuzzer/pyproject.toml ruff \">=0.16.8\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "python/py-fuzzer/pyproject.toml ruff",
+        "level": "declaration"
+       }
+      ],
+      "reason": "python/py-fuzzer/pyproject.toml depends on ruff"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"repository contains both Python linter formatter …\"",
+    "settled": false
+   },
+   {
+    "id": "16e8e84266425931c77928bb251bcfd5c3721e5a",
+    "file": "AGENTS.md",
+    "line": 3,
+    "endLine": 3,
+    "section": "Ruff Repository",
+    "kind": "sentence",
+    "text": "The crates follow a naming convention: `ruff_*` for Ruff-specific code and `ty_*` for ty-specific code. ty reuses several Ruff crates, including the Python parser (`ruff_python_parser`) and AST definitions (`ruff_python_ast`).",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "ruff_*",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "ty_*",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "ruff_python_parser",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "ruff_python_ast",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "Ruff",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"crates follow naming convention specific code …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "ruff_*",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "ty_*",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "symbol",
+      "text": "ruff_python_parser",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "Cargo.toml:39",
+        "excerpt": "ruff_python_parser = { version = \"0.0.15\", path = \"crates/ruff_python_parser\" }",
+        "level": "declaration"
+       },
+       {
+        "ref": "crates/ruff/Cargo.toml:35",
+        "excerpt": "ruff_python_parser = { workspace = true }",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at Cargo.toml:39"
+     },
+     {
+      "kind": "symbol",
+      "text": "ruff_python_ast",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "Cargo.toml:32",
+        "excerpt": "ruff_python_ast = { version = \"0.0.15\", path = \"crates/ruff_python_ast\" }",
+        "level": "declaration"
+       },
+       {
+        "ref": "clippy.toml:25",
+        "excerpt": "\"ruff_python_ast::hashable::HashableExpr\",",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at Cargo.toml:32"
+     },
+     {
+      "kind": "dependency",
+      "text": "Ruff",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "python/py-fuzzer/pyproject.toml ruff \">=0.16.8\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "python/py-fuzzer/pyproject.toml ruff",
+        "level": "declaration"
+       }
+      ],
+      "reason": "python/py-fuzzer/pyproject.toml depends on ruff"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `ruff_*`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "37f62409acc56db6d79b301aa97c655145b179be",
+    "file": "AGENTS.md",
+    "line": 7,
+    "endLine": 9,
+    "section": "Before contributing",
+    "kind": "sentence",
+    "text": "Before starting work on an issue and again before opening a pull request, follow the [guidance on avoiding duplicate work](CONTRIBUTING.md#avoiding-duplicate-work).",
+    "spans": [
+     {
+      "kind": "link",
+      "text": "CONTRIBUTING.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Before starting work issue again before …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": "CONTRIBUTING.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "CONTRIBUTING.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "CONTRIBUTING.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Before starting work issue again before …\"",
+    "settled": false
+   },
+   {
+    "id": "60321753cc84eadb46ee59d173bcdee99b946a94",
+    "file": "AGENTS.md",
+    "line": 8,
+    "endLine": 9,
+    "section": "Before contributing",
+    "kind": "sentence",
+    "text": "If an open pull request already addresses the issue, do not submit a competing one without maintainer agreement.",
+    "spans": [],
+    "residual": [
+     "rule \"do not\"",
+     "description \"open pull request already addresses issue …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"do not\", description \"open pull request already addresses issue …\"",
+    "settled": false
+   },
+   {
+    "id": "33845c765cefa840ed3ee613fafc529fd7937de9",
+    "file": "AGENTS.md",
+    "line": 13,
+    "endLine": 18,
+    "section": "PR conventions",
+    "kind": "sentence",
+    "text": "Before opening a PR, inspect the repository's available GitHub labels and the current Rooster configuration, including required and ignored labels, in the `[tool.rooster]` and `[tool.rooster.section-labels]` sections of [Ruff's `pyproject.toml`](pyproject.toml) and [ty's `pyproject.toml`](https://github.com/astral-sh/ty/blob/main/pyproject.toml).",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "[tool.rooster]",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "[tool.rooster.section-labels]",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "pyproject.toml",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "pyproject.toml",
+      "expect": "present"
+     },
+     {
+      "kind": "link",
+      "text": "pyproject.toml",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "Ruff",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"required\"",
+     "description \"Before opening inspect repository's available GitHub …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "[tool.rooster]",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "pyproject.toml:301",
+        "excerpt": "[tool.rooster]",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at pyproject.toml:301; what the example illustrates is not checked",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "[tool.rooster.section-labels]",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "pyproject.toml:326",
+        "excerpt": "[tool.rooster.section-labels]",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at pyproject.toml:326; what the example illustrates is not checked",
+      "blocked": true
+     },
+     {
+      "kind": "path",
+      "text": "pyproject.toml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "pyproject.toml",
+        "level": "definition"
+       }
+      ],
+      "reason": "pyproject.toml"
+     },
+     {
+      "kind": "path",
+      "text": "pyproject.toml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "pyproject.toml",
+        "level": "definition"
+       }
+      ],
+      "reason": "pyproject.toml"
+     },
+     {
+      "kind": "link",
+      "text": "pyproject.toml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "pyproject.toml",
+        "level": "definition"
+       }
+      ],
+      "reason": "pyproject.toml"
+     },
+     {
+      "kind": "dependency",
+      "text": "Ruff",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "python/py-fuzzer/pyproject.toml ruff \">=0.16.8\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "python/py-fuzzer/pyproject.toml ruff",
+        "level": "declaration"
+       }
+      ],
+      "reason": "python/py-fuzzer/pyproject.toml depends on ruff"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `[tool.rooster]`: appears verbatim in code at pyproject.toml:301; what the example illustrates is not checked",
+    "settled": false
+   },
+   {
+    "id": "97684405410197ccc08646fb336a0104545d0226",
+    "file": "AGENTS.md",
+    "line": 16,
+    "endLine": 18,
+    "section": "PR conventions",
+    "kind": "sentence",
+    "text": "Labels such as `internal`, `testing`, and `ci` can exclude a PR from a changelog.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "internal",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "testing",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "ci",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Labels such exclude changelog\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "internal",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/ruff_linter/src/rules/airflow/snapshots/ruff_linter__rules__airflow__tests__airflow31-moved_AIR321_names.py.snap:13",
+        "excerpt": "help: `BaseSetupTeardownContext` has been moved to `airflow.sdk.definitions._internal.setup_teardown` since Airflow 3.1…",
+        "level": "reference"
+       },
+       {
+        "ref": "crates/ruff_linter/src/rules/airflow/snapshots/ruff_linter__rules__airflow__tests__airflow31-moved_AIR321_names.py.snap:24",
+        "excerpt": "help: `SetupTeardownContext` has been moved to `airflow.sdk.definitions._internal.setup_teardown` since Airflow 3.1. Th…",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at crates/ruff_linter/src/rules/airflow/snapshots/ruff_linter__rules__airflow__tests__airflow31-moved_AIR321_names.py.snap:13"
+     },
+     {
+      "kind": "symbol",
+      "text": "testing",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "crates/ruff_db/src/lib.rs:25",
+        "excerpt": "pub mod testing;",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at crates/ruff_db/src/lib.rs:25"
+     },
+     {
+      "kind": "unknown",
+      "text": "ci",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `ci`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "c3c0a68831aa39fb4e9b55e8e0081eee213d4889",
+    "file": "AGENTS.md",
+    "line": 17,
+    "endLine": 18,
+    "section": "PR conventions",
+    "kind": "sentence",
+    "text": "Decide whether and how the change should appear in each changelog, then select appropriate labels.",
+    "spans": [],
+    "residual": [
+     "quantifier \"each\"",
+     "rule \"should\"",
+     "description \"Decide whether change appear changelog select …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"each\", rule \"should\", description \"Decide whether change appear changelog select …\"",
+    "settled": false
+   },
+   {
+    "id": "f5d982d7f0ef881406c5a9f22168e47af905966e",
+    "file": "AGENTS.md",
+    "line": 20,
+    "endLine": 20,
+    "section": "PR conventions",
+    "kind": "sentence",
+    "text": "When working on ty, PR titles should start with `[ty]`.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "[ty]",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"should\"",
+     "description \"working titles start\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "[ty]",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/workflows/sync_typeshed.yaml:321",
+        "excerpt": "gh pr create --repo \"${GITHUB_REPOSITORY}\" --base main --head \"${UPSTREAM_BRANCH}\" --title \"[ty] Sync vendored typeshed…",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at .github/workflows/sync_typeshed.yaml:321; what the example illustrates is not checked",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `[ty]`: appears verbatim in code at .github/workflows/sync_typeshed.yaml:321; what the example illustrates is not checked",
+    "settled": false
+   },
+   {
+    "id": "2385069b3a236a68f312b66c3d66d3c3744e1fab",
+    "file": "AGENTS.md",
+    "line": 20,
+    "endLine": 20,
+    "section": "PR conventions",
+    "kind": "sentence",
+    "text": "Add the `ty` GitHub label.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "ty",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Add GitHub label\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "ty",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/ty/Cargo.toml",
+        "level": "definition"
+       }
+      ],
+      "reason": "ty is built from crates/ty/Cargo.toml"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Add GitHub label\"",
+    "settled": false
+   },
+   {
+    "id": "a2d2b3f4480657565caa224aba448a6e32f919bf",
+    "file": "AGENTS.md",
+    "line": 22,
+    "endLine": 24,
+    "section": "PR conventions",
+    "kind": "sentence",
+    "text": "If you have permission, apply the selected labels when creating the PR or afterward, then verify that the PR's actual labels include them and have the intended effect on each changelog.",
+    "spans": [],
+    "residual": [
+     "quantifier \"each\"",
+     "description \"you have permission apply selected labels …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"each\", description \"you have permission apply selected labels …\"",
+    "settled": false
+   },
+   {
+    "id": "e8f69db9d9517b37037f59e8a01545bc47735a06",
+    "file": "AGENTS.md",
+    "line": 23,
+    "endLine": 24,
+    "section": "PR conventions",
+    "kind": "sentence",
+    "text": "If the available labels or a Rooster configuration could not be inspected, say so when reporting the PR.",
+    "spans": [],
+    "residual": [
+     "description \"available labels Rooster configuration inspected say …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"available labels Rooster configuration inspected say …\"",
+    "settled": false
+   },
+   {
+    "id": "e818966a1271c01790a96d71ab9418b98593282a",
+    "file": "AGENTS.md",
+    "line": 28,
+    "endLine": 30,
+    "section": "Code Review Rules",
+    "kind": "sentence",
+    "text": "For security reviews of Ruff and ty runtime changes, use the [threat models](agents/references/threat-models.md) to assess trust boundaries and calibrate severity.",
+    "spans": [
+     {
+      "kind": "link",
+      "text": "agents/references/threat-models.md",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "Ruff",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"security reviews runtime changes assess trust …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": "agents/references/threat-models.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "agents/references/threat-models.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "agents/references/threat-models.md"
+     },
+     {
+      "kind": "dependency",
+      "text": "Ruff",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "python/py-fuzzer/pyproject.toml ruff \">=0.16.8\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "python/py-fuzzer/pyproject.toml ruff",
+        "level": "declaration"
+       }
+      ],
+      "reason": "python/py-fuzzer/pyproject.toml depends on ruff"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"security reviews runtime changes assess trust …\"",
+    "settled": false
+   },
+   {
+    "id": "44f4c0598ef67d1be1c2dabf54b761c5d356dffa",
+    "file": "AGENTS.md",
+    "line": 32,
+    "endLine": 37,
+    "section": "Code Review Rules",
+    "kind": "sentence",
+    "text": "When reviewing a branch or pull request, be deliberately nitpicky.",
+    "spans": [],
+    "residual": [
+     "description \"reviewing branch pull request deliberately nitpicky\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"reviewing branch pull request deliberately nitpicky\"",
+    "settled": false
+   },
+   {
+    "id": "b73e24be56ee7736a3e4898045d4fdd8b7fd2016",
+    "file": "AGENTS.md",
+    "line": 32,
+    "endLine": 37,
+    "section": "Code Review Rules",
+    "kind": "sentence",
+    "text": "Report not only bugs and regressions, but also architectural and maintenance risks, weak test coverage, unclear code, unnecessary complexity, and meaningful style or consistency issues.",
+    "spans": [],
+    "residual": [
+     "quantifier \"only\"",
+     "description \"Report bugs regressions architectural maintenance risks …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"only\", description \"Report bugs regressions architectural maintenance risks …\"",
+    "settled": false
+   },
+   {
+    "id": "5a4c4f3ff46483039c576a8431ef884af3b14a26",
+    "file": "AGENTS.md",
+    "line": 35,
+    "endLine": 37,
+    "section": "Code Review Rules",
+    "kind": "sentence",
+    "text": "Order findings by severity, cite files and lines, and distinguish blockers from non-blocking improvements.",
+    "spans": [],
+    "residual": [
+     "description \"Order findings severity cite files lines …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Order findings severity cite files lines …\"",
+    "settled": false
+   },
+   {
+    "id": "f3239d32b2bbcbbd48be3d19b586fe29986500de",
+    "file": "AGENTS.md",
+    "line": 36,
+    "endLine": 37,
+    "section": "Code Review Rules",
+    "kind": "sentence",
+    "text": "Number each review point for easy reference in subsequent review discussion.",
+    "spans": [],
+    "residual": [
+     "quantifier \"each\"",
+     "description \"Number review point easy reference subsequent …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"each\", description \"Number review point easy reference subsequent …\"",
+    "settled": false
+   },
+   {
+    "id": "b8f37d95d291a37579f3c30d9efe39ac7c7d5c7c",
+    "file": "AGENTS.md",
+    "line": 39,
+    "endLine": 42,
+    "section": "Code Review Rules",
+    "kind": "sentence",
+    "text": "During code review, check the proposed changes against all applicable code, test, documentation, and architectural conventions in this `AGENTS.md`.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "AGENTS.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"all\"",
+     "description \"During code review check proposed changes …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "AGENTS.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "AGENTS.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "AGENTS.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: quantifier \"all\", description \"During code review check proposed changes …\"",
+    "settled": false
+   },
+   {
+    "id": "57edf57f1535a38c03d2c897db889004c69df28b",
+    "file": "AGENTS.md",
+    "line": 40,
+    "endLine": 42,
+    "section": "Code Review Rules",
+    "kind": "sentence",
+    "text": "Report meaningful violations introduced by the changes; do not apply agent-only workflow instructions to PR authors or flag unrelated pre-existing issues.",
+    "spans": [],
+    "residual": [
+     "quantifier \"only\"",
+     "rule \"do not\"",
+     "description \"Report meaningful violations introduced changes apply …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"only\", rule \"do not\", description \"Report meaningful violations introduced changes apply …\"",
+    "settled": false
+   },
+   {
+    "id": "e711aaf13939067962d206bdf2cfb4d92e666f4b",
+    "file": "AGENTS.md",
+    "line": 44,
+    "endLine": 46,
+    "section": "Code Review Rules",
+    "kind": "sentence",
+    "text": "For security reviews of repository, CI, and release changes, use the [repository threat model](agents/references/repository-threat-model.md) to assess trust boundaries and calibrate severity.",
+    "spans": [
+     {
+      "kind": "link",
+      "text": "agents/references/repository-threat-model.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"security reviews repository release changes assess …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": "agents/references/repository-threat-model.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "agents/references/repository-threat-model.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "agents/references/repository-threat-model.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"security reviews repository release changes assess …\"",
+    "settled": false
+   },
+   {
+    "id": "2aeeb2412184d5142995b0cea682228f63fe9fe3",
+    "file": "AGENTS.md",
+    "line": 50,
+    "endLine": 50,
+    "section": "Writing for human readers",
+    "kind": "sentence",
+    "text": "Write every mdtest paragraph, code comment, piece of documentation, PR description, and GitHub issue for its eventual reader, not for the current Codex conversation.",
+    "spans": [],
+    "residual": [
+     "quantifier \"every\"",
+     "description \"Write mdtest paragraph code comment piece …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"every\", description \"Write mdtest paragraph code comment piece …\"",
+    "settled": false
+   },
+   {
+    "id": "08122ed2c5efa3aa9072c229efaf6199818d361b",
+    "file": "AGENTS.md",
+    "line": 50,
+    "endLine": 50,
+    "section": "Writing for human readers",
+    "kind": "sentence",
+    "text": "Determine the reader's knowledge, purpose, and likely questions privately; do not add an audience-analysis section to the artifact.",
+    "spans": [],
+    "residual": [
+     "rule \"do not\"",
+     "description \"Determine reader's knowledge purpose likely questions …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"do not\", description \"Determine reader's knowledge purpose likely questions …\"",
+    "settled": false
+   },
+   {
+    "id": "21c083ba4bf0e203dd81462ac798d635d8d4b8e8",
+    "file": "AGENTS.md",
+    "line": 52,
+    "endLine": 52,
+    "section": "Writing for human readers",
+    "kind": "sentence",
+    "text": "Base public-facing text on the final code, complete final diff, relevant issue, and verified evidence.",
+    "spans": [],
+    "residual": [
+     "description \"Base public-facing text final code complete …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Base public-facing text final code complete …\"",
+    "settled": false
+   },
+   {
+    "id": "fbf951775afd2276a354a7a67637d25fc7f65f71",
+    "file": "AGENTS.md",
+    "line": 52,
+    "endLine": 52,
+    "section": "Writing for human readers",
+    "kind": "sentence",
+    "text": "Explain the observable behavior or problem before implementation details.",
+    "spans": [],
+    "residual": [
+     "description \"Explain observable behavior problem before implementation …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Explain observable behavior problem before implementation …\"",
+    "settled": false
+   },
+   {
+    "id": "67e6470f3af0f60a6237607329337284136c6e9f",
+    "file": "AGENTS.md",
+    "line": 52,
+    "endLine": 52,
+    "section": "Writing for human readers",
+    "kind": "sentence",
+    "text": "Use established technical terminology and the actual names of types, functions, files, and invariants.",
+    "spans": [],
+    "residual": [
+     "description \"established technical terminology actual names types …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"established technical terminology actual names types …\"",
+    "settled": false
+   },
+   {
+    "id": "35048f2bb2cf34295675026ef2c58720b1e32ad3",
+    "file": "AGENTS.md",
+    "line": 54,
+    "endLine": 54,
+    "section": "Writing for human readers",
+    "kind": "sentence",
+    "text": "Do not mention discarded alternatives, intermediate edits, private instructions, tool usage, branch or draft status, local test commands, or session history unless the reader needs that information to understand the final result.",
+    "spans": [],
+    "residual": [
+     "rule \"Do not\"",
+     "description \"mention discarded alternatives intermediate edits private …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"Do not\", description \"mention discarded alternatives intermediate edits private …\"",
+    "settled": false
+   },
+   {
+    "id": "e25b2c239894fc208f184be8b6c18232af9770ca",
+    "file": "AGENTS.md",
+    "line": 54,
+    "endLine": 54,
+    "section": "Writing for human readers",
+    "kind": "sentence",
+    "text": "Do not describe reverted changes as part of the final change.",
+    "spans": [],
+    "residual": [
+     "rule \"Do not\"",
+     "description \"describe reverted changes part final change\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"Do not\", description \"describe reverted changes part final change\"",
+    "settled": false
+   },
+   {
+    "id": "d9741eada7dd058d95eb233c4c5b5e35c752fd4e",
+    "file": "AGENTS.md",
+    "line": 56,
+    "endLine": 56,
+    "section": "Writing for human readers",
+    "kind": "sentence",
+    "text": "Preserve useful human-written comments unless the code change makes them inaccurate.",
+    "spans": [],
+    "residual": [
+     "description \"Preserve useful human-written comments unless code …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Preserve useful human-written comments unless code …\"",
+    "settled": false
+   },
+   {
+    "id": "1b047ce4113727a6bd8301108c0a3ea0322512f0",
+    "file": "AGENTS.md",
+    "line": 56,
+    "endLine": 56,
+    "section": "Writing for human readers",
+    "kind": "sentence",
+    "text": "Before finishing, reread each changed artifact as someone with no access to the Codex session and remove or explain anything that would surprise or confuse that reader.",
+    "spans": [],
+    "residual": [
+     "quantifier \"each\"",
+     "description \"Before finishing reread changed artifact someone …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"each\", description \"Before finishing reread changed artifact someone …\"",
+    "settled": false
+   },
+   {
+    "id": "9b85c10531fb819ade593d019eb9a2823eb5f313",
+    "file": "AGENTS.md",
+    "line": 60,
+    "endLine": 60,
+    "section": "Running Tests",
+    "kind": "sentence",
+    "text": "Run all tests (using `nextest` for faster execution and setting `INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1` to ensure all snapshots are updated):",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "nextest",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"all\"",
+     "description \"tests faster execution setting ensure snapshots …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "nextest",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/workflows/ci.yaml:419",
+        "excerpt": "run: uv run --locked --only-dev cargo insta test --all-features --unreferenced reject --test-runner nextest --disable-n…",
+        "level": "reference"
+       },
+       {
+        "ref": ".github/workflows/ci.yaml:477",
+        "excerpt": "run: uv run --locked --only-dev cargo nextest run --cargo-profile profiling --all-features",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/workflows/ci.yaml:419"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: quantifier \"all\", description \"tests faster execution setting ensure snapshots …\"",
+    "settled": false
+   },
+   {
+    "id": "521a7692f211ce641ef4c030b0e84a9839758d7b",
+    "file": "AGENTS.md",
+    "line": 63,
+    "endLine": 63,
+    "section": "Running Tests",
+    "kind": "command",
+    "text": "INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo nextest run",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo nextest run",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo nextest run",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "Cargo.toml",
+        "level": "reference"
+       }
+      ],
+      "reason": "cargo nextest in a Cargo project (Cargo.toml)"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": false
+   },
+   {
+    "id": "a49631d1c6de09cf70386ee8ef9184eb36ce4063",
+    "file": "AGENTS.md",
+    "line": 66,
+    "endLine": 66,
+    "section": "Running Tests",
+    "kind": "sentence",
+    "text": "File-watcher tests do not work inside the sandbox.",
+    "spans": [],
+    "residual": [
+     "rule \"do not\"",
+     "description \"File-watcher tests work sandbox\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"do not\", description \"File-watcher tests work sandbox\"",
+    "settled": false
+   },
+   {
+    "id": "1206ce6d824e0f1c425612d771687a28b00680b4",
+    "file": "AGENTS.md",
+    "line": 66,
+    "endLine": 66,
+    "section": "Running Tests",
+    "kind": "sentence",
+    "text": "It is usually unnecessary to run them locally before filing a change unless you are certain that the change affects file-watching behavior.",
+    "spans": [],
+    "residual": [
+     "description \"usually unnecessary them locally before filing …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"usually unnecessary them locally before filing …\"",
+    "settled": false
+   },
+   {
+    "id": "b62aa0c3d6bf7fec51fcba7fade1f9059dc329f7",
+    "file": "AGENTS.md",
+    "line": 71,
+    "endLine": 71,
+    "section": "Running Tests",
+    "kind": "command",
+    "text": "INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo nextest run -p ty_python_semantic",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo nextest run -p ty_python_semantic",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo nextest run -p ty_python_semantic",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "Cargo.toml",
+        "level": "reference"
+       }
+      ],
+      "reason": "cargo nextest in a Cargo project (Cargo.toml)"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": false
+   },
+   {
+    "id": "d31a8b92faf959e226641e49c1afe69f62822b8b",
+    "file": "AGENTS.md",
+    "line": 74,
+    "endLine": 74,
+    "section": "Running Tests",
+    "kind": "sentence",
+    "text": "Run a single mdtest file.",
+    "spans": [],
+    "residual": [
+     "description \"single mdtest file\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"single mdtest file\"",
+    "settled": false
+   },
+   {
+    "id": "181a087bbb6b99f5f6f233edd30af05162273249",
+    "file": "AGENTS.md",
+    "line": 74,
+    "endLine": 74,
+    "section": "Running Tests",
+    "kind": "sentence",
+    "text": "The path to the mdtest file should be relative to the `crates/ty_python_semantic/resources/mdtest` folder.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "crates/ty_python_semantic/resources/mdtest",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"should\"",
+     "description \"path mdtest file relative folder\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "crates/ty_python_semantic/resources/mdtest",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "crates/ty_python_semantic/resources/mdtest",
+        "level": "definition"
+       }
+      ],
+      "reason": "crates/ty_python_semantic/resources/mdtest"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"should\", description \"path mdtest file relative folder\"",
+    "settled": false
+   },
+   {
+    "id": "15d0420004e03ecfd3e806623bd37f6a9c2e2f53",
+    "file": "AGENTS.md",
+    "line": 74,
+    "endLine": 74,
+    "section": "Running Tests",
+    "kind": "sentence",
+    "text": "Include `--test mdtest` to avoid building unrelated test binaries:",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "--test mdtest",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"avoid\"",
+     "description \"Include avoid building unrelated test binaries\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "--test mdtest",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/workflows/ci.yaml:417",
+        "excerpt": "run: cargo test -p ty_python_semantic --test mdtest || true",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at .github/workflows/ci.yaml:417; what the example illustrates is not checked",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `--test mdtest`: appears verbatim in code at .github/workflows/ci.yaml:417; what the example illustrates is not checked",
+    "settled": false
+   },
+   {
+    "id": "81cbe32f9fef77c04d98b1f7546e242f401f246d",
+    "file": "AGENTS.md",
+    "line": 77,
+    "endLine": 77,
+    "section": "Running Tests",
+    "kind": "command",
+    "text": "INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo nextest run -p ty_python_semantic --test mdtest -- mdtest::<path/to/mdtest_file.md>",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo nextest run -p ty_python_semantic --test mdtest -- mdtest::",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo nextest run -p ty_python_semantic --test mdtest -- mdtest::",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "Cargo.toml",
+        "level": "reference"
+       }
+      ],
+      "reason": "cargo nextest in a Cargo project (Cargo.toml)"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": false
+   },
+   {
+    "id": "4159aa6946482f749193fe4348eed866d8b87877",
+    "file": "AGENTS.md",
+    "line": 80,
+    "endLine": 80,
+    "section": "Running Tests",
+    "kind": "sentence",
+    "text": "To run a specific mdtest within a file, use a substring of the Markdown header text as `MDTEST_TEST_FILTER`.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "MDTEST_TEST_FILTER",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"specific mdtest file substring Markdown header …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "MDTEST_TEST_FILTER",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "crates/mdtest/src/lib.rs:23",
+        "excerpt": "const MDTEST_TEST_FILTER: &str = \"MDTEST_TEST_FILTER\";",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at crates/mdtest/src/lib.rs:23"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"specific mdtest file substring Markdown header …\"",
+    "settled": false
+   },
+   {
+    "id": "f4898a5c96a2692306ce76c99f805a4059da9fe1",
+    "file": "AGENTS.md",
+    "line": 83,
+    "endLine": 83,
+    "section": "Running Tests",
+    "kind": "command",
+    "text": "MDTEST_TEST_FILTER=\"<filter>\" INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo nextest run -p ty_python_semantic --test mdtest -- mdtest::<path/to/mdtest_file.md>",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "MDTEST_TEST_FILTER=<filter> INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo nextest run -p ty_python_semantic --test mdtest -- mdtest::",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "MDTEST_TEST_FILTER=<filter> INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo nextest run -p ty_python_semantic --test mdtest -- mdtest::",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "a template with placeholders, not a command to run"
+     }
+    ],
+    "status": "NOT_CHECKED",
+    "reason": "a template with placeholders, not a command to run",
+    "settled": false
+   },
+   {
+    "id": "42715d5f12ce05a093bc3853b2c9b2af9dd2f689",
+    "file": "AGENTS.md",
+    "line": 88,
+    "endLine": 88,
+    "section": "Fallback without nextest",
+    "kind": "sentence",
+    "text": "If `cargo nextest` is not available, use `cargo test` with the same environment variables:",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "cargo nextest",
+      "expect": "present"
+     },
+     {
+      "kind": "command",
+      "text": "cargo test",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"available same environment variables\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "cargo nextest",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "Cargo.toml",
+        "level": "reference"
+       }
+      ],
+      "reason": "cargo nextest in a Cargo project (Cargo.toml)"
+     },
+     {
+      "kind": "command",
+      "text": "cargo test",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "Cargo.toml",
+        "level": "reference"
+       }
+      ],
+      "reason": "cargo test in a Cargo project (Cargo.toml)"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"available same environment variables\"",
+    "settled": false
+   },
+   {
+    "id": "e25424678cb74700951769d070a68cac6e0fa2bb",
+    "file": "AGENTS.md",
+    "line": 92,
+    "endLine": 92,
+    "section": "Fallback without nextest",
+    "kind": "command",
+    "text": "INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo test",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo test",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo test",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "Cargo.toml",
+        "level": "reference"
+       }
+      ],
+      "reason": "cargo test in a Cargo project (Cargo.toml)"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": false
+   },
+   {
+    "id": "90cba234e9357dbd2181abbb83ae6d89c1af7309",
+    "file": "AGENTS.md",
+    "line": 95,
+    "endLine": 95,
+    "section": "Fallback without nextest",
+    "kind": "command",
+    "text": "INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo test -p ty_python_semantic",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo test -p ty_python_semantic",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo test -p ty_python_semantic",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "Cargo.toml",
+        "level": "reference"
+       }
+      ],
+      "reason": "cargo test in a Cargo project (Cargo.toml)"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": false
+   },
+   {
+    "id": "11ecab7b08c72e5995247fd1302c482979657529",
+    "file": "AGENTS.md",
+    "line": 98,
+    "endLine": 98,
+    "section": "Fallback without nextest",
+    "kind": "command",
+    "text": "INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo test -p ty_python_semantic --test mdtest -- <path/to/mdtest_file.md>",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo test -p ty_python_semantic --test mdtest --",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo test -p ty_python_semantic --test mdtest --",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "Cargo.toml",
+        "level": "reference"
+       }
+      ],
+      "reason": "cargo test in a Cargo project (Cargo.toml)"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": false
+   },
+   {
+    "id": "3945a672bb59d1cc50ecfc126579402abca2cbc7",
+    "file": "AGENTS.md",
+    "line": 101,
+    "endLine": 101,
+    "section": "Fallback without nextest",
+    "kind": "command",
+    "text": "MDTEST_TEST_FILTER=\"<filter>\" INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo test -p ty_python_semantic --test mdtest -- <path/to/mdtest_file.md>",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "MDTEST_TEST_FILTER=<filter> INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo test -p ty_python_semantic --test mdtest --",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "MDTEST_TEST_FILTER=<filter> INSTA_FORCE_PASS=1 INSTA_UPDATE=always MDTEST_UPDATE_SNAPSHOTS=1 cargo test -p ty_python_semantic --test mdtest --",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "a template with placeholders, not a command to run"
+     }
+    ],
+    "status": "NOT_CHECKED",
+    "reason": "a template with placeholders, not a command to run",
+    "settled": false
+   },
+   {
+    "id": "7fb801687a3722a5caad619f68bf4a08a81e995b",
+    "file": "AGENTS.md",
+    "line": 106,
+    "endLine": 106,
+    "section": "Snapshot updates",
+    "kind": "sentence",
+    "text": "After running the tests, always review the contents of any snapshots that have been added or updated.",
+    "spans": [],
+    "residual": [
+     "rule \"always\"",
+     "description \"After tests always review contents snapshots …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"always\", description \"After tests always review contents snapshots …\"",
+    "settled": false
+   },
+   {
+    "id": "dc12d4e3182ccc1e0c1ab2c4a3a1b28c9cff9f47",
+    "file": "AGENTS.md",
+    "line": 108,
+    "endLine": 108,
+    "section": "Snapshot updates",
+    "kind": "sentence",
+    "text": "When running tests with `INSTA_FORCE_PASS=1`, check for `.pending-snap` files if any affected tests use inline snapshots.",
+    "spans": [
+     {
+      "kind": "env",
+      "text": "INSTA_FORCE_PASS=1",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": ".pending-snap",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"tests check files affected tests inline …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "env",
+      "text": "INSTA_FORCE_PASS=1",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "crates/ty_python_semantic/mdtest.py:145",
+        "excerpt": "INSTA_FORCE_PASS=\"1\",",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declared at crates/ty_python_semantic/mdtest.py:145"
+     },
+     {
+      "kind": "path",
+      "text": ".pending-snap",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "no file named .pending-snap in the repository"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`.pending-snap`: no file named .pending-snap in the repository",
+    "settled": false
+   },
+   {
+    "id": "326807b21bb20c653a22ca384465b03b371d05b1",
+    "file": "AGENTS.md",
+    "line": 110,
+    "endLine": 110,
+    "section": "Snapshot updates",
+    "kind": "sentence",
+    "text": "Never edit snapshot files or inline snapshot bodies manually.",
+    "spans": [],
+    "residual": [
+     "rule \"Never\"",
+     "description \"Never edit snapshot files inline snapshot …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"Never\", description \"Never edit snapshot files inline snapshot …\"",
+    "settled": false
+   },
+   {
+    "id": "a84f7e042f2607b5b3d94cd26e222342200c9ca7",
+    "file": "AGENTS.md",
+    "line": 110,
+    "endLine": 110,
+    "section": "Snapshot updates",
+    "kind": "sentence",
+    "text": "Regenerate them by running the relevant tests with the snapshot-update environment variables documented above, then review the generated diff.",
+    "spans": [],
+    "residual": [
+     "description \"Regenerate them relevant tests snapshot-update environment …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Regenerate them relevant tests snapshot-update environment …\"",
+    "settled": false
+   },
+   {
+    "id": "3c6e35b1956b4b62438190206ea1cc52648e36a3",
+    "file": "AGENTS.md",
+    "line": 114,
+    "endLine": 114,
+    "section": "Writing mdtests",
+    "kind": "item",
+    "text": "Write mdtests as readable, literate specifications, and minimize the context a reader must hold in mind. Prefer short, focused code blocks, and define types, fixtures, and helpers close to the assertions that use them. Sections and subsections can be long when they develop a coherent topic through many short examples interspersed with prose. Do not split a subsection, or flag it in review, solely because of its length. Give independent scenarios separate sibling Markdown test headings at the same level; only introduce child headings if any existing code beneath their parent is first moved into child sections. When scenarios need shared setup, interleave short prose-and-code blocks under the same heading.",
+    "spans": [],
+    "residual": [
+     "quantifier \"only\"",
+     "rule \"must\"",
+     "description \"Write mdtests readable literate specifications minimize …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"only\", rule \"must\", description \"Write mdtests readable literate specifications minimize …\"",
+    "settled": false
+   },
+   {
+    "id": "2f58e5d9764daccb2f3a8589eb9b6e32aab290ca",
+    "file": "AGENTS.md",
+    "line": 115,
+    "endLine": 115,
+    "section": "Writing mdtests",
+    "kind": "item",
+    "text": "Code blocks for the same file within a section are concatenated into one file. For inline snapshots, keep each example's code block close to its `# snapshot` block. Ideally, any given code block only has one snapshot in it, but one codeblock containing several snapshots is also acceptable. Repeating a short, independent function definition, including one with the same name, is fine if it keeps the code triggering a snapshot close to the snapshot demonstrating the expected diagnostic on that code. Reuse shared setup when clearer, and check that repeated names do not affect other examples.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "# snapshot",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"each\"",
+     "rule \"do not\"",
+     "description \"Code blocks same file section concatenated …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "# snapshot",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `# snapshot`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "b6284e3f1170d5e8b1ae56705b7cd4aae4c7e37f",
+    "file": "AGENTS.md",
+    "line": 116,
+    "endLine": 116,
+    "section": "Writing mdtests",
+    "kind": "item",
+    "text": "When a Python statement in an mdtest is included only or primarily to check that ty does not emit a diagnostic for it, normally add a `# no diagnostic` comment on or above the statement. Statements used as setup for later assertions do not necessarily need such comments.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "# no diagnostic",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"only\"",
+     "rule \"do not\"",
+     "description \"Python statement mdtest included primarily check …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "# no diagnostic",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/ruff_linter/src/rules/pylint/snapshots/ruff_linter__rules__pylint__tests__sys-exit-alias_sys_exit_alias_16.py.snap:53",
+        "excerpt": "16 | # no diagnostic for multiple arguments",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at crates/ruff_linter/src/rules/pylint/snapshots/ruff_linter__rules__pylint__tests__sys-exit-alias_sys_exit_alias_16.py.snap:53; what the example illustrates is not checked",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `# no diagnostic`: appears verbatim in code at crates/ruff_linter/src/rules/pylint/snapshots/ruff_linter__rules__pylint__tests__sys-exit-alias_sys_exit_alias_16.py.snap:53; what the example illustrates is not checked",
+    "settled": false
+   },
+   {
+    "id": "e98c38f3ae24a6e08062e6e027a8eb1be37808d4",
+    "file": "AGENTS.md",
+    "line": 117,
+    "endLine": 117,
+    "section": "Writing mdtests",
+    "kind": "item",
+    "text": "Prioritize document structure and readability over avoiding duplicated setup. Add a test to an existing section when its heading accurately describes the new scenario, adding or improving introductory prose as needed; otherwise, create a separate sibling section, even if that requires repeating a small fixture.",
+    "spans": [],
+    "residual": [
+     "description \"Prioritize document structure readability avoiding duplicated …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Prioritize document structure readability avoiding duplicated …\"",
+    "settled": false
+   },
+   {
+    "id": "9530362b34a7998f958f474c9bc9f1b85539ca53",
+    "file": "AGENTS.md",
+    "line": 118,
+    "endLine": 118,
+    "section": "Writing mdtests",
+    "kind": "item",
+    "text": "Order mdtests from basic, common behavior to more specialized cases. Place narrow regression tests alongside closely related examples when they fit naturally; otherwise, put them near the end of the relevant section or file. Do not put an obscure special case at the beginning simply because it is the newest regression.",
+    "spans": [],
+    "residual": [
+     "rule \"Do not\"",
+     "description \"Order mdtests basic common behavior more …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"Do not\", description \"Order mdtests basic common behavior more …\"",
+    "settled": false
+   },
+   {
+    "id": "75a4ece95049bbb3f866a815278569c462d12578",
+    "file": "AGENTS.md",
+    "line": 119,
+    "endLine": 119,
+    "section": "Writing mdtests",
+    "kind": "item",
+    "text": "Aim for readable documents that serve as both documentation and tests. Use prose to explain the key type checker behavior and its rationale where helpful. A sentence or fragment may suffice; avoid repeating what the heading, surrounding explanation, or assertions already make clear. Use clear, precise terminology. Avoid using jargon where it's unnecessary, and avoid inventing new jargon if there's an existing term of art used in that file. Avoid long paragraphs covering multiple scenarios followed by a single long code block.",
+    "spans": [],
+    "residual": [
+     "rule \"avoid\"",
+     "description \"Aim readable documents serve both documentation …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"avoid\", description \"Aim readable documents serve both documentation …\"",
+    "settled": false
+   },
+   {
+    "id": "950128b9cdb60068708337e5068265d2fe16790d",
+    "file": "AGENTS.md",
+    "line": 120,
+    "endLine": 120,
+    "section": "Writing mdtests",
+    "kind": "item",
+    "text": "Prefer examples whose purpose is understandable without following issue links. For narrow regressions, a brief issue reference can be enough when additional explanation would merely restate the code or obscure the relevant behavior.",
+    "spans": [],
+    "residual": [
+     "rule \"Prefer\"",
+     "description \"Prefer examples whose purpose understandable without …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"Prefer\", description \"Prefer examples whose purpose understandable without …\"",
+    "settled": false
+   },
+   {
+    "id": "eac0cb18473cb25bf900e8bba866bb81741da353",
+    "file": "AGENTS.md",
+    "line": 121,
+    "endLine": 121,
+    "section": "Writing mdtests",
+    "kind": "item",
+    "text": "Prefer direct, present-tense descriptions of behavior over abstract requirements: write \"We reject this assignment\" rather than \"We must reject this assignment.\"",
+    "spans": [],
+    "residual": [
+     "rule \"Prefer\"",
+     "description \"Prefer direct present-tense descriptions behavior abstract …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"Prefer\", description \"Prefer direct present-tense descriptions behavior abstract …\"",
+    "settled": false
+   },
+   {
+    "id": "68feba5e95c1de781478dcda9380e4df4db7018c",
+    "file": "AGENTS.md",
+    "line": 122,
+    "endLine": 122,
+    "section": "Writing mdtests",
+    "kind": "item",
+    "text": "Keep each code example as simple as possible while still demonstrating the key behavior. When adapting real-world code or an issue reproducer, remove incidental types, methods, type parameters, imports, and domain-specific details. Preserve complexity only when necessary to reproduce the regression or distinguish the intended behavior, and reuse nearby fixtures or simple built-in types when doing so keeps the test easy to understand.",
+    "spans": [],
+    "residual": [
+     "quantifier \"each\"",
+     "description \"Keep code example simple possible while …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"each\", description \"Keep code example simple possible while …\"",
+    "settled": false
+   },
+   {
+    "id": "5a3318094926830f8a9db7862610335b89146bd7",
+    "file": "AGENTS.md",
+    "line": 123,
+    "endLine": 123,
+    "section": "Writing mdtests",
+    "kind": "item",
+    "text": "Prefer a minimal, purpose-built custom type over a standard-library type when a regression depends on particular attributes, methods, bounds, or constraints. Define the relevant behavior in the test so readers do not need to look up the standard-library type to understand the scenario. For commonly used standard-library types, consider adding a separate regression using the real type to protect against changes in typeshed.",
+    "spans": [],
+    "residual": [
+     "rule \"Prefer\"",
+     "description \"Prefer minimal purpose-built custom type standard-library …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"Prefer\", description \"Prefer minimal purpose-built custom type standard-library …\"",
+    "settled": false
+   },
+   {
+    "id": "a781b6b6ab79bda9fc888a86a8a67359ae31ee3e",
+    "file": "AGENTS.md",
+    "line": 124,
+    "endLine": 124,
+    "section": "Writing mdtests",
+    "kind": "item",
+    "text": "Place each mdtest in a file for the behavior it actually tests, and assert that behavior directly. Prefer an existing file when one already covers that behavior; create a new file when no existing file is a good fit. Do not choose a file solely because its directive or helper can express the assertion.",
+    "spans": [],
+    "residual": [
+     "quantifier \"each\"",
+     "rule \"Prefer\"",
+     "description \"Place mdtest file behavior actually tests …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"each\", rule \"Prefer\", description \"Place mdtest file behavior actually tests …\"",
+    "settled": false
+   },
+   {
+    "id": "5656e42a1311b062c6754462c6bdcb7a18da63a4",
+    "file": "AGENTS.md",
+    "line": 125,
+    "endLine": 125,
+    "section": "Writing mdtests",
+    "kind": "item",
+    "text": "When testing generic behavior supported by both legacy and PEP 695 syntax, add equivalent cases under `generics/legacy/` and `generics/pep695/`.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "generics/legacy/",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "generics/pep695/",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "count \"695 syntax\"",
+     "status \"legacy\"",
+     "description \"testing generic behavior supported both legacy …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "generics/legacy/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "crates/ty_python_semantic/resources/mdtest/generics/legacy",
+        "level": "definition"
+       }
+      ],
+      "reason": "found at crates/ty_python_semantic/resources/mdtest/generics/legacy, not relative to AGENTS.md"
+     },
+     {
+      "kind": "path",
+      "text": "generics/pep695/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "crates/ty_python_semantic/resources/mdtest/generics/pep695",
+        "level": "definition"
+       }
+      ],
+      "reason": "found at crates/ty_python_semantic/resources/mdtest/generics/pep695, not relative to AGENTS.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: count \"695 syntax\", status \"legacy\", description \"testing generic behavior supported both legacy …\"",
+    "settled": false
+   },
+   {
+    "id": "deca35739b00fd5542c357ae36ce0182ff993bee",
+    "file": "AGENTS.md",
+    "line": 130,
+    "endLine": 130,
+    "section": "Running Clippy",
+    "kind": "command",
+    "text": "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "Cargo.toml",
+        "level": "reference"
+       }
+      ],
+      "reason": "cargo clippy in a Cargo project (Cargo.toml)"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": false
+   },
+   {
+    "id": "6dce0bc632e7d5577b890602285d015fe425e906",
+    "file": "AGENTS.md",
+    "line": 135,
+    "endLine": 135,
+    "section": "Running Debug Builds",
+    "kind": "sentence",
+    "text": "Use debug builds (not `--release`) when developing, as release builds lack debug assertions and have slower compile times.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "--release",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"debug builds developing release builds lack …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "--release",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "scripts/build_ruff_pgo.py:537",
+        "excerpt": "*(() if debug else (\"--release\",)),",
+        "level": "reference"
+       }
+      ],
+      "reason": "a string in code at scripts/build_ruff_pgo.py:537"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"debug builds developing release builds lack …\"",
+    "settled": false
+   },
+   {
+    "id": "d55c03f810c262c33ed491e9559da842afe0920d",
+    "file": "AGENTS.md",
+    "line": 137,
+    "endLine": 137,
+    "section": "Running Debug Builds",
+    "kind": "sentence",
+    "text": "Run Ruff:",
+    "spans": [
+     {
+      "kind": "dependency",
+      "text": "Ruff",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "dependency",
+      "text": "Ruff",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "python/py-fuzzer/pyproject.toml ruff \">=0.16.8\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "python/py-fuzzer/pyproject.toml ruff",
+        "level": "declaration"
+       }
+      ],
+      "reason": "python/py-fuzzer/pyproject.toml depends on ruff"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "78f05c743ee166a6d176fa7fc004622c02c654ef",
+    "file": "AGENTS.md",
+    "line": 140,
+    "endLine": 140,
+    "section": "Running Debug Builds",
+    "kind": "command",
+    "text": "cargo run --bin ruff -- check path/to/file.py",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "cargo run --bin ruff -- check path/to/file.py",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "path/to/file.py",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "cargo run --bin ruff -- check path/to/file.py",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "Cargo.toml",
+        "level": "reference"
+       }
+      ],
+      "reason": "cargo run in a Cargo project (Cargo.toml)"
+     },
+     {
+      "kind": "path",
+      "text": "path/to/file.py",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "an example path, not a file the statement claims exists"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": false
+   },
+   {
+    "id": "1987916696f9486fed2502ed9c6de9cd8c2468da",
+    "file": "AGENTS.md",
+    "line": 146,
+    "endLine": 146,
+    "section": "Running Debug Builds",
+    "kind": "command",
+    "text": "cargo run --bin ty -- check path/to/file.py",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "cargo run --bin ty -- check path/to/file.py",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "path/to/file.py",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "cargo run --bin ty -- check path/to/file.py",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "Cargo.toml",
+        "level": "reference"
+       }
+      ],
+      "reason": "cargo run in a Cargo project (Cargo.toml)"
+     },
+     {
+      "kind": "path",
+      "text": "path/to/file.py",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "an example path, not a file the statement claims exists"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": false
+   },
+   {
+    "id": "6ca52043b21ca878ab1ddb5850a84ed01da2c6ff",
+    "file": "AGENTS.md",
+    "line": 151,
+    "endLine": 151,
+    "section": "Working on ty",
+    "kind": "sentence",
+    "text": "The guidance in this section applies to edits to `ty*` crates, reviews of ty PRs, or other work when the ty type checker has been specifically mentioned by the user.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "ty*",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"guidance section applies edits crates reviews …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "ty*",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `ty*`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "a6055fdfa0cc6f8702e917aa3d1abf1be52802c3",
+    "file": "AGENTS.md",
+    "line": 157,
+    "endLine": 157,
+    "section": "Related skills",
+    "kind": "item",
+    "text": "Adding new ty rules, changing diagnostics or diagnostic messages, or reviewing diagnostics: `.agents/skills/adding-ty-diagnostics/SKILL.md`.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": ".agents/skills/adding-ty-diagnostics/SKILL.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Adding new rules changing diagnostics diagnostic …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": ".agents/skills/adding-ty-diagnostics/SKILL.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".agents/skills/adding-ty-diagnostics/SKILL.md",
+        "level": "definition"
+       }
+      ],
+      "reason": ".agents/skills/adding-ty-diagnostics/SKILL.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Adding new rules changing diagnostics diagnostic …\"",
+    "settled": false
+   },
+   {
+    "id": "f187e31b1c2790f1e3f0ef804c87b86dfdc19145",
+    "file": "AGENTS.md",
+    "line": 158,
+    "endLine": 158,
+    "section": "Related skills",
+    "kind": "item",
+    "text": "Ecosystem report summaries: `.agents/skills/summarise-ecosystem-results/SKILL.md`.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": ".agents/skills/summarise-ecosystem-results/SKILL.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Ecosystem report summaries\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": ".agents/skills/summarise-ecosystem-results/SKILL.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".agents/skills/summarise-ecosystem-results/SKILL.md",
+        "level": "definition"
+       }
+      ],
+      "reason": ".agents/skills/summarise-ecosystem-results/SKILL.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Ecosystem report summaries\"",
+    "settled": false
+   },
+   {
+    "id": "082ddcc38b498765ed2f0017a10f3a88ad6fafb4",
+    "file": "AGENTS.md",
+    "line": 159,
+    "endLine": 159,
+    "section": "Related skills",
+    "kind": "item",
+    "text": "Reproducing, investigating, or minimizing ecosystem or primer differences: `.agents/skills/minimizing-ty-ecosystem-changes/SKILL.md`.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": ".agents/skills/minimizing-ty-ecosystem-changes/SKILL.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Reproducing investigating minimizing ecosystem primer differences\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": ".agents/skills/minimizing-ty-ecosystem-changes/SKILL.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".agents/skills/minimizing-ty-ecosystem-changes/SKILL.md",
+        "level": "definition"
+       }
+      ],
+      "reason": ".agents/skills/minimizing-ty-ecosystem-changes/SKILL.md"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Reproducing investigating minimizing ecosystem primer differences\"",
+    "settled": false
+   },
+   {
+    "id": "c58eaa592d2da8fa79dfb65946c9f1349b9ab8f0",
+    "file": "AGENTS.md",
+    "line": 163,
+    "endLine": 163,
+    "section": "Completion ranking",
+    "kind": "sentence",
+    "text": "When changing ty autocomplete ranking, add or update evaluation fixtures under `crates/ty_completion_eval/truth/`.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "crates/ty_completion_eval/truth/",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"changing autocomplete ranking add update evaluation …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "crates/ty_completion_eval/truth/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "crates/ty_completion_eval/truth",
+        "level": "definition"
+       }
+      ],
+      "reason": "crates/ty_completion_eval/truth"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"changing autocomplete ranking add update evaluation …\"",
+    "settled": false
+   },
+   {
+    "id": "1814e5868846b94bd3fa822b031c7d2cf0d204ae",
+    "file": "AGENTS.md",
+    "line": 163,
+    "endLine": 163,
+    "section": "Completion ranking",
+    "kind": "sentence",
+    "text": "Extend an existing project when it is a good fit for the behavior being tested; otherwise, add a new one.",
+    "spans": [],
+    "residual": [
+     "description \"Extend existing project good fit behavior …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Extend existing project good fit behavior …\"",
+    "settled": false
+   },
+   {
+    "id": "2e16871bd7fe408e51b870cfe943aff2e59622d1",
+    "file": "AGENTS.md",
+    "line": 163,
+    "endLine": 163,
+    "section": "Completion ranking",
+    "kind": "sentence",
+    "text": "Use `<CURSOR:expected_name>` directives to assert ranking, and include the expected module for auto-import completions.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "<CURSOR:expected_name>",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"directives assert ranking include expected module …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "<CURSOR:expected_name>",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `<CURSOR:expected_name>`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "a928e8e808d4f62506fbc4feef9c38267bcf8631",
+    "file": "AGENTS.md",
+    "line": 163,
+    "endLine": 163,
+    "section": "Completion ranking",
+    "kind": "sentence",
+    "text": "Add `completion.rs` unit tests only when the evaluation fixtures cannot adequately cover the behavior.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "completion.rs",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"only\"",
+     "description \"Add unit tests evaluation fixtures cannot …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "completion.rs",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "crates/ty_ide/src/completion.rs",
+        "level": "definition"
+       },
+       {
+        "ref": "crates/ty_server/src/server/api/requests/completion.rs",
+        "level": "definition"
+       }
+      ],
+      "reason": "found at crates/ty_ide/src/completion.rs, crates/ty_server/src/server/api/requests/completion.rs"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: quantifier \"only\", description \"Add unit tests evaluation fixtures cannot …\"",
+    "settled": false
+   },
+   {
+    "id": "001fc5d51887bcacae4003deb42a515066ba3618",
+    "file": "AGENTS.md",
+    "line": 168,
+    "endLine": 168,
+    "section": "Completion ranking",
+    "kind": "command",
+    "text": "CARGO_PROFILE_DEV_OPT_LEVEL=1 CARGO_PROFILE_DEV_LTO=off CARGO_PROFILE_DEV_DEBUG=\"line-tables-only\" cargo run --package ty_completion_eval -- all --threshold 0.4 --tasks crates/ty_completion_eval/completion-evaluation-tasks.csv",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "CARGO_PROFILE_DEV_OPT_LEVEL=1 CARGO_PROFILE_DEV_LTO=off CARGO_PROFILE_DEV_DEBUG=line-tables-only cargo run --package ty_completion_eval -- all --threshold 0.4 --tasks crates/ty_completion_eval/completion-evaluation-tasks.csv",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "crates/ty_completion_eval/completion-evaluation-tasks.csv",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "CARGO_PROFILE_DEV_OPT_LEVEL=1 CARGO_PROFILE_DEV_LTO=off CARGO_PROFILE_DEV_DEBUG=line-tables-only cargo run --package ty_completion_eval -- all --threshold 0.4 --tasks crates/ty_completion_eval/completion-evaluation-tasks.csv",
+      "expect": "present",
+      "hintDirs": [
+       "crates/ty_completion_eval"
+      ],
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/ty_completion_eval/Cargo.toml",
+        "level": "reference"
+       }
+      ],
+      "reason": "cargo run in a Cargo project (crates/ty_completion_eval/Cargo.toml)"
+     },
+     {
+      "kind": "path",
+      "text": "crates/ty_completion_eval/completion-evaluation-tasks.csv",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "crates/ty_completion_eval/completion-evaluation-tasks.csv",
+        "level": "definition"
+       }
+      ],
+      "reason": "crates/ty_completion_eval/completion-evaluation-tasks.csv"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": false
+   },
+   {
+    "id": "492f2bbe44cf68d882d829e40a151af653b2cac1",
+    "file": "AGENTS.md",
+    "line": 171,
+    "endLine": 171,
+    "section": "Completion ranking",
+    "kind": "sentence",
+    "text": "To inspect one evaluation task, run `cargo run --package ty_completion_eval -- show-one <fixture-name> --file-name <file-name> --index <cursor-index>`.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "cargo run --package ty_completion_eval -- show-one <fixture-name> --file-name <file-name> --index <cursor-index>",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"inspect one evaluation task\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "cargo run --package ty_completion_eval -- show-one <fixture-name> --file-name <file-name> --index <cursor-index>",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "a template with placeholders, not a command to run"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"inspect one evaluation task\"",
+    "settled": false
+   },
+   {
+    "id": "67833b1ccb3d25a0c5a95e13067aed9cbeae31d2",
+    "file": "AGENTS.md",
+    "line": 175,
+    "endLine": 175,
+    "section": "Ad hoc reproductions",
+    "kind": "sentence",
+    "text": "When running ty against a temporary Python reproduction file, create it outside the Ruff checkout (for example, under `/tmp`).",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "/tmp",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "Ruff",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"against temporary Python reproduction file create …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "/tmp",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/workflows/build-docker.yml:103",
+        "excerpt": "touch \"/tmp/digests/${digest#sha256:}\"",
+        "level": "reference"
+       }
+      ],
+      "reason": "a URL path in code at .github/workflows/build-docker.yml:103"
+     },
+     {
+      "kind": "dependency",
+      "text": "Ruff",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "python/py-fuzzer/pyproject.toml ruff \">=0.16.8\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "python/py-fuzzer/pyproject.toml ruff",
+        "level": "declaration"
+       }
+      ],
+      "reason": "python/py-fuzzer/pyproject.toml depends on ruff"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"against temporary Python reproduction file create …\"",
+    "settled": false
+   },
+   {
+    "id": "7ea283f835929b4c59941d7a7c84f5c15887a3e3",
+    "file": "AGENTS.md",
+    "line": 175,
+    "endLine": 175,
+    "section": "Ad hoc reproductions",
+    "kind": "sentence",
+    "text": "A file inside the checkout discovers Ruff's root `pyproject.toml`, whose `requires-python = \">=3.7\"` causes ty to infer Python 3.7 as the default Python version.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "pyproject.toml",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "requires-python = \">=3.7\"",
+      "expect": "present"
+     },
+     {
+      "kind": "version",
+      "text": "Python 3.7",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "Ruff",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "count \"3.7 as the\"",
+     "description \"file checkout discovers root whose causes …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "pyproject.toml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "pyproject.toml",
+        "level": "definition"
+       }
+      ],
+      "reason": "pyproject.toml"
+     },
+     {
+      "kind": "unknown",
+      "text": "requires-python = \">=3.7\"",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/ruff_linter/resources/test/fixtures/ruff/pyproject_toml/maturin/pyproject.toml:9",
+        "excerpt": "requires-python = \">=3.7\"",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at crates/ruff_linter/resources/test/fixtures/ruff/pyproject_toml/maturin/pyproject.toml:9; what the example illustrates is not checked",
+      "blocked": true
+     },
+     {
+      "kind": "version",
+      "text": "Python 3.7",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "crates/ruff_linter/resources/test/fixtures/ruff/pyproject_toml/maturin/pyproject.toml requires-python \">=3.7\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "crates/ruff_linter/resources/test/fixtures/ruff/pyproject_toml/various_invalid/pyproject.toml requires-python \">=3.8\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "crates/ty_completion_eval/truth/auto-import-includes-modules/pyproject.toml requires-python \">=3.13\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "crates/ty_completion_eval/truth/auto-import-skips-current-module/pyproject.toml requires-python \">=3.13\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "versions disagree: crates/ruff_linter/resources/test/fixtures/ruff/pyproject_toml/maturin/pyproject.toml requires-python \">=3.7\"; crates/ruff_linter/resources/test/fixtures/ruff/pyproject_toml/various_invalid/pyproject.toml requires-python \">=3.8\"; crates/ty_completion_eval/truth/auto-import-includes-modules/pyproject.toml requires-python \">=3.13\"; crates/ty_completion_eval/truth/auto-import-skips-current-module/pyproject.toml requires-python \">=3.13\""
+     },
+     {
+      "kind": "dependency",
+      "text": "Ruff",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "python/py-fuzzer/pyproject.toml ruff \">=0.16.8\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "python/py-fuzzer/pyproject.toml ruff",
+        "level": "declaration"
+       }
+      ],
+      "reason": "python/py-fuzzer/pyproject.toml depends on ruff"
+     }
+    ],
+    "status": "UNCONFIRMED",
+    "reason": "`Python 3.7`: versions disagree: crates/ruff_linter/resources/test/fixtures/ruff/pyproject_toml/maturin/pyproject.toml requires-python \">=3.7\"; crates/ruff_linter/resources/test/fixtures/ruff/pyproject_toml/various_invalid/pyproject.toml requires-python \">=3.8\"; crates/ty_completion_eval/truth/auto-import-includes-modules/pyproject.toml requires-python \">=3.13\"; crates/ty_completion_eval/truth/auto-import-skips-current-module/pyproject.toml requires-python \">=3.13\"",
+    "settled": false
+   },
+   {
+    "id": "aa31d2be99ac33a172c7bcd7d570cd3d9f5487d9",
+    "file": "AGENTS.md",
+    "line": 179,
+    "endLine": 179,
+    "section": "The `db` parameter",
+    "kind": "sentence",
+    "text": "For free functions and associated functions without a `self` parameter, `db` should be the first parameter.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "self",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "db",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"should\"",
+     "description \"free functions associated functions without parameter …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "self",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/actionlint.yaml:4",
+        "excerpt": "self-hosted-runner:",
+        "level": "reference"
+       },
+       {
+        "ref": ".github/workflows/publish-crates.yml:37",
+        "excerpt": "run: rustup toolchain install nightly-2026-06-12 --profile minimal --no-self-update",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/actionlint.yaml:4"
+     },
+     {
+      "kind": "unknown",
+      "text": "db",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `db`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "44c4a0db8bae6d4a9cd4b3decb10167270e5fcb0",
+    "file": "AGENTS.md",
+    "line": 179,
+    "endLine": 179,
+    "section": "The `db` parameter",
+    "kind": "sentence",
+    "text": "For methods with a `self` parameter, `db` should come immediately after `self`.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "self",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "db",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "self",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"should\"",
+     "description \"methods parameter come immediately after\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "self",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/actionlint.yaml:4",
+        "excerpt": "self-hosted-runner:",
+        "level": "reference"
+       },
+       {
+        "ref": ".github/workflows/publish-crates.yml:37",
+        "excerpt": "run: rustup toolchain install nightly-2026-06-12 --profile minimal --no-self-update",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/actionlint.yaml:4"
+     },
+     {
+      "kind": "unknown",
+      "text": "db",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "symbol",
+      "text": "self",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/actionlint.yaml:4",
+        "excerpt": "self-hosted-runner:",
+        "level": "reference"
+       },
+       {
+        "ref": ".github/workflows/publish-crates.yml:37",
+        "excerpt": "run: rustup toolchain install nightly-2026-06-12 --profile minimal --no-self-update",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/actionlint.yaml:4"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `db`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "0d13cfa7aa6011528f6e04faae63e452d5dbc3b8",
+    "file": "AGENTS.md",
+    "line": 185,
+    "endLine": 187,
+    "section": "Tracked functions and methods",
+    "kind": "sentence",
+    "text": "Adding `#[salsa::tracked]` to a function or method means that the Salsa framework will cache the function/method.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "#[salsa::tracked]",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Adding function method means Salsa framework …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "#[salsa::tracked]",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/ruff_db/src/files/directory.rs:151",
+        "excerpt": "#[salsa::tracked]",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at crates/ruff_db/src/files/directory.rs:151; what the example illustrates is not checked",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `#[salsa::tracked]`: appears verbatim in code at crates/ruff_db/src/files/directory.rs:151; what the example illustrates is not checked",
+    "settled": false
+   },
+   {
+    "id": "0c3727b03f3542022b51526271d5d482dbfa4098",
+    "file": "AGENTS.md",
+    "line": 186,
+    "endLine": 187,
+    "section": "Tracked functions and methods",
+    "kind": "sentence",
+    "text": "This can sometimes be done for performance reasons, and can also be done to ensure incremental computation in an IDE context.",
+    "spans": [],
+    "residual": [
+     "description \"sometimes performance reasons ensure incremental computation …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"sometimes performance reasons ensure incremental computation …\"",
+    "settled": false
+   },
+   {
+    "id": "43dd4c9f2c1f91cee9acc567bfd5bcfb7d604db3",
+    "file": "AGENTS.md",
+    "line": 189,
+    "endLine": 192,
+    "section": "Tracked functions and methods",
+    "kind": "sentence",
+    "text": "Methods that access `.node()` should usually be `#[salsa::tracked]`, or ty's incrementality will suffer: we don't want to accidentally introduce a dependency on module `a`'s AST in a Salsa query that would be called when type-checking module `b`.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": ".node()",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "#[salsa::tracked]",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "a",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "b",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"should\"",
+     "description \"Methods access usually ty's incrementality suffer …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": ".node()",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/ruff_python_ast/src/find_node.rs:134",
+        "excerpt": "f.debug_tuple(\"CoveringNode\").field(&self.node()).finish()",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at crates/ruff_python_ast/src/find_node.rs:134; what the example illustrates is not checked",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "#[salsa::tracked]",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/ruff_db/src/files/directory.rs:151",
+        "excerpt": "#[salsa::tracked]",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at crates/ruff_db/src/files/directory.rs:151; what the example illustrates is not checked",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "a",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "b",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `.node()`: appears verbatim in code at crates/ruff_python_ast/src/find_node.rs:134; what the example illustrates is not checked",
+    "settled": false
+   },
+   {
+    "id": "c495890604d8d70368555b535b91233ebd6ffe6a",
+    "file": "AGENTS.md",
+    "line": 191,
+    "endLine": 192,
+    "section": "Tracked functions and methods",
+    "kind": "sentence",
+    "text": "Prefer higher-level semantic APIs over raw AST access where possible, but ask for guidance from the user if this would require significant refactoring.",
+    "spans": [],
+    "residual": [
+     "rule \"Prefer\"",
+     "description \"Prefer higher-level semantic APIs raw AST …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"Prefer\", description \"Prefer higher-level semantic APIs raw AST …\"",
+    "settled": false
+   },
+   {
+    "id": "b8b6e50a2707924375ecd4cd185c06d7fc4d49dc",
+    "file": "AGENTS.md",
+    "line": 196,
+    "endLine": 196,
+    "section": "Reduce memory usage where possible",
+    "kind": "sentence",
+    "text": "For Salsa-cached values, avoid retaining excess collection capacity.",
+    "spans": [],
+    "residual": [
+     "rule \"avoid\"",
+     "description \"Salsa-cached values avoid retaining excess collection …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"avoid\", description \"Salsa-cached values avoid retaining excess collection …\"",
+    "settled": false
+   },
+   {
+    "id": "d351ad869319675c864d3876eaff2838b2a539cd",
+    "file": "AGENTS.md",
+    "line": 196,
+    "endLine": 196,
+    "section": "Reduce memory usage where possible",
+    "kind": "sentence",
+    "text": "Prefer boxed slices; otherwise shrink collections that may have spare capacity before returning them.",
+    "spans": [],
+    "residual": [
+     "rule \"Prefer\"",
+     "description \"Prefer boxed slices otherwise shrink collections …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"Prefer\", description \"Prefer boxed slices otherwise shrink collections …\"",
+    "settled": false
+   },
+   {
+    "id": "8d0176f1cd8cb841bc40bf48d9a86c91f3d93220",
+    "file": "AGENTS.md",
+    "line": 196,
+    "endLine": 196,
+    "section": "Reduce memory usage where possible",
+    "kind": "sentence",
+    "text": "In particular, inspect `HashMap` and `HashSet` values constructed via `extend`, `collect`, explicit reservation, or removal, since those operations can leave capacity that insert-only construction does not.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "HashMap",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "HashSet",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "extend",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "collect",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"only\"",
+     "description \"particular inspect values constructed explicit reservation …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "HashMap",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/ruff_cache/src/cache_key.rs:2",
+        "excerpt": "use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};",
+        "level": "reference"
+       },
+       {
+        "ref": "crates/ruff_cache/src/cache_key.rs:312",
+        "excerpt": "impl<K, V, S> CacheKey for HashMap<K, V, S>",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at crates/ruff_cache/src/cache_key.rs:2"
+     },
+     {
+      "kind": "symbol",
+      "text": "HashSet",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/ruff_cache/src/cache_key.rs:2",
+        "excerpt": "use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};",
+        "level": "reference"
+       },
+       {
+        "ref": "crates/ruff_cache/src/cache_key.rs:329",
+        "excerpt": "impl<V: CacheKey + Ord, S> CacheKey for HashSet<V, S> {",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at crates/ruff_cache/src/cache_key.rs:2"
+     },
+     {
+      "kind": "symbol",
+      "text": "extend",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "crates/ruff_db/src/system/path.rs:720",
+        "excerpt": "fn extend<I: IntoIterator<Item = P>>(&mut self, iter: I) {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at crates/ruff_db/src/system/path.rs:720"
+     },
+     {
+      "kind": "symbol",
+      "text": "collect",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "crates/ruff_graph/src/collector.rs:36",
+        "excerpt": "pub(crate) fn collect(mut self, module: &Mod) -> Vec<CollectedImport> {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at crates/ruff_graph/src/collector.rs:36"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: quantifier \"only\", description \"particular inspect values constructed explicit reservation …\"",
+    "settled": false
+   },
+   {
+    "id": "99532a4d34dc916298827cabcebf7a224d38fe18",
+    "file": "AGENTS.md",
+    "line": 198,
+    "endLine": 198,
+    "section": "Reduce memory usage where possible",
+    "kind": "sentence",
+    "text": "Salsa caching can occur due to a function/method having `#[salsa::tracked]` on it, or due to a struct with `#[salsa::interned]` being constructed.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "#[salsa::tracked]",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "#[salsa::interned]",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Salsa caching occur due function method …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "#[salsa::tracked]",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/ruff_db/src/files/directory.rs:151",
+        "excerpt": "#[salsa::tracked]",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at crates/ruff_db/src/files/directory.rs:151; what the example illustrates is not checked",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "#[salsa::interned]",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `#[salsa::tracked]`: appears verbatim in code at crates/ruff_db/src/files/directory.rs:151; what the example illustrates is not checked",
+    "settled": false
+   },
+   {
+    "id": "b75955cd028ecab486ba044074496c61c0695568",
+    "file": "AGENTS.md",
+    "line": 202,
+    "endLine": 202,
+    "section": "Generated Release Workflow",
+    "kind": "sentence",
+    "text": "Parts of `.github/workflows/release.yml` are generated by cargo-dist from `dist-workspace.toml`.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": ".github/workflows/release.yml",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "dist-workspace.toml",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Parts generated cargo-dist\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": ".github/workflows/release.yml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/workflows/release.yml",
+        "level": "definition"
+       }
+      ],
+      "reason": ".github/workflows/release.yml"
+     },
+     {
+      "kind": "path",
+      "text": "dist-workspace.toml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "dist-workspace.toml",
+        "level": "definition"
+       }
+      ],
+      "reason": "dist-workspace.toml"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"Parts generated cargo-dist\"",
+    "settled": false
+   },
+   {
+    "id": "37435bbeaea2b8e2c6a8eb46c6a002b976089c94",
+    "file": "AGENTS.md",
+    "line": 202,
+    "endLine": 202,
+    "section": "Generated Release Workflow",
+    "kind": "sentence",
+    "text": "Before editing the release workflow, check whether the relevant section is generated.",
+    "spans": [],
+    "residual": [
+     "description \"Before editing release workflow check whether …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Before editing release workflow check whether …\"",
+    "settled": false
+   },
+   {
+    "id": "ec6541bf109087fcc8ff7c1974a1f3884e9c13c8",
+    "file": "AGENTS.md",
+    "line": 202,
+    "endLine": 202,
+    "section": "Generated Release Workflow",
+    "kind": "sentence",
+    "text": "Prefer changing `dist-workspace.toml` or the referenced reusable workflow instead of editing generated YAML.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "dist-workspace.toml",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Prefer\"",
+     "description \"Prefer changing referenced reusable workflow instead …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "dist-workspace.toml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "dist-workspace.toml",
+        "level": "definition"
+       }
+      ],
+      "reason": "dist-workspace.toml"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"Prefer\", description \"Prefer changing referenced reusable workflow instead …\"",
+    "settled": false
+   },
+   {
+    "id": "d216edddfc4d59ba202d470bfc38d5dd9a4022ce",
+    "file": "AGENTS.md",
+    "line": 202,
+    "endLine": 202,
+    "section": "Generated Release Workflow",
+    "kind": "sentence",
+    "text": "After modifying cargo-dist configuration, regenerate the workflow with the cargo-dist version pinned in `dist-workspace.toml` and inspect the resulting diff to ensure the change will survive future regenerations.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "dist-workspace.toml",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"After modifying cargo-dist configuration regenerate workflow …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "dist-workspace.toml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "dist-workspace.toml",
+        "level": "definition"
+       }
+      ],
+      "reason": "dist-workspace.toml"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: description \"After modifying cargo-dist configuration regenerate workflow …\"",
+    "settled": false
+   },
+   {
+    "id": "f588e1fefd4a6b8661e894635871656d488dd14a",
+    "file": "AGENTS.md",
+    "line": 206,
+    "endLine": 206,
+    "section": "Development Guidelines",
+    "kind": "item",
+    "text": "All significant changes must be tested. Add or update focused tests for semantic changes when existing coverage does not already establish the intended behavior.",
+    "spans": [],
+    "residual": [
+     "quantifier \"All\"",
+     "rule \"must\"",
+     "description \"significant changes tested Add update focused …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"All\", rule \"must\", description \"significant changes tested Add update focused …\"",
+    "settled": false
+   },
+   {
+    "id": "1aed7d7c1b077ba5fae17840af429dcb7587dafe",
+    "file": "AGENTS.md",
+    "line": 207,
+    "endLine": 207,
+    "section": "Development Guidelines",
+    "kind": "item",
+    "text": "Look to see if your tests could go in an existing file before adding a new file for your tests.",
+    "spans": [],
+    "residual": [
+     "description \"Look your tests existing file before …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Look your tests existing file before …\"",
+    "settled": false
+   },
+   {
+    "id": "593db5b1b6f390e25372a373a754c4eadadc2e18",
+    "file": "AGENTS.md",
+    "line": 208,
+    "endLine": 208,
+    "section": "Development Guidelines",
+    "kind": "item",
+    "text": "Get your tests to pass. If you didn't run the tests, your code does not work.",
+    "spans": [],
+    "residual": [
+     "description \"Get your tests pass you didn't …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Get your tests pass you didn't …\"",
+    "settled": false
+   },
+   {
+    "id": "eda23e74effb50614eb2319e237fefebd1a553c9",
+    "file": "AGENTS.md",
+    "line": 209,
+    "endLine": 209,
+    "section": "Development Guidelines",
+    "kind": "item",
+    "text": "Follow existing code style. Check neighboring files for patterns.",
+    "spans": [],
+    "residual": [
+     "description \"Follow existing code style Check neighboring …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: description \"Follow existing code style Check neighboring …\"",
+    "settled": false
+   },
+   {
+    "id": "ac8395c035239b2828dd4db0c7997474f6888b5b",
+    "file": "AGENTS.md",
+    "line": 210,
+    "endLine": 210,
+    "section": "Development Guidelines",
+    "kind": "item",
+    "text": "Prefer narrow visibility by default because this workspace is generally its own consumer. However, do not add workarounds solely to avoid `pub`: make an item public when another workspace crate needs it and that produces the cleaner implementation.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "pub",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Prefer\"",
+     "description \"Prefer narrow visibility default because workspace …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "pub",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/mdtest/src/assertion.rs:48",
+        "excerpt": "pub(crate) enum AssertionSource<'a> {",
+        "level": "reference"
+       },
+       {
+        "ref": "crates/mdtest/src/assertion.rs:55",
+        "excerpt": "pub(crate) struct InlineFileAssertions<'s> {",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at crates/mdtest/src/assertion.rs:48"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"Prefer\", description \"Prefer narrow visibility default because workspace …\"",
+    "settled": false
+   },
+   {
+    "id": "1fe41a460449cf555e4941d8ccf0f7a099eeafdf",
+    "file": "AGENTS.md",
+    "line": 211,
+    "endLine": 211,
+    "section": "Development Guidelines",
+    "kind": "item",
+    "text": "Rust imports should always go at the top of the file, never locally in functions.",
+    "spans": [],
+    "residual": [
+     "rule \"should\"",
+     "description \"Rust imports always top file never …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"should\", description \"Rust imports always top file never …\"",
+    "settled": false
+   },
+   {
+    "id": "5cb544e9a524a1c9bfddc230afb308445b800736",
+    "file": "AGENTS.md",
+    "line": 212,
+    "endLine": 212,
+    "section": "Development Guidelines",
+    "kind": "item",
+    "text": "Run `uv run --only-dev --locked prek` at the end of a task if you changed files in the repo. This includes changes such as rebases or addressing review comments. Use `uv run --only-dev --locked prek run --files <path1> <path2>` and pass every file you changed. This keeps the hook run independent of staged state and avoids sweeping unrelated changes. Use `uv run --only-dev --locked prek run --all-files` when a full-repository hook sweep is specifically needed.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "uv run --only-dev --locked prek",
+      "expect": "present"
+     },
+     {
+      "kind": "command",
+      "text": "uv run --only-dev --locked prek run --files <path1> <path2>",
+      "expect": "present"
+     },
+     {
+      "kind": "command",
+      "text": "uv run --only-dev --locked prek run --all-files",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"every\"",
+     "description \"end task you changed files repo …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "uv run --only-dev --locked prek",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "runs prek from the environment (not a script in pyproject.toml)"
+     },
+     {
+      "kind": "command",
+      "text": "uv run --only-dev --locked prek run --files <path1> <path2>",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "a template with placeholders, not a command to run"
+     },
+     {
+      "kind": "command",
+      "text": "uv run --only-dev --locked prek run --all-files",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "runs prek from the environment (not a script in pyproject.toml)"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: quantifier \"every\", description \"end task you changed files repo …\"",
+    "settled": false
+   },
+   {
+    "id": "0e49443b479167616f2f961400a41ee5fcbf9211",
+    "file": "AGENTS.md",
+    "line": 213,
+    "endLine": 213,
+    "section": "Development Guidelines",
+    "kind": "item",
+    "text": "Before writing significant amounts of new code, look for existing utilities or mechanisms that could solve the problem. Avoid expanding the task to unrelated issues, but do not confuse keeping the task focused with minimizing the size of the implementation. Prefer addressing the underlying architectural problem over adding a localized workaround, even when doing so requires a substantial refactor or rearchitecture. Ask the user for guidance if in doubt about whether to attempt a larger refactor or not.",
+    "spans": [],
+    "residual": [
+     "rule \"Avoid\"",
+     "description \"Before writing significant amounts new code …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: rule \"Avoid\", description \"Before writing significant amounts new code …\"",
+    "settled": false
+   },
+   {
+    "id": "5055d7148c9b1a507d74410fe3e31658bc7e4d45",
+    "file": "AGENTS.md",
+    "line": 214,
+    "endLine": 214,
+    "section": "Development Guidelines",
+    "kind": "item",
+    "text": "Try hard to avoid patterns that require `panic!`, `unreachable!`, `.unwrap()` or `.expect()`. Instead, try to encode those constraints in the type system. Don't be afraid to write code that's more verbose or requires largeish refactors if it enables you to avoid these unsafe calls.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "panic!",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "unreachable!",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": ".unwrap()",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": ".expect()",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"avoid\"",
+     "description \"Try hard avoid patterns require Instead …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "panic!",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/mdtest/src/assertion.rs:581",
+        "excerpt": "panic!(\"expected one line\");",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at crates/mdtest/src/assertion.rs:581; what the example illustrates is not checked",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "unreachable!",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/mdtest/src/assertion.rs:471",
+        "excerpt": "unreachable!(\"Assertion comments should never contain newlines\")",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at crates/mdtest/src/assertion.rs:471; what the example illustrates is not checked",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": ".unwrap()",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/mdtest/src/assertion.rs:83",
+        "excerpt": "TextSize::try_from(span.start()).unwrap(),",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at crates/mdtest/src/assertion.rs:83; what the example illustrates is not checked",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": ".expect()",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `panic!`: appears verbatim in code at crates/mdtest/src/assertion.rs:581; what the example illustrates is not checked",
+    "settled": false
+   },
+   {
+    "id": "3b3596ada89f423883fda7371a555d0918e3d9ab",
+    "file": "AGENTS.md",
+    "line": 215,
+    "endLine": 215,
+    "section": "Development Guidelines",
+    "kind": "item",
+    "text": "Prefer let chains (`if let` combined with `&&`) and let guards (`PAT if let ... =>`) over nested `if let` statements to reduce indentation and improve readability. At the end of a task, always check your work to see if you missed opportunities to use `let` chains or `let` guards.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "if let",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "&&",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "PAT if let ... =>",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "if let",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "let",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "let",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Prefer\"",
+     "description \"Prefer let chains combined let guards …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "if let",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/mdtest/src/assertion.rs:263",
+        "excerpt": "let comment = if let Some((before_nested, _)) = comment.split_once('#') {",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at crates/mdtest/src/assertion.rs:263; what the example illustrates is not checked",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "&&",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "PAT if let ... =>",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "if let",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/mdtest/src/assertion.rs:263",
+        "excerpt": "let comment = if let Some((before_nested, _)) = comment.split_once('#') {",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at crates/mdtest/src/assertion.rs:263; what the example illustrates is not checked",
+      "blocked": true
+     },
+     {
+      "kind": "symbol",
+      "text": "let",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/mdtest/src/assertion.rs:81",
+        "excerpt": "let span = token.span();",
+        "level": "reference"
+       },
+       {
+        "ref": "crates/mdtest/src/assertion.rs:97",
+        "excerpt": "let mut by_line = Vec::new();",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at crates/mdtest/src/assertion.rs:81"
+     },
+     {
+      "kind": "symbol",
+      "text": "let",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/mdtest/src/assertion.rs:81",
+        "excerpt": "let span = token.span();",
+        "level": "reference"
+       },
+       {
+        "ref": "crates/mdtest/src/assertion.rs:97",
+        "excerpt": "let mut by_line = Vec::new();",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at crates/mdtest/src/assertion.rs:81"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `if let`: appears verbatim in code at crates/mdtest/src/assertion.rs:263; what the example illustrates is not checked",
+    "settled": false
+   },
+   {
+    "id": "72d1269b39f5944c0950b5092c0cefe31c17f1eb",
+    "file": "AGENTS.md",
+    "line": 216,
+    "endLine": 216,
+    "section": "Development Guidelines",
+    "kind": "item",
+    "text": "If you have to suppress a Clippy lint, prefer to use `#[expect()]` over `[allow()]`, where possible. But if a lint is complaining about unused/dead code, it's usually best to just delete the unused code.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "#[expect()]",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "[allow()]",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"prefer\"",
+     "description \"you have suppress Clippy lint prefer …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "#[expect()]",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "[allow()]",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `#[expect()]`: not a path, command, name or version this tool can check",
+    "settled": false
+   },
+   {
+    "id": "09a9b0bbf16027031fa59db683ced8ffd4c01126",
+    "file": "AGENTS.md",
+    "line": 217,
+    "endLine": 217,
+    "section": "Development Guidelines",
+    "kind": "item",
+    "text": "Don't use comments to narrate code, but do use them to explain invariants and why something unusual was done a particular way. Make sure that a comment will make sense to somebody who's reading the code for the first time. Prefer plain language, avoid jargon, and don't be afraid to be more verbose if it's necessary to explain something well. Giving examples of the kind of Python code we're trying to model at this particular point in Ruff or ty can often be very helpful for future readers of the code.",
+    "spans": [
+     {
+      "kind": "dependency",
+      "text": "Ruff",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Don't\"",
+     "description \"Don't comments narrate code them explain …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "dependency",
+      "text": "Ruff",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "python/py-fuzzer/pyproject.toml ruff \">=0.16.8\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "python/py-fuzzer/pyproject.toml ruff",
+        "level": "declaration"
+       }
+      ],
+      "reason": "python/py-fuzzer/pyproject.toml depends on ruff"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"Don't\", description \"Don't comments narrate code them explain …\"",
+    "settled": false
+   },
+   {
+    "id": "aaaea840bd0841e6a66616b6892363d6e0e7aee4",
+    "file": "AGENTS.md",
+    "line": 218,
+    "endLine": 218,
+    "section": "Development Guidelines",
+    "kind": "item",
+    "text": "Run `cargo dev generate-all` after changing configuration options, CLI arguments, lint rules, or environment variable definitions, as these changes require regeneration of schemas, docs, and CLI references.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "cargo dev generate-all",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"require\"",
+     "description \"after changing configuration options CLI arguments …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "cargo dev generate-all",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "Cargo.toml",
+        "level": "reference"
+       }
+      ],
+      "reason": "cargo dev in a Cargo project (Cargo.toml)"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"require\", description \"after changing configuration options CLI arguments …\"",
+    "settled": false
+   },
+   {
+    "id": "a1e0eb596cfb41fd28e641befb368c3fb46add5e",
+    "file": "AGENTS.md",
+    "line": 219,
+    "endLine": 219,
+    "section": "Development Guidelines",
+    "kind": "item",
+    "text": "Don't prefix tests with `test_`.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "test_",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Don't\"",
+     "description \"Don't prefix tests\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "test_",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": ".github/workflows/build-binaries.yml:440",
+        "excerpt": "test_image: arm32v7/ubuntu:20.04@sha256:d9a6ab6baaf86907ea1d46f0cbc87547920077c9c6017721faed6eeb51e9aa7e",
+        "level": "declaration"
+       }
+      ],
+      "reason": "test_image at .github/workflows/build-binaries.yml:440"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"Don't\", description \"Don't prefix tests\"",
+    "settled": false
+   },
+   {
+    "id": "b7795f8ac9ec7f1a85daf990cd6d5e217d4c5406",
+    "file": "AGENTS.md",
+    "line": 220,
+    "endLine": 220,
+    "section": "Development Guidelines",
+    "kind": "item",
+    "text": "Don't separate struct definitions from their `impl` blocks unless the `impl` is deliberately placed in a separate file, as for large structs.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "impl",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "impl",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Don't\"",
+     "description \"Don't separate struct definitions their blocks …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "impl",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/mdtest/src/assertion.rs:59",
+        "excerpt": "impl<'s> InlineFileAssertions<'s> {",
+        "level": "reference"
+       },
+       {
+        "ref": "crates/mdtest/src/assertion.rs:94",
+        "excerpt": "comment_ranges: impl Iterator<Item = TextRange>,",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at crates/mdtest/src/assertion.rs:59"
+     },
+     {
+      "kind": "symbol",
+      "text": "impl",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/mdtest/src/assertion.rs:59",
+        "excerpt": "impl<'s> InlineFileAssertions<'s> {",
+        "level": "reference"
+       },
+       {
+        "ref": "crates/mdtest/src/assertion.rs:94",
+        "excerpt": "comment_ranges: impl Iterator<Item = TextRange>,",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at crates/mdtest/src/assertion.rs:59"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: rule \"Don't\", description \"Don't separate struct definitions their blocks …\"",
+    "settled": false
+   },
+   {
+    "id": "caa9daeac9be358acaf3549fb539bac3c5b90a1f",
+    "file": "AGENTS.md",
+    "line": 221,
+    "endLine": 221,
+    "section": "Development Guidelines",
+    "kind": "item",
+    "text": "Write all self-contained Python scripts as PEP 723 scripts, with inline metadata.",
+    "spans": [],
+    "residual": [
+     "count \"723 scripts\"",
+     "quantifier \"all\"",
+     "description \"Write self-contained Python scripts PEP scripts …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "nothing mechanical settles it: count \"723 scripts\", quantifier \"all\", description \"Write self-contained Python scripts PEP scripts …\"",
+    "settled": false
+   },
+   {
+    "id": "4752e721d3176144d6d38378870febb772d00d15",
+    "file": "AGENTS.md",
+    "line": 222,
+    "endLine": 222,
+    "section": "Development Guidelines",
+    "kind": "item",
+    "text": "When running a PEP 723 script, run it with `uv run <script>`. If a script doesn't have PEP 723 metadata, run it with `--no-project`, `--script`, or similar to avoid building Ruff from source, which is very slow and usually unnecessary.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "uv run <script>",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "--no-project",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "--script",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "Ruff",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "count \"723 script\"",
+     "count \"723 metadata\"",
+     "rule \"avoid\"",
+     "description \"PEP script script doesn't have PEP …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "uv run <script>",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "a template with placeholders, not a command to run"
+     },
+     {
+      "kind": "symbol",
+      "text": "--no-project",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/ty/tests/cli/scripts.rs:1822",
+        "excerpt": ".args([\"venv\", \"--no-project\", \"--python\", \"3.12\"])",
+        "level": "reference"
+       }
+      ],
+      "reason": "a string in code at crates/ty/tests/cli/scripts.rs:1822"
+     },
+     {
+      "kind": "symbol",
+      "text": "--script",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "crates/ruff_benchmark/benches/ty_script.rs:50",
+        "excerpt": ".args([\"workspace\", \"metadata\", \"--sync\", \"--script\"])",
+        "level": "reference"
+       }
+      ],
+      "reason": "a string in code at crates/ruff_benchmark/benches/ty_script.rs:50"
+     },
+     {
+      "kind": "dependency",
+      "text": "Ruff",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "python/py-fuzzer/pyproject.toml ruff \">=0.16.8\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "python/py-fuzzer/pyproject.toml ruff",
+        "level": "declaration"
+       }
+      ],
+      "reason": "python/py-fuzzer/pyproject.toml depends on ruff"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "names verified; still to check: count \"723 script\", count \"723 metadata\", rule \"avoid\", description \"PEP script script doesn't have PEP …\"",
+    "settled": false
+   }
+  ]
+ }
+}

@@ -1,0 +1,23 @@
+{
+ "repo": "spring-projects/spring-ai",
+ "file": "AGENTS.md",
+ "reviewer": "agent (independent of proof)",
+ "fixes": [
+  {
+   "statement_id": "3c1dda3fae1406354cbfba12e606fe41da2e645c",
+   "line": 20,
+   "old": "`javax.*` + `jakarta.*`, then others",
+   "new": "`javax.*`, then others",
+   "keep": true,
+   "evidence": [
+    "src/checkstyle/checkstyle.xml:108 <property name=\"groups\" value=\"java,javax,*,org.springframework\"/> (no jakarta group; checkstyle appends \".\" to prefixes, so jakarta.* falls in *)",
+    "src/checkstyle/checkstyle.xml:110-111 separated=true, option=bottom (statics last)",
+    "pom.xml:655-660 checkstyle-check profile active by default (!env.BOGUS), pom.xml:311-312 failsOnError/failOnViolation true",
+    "auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-bedrock-knowledgebase/src/main/java/.../BedrockKnowledgeBaseVectorStoreProperties.java:19-23 \"import jakarta.validation.constraints.Min;\" directly followed by \"import org.jspecify.annotations.Nullable;\" with no blank line (jakarta sits in the others group); this is the only jakarta-importing Java file in the repo",
+    "vector-stores/spring-ai-pgvector-store/src/test/java/.../PgVectorStoreUpsertIT.java:19-23 java.* / blank / javax.sql.DataSource / blank / com.zaxxer... (javax is its own group)",
+    "CONTRIBUTING.md:145-147 lists javax.* + jakarta.* in one group, but the enforced checkstyle config and the code disagree with it"
+   ],
+   "note": "The enforced checkstyle groups (java,javax,*,org.springframework) and the only jakarta-importing file put jakarta.* in the others group, so dropping the javax+jakarta pairing removes a false claim and keeps the rest true."
+  }
+ ]
+}

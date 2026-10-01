@@ -1,0 +1,1130 @@
+{
+ "proof": "79a431876ead",
+ "stage": "fixes",
+ "seconds": 0,
+ "exit": 0,
+ "report": {
+  "file": "CLAUDE.md",
+  "scope": "project",
+  "why": "Claude Code project instructions (at launch for this folder and above, on demand below)",
+  "imports": [],
+  "importedBy": [],
+  "counts": {
+   "VERIFIED": 14,
+   "STALE": 0,
+   "UNCONFIRMED": 0,
+   "UNVERIFIED_WITH_REASON": 1,
+   "DECIDED": 0,
+   "OVERRIDDEN": 0,
+   "NOT_CHECKED": 0,
+   "FIXED": 0,
+   "FIX_REJECTED": 0
+  },
+  "evidenceLevels": {
+   "definition": 12,
+   "declaration": 7,
+   "reference": 0,
+   "comment": 0,
+   "substring": 0,
+   "none": 1
+  },
+  "git": {
+   "root": "/home/ms/projects/proof-cache/corpus/excalidraw",
+   "tree": "70a1ead59dab6f2325982e44403b591ac2f314f4",
+   "head": "1919728724a1b71af73cb7e6d2d1a418a1415b1c",
+   "branch": null,
+   "upstream": "origin/master",
+   "behind": 0
+  },
+  "run": {
+   "started": "2026-10-01T14:01:00.130Z",
+   "finished": "2026-10-01T14:01:00.164Z",
+   "version": "0.2.0",
+   "budgetUsedUsd": 0
+  },
+  "decisions": [],
+  "reopened": [],
+  "verdict": "PARTLY PROVEN",
+  "ownVerdict": "PARTLY PROVEN",
+  "coverage": {
+   "statements": 15,
+   "withResult": 15
+  },
+  "degraded": [],
+  "statements": [
+   {
+    "id": "a3853051226741d2e61802907e81447242334758",
+    "file": "CLAUDE.md",
+    "line": 7,
+    "endLine": 7,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`packages/excalidraw/` - Main React component library published to npm as `@excalidraw/excalidraw`",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "packages/excalidraw/",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "@excalidraw/excalidraw",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "React",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Main component library published npm\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "packages/excalidraw/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/excalidraw",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/excalidraw"
+     },
+     {
+      "kind": "dependency",
+      "text": "@excalidraw/excalidraw",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "dev-docs/package.json @excalidraw/excalidraw \"0.18.0\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/with-script-in-browser/package.json @excalidraw/excalidraw \"*\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "dev-docs/package.json depends on @excalidraw/excalidraw"
+     },
+     {
+      "kind": "dependency",
+      "text": "React",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "dev-docs/package.json react \"18.2.0\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/with-nextjs/package.json react \"19.0.0\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/with-script-in-browser/package.json react \"19.0.0\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "dev-docs/package.json depends on react"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The package is named @excalidraw/excalidraw, is not private, and is published by scripts/release.js and the autorelease workflow. It is a React component library.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "packages/excalidraw/package.json:2",
+       "excerpt": "\"name\": \"@excalidraw/excalidraw\",",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "scripts/release.js:23",
+       "excerpt": "publishes `@excalidraw` packages with \"test\" tag",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "scripts/release.js:216",
+       "excerpt": "yarn publish --tag ${tag}",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The package is named @excalidraw/excalidraw, is not private, and is published by scripts/release.js and the autorelease workflow. It is a React component library.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "9559b7b756c347a093560df6687404856640f41d",
+    "file": "CLAUDE.md",
+    "line": 8,
+    "endLine": 8,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`excalidraw-app/` - Full-featured web application (excalidraw.com) that uses the library",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "excalidraw-app/",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Full-featured web application excalidraw com uses …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "excalidraw-app/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "excalidraw-app",
+        "level": "definition"
+       }
+      ],
+      "reason": "excalidraw-app"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "excalidraw-app is the web app and imports the library in App.tsx and other components.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "excalidraw-app/package.json:2",
+       "excerpt": "\"name\": \"excalidraw-app\",",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "command_output",
+       "ref": "grep -rln \"@excalidraw/excalidraw\" excalidraw-app --include=*.tsx | head -3",
+       "excerpt": "excalidraw-app/App.tsx",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "excalidraw-app is the web app and imports the library in App.tsx and other components.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "c472d7fc253a9a66046b0b37eecb4df190a38b16",
+    "file": "CLAUDE.md",
+    "line": 9,
+    "endLine": 9,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`packages/` - Core packages: `@excalidraw/common`, `@excalidraw/element`, `@excalidraw/math`, `@excalidraw/utils`",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "packages/",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "@excalidraw/common",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "@excalidraw/element",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "@excalidraw/math",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "@excalidraw/utils",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Core packages\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "packages/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages"
+     },
+     {
+      "kind": "dependency",
+      "text": "@excalidraw/common",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "packages/element/package.json @excalidraw/common \"0.18.0\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "packages/excalidraw/package.json @excalidraw/common \"0.18.0\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "packages/element/package.json depends on @excalidraw/common"
+     },
+     {
+      "kind": "dependency",
+      "text": "@excalidraw/element",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "packages/excalidraw/package.json @excalidraw/element \"0.18.0\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "packages/excalidraw/package.json depends on @excalidraw/element"
+     },
+     {
+      "kind": "dependency",
+      "text": "@excalidraw/math",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "packages/element/package.json @excalidraw/math \"0.18.0\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "packages/excalidraw/package.json @excalidraw/math \"0.18.0\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "packages/element/package.json depends on @excalidraw/math"
+     },
+     {
+      "kind": "dependency",
+      "text": "@excalidraw/utils",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "no package.json declares @excalidraw/utils"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "All four named packages exist. packages/utils/package.json declares @excalidraw/utils; the mechanical check missed it because no other package.json depends on it. The list omits packages/fractional-indexing and packages/laser-pointer, which exist. The statement does not claim the list is exhaustive.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "packages/utils/package.json:2",
+       "excerpt": "\"name\": \"@excalidraw/utils\",",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "tsconfig.json:34",
+       "excerpt": "\"@excalidraw/utils\": [\"./packages/utils/src/index.ts\"],",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "command_output",
+       "ref": "ls packages",
+       "excerpt": "fractional-indexing",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "All four named packages exist. packages/utils/package.json declares @excalidraw/utils; the mechanical check missed it because no other package.json depends on it. The list omits packages/fractional-indexing and packages/laser-pointer, which exist. The statement does not claim the list is exhaustive.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "316e5e57e6476a0e41a824fce507b033b272b213",
+    "file": "CLAUDE.md",
+    "line": 10,
+    "endLine": 10,
+    "section": "Project Structure",
+    "kind": "item",
+    "text": "`examples/` - Integration examples (NextJS, browser script)",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "examples/",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Integration examples NextJS browser script\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "examples/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "examples",
+        "level": "definition"
+       }
+      ],
+      "reason": "examples"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "examples/ contains with-nextjs, which imports the library, and with-script-in-browser, which depends on @excalidraw/excalidraw.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "command_output",
+       "ref": "ls examples",
+       "excerpt": "with-nextjs",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "command_output",
+       "ref": "ls examples",
+       "excerpt": "with-script-in-browser",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "examples/with-nextjs/src/excalidrawWrapper.tsx:3",
+       "excerpt": "import { Excalidraw } from \"@excalidraw/excalidraw\";",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "examples/ contains with-nextjs, which imports the library, and with-script-in-browser, which depends on @excalidraw/excalidraw.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "1df61612a109c8737cc5043c8c53853d57c1e1a9",
+    "file": "CLAUDE.md",
+    "line": 14,
+    "endLine": 14,
+    "section": "Development Workflow",
+    "kind": "item",
+    "text": "Package Development: Work in `packages/*` for editor features",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "packages/*",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Package Development Work editor features\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "packages/*",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/common",
+        "level": "definition"
+       },
+       {
+        "ref": "packages/element",
+        "level": "definition"
+       },
+       {
+        "ref": "packages/eslintrc.base.json",
+        "level": "definition"
+       }
+      ],
+      "reason": "packages/common, packages/element, packages/eslintrc.base.json and 6 more"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "packages/* holds the editor code: excalidraw, element, common, math and others. This is a workflow pointer, and the layout matches it.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "command_output",
+       "ref": "ls packages",
+       "excerpt": "excalidraw",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "command_output",
+       "ref": "ls packages",
+       "excerpt": "element",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "packages/* holds the editor code: excalidraw, element, common, math and others. This is a workflow pointer, and the layout matches it.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "54ef68f901ce0ada9684aeb547920c26f08e3b5e",
+    "file": "CLAUDE.md",
+    "line": 15,
+    "endLine": 15,
+    "section": "Development Workflow",
+    "kind": "item",
+    "text": "App Development: Work in `excalidraw-app/` for app-specific features",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "excalidraw-app/",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"App Development Work app-specific features\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "excalidraw-app/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "excalidraw-app",
+        "level": "definition"
+       }
+      ],
+      "reason": "excalidraw-app"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "excalidraw-app/ is the separate app that consumes the library, and it has app-specific components such as AppSidebar and AppMainMenu.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "excalidraw-app/package.json:2",
+       "excerpt": "\"name\": \"excalidraw-app\",",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "command_output",
+       "ref": "grep -rln \"@excalidraw/excalidraw\" excalidraw-app --include=*.tsx | head -3",
+       "excerpt": "excalidraw-app/components/AppMainMenu.tsx",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "excalidraw-app/ is the separate app that consumes the library, and it has app-specific components such as AppSidebar and AppMainMenu.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "03bbec241e332ce8f9ac1c68a864dce8fdc99ce9",
+    "file": "CLAUDE.md",
+    "line": 16,
+    "endLine": 16,
+    "section": "Development Workflow",
+    "kind": "item",
+    "text": "Testing: Always run `yarn test:update` before committing",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "yarn test:update",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Always\"",
+     "description \"Testing Always before committing\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "yarn test:update",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "package.json scripts.test:update",
+        "excerpt": "yarn test:app --update --watch=false",
+        "level": "definition"
+       }
+      ],
+      "reason": "script \"test:update\" in package.json"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "The script exists, but no tooling enforces running it before commit. The husky pre-commit hook has its only command commented out, and no CI workflow references test:update. Following the rule is not wrong, but I found no evidence that tooling enforces it.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "package.json:73",
+       "excerpt": "\"test:update\": \"yarn test:app --update --watch=false\",",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".husky/pre-commit:2",
+       "excerpt": "# yarn lint-staged",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The script exists, but no tooling enforces running it before commit. The husky pre-commit hook has its only command commented out, and no CI workflow references test:update. Following the rule is not wrong, but I found no evidence that tooling enforces it.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "d3ebc020bd78911464a3599716b82d7dbe27f9a5",
+    "file": "CLAUDE.md",
+    "line": 17,
+    "endLine": 17,
+    "section": "Development Workflow",
+    "kind": "item",
+    "text": "Type Safety: Use `yarn test:typecheck` to verify TypeScript",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "yarn test:typecheck",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Type Safety verify TypeScript\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "yarn test:typecheck",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "package.json scripts.test:typecheck",
+        "excerpt": "tsc",
+        "level": "definition"
+       }
+      ],
+      "reason": "script \"test:typecheck\" in package.json"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "yarn test:typecheck runs tsc, which type-checks the TypeScript. It is also part of test:all.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "package.json:72",
+       "excerpt": "\"test:typecheck\": \"tsc\",",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "yarn test:typecheck runs tsc, which type-checks the TypeScript. It is also part of test:all.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "8544dadc97626692991558149b1c933bc50aa747",
+    "file": "CLAUDE.md",
+    "line": 22,
+    "endLine": 22,
+    "section": "Development Commands",
+    "kind": "command",
+    "text": "yarn test:typecheck # TypeScript type checking",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "yarn test:typecheck",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "yarn test:typecheck",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "package.json scripts.test:typecheck",
+        "excerpt": "tsc",
+        "level": "definition"
+       }
+      ],
+      "reason": "script \"test:typecheck\" in package.json"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "f8d190f392d332a45c77adee671118b039fcde23",
+    "file": "CLAUDE.md",
+    "line": 23,
+    "endLine": 23,
+    "section": "Development Commands",
+    "kind": "command",
+    "text": "yarn test:update # Run all tests (with snapshot updates)",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "yarn test:update",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "yarn test:update",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "package.json scripts.test:update",
+        "excerpt": "yarn test:app --update --watch=false",
+        "level": "definition"
+       }
+      ],
+      "reason": "script \"test:update\" in package.json"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "47f8120c1871703389fed5df4c65d6f76ed85010",
+    "file": "CLAUDE.md",
+    "line": 24,
+    "endLine": 24,
+    "section": "Development Commands",
+    "kind": "command",
+    "text": "yarn fix # Auto-fix formatting and linting issues",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "yarn fix",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "yarn fix",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "package.json scripts.fix",
+        "excerpt": "yarn fix:other && yarn fix:code",
+        "level": "definition"
+       }
+      ],
+      "reason": "script \"fix\" in package.json"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "1d3080df88464d24bcf41d877d61d1fb82d728fd",
+    "file": "CLAUDE.md",
+    "line": 31,
+    "endLine": 31,
+    "section": "Package System",
+    "kind": "item",
+    "text": "Uses Yarn workspaces for monorepo management",
+    "spans": [],
+    "residual": [
+     "description \"Uses Yarn workspaces monorepo management\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "Root package.json declares Yarn workspaces (excalidraw-app, packages/*, examples/*), pins yarn@1.22.22, and has a yarn.lock.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "package.json:5-8",
+       "excerpt": "\"workspaces\": [ \"excalidraw-app\", \"packages/*\",",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "package.json:4",
+       "excerpt": "\"packageManager\": \"yarn@1.22.22\",",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "command_output",
+       "ref": "ls yarn.lock",
+       "excerpt": "yarn.lock",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "Root package.json declares Yarn workspaces (excalidraw-app, packages/*, examples/*), pins yarn@1.22.22, and has a yarn.lock.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "f6b33a8c22d562d07070bc4a0f194a2004b5aa89",
+    "file": "CLAUDE.md",
+    "line": 32,
+    "endLine": 32,
+    "section": "Package System",
+    "kind": "item",
+    "text": "Internal packages use path aliases (see `vitest.config.mts`)",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "vitest.config.mts",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Internal packages path aliases\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "vitest.config.mts",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "vitest.config.mts",
+        "level": "definition"
+       }
+      ],
+      "reason": "vitest.config.mts"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "vitest.config.mts aliases @excalidraw/common, element, excalidraw, math and others to their package sources. tsconfig.json has matching paths. Both are internal-package path aliases.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "vitest.config.mts:7-11",
+       "excerpt": "alias: [ { find: /^@excalidraw\\/common$/, replacement: path.resolve(__dirname, \"./packages/common/src/index.ts\"),",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "tsconfig.json:21",
+       "excerpt": "\"@excalidraw/common\": [\"./packages/common/src/index.ts\"],",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "vitest.config.mts aliases @excalidraw/common, element, excalidraw, math and others to their package sources. tsconfig.json has matching paths. Both are internal-package path aliases.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "139bc67eaa0aa9736ab2de58486baa5788aebb90",
+    "file": "CLAUDE.md",
+    "line": 33,
+    "endLine": 33,
+    "section": "Package System",
+    "kind": "item",
+    "text": "Build system uses esbuild for packages, Vite for the app",
+    "spans": [
+     {
+      "kind": "dependency",
+      "text": "Vite",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "esbuild",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Build system uses packages app\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "dependency",
+      "text": "Vite",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "examples/with-script-in-browser/package.json vite \"5.0.12\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "package.json vite \"5.0.12\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "examples/with-script-in-browser/package.json depends on vite"
+     },
+     {
+      "kind": "dependency",
+      "text": "esbuild",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "packages/excalidraw/package.json esbuild \"0.19.10\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "packages/excalidraw/package.json depends on esbuild"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "Each package's build:esm script runs a script that uses esbuild (buildBase.js, buildPackage.js). excalidraw-app builds with `vite build`.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "scripts/buildBase.js:3",
+       "excerpt": "const { build } = require(\"esbuild\");",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "scripts/buildPackage.js:5",
+       "excerpt": "const { build } = require(\"esbuild\");",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "packages/excalidraw/package.json:74",
+       "excerpt": "\"build:esm\": \"rimraf dist && node ../../scripts/buildPackage.js && yarn gen:types\"",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "excalidraw-app/package.json:45",
+       "excerpt": "\"build:app:docker\": \"cross-env VITE_APP_DISABLE_SENTRY=true vite build\",",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "Each package's build:esm script runs a script that uses esbuild (buildBase.js, buildPackage.js). excalidraw-app builds with `vite build`.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "61aa5b7de37514445f9ce2ed10615a748cf38b3d",
+    "file": "CLAUDE.md",
+    "line": 34,
+    "endLine": 34,
+    "section": "Package System",
+    "kind": "item",
+    "text": "TypeScript throughout with strict configuration",
+    "spans": [],
+    "residual": [
+     "description \"TypeScript throughout strict configuration\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The root tsconfig.json, which includes packages and excalidraw-app, sets strict: true. The source is 673 TS/TSX files against 25 JS files. The JS files are mostly tooling, docs and config, such as scripts, dev-docs, .lintstagedrc.js and public/service-worker.js. \"Throughout\" is slightly loose because of those files, but the claim holds for the source code.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "tsconfig.json:10",
+       "excerpt": "\"strict\": true,",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "count",
+       "ref": "git ls-files | grep -E '\\.(ts|tsx)$' | wc -l",
+       "excerpt": "673",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "count",
+       "ref": "git ls-files | grep -E '\\.(js|jsx|mjs)$' | wc -l",
+       "excerpt": "25",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The root tsconfig.json, which includes packages and excalidraw-app, sets strict: true. The source is 673 TS/TSX files against 25 JS files. The JS files are mostly tooling, docs and config, such as scripts, dev-docs, .lintstagedrc.js and public/service-worker.js. \"Throughout\" is slightly loose because of those files, but the claim holds for the source code.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   }
+  ],
+  "agent": {
+   "sent": 12,
+   "answered": 12,
+   "cached": 12,
+   "costUsd": 0,
+   "model": "claude-sonnet-5-5",
+   "failures": []
+  }
+ }
+}

@@ -96,7 +96,9 @@ function metricsBlock(metrics, perf, corpus) {
     '| --- | --- | --- | --- | --- | --- | --- |',
     ...rows,
   ];
-  if (perf) lines.push('', `Run time on ${perf.repo} (${perf.files.toLocaleString('en-US')} files, ${perf.full.open} open statements in ${perf.file}): a full \`proof run\` took ${Math.round(perf.full.seconds / 60)} minutes and $${perf.full.spentUsd} (${perf.full.fixed} statements fixed, ${perf.full.fixRejected} fix rejected); the re-run after the fixes took ${perf.rerun.seconds} seconds and $${perf.rerun.spentUsd}.`);
+  const perfReview = existsSync(join(root, 'eval', 'labels', 'deno.fixes.json')) ? JSON.parse(readFileSync(join(root, 'eval', 'labels', 'deno.fixes.json'), 'utf8')).fixes : null;
+  const reviewed = perfReview ? ` An independent review of that diff kept ${perfReview.filter((f) => f.keep).length} of ${perfReview.length} fixes.` : '';
+  if (perf) lines.push('', `Run time on ${perf.repo} (${perf.files.toLocaleString('en-US')} files, ${perf.full.open} open statements in ${perf.file}): a full \`proof run\` took ${Math.round(perf.full.seconds / 60)} minutes and $${perf.full.spentUsd} (${perf.full.fixed} statements fixed, ${perf.full.fixRejected} fix rejected); the re-run after the fixes took ${perf.rerun.seconds} seconds and $${perf.rerun.spentUsd}.${reviewed}`);
   return lines.join('\n');
 }
 

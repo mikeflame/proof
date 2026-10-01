@@ -1,0 +1,154 @@
+{
+ "repo": "modelcontextprotocol/typescript-sdk",
+ "file": "CLAUDE.md",
+ "reviewer": "agent (independent of proof)",
+ "fixes": [
+  {
+   "statement_id": "a3343b1bb53e2ee10d8634446951f5bdfd8f07d1",
+   "line": 39,
+   "old": "Lowercase with hyphens, test files",
+   "new": "camelCase (enforced by `unicorn/filename-case` in `common/eslint-config/eslint.config.mjs`), test files",
+   "keep": true,
+   "evidence": [
+    "common/eslint-config/eslint.config.mjs:86-90 \"'unicorn/filename-case': ['error', { case: 'camelCase' }]\"",
+    "packages/client/eslint.config.mjs:3 \"import baseConfig from '@modelcontextprotocol/eslint-config';\" (same in every packages/*/eslint.config.mjs)",
+    "git ls-files 'packages/*' | grep -E '\\.tsx?$' => 428 files, only 4 contain '-' (spec.types.2025-11-25/2026-07-28 date-named files)",
+    "git ls-files packages/client/src/client/ => authExtensions.ts, streamableHttp.ts, versionNegotiation.ts (camelCase, no hyphens)",
+    "test/e2e/eslint.config.mjs:12 \"'unicorn/filename-case': ['error', { cases: { camelCase: true, kebabCase: true } }]\" (local override; base rule is camelCase)"
+   ],
+   "note": "Package source files are camelCase and the shared ESLint config enforces camelCase via unicorn/filename-case, so 'lowercase with hyphens' was wrong; the new text is accurate (test/e2e and examples/guides relax it locally, which does not make the claim false)."
+  },
+  {
+   "statement_id": "fa2da8828cf8e355a5180aec8732cf13eb40f158",
+   "line": 41,
+   "old": "2-space indentation",
+   "new": "4-space indentation",
+   "keep": true,
+   "evidence": [
+    ".prettierrc.json:3 \"\\\"tabWidth\\\": 4,\"",
+    ".prettierrc.json:4 \"\\\"useTabs\\\": false,\"",
+    "packages/core-internal/src/types/types.ts:8 \"    CLIENT_CAPABILITIES_META_KEY,\" (4-space indent)"
+   ],
+   "note": "Prettier is configured with tabWidth 4 and the sources are 4-space indented, so 4-space is correct."
+  },
+  {
+   "statement_id": "597157be70296601307fcb6939073ae1237fec6f",
+   "line": 47,
+   "old": "`Client_connect_basicUsage`",
+   "new": "`Client_connect_stdio`",
+   "keep": true,
+   "evidence": [
+    "git grep -n Client_connect_basicUsage => only CLAUDE.md:47 (never existed in code; git log -S shows it was introduced only in CLAUDE.md by 553d6d4a)",
+    "packages/client/src/client/client.examples.ts:47 \"//#region Client_connect_stdio\"",
+    "packages/client/src/client/client.ts:957 \"* ```ts source=\\\"./client.examples.ts#Client_connect_stdio\\\"\""
+   ],
+   "note": "Replaces a region name that never existed with a real Client.connect region that follows the same ClassName_methodName_variant pattern; nothing is lost because applyMiddlewares_basicUsage still shows the basicUsage variant."
+  },
+  {
+   "statement_id": "ab53ac6db365f1586d675ec265d83d365660c862",
+   "line": 57,
+   "old": "All JSON-RPC message types, schemas, and protocol constants are defined here using Zod v4.",
+   "new": "All JSON-RPC message types are defined here, inferred from the Zod v4 schemas and protocol constants in `@modelcontextprotocol/core` (`packages/core/src/schemas.ts`, `packages/core/src/constants.ts`).",
+   "keep": true,
+   "evidence": [
+    "packages/core-internal/src/types/schemas.ts:1 \"// Moved: the spec Zod schemas now live in @modelcontextprotocol/core (packages/core/src/schemas.ts).\"",
+    "packages/core-internal/src/types/constants.ts:1 \"// Moved: the protocol constants now live in @modelcontextprotocol/core (packages/core/src/constants.ts).\"",
+    "packages/core-internal/src/types/types.ts:200 \"type Infer<Schema extends z.ZodTypeAny> = Flatten<z.infer<Schema>>;\"",
+    "packages/core-internal/src/types/types.ts:229 \"export type JSONRPCRequest = Infer<typeof JSONRPCRequestSchema>;\"",
+    "packages/core-internal/src/types/types.ts:777 \"code: typeof PARSE_ERROR;\""
+   ],
+   "note": "Schemas and constants are no longer defined in types.ts (they live in packages/core and are forwarded), while types.ts infers the TS types from them, which is exactly what the new text says."
+  },
+  {
+   "statement_id": "2c1cf118c5317ecd8129248d294e3154dbf241ee",
+   "line": 87,
+   "old": "`packages/server/src/server/sse.ts`",
+   "new": "`packages/server-legacy/src/sse/sse.ts`",
+   "keep": true,
+   "evidence": [
+    "git ls-files packages/server/src/server/ => no sse.ts (only sseKeepAlive.ts)",
+    "packages/server-legacy/src/sse/sse.ts:39 \"export class SSEServerTransport implements Transport {\"",
+    "packages/server-legacy/README.md:7 \"SSE Transport (`./sse`) — The `SSEServerTransport` class, replaced in v2 by ...\""
+   ],
+   "note": "The server-side SSE transport now lives at packages/server-legacy/src/sse/sse.ts, and the line still labels it legacy."
+  },
+  {
+   "statement_id": "d4710bd7781e2a2e9403958bd283dddace068c23",
+   "line": 92,
+   "old": "`McpServer.tool()`, `.resource()`, `.prompt()` methods",
+   "new": "`McpServer.registerTool()`, `.registerResource()`, `.registerPrompt()` methods",
+   "keep": true,
+   "evidence": [
+    "grep -nE '^\\s+(tool|resource|prompt)\\s*(<|\\()' packages/server/src/server/mcp.ts => no matches",
+    "packages/server/src/server/mcp.ts:633 \"registerResource(\"",
+    "packages/server/src/server/mcp.ts:995 \"registerTool<OutputArgs extends StandardSchemaWithJSON, ...>(\"",
+    "packages/server/src/server/mcp.ts:1085 \"registerPrompt(\""
+   ],
+   "note": "McpServer exposes only registerTool/registerResource/registerPrompt; tool()/resource()/prompt() no longer exist."
+  },
+  {
+   "statement_id": "ac4a70986df9dd63d7277e6643114493a19b2f5d",
+   "line": 93,
+   "old": "`packages/server/src/server/auth/`",
+   "new": "`packages/server-legacy/src/auth/`",
+   "keep": true,
+   "evidence": [
+    "git ls-files packages/server/src/server/auth => (empty)",
+    "git ls-files packages/server-legacy/src/auth => router.ts, handlers/{authorize,token,register,revoke,metadata}.ts, providers/proxyProvider.ts, ...",
+    "packages/server-legacy/package.json:5 \"Frozen v1 SSE transport and OAuth Authorization Server helpers ... Deprecated\""
+   ],
+   "note": "The OAuth authorization-server implementation now lives in packages/server-legacy/src/auth/; the path is correct, and the package name itself marks it as legacy/deprecated."
+  },
+  {
+   "statement_id": "81ca2fc964c26cf3abccc2eb709658386bad1f71",
+   "line": 98,
+   "old": "auth-extensions.ts",
+   "new": "authExtensions.ts",
+   "keep": true,
+   "evidence": [
+    "git ls-files packages/client/src/client/ => authExtensions.ts present, auth-extensions.ts absent",
+    "packages/client/src/index.ts:62 \"} from './client/authExtensions';\""
+   ],
+   "note": "The file is named authExtensions.ts."
+  },
+  {
+   "statement_id": "6e2be1e9d937aeeada227c9c5ce3aec09a291c45",
+   "line": 110,
+   "old": "Located in `packages/*/src/experimental/`. Currently empty.",
+   "new": "",
+   "keep": false,
+   "evidence": [
+    "find packages -type d -name experimental => (none); git grep -i experimental -- 'packages/*/src' => (none)",
+    "git show c8d7401b -- CLAUDE.md => author replaced the Tasks list with \"Located in `packages/*/src/experimental/`. Currently empty.\" when removing experimental tasks",
+    "CLAUDE.md:108 \"### Experimental Features\" (heading would remain with no body after the deletion)"
+   ],
+   "note": "The original already says correctly that there are no experimental features and gives the intended location convention (git does not track empty dirs); deleting it loses that and leaves the Experimental Features heading empty."
+  },
+  {
+   "statement_id": "00860aae98c4f61e9c260ffe6a75f2aa8820e092",
+   "line": 172,
+   "old": "`signal`, `sessionId`, `sendNotification`, `sendRequest`, etc.",
+   "new": "`sessionId`, `mcpReq` (`signal`, `send`, `notify`), etc.",
+   "keep": true,
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:1068-1110 \"const baseCtx: BaseContext = { sessionId: ..., mcpReq: { id, method, _meta, ..., signal: abortController.signal, send: ..., notify: sendNotification }, http: ... }\"",
+    "packages/core-internal/src/shared/protocol.ts:414 \"signal: AbortSignal;\" (inside mcpReq)",
+    "packages/core-internal/src/shared/protocol.ts:441 \"notify: (notification: Notification) => Promise<void>;\""
+   ],
+   "note": "BaseContext has sessionId at top level and signal/send/notify nested under mcpReq; there are no sendNotification/sendRequest fields on the context, so the new text is accurate and matches lines 197-208."
+  },
+  {
+   "statement_id": "e86d769a3775a7877a16c4bc9ee07efae84136f8",
+   "line": 227,
+   "old": "`src/types.ts`",
+   "new": "`packages/core/src/schemas.ts`",
+   "keep": true,
+   "evidence": [
+    "git ls-files src/types.ts => (none)",
+    "packages/core-internal/src/types/schemas.ts:6 \"// Add new schemas in packages/core/src/schemas.ts, never here — this file only forwards\"",
+    "packages/core/src/schemas.ts:1468 \"export const CallToolRequestSchema = RequestSchema.extend({\""
+   ],
+   "note": "src/types.ts does not exist; the repo says new spec schemas must be added in packages/core/src/schemas.ts."
+  }
+ ]
+}

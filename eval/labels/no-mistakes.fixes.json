@@ -1,0 +1,39 @@
+{
+  "repo": "kunchenguid/no-mistakes",
+  "file": "AGENTS.md",
+  "reviewer": "agent (independent of proof)",
+  "fixes": [
+    {
+      "statement_id": "82af96d9bd6e1206684c6f40a046080ec480ae55",
+      "line": 51,
+      "old": "is observability only and never changes gate resolution.",
+      "new": "never changes gate resolution; it is rendered in `axi` status and parked-time accounting, and startup recovery only resumes a run that has it set (`internal/pipeline/executor.go`, `internal/daemon/manager.go`).",
+      "keep": true,
+      "evidence": [
+        "internal/daemon/manager.go:140 if run == nil || run.Status != types.RunRunning || run.AwaitingAgentSince == nil || run.Branch == \"\" { return nil, fmt.Errorf(\"run is not a parked running run\")",
+        "internal/pipeline/executor.go:409 ValidateRecoveredRun: if run == nil || run.Status != types.RunRunning || run.AwaitingAgentSince == nil { return fmt.Errorf(\"run is not a recoverable parked run\")",
+        "git log -S'AwaitingAgentSince == nil' => 48bd29f 2026-07-10 (#444) added both recovery checks, after 57a62da 2026-06-26 (#329) wrote 'observability only'",
+        "internal/cli/axi_render.go:484-485 if rv.AwaitingAgentSince != nil && !terminalStatus(rv.Status) { ... Key: \"awaiting_agent\" ...} (used by axi_query.go:90 status, axi.go:211 home)",
+        "internal/db/run.go:753-755,965,1091-1093 parked_ms += (now - awaiting_agent_since)*1000; internal/pipeline/executor.go:441 parkStart := time.Unix(*run.AwaitingAgentSince, 0)",
+        "grep AwaitingAgentSince non-test internal/ => no read in gate approve/fix/reconcile logic; only recovery precondition, park-duration, rendering, IPC"
+      ],
+      "note": "Recovery has gated on the marker since #444, so 'observability only' is false; the edit keeps 'never changes gate resolution' and its added uses (axi status rendering, parked_ms accounting, recovery precondition) all check out."
+    },
+    {
+      "statement_id": "de109996c37aec9ee520f2ad13a1f0d2803dcb2d",
+      "line": 68,
+      "old": "AXI never bounds a finding description, so a long question's options line always survives in its row.",
+      "new": "AXI itself never bounds a finding description, but `openReviewQuestionFindings` bounds each question description to `maxReviewQuestionDescription` (2000) runes, so a very long question's options line can be truncated in its row.",
+      "keep": true,
+      "evidence": [
+        "internal/pipeline/steps/review_questions.go:395 maxReviewQuestionDescription   = 2000",
+        "internal/pipeline/steps/review_questions.go:486-504 description = \"Review question awaiting an answer: \" + question + \"\\nOptions: \" ... then Description: boundReviewQuestionText(b.String(), maxReviewQuestionDescription)",
+        "internal/pipeline/steps/review_questions.go:404-410 boundReviewQuestionText keeps runes[:limit] + '… (truncated, N chars total)' => options after a >~2000-rune question are cut",
+        "internal/reviewqa/reviewqa.go:71 maxLineBytes = 64 << 10 => questions far longer than 2000 runes are accepted",
+        "internal/cli/axi_render.go:620-628 findingRows copies Description: f.Description verbatim; recordedFindingsFields truncates only the summary",
+        "git show 3a5fd7e (#1219) replaced 'Accepted loss: the ordinary row truncates at maxFindingDesc' with 'AXI never bounds...always survives', while the 2000-rune bound already existed at that commit"
+      ],
+      "note": "AXI renders descriptions verbatim, but the producer bounds each question finding to 2000 runes ahead of the Options line, so 'always survives' is false and the edit states the real limit correctly."
+    }
+  ]
+}

@@ -1,0 +1,1954 @@
+{
+ "proof": "79a431876ead",
+ "stage": "fixes",
+ "seconds": 25,
+ "exit": 0,
+ "report": {
+  "file": "AGENTS.md",
+  "scope": "project",
+  "why": "Claude Code reads it only when no CLAUDE.md, .claude/CLAUDE.md or CLAUDE.local.md is in the folder or above it, and Codex, Cursor and others read it always",
+  "imports": [],
+  "importedBy": [],
+  "counts": {
+   "VERIFIED": 22,
+   "STALE": 0,
+   "UNCONFIRMED": 0,
+   "UNVERIFIED_WITH_REASON": 6,
+   "DECIDED": 0,
+   "OVERRIDDEN": 0,
+   "NOT_CHECKED": 3,
+   "FIXED": 0,
+   "FIX_REJECTED": 0
+  },
+  "evidenceLevels": {
+   "definition": 20,
+   "declaration": 5,
+   "reference": 0,
+   "comment": 0,
+   "substring": 0,
+   "none": 0
+  },
+  "git": {
+   "root": "/home/ms/projects/proof-cache/corpus/sentry-python",
+   "tree": "03dda66090139c098ff47d0f48280037fb692fdb",
+   "head": "014769c4ba1db2810e0a1a5c59659b4689b80d32",
+   "branch": null,
+   "upstream": "origin/master",
+   "behind": 0
+  },
+  "run": {
+   "started": "2026-10-01T13:39:19.017Z",
+   "finished": "2026-10-01T13:39:19.248Z",
+   "version": "0.2.0",
+   "budgetUsedUsd": 0.0747106
+  },
+  "decisions": [],
+  "reopened": [],
+  "verdict": "PARTLY PROVEN",
+  "ownVerdict": "PARTLY PROVEN",
+  "coverage": {
+   "statements": 31,
+   "withResult": 31
+  },
+  "degraded": [],
+  "statements": [
+   {
+    "id": "103cbc79fc73544a3f655a5657f9a0f6b259f423",
+    "file": "AGENTS.md",
+    "line": 5,
+    "endLine": 5,
+    "section": "Tox",
+    "kind": "item",
+    "text": "Run tox via uv: `uv run tox -e <env>`",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "uv run tox -e <env>",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "uv run tox -e <env>",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "a template with placeholders, not a command to run"
+     }
+    ],
+    "status": "NOT_CHECKED",
+    "reason": "a template with placeholders, not a command to run",
+    "settled": false
+   },
+   {
+    "id": "87d434a2ad65634c8dd53cd6cffa6ae8da1c6a6b",
+    "file": "AGENTS.md",
+    "line": 6,
+    "endLine": 6,
+    "section": "Tox",
+    "kind": "item",
+    "text": "`tox` + `tox-uv` are declared as the project's default dev dependencies in `pyproject.toml`, so uv installs them automatically into `.venv`.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "tox",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "tox-uv",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "pyproject.toml",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": ".venv",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"declared project's default dev dependencies installs …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "tox",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "pyproject.toml:10",
+        "excerpt": "\"tox\",",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at pyproject.toml:10"
+     },
+     {
+      "kind": "symbol",
+      "text": "tox-uv",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "pyproject.toml:11",
+        "excerpt": "\"tox-uv\",",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at pyproject.toml:11"
+     },
+     {
+      "kind": "path",
+      "text": "pyproject.toml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "pyproject.toml",
+        "level": "definition"
+       }
+      ],
+      "reason": "pyproject.toml"
+     },
+     {
+      "kind": "unknown",
+      "text": ".venv",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".gitignore:22",
+        "excerpt": ".venv",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at .gitignore:22; what the example illustrates is not checked",
+      "blocked": true
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "tox and tox-uv are in the `dev` dependency group (pyproject.toml:8-15). There is no [tool.uv] default-groups override, so uv's default `dev` group applies. .venv is the uv default environment dir and is gitignored.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "pyproject.toml:10-11",
+       "excerpt": "\"tox\",\n    \"tox-uv\",",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "pyproject.toml:3",
+       "excerpt": "# `dev` is installed by default; `typing` is opt-in via `uv run --group typing`.",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".gitignore:22",
+       "excerpt": ".venv",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "tox and tox-uv are in the `dev` dependency group (pyproject.toml:8-15). There is no [tool.uv] default-groups override, so uv's default `dev` group applies. .venv is the uv default environment dir and is gitignored.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "25427a796f192329a30c8c9c61cb61bc1ab04328",
+    "file": "AGENTS.md",
+    "line": 10,
+    "endLine": 10,
+    "section": "Package Manager",
+    "kind": "sentence",
+    "text": "Use tox for testing (not pytest directly):",
+    "spans": [
+     {
+      "kind": "dependency",
+      "text": "pytest",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"tox testing directly\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "dependency",
+      "text": "pytest",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "pyproject.toml pytest \">=6.0.0\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": "pyproject.toml depends on pytest"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "CI runs tests through runtox.sh (tox). tox.ini invokes pytest itself with the needed flags and notes pytest breaks as a bare executable. pytest is not in the default dev group, only in the `test` group. This is a convention the repo follows, not something tooling blocks.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "tox.ini:19830-19834",
+       "excerpt": "commands =\n    ; Running `pytest` as an executable suffers from an import error ... python -m pytest -W error::pytest.PytestUnraisableExceptionWarning",
+       "valid": false,
+       "problem": "the excerpt is not at tox.ini:19830"
+      },
+      {
+       "kind": "file_line",
+       "ref": ".github/workflows/test-integrations-ai.yml:43",
+       "excerpt": "./scripts/runtox.sh \"py${{ matrix.python-version }}-anthropic\"",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "CI runs tests through runtox.sh (tox). tox.ini invokes pytest itself with the needed flags and notes pytest breaks as a bare executable. pytest is not in the default dev group, only in the `test` group. This is a convention the repo follows, not something tooling blocks.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "48e8681902a55d8df85d43e6f0fcbfbc6567461a",
+    "file": "AGENTS.md",
+    "line": 11,
+    "endLine": 11,
+    "section": "Package Manager",
+    "kind": "item",
+    "text": "Test matrix configuration is in `tox.ini`",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "tox.ini",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Test matrix configuration\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "tox.ini",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "tox.ini",
+        "level": "definition"
+       }
+      ],
+      "reason": "tox.ini"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "tox.ini holds the envlist, which is the test matrix (Python versions × common/integration suites). Its header says it is generated by scripts/populate_tox/populate_tox.py, with config in scripts/populate_tox/config.py. That is a detail the statement omits, so it is still true.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "tox.ini:15-18",
+       "excerpt": "requires =",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "tox.ini:20",
+       "excerpt": "{py3.6,py3.7,py3.8,py3.9,py3.10,py3.11,py3.12,py3.13,py3.14,py3.14t,py3.15,py3.15t}-common",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "tox.ini holds the envlist, which is the test matrix (Python versions × common/integration suites). Its header says it is generated by scripts/populate_tox/populate_tox.py, with config in scripts/populate_tox/config.py. That is a detail the statement omits, so it is still true.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "92f3b488bab1760a81f6df162fefdfb1719a6705",
+    "file": "AGENTS.md",
+    "line": 12,
+    "endLine": 12,
+    "section": "Package Manager",
+    "kind": "item",
+    "text": "Integration tests: `uv run tox -e py3.14-{integration}-v{version}`",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "uv run tox -e py3.14-{integration}-v{version}",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Integration tests\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "uv run tox -e py3.14-{integration}-v{version}",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "runs tox from the environment (not a script in pyproject.toml)"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "Integration envs follow the `py3.14-<integration>-v<version>` pattern, for example py3.14-anthropic-v1.9.0. The `{integration}` and `{version}` placeholders are placeholders, not literal text. tox-uv is required in tox.ini. Not every integration lists py3.14, and some use `latest` instead of a version.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "tox.ini:104",
+       "excerpt": "{py3.10,py3.13,py3.14,py3.14t}-anthropic-v1.9.0",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "tox.ini:19-20",
+       "excerpt": "requires =\n    tox-uv",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "Integration envs follow the `py3.14-<integration>-v<version>` pattern, for example py3.14-anthropic-v1.9.0. The `{integration}` and `{version}` placeholders are placeholders, not literal text. tox-uv is required in tox.ini. Not every integration lists py3.14, and some use `latest` instead of a version.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "b63652fabaab9205a9348ca5e303563d3796637a",
+    "file": "AGENTS.md",
+    "line": 13,
+    "endLine": 13,
+    "section": "Package Manager",
+    "kind": "item",
+    "text": "Common tests: `uv run tox -e py3.14-common`",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "uv run tox -e py3.14-common",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Common tests\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "uv run tox -e py3.14-common",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "runs tox from the environment (not a script in pyproject.toml)"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The py3.14-common env is in the envlist and runs the `tests` path.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "tox.ini:20",
+       "excerpt": "{py3.6,py3.7,py3.8,py3.9,py3.10,py3.11,py3.12,py3.13,py3.14,py3.14t,py3.15,py3.15t}-common",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "tox.ini:19728",
+       "excerpt": "common: _TESTPATH=tests",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The py3.14-common env is in the envlist and runs the `tests` path.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "225a570c8c5c2ae6249088d19e7332e08e03ddd1",
+    "file": "AGENTS.md",
+    "line": 14,
+    "endLine": 14,
+    "section": "Package Manager",
+    "kind": "item",
+    "text": "Run specific test file: `TESTPATH=tests/integrations/logging/test_logging.py uv run tox -e py3.14-common`",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "TESTPATH=tests/integrations/logging/test_logging.py uv run tox -e py3.14-common",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"specific test file\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "TESTPATH=tests/integrations/logging/test_logging.py uv run tox -e py3.14-common",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "runs tox from the environment (not a script in pyproject.toml)"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "TESTPATH is in passenv and overrides the default _TESTPATH in the pytest command. The example file path exists.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "tox.ini:19814",
+       "excerpt": "TESTPATH",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "tox.ini:19834",
+       "excerpt": "python -m pytest ... {env:TESTPATH:{env:_TESTPATH}} ... {posargs}",
+       "valid": false,
+       "problem": "the excerpt is not at tox.ini:19834"
+      },
+      {
+       "kind": "file_line",
+       "ref": "tests/integrations/logging/test_logging.py:1",
+       "excerpt": "test_logging.py (file exists)",
+       "valid": false,
+       "problem": "the excerpt is not at tests/integrations/logging/test_logging.py:1"
+      }
+     ],
+     "reason": "TESTPATH is in passenv and overrides the default _TESTPATH in the pytest command. The example file path exists.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "08562ca75eb95f5b3b638cd91ac513f0b252e1b6",
+    "file": "AGENTS.md",
+    "line": 15,
+    "endLine": 15,
+    "section": "Package Manager",
+    "kind": "item",
+    "text": "Run single test: `TESTPATH=tests/path/to/test_file.py uv run tox -e py3.14-common -- -k \"test_name\"`",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "TESTPATH=tests/path/to/test_file.py uv run tox -e py3.14-common -- -k test_name",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"single test\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "TESTPATH=tests/path/to/test_file.py uv run tox -e py3.14-common -- -k test_name",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "runs tox from the environment (not a script in pyproject.toml)"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The py3.14-common env exists. TESTPATH is passed through (passenv) and overrides the default _TESTPATH in the pytest command. Args after `--` go to {posargs}, so `-k test_name` reaches pytest.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "tox.ini:19834",
+       "excerpt": "python -m pytest -W error::pytest.PytestUnraisableExceptionWarning {env:TESTPATH:{env:_TESTPATH}} -o junit_suite_name={envname} --junitxml=.junitxml-{envname} {posargs}",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "tox.ini:19814",
+       "excerpt": "TESTPATH",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "tox.ini:20",
+       "excerpt": "{py3.6,py3.7,py3.8,py3.9,py3.10,py3.11,py3.12,py3.13,py3.14,py3.14t,py3.15,py3.15t}-common",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The py3.14-common env exists. TESTPATH is passed through (passenv) and overrides the default _TESTPATH in the pytest command. Args after `--` go to {posargs}, so `-k test_name` reaches pytest.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "e36529927d1379fec5281919c48a6423c5ac3600",
+    "file": "AGENTS.md",
+    "line": 19,
+    "endLine": 19,
+    "section": "Type Checking",
+    "kind": "sentence",
+    "text": "Mypy and its type stubs live in the opt-in `typing` dependency group:",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "typing",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Mypy type stubs live opt-in dependency …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "typing",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/conf.py:17",
+        "excerpt": "typing.TYPE_CHECKING = True",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at docs/conf.py:17"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "mypy and the types-* stubs are in the `typing` group. It is not part of the default `dev` group, and no default-groups setting makes it default, so it is opt-in.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "pyproject.toml:43-54",
+       "excerpt": "typing = [\n    \"mypy\", ... \"types-protobuf\", ... \"types-setuptools<71\",",
+       "valid": false,
+       "problem": "the excerpt is not at pyproject.toml:43"
+      },
+      {
+       "kind": "file_line",
+       "ref": "pyproject.toml:3",
+       "excerpt": "# `dev` is installed by default; `typing` is opt-in via `uv run --group typing`.",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "absence",
+       "ref": "Grep default-groups|\\[tool\\.uv\\] in pyproject.toml, uv.toml",
+       "excerpt": "No matches found",
+       "valid": false,
+       "problem": "not re-run: `Grep` is not a read-only command proof re-runs"
+      }
+     ],
+     "reason": "mypy and the types-* stubs are in the `typing` group. It is not part of the default `dev` group, and no default-groups setting makes it default, so it is opt-in.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "e639c5bb658ccd12640d09b12c02035217394020",
+    "file": "AGENTS.md",
+    "line": 20,
+    "endLine": 20,
+    "section": "Type Checking",
+    "kind": "item",
+    "text": "Run `uv run --group typing mypy sentry_sdk` before committing (must pass with zero errors)",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "uv run --group typing mypy sentry_sdk",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"must\"",
+     "description \"before committing pass zero errors\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "uv run --group typing mypy sentry_sdk",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "runs typing from the environment (not a script in pyproject.toml)"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "CI runs exactly this command in the lint job, so a failing mypy blocks the change; the `typing` group exists in pyproject.toml. 'Before committing' is the local convention; CI enforces the zero-error requirement.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".github/workflows/ci.yml:41",
+       "excerpt": "run: uv run --group typing mypy sentry_sdk",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "pyproject.toml:5",
+       "excerpt": "# Run mypy with: `uv run --group typing mypy sentry_sdk`",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "CI runs exactly this command in the lint job, so a failing mypy blocks the change; the `typing` group exists in pyproject.toml. 'Before committing' is the local convention; CI enforces the zero-error requirement.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "f016418475c17abf100921e02e830349da9b2efa",
+    "file": "AGENTS.md",
+    "line": 21,
+    "endLine": 21,
+    "section": "Type Checking",
+    "kind": "item",
+    "text": "Strict mode enabled (`check_untyped_defs`, `disallow_untyped_defs`)",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "check_untyped_defs",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "disallow_untyped_defs",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Strict mode enabled\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "check_untyped_defs",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "pyproject.toml:142",
+        "excerpt": "check_untyped_defs = true",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at pyproject.toml:142"
+     },
+     {
+      "kind": "symbol",
+      "text": "disallow_untyped_defs",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": "pyproject.toml:147",
+        "excerpt": "disallow_untyped_defs = true",
+        "level": "declaration"
+       },
+       {
+        "ref": "pyproject.toml:230",
+        "excerpt": "disallow_untyped_defs = false",
+        "level": "declaration"
+       }
+      ],
+      "reason": "declaration at pyproject.toml:147"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "Both named flags are enabled in [tool.mypy], along with other strict-style flags. mypy's literal `strict = true` is not set, so 'Strict mode' is loose wording. Some modules (e.g. sentry_sdk._queue, _lru_cache) relax disallow_untyped_defs via overrides. The statement's stated flags hold.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "pyproject.toml:142",
+       "excerpt": "check_untyped_defs = true",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "pyproject.toml:147",
+       "excerpt": "disallow_untyped_defs = true",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "absence",
+       "ref": "grep -n '^strict = ' pyproject.toml",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "Both named flags are enabled in [tool.mypy], along with other strict-style flags. mypy's literal `strict = true` is not set, so 'Strict mode' is loose wording. Some modules (e.g. sentry_sdk._queue, _lru_cache) relax disallow_untyped_defs via overrides. The statement's stated flags hold.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "ae2a22761e2f54c0bdf4559e05022b35a8b001cf",
+    "file": "AGENTS.md",
+    "line": 26,
+    "endLine": 26,
+    "section": "Linting & Formatting",
+    "kind": "item",
+    "text": "`uv run ruff check --fix tests sentry_sdk`",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "uv run ruff check --fix tests sentry_sdk",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "uv run ruff check --fix tests sentry_sdk",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "runs ruff from the environment (not a script in pyproject.toml)"
+     }
+    ],
+    "status": "NOT_CHECKED",
+    "reason": "runs ruff from the environment (not a script in pyproject.toml)",
+    "settled": false
+   },
+   {
+    "id": "5e37bf6829c399e67413cab86d8132ef17cce803",
+    "file": "AGENTS.md",
+    "line": 27,
+    "endLine": 27,
+    "section": "Linting & Formatting",
+    "kind": "item",
+    "text": "`uv run ruff format tests sentry_sdk`",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "uv run ruff format tests sentry_sdk",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "uv run ruff format tests sentry_sdk",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "runs ruff from the environment (not a script in pyproject.toml)"
+     }
+    ],
+    "status": "NOT_CHECKED",
+    "reason": "runs ruff from the environment (not a script in pyproject.toml)",
+    "settled": false
+   },
+   {
+    "id": "914064222e27e3e5f2ac62520e6c9fd901cbf0e5",
+    "file": "AGENTS.md",
+    "line": 32,
+    "endLine": 32,
+    "section": "Auto-Generated Files",
+    "kind": "item",
+    "text": "`tox.ini` — generated by `scripts/populate_tox/populate_tox.py` from `scripts/populate_tox/tox.jinja`",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "tox.ini",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "scripts/populate_tox/populate_tox.py",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "scripts/populate_tox/tox.jinja",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "tox.ini",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "tox.ini",
+        "level": "definition"
+       }
+      ],
+      "reason": "tox.ini"
+     },
+     {
+      "kind": "path",
+      "text": "scripts/populate_tox/populate_tox.py",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "scripts/populate_tox/populate_tox.py",
+        "level": "definition"
+       }
+      ],
+      "reason": "scripts/populate_tox/populate_tox.py"
+     },
+     {
+      "kind": "path",
+      "text": "scripts/populate_tox/tox.jinja",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "scripts/populate_tox/tox.jinja",
+        "level": "definition"
+       }
+      ],
+      "reason": "scripts/populate_tox/tox.jinja"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "5d90543746ab56cf9d2e0d86f56d82e1cf407e9e",
+    "file": "AGENTS.md",
+    "line": 33,
+    "endLine": 33,
+    "section": "Auto-Generated Files",
+    "kind": "item",
+    "text": "`.github/workflows/test-integrations-*.yml` — generated by `scripts/split_tox_gh_actions/split_tox_gh_actions.py`",
+    "spans": [
+     {
+      "kind": "path",
+      "text": ".github/workflows/test-integrations-*.yml",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "scripts/split_tox_gh_actions/split_tox_gh_actions.py",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": ".github/workflows/test-integrations-*.yml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/workflows/test-integrations-agents.yml",
+        "level": "definition"
+       },
+       {
+        "ref": ".github/workflows/test-integrations-ai-workflow.yml",
+        "level": "definition"
+       },
+       {
+        "ref": ".github/workflows/test-integrations-ai.yml",
+        "level": "definition"
+       }
+      ],
+      "reason": ".github/workflows/test-integrations-agents.yml, .github/workflows/test-integrations-ai-workflow.yml, .github/workflows/test-integrations-ai.yml and 12 more"
+     },
+     {
+      "kind": "path",
+      "text": "scripts/split_tox_gh_actions/split_tox_gh_actions.py",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "scripts/split_tox_gh_actions/split_tox_gh_actions.py",
+        "level": "definition"
+       }
+      ],
+      "reason": "scripts/split_tox_gh_actions/split_tox_gh_actions.py"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "00370ffa9c5e793e08d6392f624e1b6584c1934b",
+    "file": "AGENTS.md",
+    "line": 34,
+    "endLine": 34,
+    "section": "Auto-Generated Files",
+    "kind": "item",
+    "text": "Regenerate all: `scripts/generate-test-files.sh`",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "scripts/generate-test-files.sh",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"all\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "scripts/generate-test-files.sh",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "scripts/generate-test-files.sh",
+        "level": "definition"
+       }
+      ],
+      "reason": "scripts/generate-test-files.sh"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The script runs populate_tox.py (tox.ini) and split_tox_gh_actions.py (test-integrations-*.yml), i.e. both generated file sets listed above it. No other generated files from these scripts were found.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "scripts/generate-test-files.sh:3",
+       "excerpt": "# This script generates tox.ini and CI YAML files in one go.",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "scripts/generate-test-files.sh:11",
+       "excerpt": "uv run --python 3.14t --group toxgen --with-editable .. python populate_tox/populate_tox.py \"$@\"",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The script runs populate_tox.py (tox.ini) and split_tox_gh_actions.py (test-integrations-*.yml), i.e. both generated file sets listed above it. No other generated files from these scripts were found.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "3c973acd8321dff7e56a1ef5dd206c756ac2711b",
+    "file": "AGENTS.md",
+    "line": 38,
+    "endLine": 38,
+    "section": "Adding Integrations to Test Suite",
+    "kind": "item",
+    "text": "Add minimum version to `_MIN_VERSIONS` in `sentry_sdk/integrations/__init__.py`",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "_MIN_VERSIONS",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "sentry_sdk/integrations/__init__.py",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Add minimum version\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "_MIN_VERSIONS",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "sentry_sdk/integrations/__init__.py:120",
+        "excerpt": "_MIN_VERSIONS = {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at sentry_sdk/integrations/__init__.py:120"
+     },
+     {
+      "kind": "path",
+      "text": "sentry_sdk/integrations/__init__.py",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "sentry_sdk/integrations/__init__.py",
+        "level": "definition"
+       }
+      ],
+      "reason": "sentry_sdk/integrations/__init__.py"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "_MIN_VERSIONS is a dict of integration name to min version tuple, consumed by populate_tox.py; the repo's README gives the same step.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "sentry_sdk/integrations/__init__.py:120",
+       "excerpt": "_MIN_VERSIONS = {",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "scripts/populate_tox/populate_tox.py:342",
+       "excerpt": "min_supported = _MIN_VERSIONS.get(integration_name)",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "scripts/populate_tox/README.md:221",
+       "excerpt": "1. Add the minimum supported version of the framework/library to `_MIN_VERSIONS`",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "_MIN_VERSIONS is a dict of integration name to min version tuple, consumed by populate_tox.py; the repo's README gives the same step.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "76053f7689b2f4dbe757dab05bb3c3be3b786802",
+    "file": "AGENTS.md",
+    "line": 39,
+    "endLine": 39,
+    "section": "Adding Integrations to Test Suite",
+    "kind": "item",
+    "text": "Add config to `TEST_SUITE_CONFIG` in `scripts/populate_tox/config.py`",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "TEST_SUITE_CONFIG",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "scripts/populate_tox/config.py",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Add config\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "TEST_SUITE_CONFIG",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "scripts/populate_tox/config.py:7",
+        "excerpt": "TEST_SUITE_CONFIG = {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at scripts/populate_tox/config.py:7"
+     },
+     {
+      "kind": "path",
+      "text": "scripts/populate_tox/config.py",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "scripts/populate_tox/config.py",
+        "level": "definition"
+       }
+      ],
+      "reason": "scripts/populate_tox/config.py"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "TEST_SUITE_CONFIG is the per-integration test suite config dict in that file, and the README documents the same step.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "scripts/populate_tox/config.py:7",
+       "excerpt": "TEST_SUITE_CONFIG = {",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "scripts/populate_tox/README.md:225",
+       "excerpt": "2. Add the integration and any constraints to `TEST_SUITE_CONFIG`.",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "TEST_SUITE_CONFIG is the per-integration test suite config dict in that file, and the README documents the same step.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "dbdf3fad2ef268ffa5df2ded18f813bef73153a2",
+    "file": "AGENTS.md",
+    "line": 40,
+    "endLine": 40,
+    "section": "Adding Integrations to Test Suite",
+    "kind": "item",
+    "text": "Add to group in `scripts/split_tox_gh_actions/split_tox_gh_actions.py`",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "scripts/split_tox_gh_actions/split_tox_gh_actions.py",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Add group\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "scripts/split_tox_gh_actions/split_tox_gh_actions.py",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "scripts/split_tox_gh_actions/split_tox_gh_actions.py",
+        "level": "definition"
+       }
+      ],
+      "reason": "scripts/split_tox_gh_actions/split_tox_gh_actions.py"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The file defines a GROUPS dict, and the script raises an error (with --fail-on-changes) if a framework is missing from a group, so adding to a group is required. The statement doesn't name GROUPS, which is a minor omission.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "scripts/split_tox_gh_actions/split_tox_gh_actions.py:72",
+       "excerpt": "GROUPS = {",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "scripts/split_tox_gh_actions/split_tox_gh_actions.py:199",
+       "excerpt": "\"in `GROUPS` in `scripts/split_tox_gh_actions/split_tox_gh_actions.py: \"",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The file defines a GROUPS dict, and the script raises an error (with --fail-on-changes) if a framework is missing from a group, so adding to a group is required. The statement doesn't name GROUPS, which is a minor omission.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "c6bc5912874602ba776d4a86e9c416ada5dc5dc2",
+    "file": "AGENTS.md",
+    "line": 41,
+    "endLine": 41,
+    "section": "Adding Integrations to Test Suite",
+    "kind": "item",
+    "text": "Run `scripts/generate-test-files.sh`",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "scripts/generate-test-files.sh",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "scripts/generate-test-files.sh",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "scripts/generate-test-files.sh",
+        "level": "definition"
+       }
+      ],
+      "reason": "scripts/generate-test-files.sh"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "350c83986f2fc4f4986b67c391ec69575f20b16b",
+    "file": "AGENTS.md",
+    "line": 45,
+    "endLine": 45,
+    "section": "Integration Contract",
+    "kind": "item",
+    "text": "Don't crash applications or swallow exceptions",
+    "spans": [],
+    "residual": [
+     "rule \"Don't\"",
+     "description \"Don't crash applications swallow exceptions\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "This is a design rule. CONTRIBUTING.md states it, but no lint, type-check or CI config enforces it. I looked in pyproject.toml (ruff/mypy), .pre-commit-config.yaml and .github/workflows/ci.yml and found no check for it. Rule 7 does not allow 'true' without enforcement.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:217",
+       "excerpt": "Users do not expect their application to crash, the SDK to mutate object references, the SDK to swallow their exceptions",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "This is a design rule. CONTRIBUTING.md states it, but no lint, type-check or CI config enforces it. I looked in pyproject.toml (ruff/mypy), .pre-commit-config.yaml and .github/workflows/ci.yml and found no check for it. Rule 7 does not allow 'true' without enforcement.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "b7a22b2f6be8fa36fbe13fb522a0dc1cc2ad44cc",
+    "file": "AGENTS.md",
+    "line": 46,
+    "endLine": 46,
+    "section": "Integration Contract",
+    "kind": "item",
+    "text": "Don't mutate object references or alter function signatures",
+    "spans": [],
+    "residual": [
+     "rule \"Don't\"",
+     "description \"Don't mutate object references alter function …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "This is a design rule. CONTRIBUTING.md states it, but no lint, type-check or CI config enforces it. I looked in pyproject.toml, .pre-commit-config.yaml and .github/workflows/ci.yml and found no check for it. Rule 7 does not allow 'true' without enforcement.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:217",
+       "excerpt": "the SDK to mutate object references, ... or the SDK to alter the signature of functions or coroutines.",
+       "valid": false,
+       "problem": "the excerpt is not at CONTRIBUTING.md:217"
+      }
+     ],
+     "reason": "This is a design rule. CONTRIBUTING.md states it, but no lint, type-check or CI config enforces it. I looked in pyproject.toml, .pre-commit-config.yaml and .github/workflows/ci.yml and found no check for it. Rule 7 does not allow 'true' without enforcement.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "1e5733e8400a2907d69e140f38bd6d4b29a3c741",
+    "file": "AGENTS.md",
+    "line": 47,
+    "endLine": 47,
+    "section": "Integration Contract",
+    "kind": "item",
+    "text": "Don't leak file descriptors or make unexpected DB requests",
+    "spans": [],
+    "residual": [
+     "rule \"Don't\"",
+     "description \"Don't leak file descriptors make unexpected …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "Behavioral guideline; I searched AGENTS.md, and repository lint/CI config for anything enforcing no leaked file descriptors or unexpected DB queries and found no tooling that enforces it. Not mechanically checkable.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [],
+     "reason": "Behavioral guideline; I searched AGENTS.md, and repository lint/CI config for anything enforcing no leaked file descriptors or unexpected DB queries and found no tooling that enforces it. Not mechanically checkable.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "d10879ab83109c2525ff92ea1b39774feef7a003",
+    "file": "AGENTS.md",
+    "line": 48,
+    "endLine": 48,
+    "section": "Integration Contract",
+    "kind": "item",
+    "text": "Write defensive code",
+    "spans": [],
+    "residual": [
+     "description \"Write defensive code\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "Style guidance (\"write defensive code\") with no lint/type-check/CI rule that enforces or contradicts it; nothing to inspect.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [],
+     "reason": "Style guidance (\"write defensive code\") with no lint/type-check/CI rule that enforces or contradicts it; nothing to inspect.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "0445fff2633671d7631985a08aa2593942c8d889",
+    "file": "AGENTS.md",
+    "line": 49,
+    "endLine": 49,
+    "section": "Integration Contract",
+    "kind": "item",
+    "text": "Use end-to-end tests (not mocks)",
+    "spans": [],
+    "residual": [
+     "description \"end-to-end tests mocks\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "No tooling enforces this rule, and integration tests in the repo use mocks heavily (678 mock.patch/MagicMock occurrences in tests/integrations), so code does not consistently follow it. That makes it neither verified nor stale.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "count",
+       "ref": "grep -rn \"mock.patch\\|MagicMock\" tests/integrations --include=*.py | wc -l",
+       "excerpt": "678",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "tests/integrations/stdlib/test_httplib.py:537",
+       "excerpt": "with mock.patch(",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "No tooling enforces this rule, and integration tests in the repo use mocks heavily (678 mock.patch/MagicMock occurrences in tests/integrations), so code does not consistently follow it. That makes it neither verified nor stale.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "41ffad8496d28f25fbfcf592711b1170abfa32b0",
+    "file": "AGENTS.md",
+    "line": 55,
+    "endLine": 55,
+    "section": "Key Paths",
+    "kind": "row",
+    "text": "`sentry_sdk/integrations/` · integration modules",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "sentry_sdk/integrations/",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"integration modules\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "sentry_sdk/integrations/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "sentry_sdk/integrations",
+        "level": "definition"
+       }
+      ],
+      "reason": "sentry_sdk/integrations"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The directory holds the integration modules, such as aiohttp.py, anthropic.py, asgi.py, and the celery and boto3 packages. It also holds helper modules like _asgi_common.py.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "command_output",
+       "ref": "ls sentry_sdk/integrations | head -3",
+       "excerpt": "aiohttp.py",
+       "valid": false,
+       "problem": "the re-run output does not contain the excerpt"
+      },
+      {
+       "kind": "count",
+       "ref": "ls sentry_sdk/integrations | wc -l",
+       "excerpt": "84",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The directory holds the integration modules, such as aiohttp.py, anthropic.py, asgi.py, and the celery and boto3 packages. It also holds helper modules like _asgi_common.py.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "0f75e60b81b6c9a96621d5e76a7ef2999847052d",
+    "file": "AGENTS.md",
+    "line": 56,
+    "endLine": 56,
+    "section": "Key Paths",
+    "kind": "row",
+    "text": "`sentry_sdk/ai/` · AI monitoring",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "sentry_sdk/ai/",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "sentry_sdk/ai/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "sentry_sdk/ai",
+        "level": "definition"
+       }
+      ],
+      "reason": "sentry_sdk/ai"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "2b9224e501ceb813dd42cc6959342d242ecd65c8",
+    "file": "AGENTS.md",
+    "line": 57,
+    "endLine": 57,
+    "section": "Key Paths",
+    "kind": "row",
+    "text": "`sentry_sdk/crons/` · Cron monitoring",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "sentry_sdk/crons/",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Cron monitoring\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "sentry_sdk/crons/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "sentry_sdk/crons",
+        "level": "definition"
+       }
+      ],
+      "reason": "sentry_sdk/crons"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The crons package holds check-in API, constants and a decorator, which is cron monitoring.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "command_output",
+       "ref": "ls sentry_sdk/crons",
+       "excerpt": "api.py consts.py decorator.py __init__.py",
+       "valid": false,
+       "problem": "the re-run output does not contain the excerpt"
+      },
+      {
+       "kind": "file_line",
+       "ref": "sentry_sdk/crons/api.py:13",
+       "excerpt": "def _create_check_in_event(",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The crons package holds check-in API, constants and a decorator, which is cron monitoring.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "cd55450097e360b765c44907e47705dfac6d4d8d",
+    "file": "AGENTS.md",
+    "line": 58,
+    "endLine": 58,
+    "section": "Key Paths",
+    "kind": "row",
+    "text": "`sentry_sdk/profiler/` · Performance profiling",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "sentry_sdk/profiler/",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Performance profiling\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "sentry_sdk/profiler/",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "sentry_sdk/profiler",
+        "level": "definition"
+       }
+      ],
+      "reason": "sentry_sdk/profiler"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The package contains continuous and transaction profilers, so \"Performance profiling\" holds.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "command_output",
+       "ref": "ls sentry_sdk/profiler",
+       "excerpt": "continuous_profiler.py __init__.py transaction_profiler.py utils.py",
+       "valid": false,
+       "problem": "the re-run output does not contain the excerpt"
+      },
+      {
+       "kind": "file_line",
+       "ref": "sentry_sdk/profiler/__init__.py:1",
+       "excerpt": "from sentry_sdk.profiler.continuous_profiler import (",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The package contains continuous and transaction profilers, so \"Performance profiling\" holds.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "703cf3087763499a12d534b3b299ea19b4816e01",
+    "file": "AGENTS.md",
+    "line": 59,
+    "endLine": 59,
+    "section": "Key Paths",
+    "kind": "row",
+    "text": "`tests/integrations/{name}/` · Integration test suites",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "tests/integrations/{name}/",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Integration test suites\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "tests/integrations/{name}/",
+      "expect": "present",
+      "status": "STALE",
+      "level": "none",
+      "evidence": [],
+      "reason": "not found: tests/integrations/{name}"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "the mechanical check says stale (`tests/integrations/{name}/`: not found: tests/integrations/{name}); the verifier disputes it: The mechanical check flagged the literal `{name}`, but that is a placeholder for the integration name. Per-integration test directories exist (tests/integrations/flask, django, etc.), so the statement holds.",
+    "settled": false,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "command_output",
+       "ref": "ls -d tests/integrations/flask tests/integrations/django",
+       "excerpt": "tests/integrations/django",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "count",
+       "ref": "git ls-files tests/integrations | cut -d/ -f3 | sort -u | wc -l",
+       "excerpt": "84",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The mechanical check flagged the literal `{name}`, but that is a placeholder for the integration name. Per-integration test directories exist (tests/integrations/flask, django, etc.), so the statement holds.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "86eba8d79c4c58189a73848dbe47c92156774f3c",
+    "file": "AGENTS.md",
+    "line": 60,
+    "endLine": 60,
+    "section": "Key Paths",
+    "kind": "row",
+    "text": "`scripts/populate_tox/config.py` · Test suite configuration",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "scripts/populate_tox/config.py",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Test suite configuration\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "scripts/populate_tox/config.py",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "scripts/populate_tox/config.py",
+        "level": "definition"
+       }
+      ],
+      "reason": "scripts/populate_tox/config.py"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "config.py defines TEST_SUITE_CONFIG, the per-integration test suite configuration (packages, deps, Python versions).",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "scripts/populate_tox/config.py:7",
+       "excerpt": "TEST_SUITE_CONFIG = {",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "scripts/populate_tox/config.py:1",
+       "excerpt": "# The TEST_SUITE_CONFIG dictionary defines, for each integration test suite,",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "config.py defines TEST_SUITE_CONFIG, the per-integration test suite configuration (packages, deps, Python versions).",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   }
+  ],
+  "agent": {
+   "sent": 24,
+   "answered": 24,
+   "cached": 21,
+   "costUsd": 0.0747106,
+   "model": "claude-sonnet-5-5",
+   "failures": []
+  }
+ }
+}

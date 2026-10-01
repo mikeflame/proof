@@ -1,0 +1,91 @@
+{
+  "repo": "dotnet/aspire",
+  "file": "AGENTS.md",
+  "reviewer": "agent (independent of proof)",
+  "fixes": [
+    {
+      "statement_id": "1b44e7ee78d8b24af46a114de41b6677fa855db2",
+      "line": 18,
+      "old": "- .NET 10.0",
+      "new": "- .NET 11.0",
+      "keep": true,
+      "evidence": [
+        "global.json:3 \"version\": \"11.0.100-rc.1.26425.128\"",
+        "src/Aspire.Cli/Aspire.Cli.csproj:7 <TargetFramework>net11.0</TargetFramework>; src/Aspire.Dashboard/Aspire.Dashboard.csproj also net11.0",
+        "git log -- global.json => 482742fb9 Update to .NET 11 RC1 SDK (#19999); 38247de8e Update Aspire.Cli to target net11.0 (#20436)",
+        "git show 951d3fb0e:.github/copilot-instructions.md:17 \"- .NET 10.0 RC (specified in global.json)\" => line originally named the global.json SDK, which is now 11"
+      ],
+      "note": "The stack line originally tracked the global.json SDK, which is now .NET 11 (RC1), and the CLI and Dashboard target net11.0, so .NET 11.0 is the correct current value."
+    },
+    {
+      "statement_id": "ebe79532b446bc4b9fed73f4cc63133e1e49b6cc",
+      "line": 19,
+      "old": "- C# 13 preview features",
+      "new": "- C# preview features",
+      "keep": true,
+      "evidence": [
+        "Directory.Build.props:6 <LangVersion>preview</LangVersion>",
+        "global.json:3 SDK 11.0.100-rc.1 => preview LangVersion is well beyond C# 13 (C# 13 shipped with .NET 9)"
+      ],
+      "note": "C# 13 is stale with a .NET 11 SDK and LangVersion=preview; dropping the wrong number leaves a true statement without adding claims."
+    },
+    {
+      "statement_id": "b99458c0fbed29aa7f42a2d649647add9b4494b9",
+      "line": 28,
+      "old": "currently C# 13 features.",
+      "new": "currently C# preview features.",
+      "keep": true,
+      "evidence": [
+        "Directory.Build.props:6 <LangVersion>preview</LangVersion>",
+        "global.json:3 \"version\": \"11.0.100-rc.1.26425.128\""
+      ],
+      "note": "The repo compiles with LangVersion preview on a .NET 11 SDK, so 'C# 13' is wrong and 'C# preview features' is accurate."
+    },
+    {
+      "statement_id": "dc7f79280bb91a64c6b304272d27c9464a1e9b84",
+      "line": 336,
+      "old": ".NET 10 RC is installed",
+      "new": ".NET 11 RC is installed",
+      "keep": true,
+      "evidence": [
+        "global.json:3 \"version\": \"11.0.100-rc.1.26425.128\"",
+        "git log -- global.json => 482742fb9 Update to .NET 11 RC1 SDK (#19999)"
+      ],
+      "note": "restore.sh installs the global.json SDK, which is a .NET 11 RC."
+    },
+    {
+      "statement_id": "f971b266f3e2f1bfa175f2d44649317452b9cc42",
+      "line": 452,
+      "old": "40+ integration packages",
+      "new": "30+ integration packages",
+      "keep": true,
+      "evidence": [
+        "ls src/Components/*/*.csproj | wc -l => 37 (Common has no csproj; 37 Aspire.* package dirs)",
+        "git ls-tree 951d3fb0e src/Components/ | grep -c Aspire. => 36 (never 40+ under Components/)"
+      ],
+      "note": "src/Components holds 37 client integration packages, so 30+ is true and 40+ is not; line 13's broader 40+ (including hosting) is a separate statement."
+    },
+    {
+      "statement_id": "76d5add5ff6bfec73fa3d3fcbeed9c35a50d8dca",
+      "line": 472,
+      "old": "every 6 hours",
+      "new": "every 2 hours",
+      "keep": true,
+      "evidence": [
+        ".github/workflows/tests-quarantine.yml:18-19 \"# Run every 2 hours. ...\" / \"- cron: '0 */2 * * *'\""
+      ],
+      "note": "The quarantine workflow cron is every 2 hours."
+    },
+    {
+      "statement_id": "3930cc8af50e82c24d413ae73ab38dd576906995",
+      "line": 473,
+      "old": "every 6 hours",
+      "new": "daily",
+      "keep": true,
+      "evidence": [
+        ".github/workflows/tests-outerloop.yml:18 \"- cron: '0 2 * * *'  # Daily at 02:00 UTC\""
+      ],
+      "note": "The outerloop workflow runs once daily at 02:00 UTC, not every 6 hours."
+    }
+  ]
+}

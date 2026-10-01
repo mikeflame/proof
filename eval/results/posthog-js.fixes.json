@@ -1,0 +1,788 @@
+{
+ "proof": "79a431876ead",
+ "stage": "fixes",
+ "seconds": 0,
+ "exit": 0,
+ "report": {
+  "file": "AGENTS.md",
+  "scope": "project",
+  "why": "Claude Code reads it only when no CLAUDE.md, .claude/CLAUDE.md or CLAUDE.local.md is in the folder or above it, and Codex, Cursor and others read it always",
+  "imports": [],
+  "importedBy": [],
+  "counts": {
+   "VERIFIED": 6,
+   "STALE": 0,
+   "UNCONFIRMED": 0,
+   "UNVERIFIED_WITH_REASON": 4,
+   "DECIDED": 0,
+   "OVERRIDDEN": 0,
+   "NOT_CHECKED": 0,
+   "FIXED": 0,
+   "FIX_REJECTED": 0
+  },
+  "evidenceLevels": {
+   "definition": 6,
+   "declaration": 2,
+   "reference": 0,
+   "comment": 1,
+   "substring": 0,
+   "none": 3
+  },
+  "git": {
+   "root": "/home/ms/projects/proof-cache/corpus/posthog-js",
+   "tree": "19a1ae0611cf934cbd400a57a57ce82b5256b4a0",
+   "head": "c7bf8ca76b5aaad2a4badd1d1476dc499ca0009a",
+   "branch": null,
+   "upstream": "origin/main",
+   "behind": 0
+  },
+  "run": {
+   "started": "2026-10-01T14:06:28.579Z",
+   "finished": "2026-10-01T14:06:28.831Z",
+   "version": "0.2.0",
+   "budgetUsedUsd": 0
+  },
+  "decisions": [],
+  "reopened": [],
+  "verdict": "PARTLY PROVEN",
+  "ownVerdict": "PARTLY PROVEN",
+  "coverage": {
+   "statements": 10,
+   "withResult": 10
+  },
+  "degraded": [
+   {
+    "subject": "grammar Kotlin",
+    "reason": "no tree-sitter grammar for Kotlin (8 files): definitions there are matched by line patterns"
+   },
+   {
+    "subject": "grammar Swift",
+    "reason": "no tree-sitter grammar for Swift (7 files): definitions there are matched by line patterns"
+   }
+  ],
+  "statements": [
+   {
+    "id": "70c995636fef46e1e2b81210a6555b7c46d8249a",
+    "file": "AGENTS.md",
+    "line": 3,
+    "endLine": 3,
+    "section": "Agent Instructions",
+    "kind": "item",
+    "text": "Read and follow [CONTRIBUTING.md](./CONTRIBUTING.md) before contributing to the SDKs. It contains repository structure, environment setup, development commands, testing, linting, dependency policies, and PR requirements.",
+    "spans": [
+     {
+      "kind": "link",
+      "text": "./CONTRIBUTING.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Read follow before contributing SDKs contains …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": "./CONTRIBUTING.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "CONTRIBUTING.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "CONTRIBUTING.md"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "CONTRIBUTING.md has sections for structure, setup (Tooling), commands, test commands, linting (Code Style and Linting), dependency policy and PR requirements. Testing is covered through commands and the Test Failures section rather than a dedicated Testing heading.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:26",
+       "excerpt": "## Folder Structure",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:14",
+       "excerpt": "## Tooling",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:98",
+       "excerpt": "## Development Commands",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:79",
+       "excerpt": "## Dependency cooldown",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:344",
+       "excerpt": "## Opening a new PR",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "CONTRIBUTING.md has sections for structure, setup (Tooling), commands, test commands, linting (Code Style and Linting), dependency policy and PR requirements. Testing is covered through commands and the Test Failures section rather than a dedicated Testing heading.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "b4f6453b977269483064fa4489a853af0ab41642",
+    "file": "AGENTS.md",
+    "line": 4,
+    "endLine": 4,
+    "section": "Agent Instructions",
+    "kind": "item",
+    "text": "Read and follow [RELEASING.md](./RELEASING.md) when adding changesets or working on publishing or release recovery.",
+    "spans": [
+     {
+      "kind": "link",
+      "text": "./RELEASING.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Read follow adding changesets working publishing …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": "./RELEASING.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "RELEASING.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "RELEASING.md"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "RELEASING.md covers creating changesets, publishing and recovery. CONTRIBUTING.md also points to RELEASING.md for changeset, publishing and recovery procedures.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "RELEASING.md:5",
+       "excerpt": "### Creating a changeset",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "RELEASING.md:19",
+       "excerpt": "### Publishing",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "RELEASING.md:50",
+       "excerpt": "## Manual S3 recovery",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "RELEASING.md covers creating changesets, publishing and recovery. CONTRIBUTING.md also points to RELEASING.md for changeset, publishing and recovery procedures.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "dedc8d599b1508b83911e956296c7f17b63a2573",
+    "file": "AGENTS.md",
+    "line": 5,
+    "endLine": 5,
+    "section": "Agent Instructions",
+    "kind": "item",
+    "text": "Public API changes: follow \"Public API changes\" in [CONTRIBUTING.md](./CONTRIBUTING.md). As an agent, also:",
+    "spans": [
+     {
+      "kind": "link",
+      "text": "./CONTRIBUTING.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Public API changes follow Public API …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": "./CONTRIBUTING.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "CONTRIBUTING.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "CONTRIBUTING.md"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "A 'Public API changes' section exists in CONTRIBUTING.md, as the statement says. The agent-specific additions are the sub-bullets, which are checked separately.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:330",
+       "excerpt": "## Public API changes",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "A 'Public API changes' section exists in CONTRIBUTING.md, as the statement says. The agent-specific additions are the sub-bullets, which are checked separately.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "ca3c368466a5f96768169c5ac40df17e9c32a451",
+    "file": "AGENTS.md",
+    "line": 6,
+    "endLine": 6,
+    "section": "Agent Instructions",
+    "kind": "item",
+    "text": "When reviewing or fixing someone else's PR, don't ask for or open an issue, but note in the review when an external contributor's PR changes public API without one.",
+    "spans": [],
+    "residual": [
+     "rule \"don't\"",
+     "description \"reviewing fixing someone else's don't ask …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "This is a behavioral rule for agents about reviewing PRs. I looked in CONTRIBUTING.md 'Public API changes' and the lint-pr.yml workflow and found no tooling that enforces it or contradicts it. CONTRIBUTING.md (about 'Already have a PR open?') does not forbid it either.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [],
+     "reason": "This is a behavioral rule for agents about reviewing PRs. I looked in CONTRIBUTING.md 'Public API changes' and the lint-pr.yml workflow and found no tooling that enforces it or contradicts it. CONTRIBUTING.md (about 'Already have a PR open?') does not forbid it either.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "85145c338415296737ab90ad494b82f97fa4b73e",
+    "file": "AGENTS.md",
+    "line": 7,
+    "endLine": 7,
+    "section": "Agent Instructions",
+    "kind": "item",
+    "text": "The author is a PostHog maintainer when the PR's `author_association` is `MEMBER` or `OWNER` (`gh api repos/PostHog/posthog-js/pulls/<number> --jq .author_association`) or, before a PR exists, when `gh api orgs/PostHog/members/$(gh api user --jq .login)` succeeds. If the check fails or can't run, treat the author as an external contributor.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "author_association",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "MEMBER",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "OWNER",
+      "expect": "present"
+     },
+     {
+      "kind": "command",
+      "text": "gh api repos/PostHog/posthog-js/pulls/<number> --jq .author_association",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "repos/PostHog/posthog-js/pulls/<number>",
+      "expect": "present"
+     },
+     {
+      "kind": "command",
+      "text": "gh api orgs/PostHog/members/$(gh api user --jq .login)",
+      "expect": "present"
+     },
+     {
+      "kind": "dependency",
+      "text": "PostHog",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"author maintainer PR's before exists succeeds …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "author_association",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "author_association appears in no code file or file name"
+     },
+     {
+      "kind": "symbol",
+      "text": "MEMBER",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "MEMBER appears in no code file or file name"
+     },
+     {
+      "kind": "symbol",
+      "text": "OWNER",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "comment",
+      "evidence": [
+       {
+        "ref": "packages/rrweb/rrweb/test/html/assets/webgl-utils.js:23",
+        "excerpt": "* OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,",
+        "level": "comment"
+       }
+      ],
+      "reason": "OWNER appears only in comments (packages/rrweb/rrweb/test/html/assets/webgl-utils.js:23)"
+     },
+     {
+      "kind": "command",
+      "text": "gh api repos/PostHog/posthog-js/pulls/<number> --jq .author_association",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "a template with placeholders, not a command to run"
+     },
+     {
+      "kind": "path",
+      "text": "repos/PostHog/posthog-js/pulls/<number>",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "no file matches the pattern repos/PostHog/posthog-js/pulls/<number> yet"
+     },
+     {
+      "kind": "command",
+      "text": "gh api orgs/PostHog/members/$(gh api user --jq .login)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "external tool `gh`"
+     },
+     {
+      "kind": "dependency",
+      "text": "PostHog",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": ".github/fixtures/minimum-version-ts/package.json posthog-js \"file:posthog-js.tgz\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/example-ai-adk/package.json posthog-node \"*\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/example-ai-aws-bedrock/package.json posthog-node \"*\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": ".github/fixtures/minimum-version-ts/package.json depends on posthog-js"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "CONTRIBUTING.md supports the idea that maintainers are PostHog org members. The `gh api` endpoints and the `author_association` values MEMBER/OWNER depend on GitHub's live API, and I can't verify them from the repository. The repository doesn't define this check.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:334",
+       "excerpt": "PostHog maintainers (members of the PostHog GitHub org) agree on API shape in the PR itself",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "CONTRIBUTING.md supports the idea that maintainers are PostHog org members. The `gh api` endpoints and the `author_association` values MEMBER/OWNER depend on GitHub's live API, and I can't verify them from the repository. The repository doesn't define this check.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "b56fd227c6d56b943ead831c8187722a8272b97a",
+    "file": "AGENTS.md",
+    "line": 8,
+    "endLine": 8,
+    "section": "Agent Instructions",
+    "kind": "item",
+    "text": "A published [sdk-spec](https://github.com/PostHog/sdk-specs) that defines the API counts as the agreement, so no issue is needed.",
+    "spans": [],
+    "residual": [
+     "description \"published defines API counts agreement issue …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "This matches the 'Already specified?' bullet in CONTRIBUTING.md.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:338",
+       "excerpt": "If a published [sdk-spec](https://github.com/PostHog/sdk-specs) defines the API, that's the agreement, so you don't need an issue.",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "This matches the 'Already specified?' bullet in CONTRIBUTING.md.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "e8a9e455592aa601997fe0a71d46a8e02702055b",
+    "file": "AGENTS.md",
+    "line": 9,
+    "endLine": 9,
+    "section": "Agent Instructions",
+    "kind": "item",
+    "text": "For an external contributor with no agreed issue and no spec, stop before implementing and draft the issue body for the user to post. Open it only if they ask.",
+    "spans": [],
+    "residual": [
+     "quantifier \"only\"",
+     "description \"external contributor agreed issue spec stop …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "CONTRIBUTING.md requires external contributors to agree the API in an issue before implementing, which is consistent with this statement. The agent-specific behavior (stop, draft the issue body, open it only on request) is a workflow rule that no repository tooling or file defines or enforces.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:336",
+       "excerpt": "open an issue describing your use case. Wait for a maintainer to agree on the API shape there before you implement it.",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "CONTRIBUTING.md requires external contributors to agree the API in an issue before implementing, which is consistent with this statement. The agent-specific behavior (stop, draft the issue body, open it only on request) is a workflow rule that no repository tooling or file defines or enforces.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "b83481735d58e44ab6a21d915c66077422cacbca",
+    "file": "AGENTS.md",
+    "line": 10,
+    "endLine": 10,
+    "section": "Agent Instructions",
+    "kind": "item",
+    "text": "Before implementing or reviewing SDK behavior, check [PostHog/sdk-specs](https://github.com/PostHog/sdk-specs) for a spec covering it (its README lists every capability). If one exists, use it as the cross-SDK contract for the behavior the PR changes, and call out any divergence in that behavior in the PR description. Don't fix or flag discrepancies between the spec and code the PR doesn't touch. If none exists, carry on.",
+    "spans": [
+     {
+      "kind": "dependency",
+      "text": "PostHog",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "quantifier \"every\"",
+     "rule \"Don't\"",
+     "description \"Before implementing reviewing SDK behavior check …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "dependency",
+      "text": "PostHog",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "declaration",
+      "evidence": [
+       {
+        "ref": ".github/fixtures/minimum-version-ts/package.json posthog-js \"file:posthog-js.tgz\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/example-ai-adk/package.json posthog-node \"*\"",
+        "level": "declaration"
+       },
+       {
+        "ref": "examples/example-ai-aws-bedrock/package.json posthog-node \"*\"",
+        "level": "declaration"
+       }
+      ],
+      "reason": ".github/fixtures/minimum-version-ts/package.json depends on posthog-js"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "The repository references PostHog/sdk-specs, but the claim that its README lists every capability concerns an external repo I can't inspect from here. The rest is a behavioral rule for agents that no tooling enforces.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "compliance/node/v2/README.md:61",
+       "excerpt": "Clean specs provenance links to the pinned `PostHog/sdk-specs` commit",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The repository references PostHog/sdk-specs, but the claim that its README lists every capability concerns an external repo I can't inspect from here. The rest is a behavioral rule for agents that no tooling enforces.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "50da6df6eea93a8083d4d9f8c027cfc5984b84e7",
+    "file": "AGENTS.md",
+    "line": 11,
+    "endLine": 11,
+    "section": "Agent Instructions",
+    "kind": "item",
+    "text": "Check for package-level `AGENTS.md` files and contributor guides before working in a package.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "AGENTS.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Check package-level files contributor guides before …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "AGENTS.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "AGENTS.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "AGENTS.md"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "Package-level AGENTS.md files exist (packages/browser, packages/browser-next), and package-level CONTRIBUTING.md guides exist (browser, convex, nuxt, react-native). The instruction is a reasonable pointer to real files.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "command_output",
+       "ref": "git ls-files | grep -E '(AGENTS|CLAUDE)\\.md$'",
+       "excerpt": "packages/browser-next/AGENTS.md\npackages/browser/AGENTS.md",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "command_output",
+       "ref": "git ls-files | grep -E '^packages/[^/]+/(AGENTS|CLAUDE|CONTRIBUTING)[^/]*\\.md$'",
+       "excerpt": "packages/convex/CONTRIBUTING.md",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "Package-level AGENTS.md files exist (packages/browser, packages/browser-next), and package-level CONTRIBUTING.md guides exist (browser, convex, nuxt, react-native). The instruction is a reasonable pointer to real files.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "d669eff71dc7b65168ec297c08af0e88e1e787f9",
+    "file": "AGENTS.md",
+    "line": 12,
+    "endLine": 12,
+    "section": "Agent Instructions",
+    "kind": "item",
+    "text": "Keep shared development guidance in `CONTRIBUTING.md` and release guidance in `RELEASING.md` rather than duplicating it here.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "CONTRIBUTING.md",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "RELEASING.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Keep shared development guidance release guidance …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "CONTRIBUTING.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "CONTRIBUTING.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "CONTRIBUTING.md"
+     },
+     {
+      "kind": "path",
+      "text": "RELEASING.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "RELEASING.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "RELEASING.md"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "Both files exist. CONTRIBUTING.md holds development guidance (setup, dependencies, CI) and defers release topics to RELEASING.md, which covers changesets, publishing and recovery. The repo follows the split the statement describes.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:350",
+       "excerpt": "Follow [RELEASING.md](./RELEASING.md) for changeset requirements and writing guidance, publishing, and recovery procedures.",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "count",
+       "ref": "wc -l CONTRIBUTING.md RELEASING.md",
+       "excerpt": "463 CONTRIBUTING.md / 153 RELEASING.md",
+       "valid": false,
+       "problem": "the re-run output does not contain the excerpt"
+      }
+     ],
+     "reason": "Both files exist. CONTRIBUTING.md holds development guidance (setup, dependencies, CI) and defers release topics to RELEASING.md, which covers changesets, publishing and recovery. The repo follows the split the statement describes.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   }
+  ],
+  "agent": {
+   "sent": 10,
+   "answered": 10,
+   "cached": 10,
+   "costUsd": 0,
+   "model": "claude-sonnet-5-5",
+   "failures": []
+  }
+ }
+}

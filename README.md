@@ -103,9 +103,11 @@ Corpus: 12 public repositories pinned to commits (6 tune, 6 held-out, never run 
 | Stage, split | Repos | Labeled statements | STALE precision | STALE recall | VERIFIED precision | Fixes kept |
 | --- | --- | --- | --- | --- | --- | --- |
 | `proof check`, tune | 6 | 364 | 100% (4 flagged) | 25% (16 stale) | 100% (28) | — |
-| `proof run`, tune | 6 | 364 | 100% (15 flagged) | 93.8% (16 stale) | 97.2% (246) | — |
+| `proof run`, tune | 6 | 364 | 100% (15 flagged) | 93.8% (16 stale) | 97.2% (246) | 94.1% (17) |
+| `proof check`, held-out | 6 | 316 | 0% (6 flagged) | 0% (7 stale) | 100% (17) | — |
+| `proof run`, held-out | 6 | 316 | 87.5% (8 flagged) | 100% (7 stale) | 93.8% (145) | 90.9% (11) |
 
-Run time on denoland/deno (14,927 files, 137 open statements in CLAUDE.md): a full `proof run` took 10 minutes and $2.37 (9 statements fixed, 1 fix rejected); the re-run after the fixes took 55 seconds and $0.15.
+Run time on denoland/deno (14,927 files, 137 open statements in CLAUDE.md): a full `proof run` took 10 minutes and $2.37 (9 statements fixed, 1 fix rejected); the re-run after the fixes took 55 seconds and $0.15. An independent review of that diff kept 9 of 9 fixes.
 <!-- /generated:metrics -->
 
 Scored by `node eval/score.mjs` against `eval/labels/`; `eval/` holds the corpus, the reports and

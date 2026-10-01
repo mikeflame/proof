@@ -1,0 +1,138 @@
+{
+ "repo": "denoland/deno",
+ "file": "CLAUDE.md",
+ "reviewer": "agent (independent of proof)",
+ "fixes": [
+  {
+   "statement_id": "edf1a038ac918a61481edf03a66844b75ab7f071",
+   "line": 48,
+   "old": "parsing is in `cli/args/flags.rs`.",
+   "new": "parsing is in `libs/cli_parser` (re-exported from `cli/args/flags.rs`).",
+   "keep": true,
+   "evidence": [
+    "cli/args/flags.rs:13 pub use deno_cli_parser::flags::*;",
+    "cli/args/flags.rs:690-694 /// Main entry point for parsing deno's command line flags. Routes through the hand-written `deno_cli_parser` ... pub fn flags_from_vec_with_initial_cwd(",
+    "cli/args/flags.rs:740 match deno_cli_parser::convert::flags_from_vec(string_args) {",
+    "libs/cli_parser/src/lib.rs:7-11 The zero-cost argument parser. `types` defines the static `CommandDef` / `ArgDef` tables, `defs` is the actual command tree for Deno, `parse` walks argv ...",
+    "libs/cli_parser/Cargo.toml:4 name = \"deno_cli_parser\"",
+    "git log -- cli/args/flags.rs => 41b646e95 2026-08-08 refactor: remove clap from the tree (#36489) (17829 deletions); 7ee93113e refactor: cut over CLI flag parsing to deno_cli_parser (#35982)"
+   ],
+   "note": "Parsing moved to the deno_cli_parser crate (libs/cli_parser) and cli/args/flags.rs now re-exports its flag types and wraps it, so the new sentence is true and still names the old path. The edited line is 104 chars, though, and dprint (markdown deno:true, 80 cols) would reflow it."
+  },
+  {
+   "statement_id": "acbd8c6c921b002c2b3ca8e15ea3434e711a9e78",
+   "line": 67,
+   "old": "cmake, protobuf, etc.)",
+   "new": "cmake, etc.)",
+   "keep": true,
+   "evidence": [
+    "grep -n -i proto .github/CONTRIBUTING.md => (no output)",
+    "git show 4fb6336c3 (docs(contributing): fix Windows build prerequisites (#34842), 2026-06-05) => removes '#### Protobuf Compiler' section: 'Deno no longer compiles any .proto files at build time ... prost-build/tonic-build/protobuf-src are not in the dependency graph ... protoc is not needed'",
+    "grep 'name = \"prost' Cargo.lock => prost, prost-derive, prost-types only (no prost-build)",
+    "git ls-files '*.proto' => (no output)",
+    ".github/CONTRIBUTING.md:158 apt install --install-recommends -y cmake libglib2.0-dev (cmake still listed)"
+   ],
+   "note": "Protobuf is no longer a build prerequisite and was deliberately dropped from the CONTRIBUTING.md section this sentence links to. The rest of the list is unchanged."
+  },
+  {
+   "statement_id": "57e64fe06874631b3914c1e450f8d31628ca3d38",
+   "line": 147,
+   "old": "cargo test --bin deno",
+   "new": "cargo test -p integration_tests",
+   "keep": true,
+   "evidence": [
+    "cli/main.rs:3-8 pub fn main() { ... Prefer to keep this file simple and mostly empty. deno::main() } (no #[test] in main.rs, so `cargo test --bin deno` runs zero tests)",
+    "tests/integration/Cargo.toml:4,15-18 name = \"integration_tests\" ... [[test]] name = \"integration\" path = \"mod.rs\"",
+    "Cargo.toml workspace members => \"tests/integration\"",
+    ".github/workflows/ci.generated.yml:443,627 test_package: integration_tests ... run: 'cargo test -p ${{ matrix.test_package }} --test ${{ matrix.test_crate }}'",
+    "tools/x.ts:241-270 test-spec => cargo test -p specs_tests --test specs (same -p <tests package> convention)"
+   ],
+   "note": "The old command only runs the deno bin target's own tests, and main.rs has none. The new command runs the tests/integration crate the way CI does (cargo test -p integration_tests)."
+  },
+  {
+   "statement_id": "d31240b6678ad4661561c4d5c69b48d6fc047d18",
+   "line": 153,
+   "old": "cargo test spec::test_name",
+   "new": "cargo test specs::category_name::test_name",
+   "keep": true,
+   "evidence": [
+    "tests/specs/README.md:11,19 tests/specs/<category_name>/<test_name>/__test__.json ... cargo test specs::category_name::test_name",
+    "tests/specs/mod.rs:295-296 collect_tests_or_exit(CollectOptions { base: tests_path().join(\"specs\") ...",
+    "libs/lockfile/tests/spec_test.rs:43,56 base: \"tests/specs\" ... test.name.starts_with(\"specs::config_changes::\") (file_test_runner roots names at the base dir name)",
+    "\"spec::\" is not a substring of \"specs::...\" => old filter matches nothing"
+   ],
+   "note": "Spec test names start with the directory name `specs::`, so the old filter `spec::test_name` matches no tests. The new filter matches the repo's own README word for word."
+  },
+  {
+   "statement_id": "866c2ae6130608a8525f04e7cb2fc3f989d290e1",
+   "line": 169,
+   "old": "cargo test unit_node::crypto_test",
+   "new": "cargo test unit_node::crypto::crypto_hash_test",
+   "keep": true,
+   "evidence": [
+    "find tests/unit_node -name '*crypto_test*' => (no output); git log --all -- tests/unit_node/crypto_test.ts => (no output)",
+    "ls tests/unit_node/crypto => crypto_hash_test.ts ...",
+    "tests/unit_node/mod.rs:34-38 base: tests_path().join(\"unit_node\") ... TestPerFileCollectionStrategy { file_pattern: Some(\".*_test\\\\.ts$\") }",
+    "tests/unit_node/mod.rs:51,110 test.name.contains(\"::crypto::\") (subdir is a category)",
+    "tests/unit_node/mod.rs:101 test.name.ends_with(\"::http2_test\") with file tests/unit_node/http2_test.ts (names carry no extension)"
+   ],
+   "note": "The old filter names a file that never existed. The new filter selects a real file, tests/unit_node/crypto/crypto_hash_test.ts, using the file_test_runner naming scheme."
+  },
+  {
+   "statement_id": "8f031aa69ac5e5aea3f74724a456fd99c21f5d92",
+   "line": 268,
+   "old": "`cli/args/flags.rs`",
+   "new": "`libs/cli_parser/src/defs.rs` and `libs/cli_parser/src/flags.rs`",
+   "keep": true,
+   "evidence": [
+    "libs/cli_parser/src/defs.rs:2 //! Static command definitions for the Deno CLI.",
+    "libs/cli_parser/src/defs.rs:873 pub static FMT_SUBCOMMAND: CommandDef = CommandDef {",
+    "libs/cli_parser/src/defs.rs:3460-3471 pub static DENO_ROOT: CommandDef = ... subcommands: &[ RUN_SUBCOMMAND, ... FMT_SUBCOMMAND,",
+    "libs/cli_parser/src/flags.rs:804 Fmt(FmtFlags), (DenoSubcommand enum)",
+    "grep -n 'CommandDef\\|ArgDef\\|Arg::new' cli/args/flags.rs => only uses of deno_cli_parser::CommandDef (852, 1163), no definitions; cli/args/flags.rs:32-35 'CLI-only helpers ... which the parser crate intentionally does not'"
+   ],
+   "note": "Subcommand definitions (CommandDef tables) and the Flags and DenoSubcommand types now live in defs.rs and flags.rs, and cli/args/flags.rs holds none of them. libs/cli_parser/src/convert.rs also needs an entry, but leaving it out does not make the sentence false. The edited line is 99 chars, beyond the 80-col dprint wrap."
+  },
+  {
+   "statement_id": "596ed93d93d2eeada57758a40ca5b8f68b1b9f30",
+   "line": 344,
+   "old": "`cli/main.rs`",
+   "new": "`cli/lib.rs`",
+   "keep": true,
+   "evidence": [
+    "cli/main.rs:3-8 We have a lib.rs and main.rs in order to be able to run tests without building a binary on the CI. Prefer to keep this file simple and mostly empty. deno::main()",
+    "cli/Cargo.toml:13-19 [[bin]] name = \"deno\" path = \"main.rs\" ... [lib] path = \"lib.rs\"",
+    "cli/lib.rs:124-129 async fn run_subcommand( ... let handle = match flags.subcommand.clone() { DenoSubcommand::Add(add_flags) => ...",
+    "cli/lib.rs:863 pub fn main() {"
+   ],
+   "note": "cli/main.rs is an empty shim, while cli/lib.rs holds the real main() and run_subcommand, so lib.rs is the right key file for 'Entry point, command routing'. Step 3 at line 271 ('Wire it up in cli/main.rs') is still stale, but this edit set does not touch it."
+  },
+  {
+   "statement_id": "c66cedfb039ac34e2cee25601ac0a6a23f68d943",
+   "line": 347,
+   "old": "`runtime/permissions.rs`",
+   "new": "`runtime/permissions/lib.rs`",
+   "keep": true,
+   "evidence": [
+    "runtime/permissions.rs:1-2 (whole file, 2 lines) pub use deno_permissions::RuntimePermissionDescriptorParser;",
+    "runtime/permissions/Cargo.toml:4,10 name = \"deno_permissions\" ... description = \"Provides the deno permissions implementation.\"",
+    "wc -l runtime/permissions/lib.rs => 11756"
+   ],
+   "note": "runtime/permissions.rs still exists but is a 2-line re-export, and the permission system itself is the deno_permissions crate at runtime/permissions/lib.rs."
+  },
+  {
+   "statement_id": "d37750cca557af314355437ac8335b4622a7e2a6",
+   "line": 360,
+   "old": "`cli/args/flags.rs`",
+   "new": "`libs/cli_parser/src/defs.rs`",
+   "keep": true,
+   "evidence": [
+    "libs/cli_parser/src/defs.rs:701 pub static RUN_SUBCOMMAND: CommandDef = CommandDef {",
+    "libs/cli_parser/src/defs.rs:28-32 pub static PERMISSION_ARGS: &[ArgDef] = &[ ArgDef::new(\"allow-all\").short('A').long(\"allow-all\") ...",
+    "git show --stat 5de9e18ca (feat(cli): deno add --no-save) => libs/cli_parser/src/defs.rs | 18 ++",
+    "cli/args/flags.rs:13 pub use deno_cli_parser::flags::*; (no ArgDef/command defs left in cli/args/flags.rs)"
+   ],
+   "note": "Each command's flags (ArgDef lists) are now defined in defs.rs, so that is where 'similar commands' are, and cli/args/flags.rs no longer holds them. The edited line is 83 chars, beyond the 80-col wrap."
+  }
+ ]
+}
