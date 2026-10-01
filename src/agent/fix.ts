@@ -87,6 +87,8 @@ interface RawEdit {
 const isRule = (st: CheckedStatement) => st.residual.some((r) => r.startsWith('rule '));
 
 const lineCount = (t: string) => t.split('\n').length;
+/** Letters and digits only, link targets dropped: markup-blind text to compare an edit with its statement. */
+const bare = (t: string) => t.replace(/\]\([^)]*\)/g, ']').replace(/[^\p{L}\p{N}]+/gu, '').toLowerCase();
 const STRUCTURE = /^\s*(?:[-*+]\s|\d+[.)]\s|#|>|```|~~~|\|)|^\s*$/;
 
 /**
@@ -129,10 +131,11 @@ export function vetEdit(repo: RepoContext, source: string, st: CheckedStatement,
   else if (!opts.config.autofix[tier]) edit.refused = `tier ${tier} is switched off in .proof.yaml`;
   else if (!old) edit.refused = 'no `old` text to replace';
   else if (count !== 1) edit.refused = count ? '`old` appears more than once in the statement' : '`old` is not in the statement as written';
+  else if (!bare(st.text).includes(bare(old))) edit.refused = 'the edit reaches beyond the statement into the text around it';
   else if (old === next) edit.refused = 'the edit changes nothing';
   else if (fitted === null) edit.refused = 'the edit adds lines; proof never adds content (gap proposals need --gaps)';
   else if (action === 'delete' && isRule(st)) edit.refused = 'a rule is rewritten to match the tooling, never deleted';
-  else if (action === 'delete' && /\b(currently empty|(is|are) empty|none yet|not yet|no .{1,30} yet|nothing (here|yet)|placeholder)\b/i.test(st.text)) edit.refused = 'the statement itself says the thing is empty or absent; absence does not contradict it';
+  else if (action === 'delete' && /\b(currently empty|(is|are) empty|none yet|not yet|no .{1,30} yet|nothing (here|yet)|placeholder)\b/i.test(lines)) edit.refused = 'the statement itself says the thing is empty or absent; absence does not contradict it';
   else if (action === 'delete' && !evidence.some((e) => e.valid && e.kind === 'absence') && !st.results.some((r) => r.status === 'STALE' && /not found|does not exist|said to be gone/.test(r.reason))) edit.refused = 'a deletion needs evidence that the thing is absent';
   else if (!evidence.some((e) => e.valid)) edit.refused = evidence.length ? `no citation checks out (${evidence.map((e) => `${e.ref}: ${e.problem}`).join('; ').slice(0, 240)})` : 'an edit without evidence';
   return edit;

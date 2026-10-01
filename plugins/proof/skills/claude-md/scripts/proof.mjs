@@ -8060,7 +8060,7 @@ var FIXER_RULES = [
   "Never delete a rule; rewrite it to match the tooling, citing the config file.",
   `Never rewrite a rule or a convention into a description of the code that breaks it ("some endpoints also \u2026", "the main place" for "the only place"): whether the exceptions or the convention should change is a person's decision, so return action none for that part.`,
   "Delete a fact only with evidence that the thing is absent (an absence citation). A fact that is merely unverified stays.",
-  "`old` is an exact substring of the statement's source lines, as written in the file, and `new` replaces it. Keep list markers, backticks, links and line breaks; `new` has no more lines than `old`.",
+  "`old` is an exact substring of the statement as written in the file, never reaching into another statement on the same line, and `new` replaces it. Keep list markers, backticks, links and line breaks; `new` has no more lines than `old`.",
   "Every edit cites the evidence it relies on, in the same kinds the verifier uses. An edit without a citation that checks out is not applied.",
   "Never propose again a fix a person or the re-verifier rejected; the rejected fixes are listed.",
   "If no edit is justified, return action none with the reason.",
@@ -19330,10 +19330,10 @@ var FLAG_TOKEN = /^--?[A-Za-z][\w-]*$/;
 var PLACEHOLDER = /^<[^>]+>$/;
 var NOT_CALLS = /* @__PURE__ */ new Set(["if", "for", "while", "switch", "catch", "function", "return", "typeof", "await", "async", "super", "require", "import", "export", "sizeof", "defined", "elif", "print"]);
 function codeCalls(t) {
-  const bare = t.replace(/"[^"]*"|'[^']*'|`[^`]*`/g, '""').replace(/\$\(/g, " ");
-  const snippet = /^(?:export\s+(?:default|const|let|var|function|class|type|interface|async|\{)|import\s+[\w{*'"]|(?:const|let|var|function|class|def|func|return|await|new)\s)/.test(t) || /[A-Za-z_$][\w$]*\(/.test(bare) || /=>/.test(bare);
+  const bare2 = t.replace(/"[^"]*"|'[^']*'|`[^`]*`/g, '""').replace(/\$\(/g, " ");
+  const snippet = /^(?:export\s+(?:default|const|let|var|function|class|type|interface|async|\{)|import\s+[\w{*'"]|(?:const|let|var|function|class|def|func|return|await|new)\s)/.test(t) || /[A-Za-z_$][\w$]*\(/.test(bare2) || /=>/.test(bare2);
   if (!snippet) return null;
-  const names = [...bare.matchAll(/([A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*)\s*\(/g)].map((m) => m[1] ?? "").filter((n) => n.length >= 3 && !NOT_CALLS.has(n));
+  const names = [...bare2.matchAll(/([A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*)\s*\(/g)].map((m) => m[1] ?? "").filter((n) => n.length >= 3 && !NOT_CALLS.has(n));
   const spans = [...new Set(names)].map((n) => ({ kind: "symbol", text: `${n}()`, expect: "present" }));
   return spans.length ? spans : [{ kind: "unknown", text: t, expect: "present" }];
 }
@@ -19754,6 +19754,7 @@ function buildFixPrompt(file, source, stale2, records, config) {
 }
 var isRule = (st) => st.residual.some((r) => r.startsWith("rule "));
 var lineCount = (t) => t.split("\n").length;
+var bare = (t) => t.replace(/\]\([^)]*\)/g, "]").replace(/[^\p{L}\p{N}]+/gu, "").toLowerCase();
 var STRUCTURE = /^\s*(?:[-*+]\s|\d+[.)]\s|#|>|```|~~~|\|)|^\s*$/;
 function fitLines(st, old, next) {
   const want = lineCount(old);
@@ -19784,10 +19785,11 @@ function vetEdit(repo, source, st, raw, scope, opts) {
   else if (!opts.config.autofix[tier]) edit.refused = `tier ${tier} is switched off in .proof.yaml`;
   else if (!old) edit.refused = "no `old` text to replace";
   else if (count !== 1) edit.refused = count ? "`old` appears more than once in the statement" : "`old` is not in the statement as written";
+  else if (!bare(st.text).includes(bare(old))) edit.refused = "the edit reaches beyond the statement into the text around it";
   else if (old === next) edit.refused = "the edit changes nothing";
   else if (fitted === null) edit.refused = "the edit adds lines; proof never adds content (gap proposals need --gaps)";
   else if (action === "delete" && isRule(st)) edit.refused = "a rule is rewritten to match the tooling, never deleted";
-  else if (action === "delete" && /\b(currently empty|(is|are) empty|none yet|not yet|no .{1,30} yet|nothing (here|yet)|placeholder)\b/i.test(st.text)) edit.refused = "the statement itself says the thing is empty or absent; absence does not contradict it";
+  else if (action === "delete" && /\b(currently empty|(is|are) empty|none yet|not yet|no .{1,30} yet|nothing (here|yet)|placeholder)\b/i.test(lines)) edit.refused = "the statement itself says the thing is empty or absent; absence does not contradict it";
   else if (action === "delete" && !evidence.some((e) => e.valid && e.kind === "absence") && !st.results.some((r) => r.status === "STALE" && /not found|does not exist|said to be gone/.test(r.reason))) edit.refused = "a deletion needs evidence that the thing is absent";
   else if (!evidence.some((e) => e.valid)) edit.refused = evidence.length ? `no citation checks out (${evidence.map((e) => `${e.ref}: ${e.problem}`).join("; ").slice(0, 240)})` : "an edit without evidence";
   return edit;
@@ -21064,14 +21066,14 @@ function checkPath(ctx, span) {
   const exported = exportOf(ctx, segments);
   if (exported) return verified(span, "declaration", [{ ref: exported, level: "declaration" }], `an export of a workspace package: ${exported}`);
   if (/<[^>]+>|\{[A-Za-z_][\w-]*\}/.test(t)) return unconfirmed(span, `no file matches the pattern ${t} yet`);
-  const bare = !t.endsWith("/") && !posix7.extname(segments[segments.length - 1] ?? "");
-  if (bare) {
+  const bare2 = !t.endsWith("/") && !posix7.extname(segments[segments.length - 1] ?? "");
+  if (bare2) {
     const named = stringInCode(ctx, t);
     if (named) return verified(span, "reference", [named], `not a path: the code spells it as a name at ${named.ref}`);
   }
   const anchored = segments.length === 1 || candidates.some((b) => ctx.repo.exists(join8(b, first)));
   if (anchored) return stale(span, `not found: ${join8(primary, t)}`);
-  const homes = /^[\w-]+$/.test(first) && !bare ? [...ctx.repo.dirs].filter((d) => posix7.basename(d) === first) : [];
+  const homes = /^[\w-]+$/.test(first) && !bare2 ? [...ctx.repo.dirs].filter((d) => posix7.basename(d) === first) : [];
   if (homes.length) return stale(span, `not found: no ${segments.slice(1).join("/")} under any ${first}/ folder (${shown(homes)})`);
   if (/^@?[a-z][\w-]*\/[a-z][\w-]*$/.test(t)) return notChecked(span, `reads as "${t.replace("/", " or ")}" or a rule id, not a path`);
   return unconfirmed(span, `no ${first}/ in this repository; fine if it names a folder somewhere else`);

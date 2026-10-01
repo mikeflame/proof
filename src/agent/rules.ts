@@ -67,7 +67,7 @@ export const FIXER_RULES: readonly string[] = [
   'Never delete a rule; rewrite it to match the tooling, citing the config file.',
   'Never rewrite a rule or a convention into a description of the code that breaks it ("some endpoints also …", "the main place" for "the only place"): whether the exceptions or the convention should change is a person\'s decision, so return action none for that part.',
   'Delete a fact only with evidence that the thing is absent (an absence citation). A fact that is merely unverified stays.',
-  '`old` is an exact substring of the statement\'s source lines, as written in the file, and `new` replaces it. Keep list markers, backticks, links and line breaks; `new` has no more lines than `old`.',
+  '`old` is an exact substring of the statement as written in the file, never reaching into another statement on the same line, and `new` replaces it. Keep list markers, backticks, links and line breaks; `new` has no more lines than `old`.',
   'Every edit cites the evidence it relies on, in the same kinds the verifier uses. An edit without a citation that checks out is not applied.',
   'Never propose again a fix a person or the re-verifier rejected; the rejected fixes are listed.',
   'If no edit is justified, return action none with the reason.',

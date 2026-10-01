@@ -121,6 +121,23 @@ describe('fixes', () => {
     expect(report?.fixes?.[0]).toMatchObject({ action: 'delete', outcome: 'applied' });
   });
 
+  it('never lets an edit reach into the next statement on the same line', () => {
+    f = makeRepo({ 'CLAUDE.md': '# App\n\nHelpers live in `src/helpers/`. Run `make docs` after.\n', 'src/a.ts': 'export {};\n' });
+    const gone = { match: 'Helpers', action: 'delete', reason: 'folder is gone', evidence: [{ kind: 'absence', ref: 'git ls-files src/helpers' }] };
+    const whole = proof({ fixes: [gone] }, 'run', 'CLAUDE.md', '--json').report;
+    expect(whole?.fixes?.[0]?.refused).toContain('reaches beyond the statement');
+    expect(doc()).toContain('Run `make docs` after.');
+    const own = proof({ fixes: [{ ...gone, old: 'Helpers live in `src/helpers/`. ' }] }, 'run', 'CLAUDE.md', '--json').report;
+    expect(own?.fixes?.[0]).toMatchObject({ outcome: 'applied' });
+    expect(doc()).toBe('# App\n\nRun `make docs` after.\n');
+  });
+
+  it('keeps a deletion away from a line that says its subject is empty', () => {
+    f = makeRepo({ 'CLAUDE.md': '# App\n\nHelpers live in `src/helpers/`. Currently empty.\n', 'src/a.ts': 'export {};\n' });
+    const { report } = proof({ fixes: [{ match: 'Helpers', action: 'delete', old: 'Helpers live in `src/helpers/`. ', reason: 'folder is gone', evidence: [{ kind: 'absence', ref: 'git ls-files src/helpers' }] }] }, 'run', 'CLAUDE.md', '--json');
+    expect(report?.fixes?.[0]?.refused).toContain('says the thing is empty');
+  });
+
   it('shows the diff without writing anything with --dry-run, and never calls the fixer with --no-fix', () => {
     f = makeRepo(FILES);
     const before = doc();
@@ -205,7 +222,7 @@ describe('policy, applied by proof', () => {
     f = makeRepo({ 'CLAUDE.md': '- Never use `oldTool`.\n', 'a.ts': 'export {};\n' });
     const repo = new RepoContext(f.repo);
     const source = '- Never use `oldTool`.\n';
-    const st = { id: 'x', line: 1, endLine: 1, residual: ['rule "Never"'], results: [] } as unknown as Parameters<typeof vetEdit>[2];
+    const st = { id: 'x', line: 1, endLine: 1, kind: 'item', text: 'Never use `oldTool`.', residual: ['rule "Never"'], results: [] } as unknown as Parameters<typeof vetEdit>[2];
     const raw = { action: 'replace', tier: 'B', old: '`oldTool`', new: '`newTool`', evidence: [{ kind: 'file_line', ref: 'a.ts:1', excerpt: 'export {};' }], reason: 'r' };
     const opts = { model: 'm', effort: 'high', budgetUsd: 1, timeoutMs: 1000, user: false, config: DEFAULT_CONFIG };
     expect(vetEdit(repo, source, st, raw, 'managed', opts)?.refused).toContain('managed');
