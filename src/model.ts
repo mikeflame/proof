@@ -35,6 +35,8 @@ export interface Span {
   cwd?: string;
   /** Folders the surrounding text points at ("run inside `api/`"), tried as working folders. */
   hintDirs?: string[];
+  /** The span runs in, or names a path inside, the folder a preceding `git clone` created. */
+  clone?: { dir: string; url: string };
 }
 
 export type SpanStatus = 'VERIFIED' | 'STALE' | 'UNCONFIRMED' | 'NOT_CHECKED';

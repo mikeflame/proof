@@ -54,15 +54,26 @@ Nothing is committed unless you pass `--commit`.
 
 | Section | Meaning | Your job |
 | --- | --- | --- |
-| Fixed | edited, and a fresh verifier confirmed the new text | show the user the diff (`git diff -- <file>`) |
-| Fix rejected | the re-verifier refused the edit; it was reverted | correct the line by hand from the reason, or ask |
-| Stale | the repository contradicts it and no fix was applied | correct it from the reason, or ask |
-| Unconfirmed | part of it has no evidence, nothing contradicts it | relay it as a decision (section 4) |
-| Unverified with reason | the reason says what evidence is missing | relay it as a decision (section 4) |
-| Overrides | an ignore marker with a reason | leave it unless the reason no longer holds |
-| Decided | settled by a recorded decision | nothing |
-| Verified | proven at the level shown, or by the verifier with citations | nothing |
-| Not checked | outside the repository | nothing |
+| Fixed | Edited, and a fresh verifier confirmed the new text. Review the diff. | show the user the diff (`git diff -- <file>`) |
+| Fix rejected | The re-verifier refused these edits; they were reverted. | correct the line by hand from the reason, or ask |
+| Stale | The repository contradicts these, and no fix was applied. | correct it from the reason, or ask |
+| Unconfirmed | Part of each has no evidence; nothing contradicts it either. | relay it to the user as a decision |
+| Unverified with reason | The reason says what evidence is still missing. | relay it to the user as a decision |
+| Overrides | Silenced by a proof:ignore marker with a reason. | leave it unless the reason no longer holds |
+| Decided | Settled by a recorded decision. | nothing |
+| Verified | Proven at the level shown, or by the verifier with citations proof re-checked. | nothing |
+| Not checked | Outside the repository: system files and external tools. | nothing |
+
+Verdicts, from the header:
+
+| Verdict | Meaning | Exit |
+| --- | --- | --- |
+| `PROVEN` | every statement verified at definition or declaration level, or decided | 0 |
+| `PROVEN WITH OVERRIDES` | as above, with at least one override or reference-level proof | 0 |
+| `FIXED` | stale lines were found, and all were fixed and re-verified | 0 |
+| `PARTLY PROVEN` | open items remain for a decision | 0 |
+| `NOT PROVEN` | stale lines remain, or a fix was rejected | 1 |
+| `UNTESTED` | unreadable, or the verifier did not answer every open statement | 2 |
 
 Evidence levels: `definition`, `declaration`, `reference`. A match in a comment
 or inside a longer string never verifies anything.

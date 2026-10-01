@@ -1,5 +1,6 @@
-import type { CheckedStatement, SpanResult, StatementStatus } from './model.ts';
+import type { CheckedStatement, SpanResult } from './model.ts';
 import type { FileReport } from './pipeline.ts';
+import { STATUSES } from './vocabulary.ts';
 
 const MARK: Record<string, string> = { VERIFIED: '✓', STALE: '✗', UNCONFIRMED: '?', NOT_CHECKED: '·' };
 const clip = (raw: string, n = 160) => {
@@ -7,18 +8,8 @@ const clip = (raw: string, n = 160) => {
   return t.length > n ? `${t.slice(0, n - 1)}…` : t;
 };
 
-/** Report sections in the order of spec 7.1, with the hint each one carries. */
-export const SECTIONS: { status: StatementStatus; title: string; hint: string; expand: 'always' | 'verbose' }[] = [
-  { status: 'FIXED', title: 'Fixed', hint: 'Edited and re-verified. Review the diff.', expand: 'always' },
-  { status: 'FIX_REJECTED', title: 'Fix rejected', hint: 'The re-verifier rejected these edits; they were reverted.', expand: 'always' },
-  { status: 'STALE', title: 'Stale', hint: 'The repository contradicts these.', expand: 'always' },
-  { status: 'UNCONFIRMED', title: 'Unconfirmed', hint: 'Part of each has no evidence; nothing contradicts it either.', expand: 'always' },
-  { status: 'UNVERIFIED_WITH_REASON', title: 'Unverified with reason', hint: 'Nothing mechanical settles these; the verifier must read them.', expand: 'always' },
-  { status: 'OVERRIDDEN', title: 'Overrides', hint: 'Silenced by a proof:ignore marker with a reason.', expand: 'always' },
-  { status: 'DECIDED', title: 'Decided', hint: 'Settled by a recorded decision.', expand: 'verbose' },
-  { status: 'VERIFIED', title: 'Verified', hint: 'Every name in these checks out at the level shown.', expand: 'verbose' },
-  { status: 'NOT_CHECKED', title: 'Not checked', hint: 'Outside the repository: system files and external tools.', expand: 'verbose' },
-];
+/** Report sections in the order of spec 7.1, from the shared vocabulary. */
+export const SECTIONS = STATUSES.map((s) => ({ status: s.status, title: s.title, hint: s.meaning, expand: s.expand }));
 
 function spanLine(r: SpanResult): string {
   const ref = r.evidence[0];

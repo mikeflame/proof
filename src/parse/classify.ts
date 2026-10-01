@@ -1,5 +1,6 @@
 import type { Span } from '../model.ts';
 import { DEPENDENCY_ALIASES } from './aliases.ts';
+import { posix } from 'node:path';
 import { splitShell } from './shell.ts';
 
 /** Commands whose first word is enough to read inline code as a shell command. */
@@ -20,7 +21,7 @@ export const KNOWN_TOOLS = new Set([
 /** Commands that take a file to run; the command check validates that file itself. */
 export const FILE_RUNNERS = new Set(['bash', 'sh', 'zsh', 'fish', 'source', 'node', 'deno', 'tsx', 'ts-node', 'python', 'python3', 'ruby', 'php', 'bun']);
 
-const FILE_EXT = /\.(ts|tsx|mts|cts|js|jsx|mjs|cjs|json|jsonc|json5|md|mdx|mdc|ya?ml|sh|bash|zsh|toml|ini|cfg|conf|sql|env|example|sample|mjml|css|scss|sass|less|lock|txt|py|pyi|go|mod|sum|rs|rb|php|java|kt|kts|gradle|cs|csproj|sln|fs|swift|c|h|cc|cpp|hpp|html|vue|svelte|astro|xml|proto|graphql|gql|tf|tfvars|hcl|dockerfile|ps1|bat|cmd|wasm|pem|crt|key|csv|tsv|png|svg|jpg|jpeg|gif|webp|ico|pdf|zip|gz|tgz)$/i;
+const FILE_EXT = /\.(tmpl|tpl|j2|jinja2?|hbs|ejs|njk|erb|liquid|mustache|template|dist|snap|ts|tsx|mts|cts|js|jsx|mjs|cjs|json|jsonc|json5|md|mdx|mdc|ya?ml|sh|bash|zsh|toml|ini|cfg|conf|sql|env|example|sample|mjml|css|scss|sass|less|lock|txt|py|pyi|go|mod|sum|rs|rb|php|java|kt|kts|gradle|cs|csproj|sln|fs|swift|c|h|cc|cpp|hpp|html|vue|svelte|astro|xml|proto|graphql|gql|tf|tfvars|hcl|dockerfile|ps1|bat|cmd|wasm|pem|crt|key|csv|tsv|png|svg|jpg|jpeg|gif|webp|ico|pdf|zip|gz|tgz)$/i;
 /** `.ts`, `.md`: a file type mentioned in prose, not a file. */
 const BARE_EXTENSION = /^\.[a-z0-9]{1,6}$/i;
 const IDENT = /^[A-Za-z_$][\w$]*$/;
@@ -44,6 +45,8 @@ export function qualifiedName(t: string): { scope: string; name: string } | null
   if (!m) return null;
   const [, scope = '', name = ''] = m;
   if (FILE_EXT.test(`.${name}`) || /^(json|yaml|yml|lock|config|test|spec|d|min|local|example)$/i.test(name)) return null;
+  // `src/skill/SKILL.md.tmpl`, `types.d.ts`: a file whose name already has an extension.
+  if (/\.[A-Za-z0-9]{1,6}$/.test(scope.split('/').pop() ?? '') && scope.includes('/')) return null;
   if (!scope.includes('/') && !IDENT.test(scope.split('.').pop() ?? '')) return null;
   return { scope, name };
 }
@@ -62,20 +65,50 @@ function pathArgs(argv: string[], cwd: string | undefined, hintDirs: string[]): 
     .map((tok): Span => ({ kind: 'path', text: tok, expect: 'present', ...(cwd ? { cwd } : {}), ...(hintDirs.length ? { hintDirs } : {}) }));
 }
 
-/** Every simple command in a shell line, plus the folders its `cd`s enter and the repository paths it names. */
-export function commandSpans(line: string, hintDirs: string[] = []): Span[] {
+/** A `git clone <url> [dir]` seen earlier in the document: later commands may run in `dir`. */
+export interface Clone {
+  dir: string;
+  url: string;
+}
+
+const inClone = (path: string | undefined, clones: Clone[]): { clone: Clone; rest: string } | null => {
+  if (!path) return null;
+  for (const c of clones) if (path === c.dir || path.startsWith(`${c.dir}/`)) return { clone: c, rest: path.slice(c.dir.length + 1) };
+  return null;
+};
+
+/**
+ * Every simple command in a shell line, plus the folders its `cd`s enter and the repository paths it names.
+ * `clones` collects `git clone` targets across a document, so `cd repo && make` after a clone runs at the root.
+ */
+export function commandSpans(line: string, hintDirs: string[] = [], clones: Clone[] = []): Span[] {
   const spans: Span[] = [];
   for (const sc of splitShell(line)) {
-    const cwd = sc.cwdUnknown ? undefined : sc.cwd || undefined;
+    const raw = sc.cwdUnknown ? undefined : sc.cwd || undefined;
+    const cloned = inClone(raw, clones);
+    const cwd = cloned ? cloned.rest || undefined : raw;
+    const cloneOf = (extra: Clone | undefined) => (cloned?.clone ?? extra ? { clone: (cloned?.clone ?? extra) as Clone } : {});
+    if (sc.argv[0] === 'git' && sc.argv[1] === 'clone') {
+      const args = sc.argv.slice(2).filter((a, i, all) => !a.startsWith('-') && !['-b', '--branch', '--depth', '-o', '--origin', '--filter', '--reference'].includes(all[i - 1] ?? ''));
+      const url = args[0];
+      if (url) clones.push({ url, dir: args[1] ?? (url.split(/[/:]/).pop() ?? '').replace(/\.git$/, '') });
+    }
     if (sc.argv[0] === 'cd' || sc.argv[0] === 'pushd') {
       const target = sc.argv[1];
       if (target && !target.startsWith('/') && !target.startsWith('~') && !target.includes('$') && target !== '-') {
-        spans.push({ kind: 'path', text: `${target.replace(/\/$/, '')}/`, expect: 'present', ...(cwd ? { cwd } : {}) });
+        const into = inClone(posix.join(raw ?? '', target.replace(/\/$/, '')), clones);
+        // `cd repo` right after cloning it enters the repository root: nothing to check.
+        if (into && !into.rest) continue;
+        spans.push({ kind: 'path', text: `${(into ? into.rest : target).replace(/\/$/, '')}/`, expect: 'present', ...(cwd && !into ? { cwd } : {}), ...(into ? { clone: into.clone } : cloneOf(undefined)) });
       }
       continue;
     }
-    spans.push({ kind: 'command', text: sc.text, expect: 'present', ...(cwd ? { cwd } : {}), ...(hintDirs.length ? { hintDirs } : {}) });
-    spans.push(...pathArgs(sc.argv, cwd, hintDirs));
+    const named = clones.find((c) => sc.argv.some((a) => a.startsWith(`${c.dir}/`)));
+    spans.push({ kind: 'command', text: sc.text, expect: 'present', ...(cwd ? { cwd } : {}), ...(hintDirs.length ? { hintDirs } : {}), ...cloneOf(named) });
+    for (const p of pathArgs(sc.argv, cwd, hintDirs)) {
+      const c = inClone(p.text, clones)?.clone ?? cloned?.clone;
+      spans.push({ ...p, ...(c ? { clone: c } : {}) });
+    }
   }
   return spans;
 }

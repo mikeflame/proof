@@ -63,8 +63,15 @@ claude plugin install proof@proof
 
 Then run `/proof:claude-md` in any repository.
 
-**Other agents**: copy `plugins/proof/skills/claude-md/` into your agent's skills directory. The
-skill tells the agent to run `scripts/proof.mjs` from that folder.
+**Any agent**, in two commands:
+
+```bash
+git clone https://github.com/mikeflame/proof
+node proof/plugins/proof/skills/claude-md/scripts/proof.mjs install
+```
+
+`install` copies the skill to `~/.claude/skills/claude-md/` and `~/.agents/skills/claude-md/` (the
+layout Codex, OpenCode and Pi read), and leaves both alone when they are already current.
 
 **Just the check**, no agent: `node plugins/proof/skills/claude-md/scripts/proof.mjs check` in
 your repository. It needs Node 22+ and git; the parsers and grammars ship next to it.
@@ -88,19 +95,53 @@ your repository. It needs Node 22+ and git; the parsers and grammars ship next t
 | a rule's `paths:` (`globs:`, `applyTo:`) | the files each pattern matches, read with Claude Code's glob rules (`[` is a bracket expression) |
 <!-- proof:ignore-end -->
 
-Each statement comes back **stale** (the repository contradicts it), **unconfirmed** (part of it
-has no evidence), **unverified with reason** (the names check out, and the reason says what is
-left for a reader), **overridden** (an ignore marker with a reason), **verified**, or **not
-checked** (system files, external tools). Every verified span names its evidence level:
-definition, declaration or reference. A match in a comment or inside a longer string never
-verifies anything.
+## Reading the report
 
-The verdict is NOT PROVEN when anything is stale, PARTLY PROVEN while anything is open, and PROVEN
-only when every statement is verified. A check that cannot run fully, such as a manifest that does
-not parse, is named in a `degraded:` header line and keeps its statements open. It warns when
-your checkout is behind its upstream, and writes nothing into your repository.
+Every statement lands in one section. Every verified span names its evidence level: definition,
+declaration or reference; a match in a comment or inside a longer string never verifies anything.
 
-Exit codes: `0` PROVEN, PROVEN WITH OVERRIDES or PARTLY PROVEN; `1` NOT PROVEN; `2` unreadable file or usage error.
+<!-- generated:statuses -->
+| Section | Meaning | Your job |
+| --- | --- | --- |
+| Fixed | Edited, and a fresh verifier confirmed the new text. Review the diff. | show the user the diff (`git diff -- <file>`) |
+| Fix rejected | The re-verifier refused these edits; they were reverted. | correct the line by hand from the reason, or ask |
+| Stale | The repository contradicts these, and no fix was applied. | correct it from the reason, or ask |
+| Unconfirmed | Part of each has no evidence; nothing contradicts it either. | relay it to the user as a decision |
+| Unverified with reason | The reason says what evidence is still missing. | relay it to the user as a decision |
+| Overrides | Silenced by a proof:ignore marker with a reason. | leave it unless the reason no longer holds |
+| Decided | Settled by a recorded decision. | nothing |
+| Verified | Proven at the level shown, or by the verifier with citations proof re-checked. | nothing |
+| Not checked | Outside the repository: system files and external tools. | nothing |
+<!-- /generated:statuses -->
+
+The header gives the verdict of the file and the exit code:
+
+<!-- generated:verdicts -->
+| Verdict | Meaning | Exit |
+| --- | --- | --- |
+| `PROVEN` | every statement verified at definition or declaration level, or decided | 0 |
+| `PROVEN WITH OVERRIDES` | as above, with at least one override or reference-level proof | 0 |
+| `FIXED` | stale lines were found, and all were fixed and re-verified | 0 |
+| `PARTLY PROVEN` | open items remain for a decision | 0 |
+| `NOT PROVEN` | stale lines remain, or a fix was rejected | 1 |
+| `UNTESTED` | unreadable, or the verifier did not answer every open statement | 2 |
+<!-- /generated:verdicts -->
+
+A check that cannot run fully, such as a manifest that does not parse, is named in a `degraded:`
+header line and keeps its statements open. The report warns when your checkout is behind its
+upstream. `proof check` writes nothing into your repository.
+
+## Commands
+
+<!-- generated:commands -->
+| Command | What it does |
+| --- | --- |
+| `proof check` | Checks every statement of every instruction file an agent loads, and the files they `@import`, with deterministic parsers. Writes nothing. |
+| `proof run` | Checks, hands what the checks leave open to a verifier agent whose citations proof re-checks, fixes the stale lines, and re-verifies each fix with a fresh agent. Can take many minutes. |
+| `proof decide` | Lists a file's open statements, or records a person's decision on one in <file>.proof.json. |
+| `proof revert` | Puts back the text a fix replaced and records the rejection, so it is not proposed again. |
+| `proof install` | Copies this skill to ~/.claude/skills/claude-md/ and ~/.agents/skills/claude-md/, so every agent finds it. |
+<!-- /generated:commands -->
 
 ## How it stays precise
 
@@ -125,8 +166,11 @@ npm run typecheck
 npm run validate    # claude plugin validate for the marketplace and the plugin
 ```
 
-The skill ships `scripts/proof.mjs` and `scripts/grammars/`, built from `src/` by `scripts/build.mjs`.
-Commit them after `npm run build`. `docs/rework-spec.md` is the working spec.
+Everything users get is generated from `src/` by `npm run build`: the bundle and its grammars, the
+skill (from `src/skill/SKILL.md.tmpl`), the tables in this README and the plugin manifest version.
+CI runs `npm run build:check` and fails when any committed copy is out of date. `package.json`
+holds the only version; `npm run release -- <version>` sets it, rebuilds, writes `CHANGELOG.md`
+from the conventional commits, and tags. `docs/rework-spec.md` is the working spec.
 
 ## License
 

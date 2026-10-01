@@ -1,0 +1,73 @@
+# Spec 9.2: one workflow. It turns red when anything generated is out of date, when a test fails,
+# when a manifest does not validate, or when proof's own instruction files have a stale line.
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [24, 26]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - name: Generated files are up to date (bundle, grammars, SKILL.md, README tables, manifest version)
+        run: node scripts/build.mjs --check
+      - run: npm run typecheck
+      - name: Reference repository for the acceptance criteria
+        run: |
+          git clone -q https://github.com/kunchenguid/no-mistakes "$HOME/projects/proof-cache/no-mistakes"
+          git -C "$HOME/projects/proof-cache/no-mistakes" checkout -q f4b85ae161cef8f14e289cc90aebae044ed570b9
+      - name: Unit, fixture and acceptance tests
+        run: npx vitest run
+      - name: Plugin manifests validate
+        run: |
+          npx -y @anthropic-ai/claude-code plugin validate .
+          npx -y @anthropic-ai/claude-code plugin validate ./plugins/proof
+      - name: Dogfood, proof's own files have no stale line
+        run: node plugins/proof/skills/claude-md/scripts/proof.mjs check AGENTS.md README.md
+
+  smoke:
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - repo: kunchenguid/no-mistakes
+            sha: f4b85ae161cef8f14e289cc90aebae044ed570b9
+          - repo: modelcontextprotocol/python-sdk
+            sha: d639cf7f97f77388fa7da60c0f9b04f8837b77fd
+          - repo: modelcontextprotocol/typescript-sdk
+            sha: 433eb413dc305ebeb93b8ebcde0095a8fc0d5fa0
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 26
+      - name: Pinned checkout of ${{ matrix.repo }}
+        run: |
+          git clone -q "https://github.com/${{ matrix.repo }}" target
+          git -C target checkout -q "${{ matrix.sha }}"
+      - name: Read-only run, every statement gets a result, nothing in the target changes
+        working-directory: target
+        run: |
+          set +e
+          node ../plugins/proof/skills/claude-md/scripts/proof.mjs check --json > ../report.json
+          code=$?
+          set -e
+          test "$code" -le 1
+          test -z "$(git status --porcelain)"
+          node -e 'const r = JSON.parse(require("fs").readFileSync("../report.json", "utf8")); if (!r.length) throw new Error("no instruction file found"); for (const f of r) { if (f.coverage.withResult !== f.coverage.statements) throw new Error(f.file + ": statements without a result"); console.log(f.file, f.verdict, JSON.stringify(f.counts)); }'

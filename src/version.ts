@@ -1,2 +1,4 @@
-/** Keep in sync with package.json and plugins/proof/.claude-plugin/plugin.json. */
-export const VERSION = '0.1.0';
+import pkg from '../package.json' with { type: 'json' };
+
+/** The one version source is package.json; the build writes it into the plugin manifest (spec 9.3). */
+export const VERSION: string = pkg.version;

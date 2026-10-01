@@ -7,7 +7,7 @@ import { frontmatter } from 'micromark-extension-frontmatter';
 import { gfm } from 'micromark-extension-gfm';
 import { parse as parseYaml } from 'yaml';
 import type { Override, Span, Statement, StatementKind } from '../model.ts';
-import { classifyCode, commandSpans, dependencySpans, KNOWN_TOOLS, versionSpans } from './classify.ts';
+import { classifyCode, type Clone, commandSpans, dependencySpans, KNOWN_TOOLS, versionSpans } from './classify.ts';
 
 const SHELL_LANGS = new Set(['bash', 'sh', 'shell', 'zsh', 'console', 'terminal', 'shell-session', 'shellsession', 'fish', 'ps1', 'powershell']);
 const SCRIPT_LANGS = new Set(['ts', 'tsx', 'typescript', 'js', 'jsx', 'javascript', 'mjs', 'cjs', 'go', 'py', 'python', 'rust', 'rs']);
@@ -236,6 +236,8 @@ export function parseDocument(source: string, file: string): ParsedDocument {
   let frontmatterError: string | null = null;
   let section = '';
   const markers: MarkerState = { block: null, next: null, findings: [] };
+  // `git clone` targets seen so far in the document: later commands may run inside them.
+  const clones: Clone[] = [];
 
   const lineOf = (n: Nodes) => n.position?.start.line ?? 0;
   const endOf = (n: Nodes) => n.position?.end.line ?? lineOf(n);
@@ -308,7 +310,7 @@ export function parseDocument(source: string, file: string): ParsedDocument {
         if (!cmd || cmd.startsWith('#')) continue;
         // An unlabelled fence may hold a report, a template or plain text; only lines that run something are claims.
         if (!SHELL_LANGS.has(lang) && !runsSomething(cmd)) continue;
-        const spans = commandSpans(cmd, hintDirs);
+        const spans = commandSpans(cmd, hintDirs, clones);
         push('command', cmd, start + first, start + i, spans, false);
       }
       return;

@@ -10,46 +10,12 @@ import { annotateFixes, type FileFix, type FileReport, Run } from './pipeline.ts
 import { loadConfig } from './config.ts';
 import { sidecarPath } from './decisions.ts';
 import { decide, HumanError, listOpen, revert } from './human.ts';
+import { install } from './install.ts';
 import { toMarkdown } from './report.ts';
 import { VERSION } from './version.ts';
+import { renderHelp } from './vocabulary.ts';
 
-export const HELP = `proof ${VERSION}: is your CLAUDE.md still true?
-
-Usage:
-  proof check [file...] [--user] [--json] [--out <dir>] [--verbose]
-  proof run   [file...] [--user] [--no-fix] [--dry-run] [--commit] [--fix-rounds <n>] [--gaps] [--model <id>] [--effort <lvl>] [--budget-usd <n>]
-              [--jobs <n>] [--no-cache] [--json] [--out <dir>]
-  proof decide <file> [L<line>|<id> (--rule | --fact --evidence <path:line>) --reason "…"]
-  proof revert <file> --id <statement id>
-
-check   Checks every statement in CLAUDE.md, AGENTS.md and the other instruction files an agent loads
-        against the repository with deterministic parsers, follows their @imports, and prints a report.
-        With no files, checks every instruction file it discovers.
-run     Does the same, then hands every statement the checks left open to a verifier agent (the
-        claude CLI, read-only tools), keeps only verdicts whose citations check out, and reports coverage.
-        Then it fixes the stale lines: a fixer proposes each edit, a fresh verifier re-checks it, and only
-        edits it accepts are written. Review the diff afterwards. A run can take many minutes.
-decide  Lists the open statements of a file, or records a person's decision on one in <file>.proof.json,
-        so later runs show it as decided instead of asking again.
-revert  Puts back the text a fix replaced and records the rejection, so it is not proposed again.
-
-  --user          Also check ~/.claude/CLAUDE.md, ~/.claude/rules/ and this machine's managed policy file,
-                  and follow imports outside the repository (reported, never edited)
-  --model <id>    Verifier model (default ${DEFAULT_VERIFY.model})
-  --effort <lvl>  Verifier thinking effort: low, medium, high, xhigh, max (default ${DEFAULT_VERIFY.effort})
-  --budget-usd    Total spend for the verifier across the run (default ${DEFAULT_VERIFY.budgetUsd})
-  --jobs <n>      Verifier calls in parallel (default ${DEFAULT_VERIFY.jobs})
-  --no-cache      Ask again even when the code and the statement are unchanged since the last run
-  --no-fix        Verify only; change nothing
-  --dry-run       Show the diff the fixes would make, without writing it
-  --commit        Commit the fixed files and their sidecars (nothing is committed without it)
-  --fix-rounds    Fix rounds, each re-verified (default 1); a later round sees why earlier edits were rejected
-  --gaps          Also propose up to five missing lines per file, with evidence; never written
-  --json          Print JSON (an array, one object per file) instead of markdown
-  --out <dir>     Also write <name>.md and <name>.json reports into <dir>
-  --verbose       List verified, decided and not-checked statements too
-
-Exit codes: 0 PROVEN, PROVEN WITH OVERRIDES, FIXED or PARTLY PROVEN; 1 NOT PROVEN; 2 UNTESTED or a usage error.`;
+export const HELP = renderHelp(VERSION);
 
 const NUMBER = (name: string, v: string | undefined, fallback: number): number => {
   if (v === undefined) return fallback;
@@ -196,6 +162,15 @@ function revertCommand(argv: string[]): number {
   return 0;
 }
 
+function installCommand(argv: string[]): number {
+  const { values } = parseArgs({ args: argv, options: { claude: { type: 'boolean' }, agents: { type: 'boolean' } } });
+  const which = values.claude || values.agents ? (['claude', 'agents'] as const).filter((k) => values[k]) : (['claude', 'agents'] as const);
+  const results = install([...which]);
+  for (const r of results) console.log(`${r.state.padEnd(9)} ${r.target} (${r.note})`);
+  if (results.some((r) => r.state !== 'refused')) console.log('Run it in any repository: /claude-md in Claude Code, or ask your agent to use the claude-md skill.');
+  return results.some((r) => r.state === 'refused') ? 2 : 0;
+}
+
 export async function main(argv: string[]): Promise<number> {
   const [first, ...rest] = argv;
   if (first === '--help' || first === '-h' || first === 'help') {
@@ -210,6 +185,7 @@ export async function main(argv: string[]): Promise<number> {
     if (first === 'check' || first === 'run') return await pipeline(first, rest);
     if (first === 'decide') return await decideCommand(rest);
     if (first === 'revert') return revertCommand(rest);
+    if (first === 'install') return installCommand(rest);
     // `proof CLAUDE.md` and `proof --json` mean `proof check …`.
     if (!first || first.startsWith('-') || /\.(md|mdc)$|rules$/i.test(first)) return await pipeline('check', argv);
   } catch (err) {

@@ -1,3 +1,4 @@
+import { spawnSync } from 'node:child_process';
 import { mkdirSync, symlinkSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -36,6 +37,23 @@ describe('paths', () => {
     expect(spanOf(r, 'src/services/').status).toBe('STALE');
     expect(spanOf(r, 'src/router/').status).toBe('VERIFIED');
     expect(spanOf(r, 'vendor-docs/x.md').status).toBe('UNCONFIRMED');
+  });
+
+  it('never calls an example path, an export subpath, a method name or an unused template stale', async () => {
+    const r = await checkFiles({
+      'CLAUDE.md': doc('Run one file: `uv run pytest tests/path/test_foo.py`.', 'Public API in `core/public`.', 'Clients handle `sampling/createMessage`.', 'Guides go in `examples/guides/<section>/`.'),
+      'tests/a_test.py': 'def test_a(): pass\n',
+      'packages/core/package.json': JSON.stringify({ name: '@acme/core', exports: { '.': './index.js', './public': './public.js' } }),
+      'packages/core/index.js': 'export {};\n',
+      'packages/sampling/x.ts': 'export {};\n',
+      'src/client.ts': "export const METHOD = 'sampling/createMessage';\n",
+      'examples/readme.md': '# x\n',
+    });
+    expect(spanOf(r, 'tests/path/test_foo.py').status).toBe('NOT_CHECKED');
+    expect(spanOf(r, 'core/public')).toMatchObject({ status: 'VERIFIED', level: 'declaration' });
+    expect(spanOf(r, 'sampling/createMessage')).toMatchObject({ status: 'VERIFIED', level: 'reference' });
+    expect(spanOf(r, 'examples/guides/<section>/').status).toBe('UNCONFIRMED');
+    expect(r.counts.STALE).toBe(0);
   });
 
   it('accepts a file name the code reads at run time', async () => {
@@ -106,6 +124,29 @@ describe('commands', () => {
     });
     expect(spanOf(r, 'mytool answer --run x')).toMatchObject({ status: 'VERIFIED', level: 'reference' });
     expect(spanOf(r, 'mytool vanish').status).toBe('UNCONFIRMED');
+  });
+
+  it('reads commands after `git clone` of this repository as running in it, and leaves other clones alone', async () => {
+    const f = makeRepo({
+      'README.md': '```bash\ngit clone https://github.com/acme/tool\nnode tool/bin/run.mjs\ncd tool && make build\ngit clone https://github.com/other/thing\nnode thing/x.mjs\n```\n',
+      'bin/run.mjs': 'console.log(1);\n',
+      'Makefile': 'build:\n\techo b\n',
+    });
+    try {
+      spawnSync('git', ['remote', 'add', 'origin', 'git@github.com:acme/tool.git'], { cwd: f.repo });
+      const r = await new Run(f.repo).checkFile('README.md');
+      expect(spanOf(r, 'node bin/run.mjs').status).toBe('VERIFIED');
+      expect(spanOf(r, 'make build').status).toBe('VERIFIED');
+      expect(spanOf(r, 'node thing/x.mjs').reason).toContain('fresh clone of https://github.com/other/thing');
+      expect(r.counts.STALE).toBe(0);
+    } finally {
+      f.cleanup();
+    }
+  });
+
+  it('reads a file name with two extensions as a file, not a qualified name', async () => {
+    const r = await checkFiles({ 'CLAUDE.md': doc('Edit `src/skill/SKILL.md.tmpl`.'), 'src/skill/SKILL.md.tmpl': '# t\n' });
+    expect(spanOf(r, 'src/skill/SKILL.md.tmpl')).toMatchObject({ kind: 'path', status: 'VERIFIED' });
   });
 
   it('leaves external tools unchecked without blocking the statement', async () => {

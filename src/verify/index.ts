@@ -1,3 +1,4 @@
+import { spawnSync } from 'node:child_process';
 import type { CheckedStatement, Span, SpanResult, Statement } from '../model.ts';
 import { checkCommand, projectBinary } from './commands.ts';
 import { checkDependency } from './deps.ts';
@@ -7,8 +8,31 @@ import { checkSymbol, LookupError, textInCode } from './symbols.ts';
 import { blocked, type CheckContext, notChecked, verified } from './util.ts';
 import { checkVersion } from './versions.ts';
 
+/** Remote URLs as `host/owner/repo`, so `git@github.com:a/b.git` and `https://github.com/a/b` compare equal. */
+const normalizeRemote = (url: string) => url.trim().replace(/^[a-z+]+:\/\//, '').replace(/^[^@/]+@/, '').replace(/:(?!\d)/, '/').replace(/\.git$/, '').replace(/\/$/, '').toLowerCase();
+
+const remotes = new WeakMap<object, string[]>();
+
+/** Whether `url` is a remote of this repository: then a fresh clone of it is this repository. */
+function isThisRepository(ctx: CheckContext, url: string): boolean {
+  let known = remotes.get(ctx.repo);
+  if (!known) {
+    const res = spawnSync('git', ['remote', '-v'], { cwd: ctx.repo.root, encoding: 'utf8' });
+    known = res.status === 0 ? [...new Set(res.stdout.split('\n').map((l) => l.split(/\s+/)[1] ?? '').filter(Boolean).map(normalizeRemote))] : [];
+    remotes.set(ctx.repo, known);
+  }
+  return known.includes(normalizeRemote(url));
+}
+
 /** Every span gets a result; a check that throws reports not checked with the error, never vanishes. */
-export async function checkSpan(ctx: CheckContext, span: Span): Promise<SpanResult> {
+export async function checkSpan(ctx: CheckContext, original: Span): Promise<SpanResult> {
+  let span = original;
+  if (span.clone) {
+    if (!isThisRepository(ctx, span.clone.url)) return notChecked(span, `runs in a fresh clone of ${span.clone.url}, not in this repository`);
+    // A fresh clone of this repository: `proof/plugins/x` is `plugins/x` here.
+    const dir = span.clone.dir.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    span = { ...span, text: span.text.replace(new RegExp(`(^|[\\s=])${dir}/`, 'g'), '$1') };
+  }
   try {
     switch (span.kind) {
       case 'path':

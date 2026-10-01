@@ -53,6 +53,21 @@ function absent(span: Span, found: string[] | null): SpanResult {
     : verified(span, 'definition', [{ ref: `no ${span.text} in the repository`, level: 'definition' }], 'absent, as the statement says');
 }
 
+const PLACEHOLDER_PATH = /(^|\/)path\/to\/|(^|[/_.-])(foo|bar|baz|qux|xxx|yyy)([/_.-]|$)|(^|\/)(your|my|some)[-_]/i;
+
+/** `core-internal/public` → `packages/core-internal/package.json exports["./public"]`, when a workspace package exports it. */
+function exportOf(ctx: CheckContext, segments: string[]): string | null {
+  const [name, ...rest] = segments;
+  if (!name || !rest.length) return null;
+  for (const p of ctx.repo.packages) {
+    const short = p.name?.replace(/^@[^/]+\//, '');
+    if (short !== name && posix.basename(p.dir) !== name) continue;
+    const exports = (ctx.repo.structured(p.file, { quiet: true }) as { exports?: unknown } | null)?.exports;
+    if (exports && typeof exports === 'object' && `./${rest.join('/')}` in exports) return `${p.file} exports["./${rest.join('/')}"]`;
+  }
+  return null;
+}
+
 /** A file, folder or glob named in the instruction file. */
 export function checkPath(ctx: CheckContext, span: Span): SpanResult {
   const t = span.text.trim();
@@ -91,14 +106,28 @@ export function checkPath(ctx: CheckContext, span: Span): SpanResult {
     if (named) return verified(span, 'reference', [named], `not a file in the repository; the code names it at ${named.ref}`);
     return unconfirmed(span, `no file named ${first} in the repository`);
   }
+  // `tests/path/test_foo.py`, `path/to/file.ts`: an example of the shape, not a file anyone claims exists.
+  if (PLACEHOLDER_PATH.test(t)) return notChecked(span, 'an example path, not a file the statement claims exists');
   // `lodash/fp`: an import path into a declared package.
   const pkg = ctx.repo.packages.find((p) => first in p.deps);
   if (pkg) return verified(span, 'declaration', [{ ref: `${pkg.file} ${first}`, level: 'declaration' }], `an import path into ${first}, which ${pkg.file} declares`);
+  // `core-internal/public`: an `exports` subpath of a workspace package.
+  const exported = exportOf(ctx, segments);
+  if (exported) return verified(span, 'declaration', [{ ref: exported, level: 'declaration' }], `an export of a workspace package: ${exported}`);
+  // A shape with placeholders (`examples/<section>/`) that nothing matches yet is a convention, not a contradiction.
+  if (/<[^>]+>/.test(t)) return unconfirmed(span, `no file matches the pattern ${t} yet`);
+  // `sampling/createMessage`: neither a file extension nor a trailing slash, and the code spells it: a method or route name.
+  const bare = !t.endsWith('/') && !posix.extname(segments[segments.length - 1] ?? '');
+  if (bare) {
+    const named = stringInCode(ctx, t);
+    if (named) return verified(span, 'reference', [named], `not a path: the code spells it as a name at ${named.ref}`);
+  }
   // A missing leaf under a folder that exists means something moved or was deleted.
   const anchored = segments.length === 1 || candidates.some((b) => ctx.repo.exists(join(b, first)));
   if (anchored) return stale(span, `not found: ${join(primary, t)}`);
-  // `src/services/` when the repository has `backend/src/` but no services folder under any `src/`.
-  const homes = /^[\w-]+$/.test(first) ? [...ctx.repo.dirs].filter((d) => posix.basename(d) === first) : [];
+  // `src/services/` when the repository has `backend/src/` but no services folder under any `src/`. Only for a
+  // token that is plainly a path (an extension or a trailing slash): `sampling/create` may be a name.
+  const homes = /^[\w-]+$/.test(first) && !bare ? [...ctx.repo.dirs].filter((d) => posix.basename(d) === first) : [];
   if (homes.length) return stale(span, `not found: no ${segments.slice(1).join('/')} under any ${first}/ folder (${shown(homes)})`);
   // `helm install/upgrade`, `prettier/prettier`: wording or a rule id, not a repository path.
   if (/^@?[a-z][\w-]*\/[a-z][\w-]*$/.test(t)) return notChecked(span, `reads as "${t.replace('/', ' or ')}" or a rule id, not a path`);
