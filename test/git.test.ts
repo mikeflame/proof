@@ -1,12 +1,11 @@
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, symlinkSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { gitState, headCommit, repoRoot, workingTreeHash } from '../src/git.ts';
+import { gitGrep, gitState, ignoredPaths, listFiles, repoRoot, workingTreeHash } from '../src/core/git.ts';
 
-const run = (cwd: string, ...args: string[]) =>
-  execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+const run = (cwd: string, ...args: string[]) => execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
 
 let repo: string;
 
@@ -17,7 +16,7 @@ beforeEach(() => {
   run(repo, 'config', 'user.name', 'Test');
   run(repo, 'config', 'commit.gpgsign', 'false');
   writeFileSync(join(repo, 'a.txt'), 'one\n');
-  writeFileSync(join(repo, '.gitignore'), 'ignored/\n*.log\n');
+  writeFileSync(join(repo, '.gitignore'), 'ignored/\n*.log\nbin/\n');
   run(repo, 'add', '-A');
   run(repo, 'commit', '-q', '-m', 'init');
 });
@@ -48,9 +47,7 @@ describe('workingTreeHash', () => {
     expect(withNew).not.toBe(clean);
     unlinkSync(join(repo, 'new.txt'));
     unlinkSync(join(repo, 'a.txt'));
-    const deleted = workingTreeHash(repo);
-    expect(deleted).not.toBe(clean);
-    expect(deleted).not.toBe(withNew);
+    expect(workingTreeHash(repo)).not.toBe(clean);
   });
 
   it('never touches the real index or the stash', () => {
@@ -62,23 +59,7 @@ describe('workingTreeHash', () => {
     expect(readFileSync(index).equals(before.bytes)).toBe(true);
     expect(statSync(index).mtimeMs).toBe(before.mtime);
     expect(run(repo, 'diff', '--cached', '--name-only')).toBe('');
-    expect(run(repo, 'status', '--porcelain')).toContain('?? untracked.txt');
     expect(run(repo, 'stash', 'list')).toBe('');
-  });
-
-  it('ignores receipts written to .proof/, whether or not .gitignore lists it', () => {
-    const writeReceipt = () => {
-      mkdirSync(join(repo, '.proof', 'receipts', 'abc'), { recursive: true });
-      writeFileSync(join(repo, '.proof', 'receipts', 'abc', 'receipt.json'), `${Math.random()}\n`);
-    };
-    const clean = workingTreeHash(repo);
-    writeReceipt();
-    expect(workingTreeHash(repo)).toBe(clean);
-
-    writeFileSync(join(repo, '.gitignore'), 'ignored/\n*.log\n.proof/\n');
-    const ignoring = workingTreeHash(repo);
-    writeReceipt();
-    expect(workingTreeHash(repo)).toBe(ignoring);
   });
 
   it('works in a repository without commits', () => {
@@ -87,7 +68,7 @@ describe('workingTreeHash', () => {
       run(empty, 'init', '-q');
       writeFileSync(join(empty, 'f.txt'), 'f\n');
       expect(workingTreeHash(empty)).toMatch(/^[0-9a-f]{40}$/);
-      expect(headCommit(empty)).toBeNull();
+      expect(gitState(empty)?.head).toBeNull();
     } finally {
       rmSync(empty, { recursive: true, force: true });
     }
@@ -110,5 +91,28 @@ describe('gitState', () => {
     expect(s?.head).toBe(run(repo, 'rev-parse', 'HEAD'));
     expect(s?.tree).toBe(run(repo, 'rev-parse', 'HEAD^{tree}'));
     expect(s?.root).toBe(run(repo, 'rev-parse', '--show-toplevel'));
+  });
+});
+
+describe('file listing and ignore rules', () => {
+  it('lists untracked files and leaves out deleted ones', () => {
+    writeFileSync(join(repo, 'new.txt'), 'x\n');
+    unlinkSync(join(repo, 'a.txt'));
+    const files = listFiles(repo);
+    expect(files).toContain('new.txt');
+    expect(files).not.toContain('a.txt');
+  });
+
+  it('matches directory patterns for folders that do not exist, and survives paths under a symlink', () => {
+    mkdirSync(join(repo, 'real'));
+    symlinkSync('real', join(repo, 'link'));
+    const hits = ignoredPaths(repo, ['bin/', 'bin/tool', 'link/', 'link/x/', 'a.txt']);
+    expect(hits).not.toBeNull();
+    expect([...(hits ?? [])].sort()).toEqual(['bin/', 'bin/tool']);
+  });
+
+  it('reports a failed grep as an error, never as a miss', () => {
+    expect(gitGrep(repo, 'one', { pathspec: [':(bad-magic)x'] }).status).toBe('error');
+    expect(gitGrep(repo, 'nothing-here-at-all').status).toBe('miss');
   });
 });

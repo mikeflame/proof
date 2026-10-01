@@ -1,60 +1,77 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parseArgs } from 'node:util';
-import { discover, proveFile, toMarkdown, type Verdict } from './report.ts';
+import { discover } from './discover.ts';
+import { EXIT_CODE } from './model.ts';
+import { type FileReport, Run } from './pipeline.ts';
+import { toMarkdown } from './report.ts';
 import { VERSION } from './version.ts';
 
-const HELP = `proof ${VERSION}: is your CLAUDE.md still true?
+export const HELP = `proof ${VERSION}: is your CLAUDE.md still true?
 
-Usage: node claims.mjs [file...] [--json] [--out <dir>]
+Usage:
+  proof check [file...] [--json] [--out <dir>] [--verbose]
 
-Checks every statement in CLAUDE.md / AGENTS.md against the repository and prints a
-markdown report. With no files, checks every CLAUDE.md and AGENTS.md git knows about.
+Checks every statement in CLAUDE.md, AGENTS.md and the other instruction files an agent loads
+against the repository, and prints a markdown report. With no files, checks every instruction
+file it discovers.
 
-  --json        Print JSON instead of markdown
+  --json        Print JSON (an array, one object per file) instead of markdown
   --out <dir>   Also write <name>.md and <name>.json reports into <dir>
+  --verbose     List verified, decided and not-checked statements too
 
-Exit codes: 0 PROVEN or PARTLY PROVEN, 1 NOT PROVEN (something is stale), 2 a file is missing or usage error.`;
+Exit codes: 0 PROVEN, PROVEN WITH OVERRIDES, FIXED or PARTLY PROVEN; 1 NOT PROVEN; 2 UNTESTED or a usage error.`;
 
-const EXIT: Record<Verdict, number> = { PROVEN: 0, 'PARTLY PROVEN': 0, 'NOT PROVEN': 1, UNTESTED: 2 };
-
-function main(argv: string[]): number {
+async function check(argv: string[]): Promise<number> {
   const { values, positionals } = parseArgs({
     args: argv,
     allowPositionals: true,
-    options: { json: { type: 'boolean' }, out: { type: 'string' }, help: { type: 'boolean', short: 'h' }, version: { type: 'boolean', short: 'v' } },
+    options: { json: { type: 'boolean' }, out: { type: 'string' }, verbose: { type: 'boolean' } },
   });
-  if (values.help) {
-    console.log(HELP);
-    return 0;
-  }
-  if (values.version) {
-    console.log(VERSION);
-    return 0;
-  }
-  const cwd = process.cwd();
-  const files = positionals.length ? positionals : discover(cwd);
+  const run = new Run(process.cwd());
+  const files = positionals.length ? positionals : discover(run.repo).map((d) => d.file);
   if (!files.length) {
-    console.error('No CLAUDE.md or AGENTS.md found. Pass a file: node claims.mjs path/to/CLAUDE.md');
+    console.error('No instruction file found. Pass one: proof check path/to/CLAUDE.md');
     return 2;
   }
-  const reports = files.map((f) => proveFile(f, cwd));
+  const reports: FileReport[] = [];
+  for (const f of files) reports.push(await run.checkFile(f));
   if (values.out) {
     mkdirSync(values.out, { recursive: true });
     for (const r of reports) {
       const name = r.file.replace(/[^a-z0-9._-]+/gi, '-').toLowerCase();
-      writeFileSync(join(values.out, `${name}.md`), toMarkdown(r));
+      writeFileSync(join(values.out, `${name}.md`), toMarkdown(r, { verbose: true }));
       writeFileSync(join(values.out, `${name}.json`), `${JSON.stringify(r, null, 2)}\n`);
     }
   }
-  if (values.json) console.log(JSON.stringify(reports.length === 1 ? reports[0] : reports, null, 2));
-  else console.log(reports.map(toMarkdown).join('\n---\n\n'));
-  return Math.max(...reports.map((r) => EXIT[r.verdict]));
+  if (values.json) console.log(JSON.stringify(reports, null, 2));
+  else console.log(reports.map((r) => toMarkdown(r, { verbose: Boolean(values.verbose) })).join('\n---\n\n'));
+  return Math.max(...reports.map((r) => EXIT_CODE[r.verdict]));
 }
 
-try {
-  process.exitCode = main(process.argv.slice(2));
-} catch (err) {
-  console.error(err instanceof Error ? err.message : String(err));
-  process.exitCode = 2;
+export async function main(argv: string[]): Promise<number> {
+  const [first, ...rest] = argv;
+  if (first === '--help' || first === '-h' || first === 'help') {
+    console.log(HELP);
+    return 0;
+  }
+  if (first === '--version' || first === '-v' || first === 'version') {
+    console.log(VERSION);
+    return 0;
+  }
+  if (first === 'check') return check(rest);
+  // `proof CLAUDE.md` and `proof --json` mean `proof check …`.
+  if (!first || first.startsWith('-') || /\.(md|mdc)$|rules$/i.test(first)) return check(argv);
+  console.error(`Unknown command "${first}". Run: proof help`);
+  return 2;
 }
+
+main(process.argv.slice(2)).then(
+  (code) => {
+    process.exitCode = code;
+  },
+  (err: unknown) => {
+    console.error(err instanceof Error ? (err.stack ?? err.message) : String(err));
+    process.exitCode = 2;
+  },
+);
