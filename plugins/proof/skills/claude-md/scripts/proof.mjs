@@ -21235,8 +21235,47 @@ function rubySources(ctx) {
 function phpSources(ctx) {
   const out = [];
   for (const f of ctx.repo.find(/(^|\/)composer\.json$/)) {
-    const spec = ctx.repo.structured(f)?.require?.php;
+    const data = ctx.repo.structured(f);
+    const spec = data?.require?.php;
     if (spec && lowerBound(spec)) out.push({ where: `${f} require.php "${spec}"`, version: lowerBound(spec) ?? [], floor: true });
+    const platform2 = data?.config?.platform?.php;
+    if (platform2 && lowerBound(platform2)) out.push({ where: `${f} config.platform.php "${platform2}"`, version: lowerBound(platform2) ?? [], floor: false });
+  }
+  return out;
+}
+function dotnetSources(ctx) {
+  const out = [];
+  for (const f of ctx.repo.find(/(^|\/)global\.json$/)) {
+    const v = ctx.repo.structured(f, { quiet: true })?.sdk?.version;
+    const m = v?.match(/^(\d+)\.(\d+)/);
+    if (m) out.push({ where: `${f} sdk.version "${v}"`, version: [Number(m[1]), Number(m[2])], floor: false });
+  }
+  const frameworks = /* @__PURE__ */ new Map();
+  for (const f of ctx.repo.find(/\.(csproj|fsproj|vbproj|props|targets)$/).slice(0, 400)) {
+    for (const m of (ctx.repo.read(f) ?? "").matchAll(/<TargetFrameworks?>([^<]+)<\/TargetFrameworks?>/g)) {
+      for (const tfm of (m[1] ?? "").split(";")) {
+        const v = tfm.trim().match(/^net(\d+)\.(\d+)/);
+        if (v && !frameworks.has(`${v[1]}.${v[2]}`)) frameworks.set(`${v[1]}.${v[2]}`, f);
+      }
+    }
+  }
+  for (const [v, f] of frameworks) out.push({ where: `${f} TargetFramework net${v}`, version: v.split(".").map(Number), floor: false });
+  return out;
+}
+function javaSources(ctx) {
+  const out = [];
+  const sdkman = ctx.repo.read(".sdkmanrc")?.match(/^java=(\d+)/m);
+  if (sdkman?.[1]) out.push({ where: `.sdkmanrc java=${sdkman[1]}`, version: [Number(sdkman[1])], floor: false });
+  const jv = ctx.repo.read(".java-version")?.trim().match(/^(\d+)/);
+  if (jv?.[1]) out.push({ where: `.java-version ${jv[1]}`, version: [Number(jv[1])], floor: false });
+  for (const f of ctx.repo.find(/(^|\/)pom\.xml$/).slice(0, 50)) {
+    const m = (ctx.repo.read(f) ?? "").match(/<(maven\.compiler\.release|java\.version|maven\.compiler\.source|release)>(\d+)</);
+    if (m?.[2]) out.push({ where: `${f} <${m[1]}>${m[2]}`, version: [Number(m[2])], floor: true });
+  }
+  for (const f of ctx.repo.find(/(^|\/)build\.gradle(\.kts)?$/).slice(0, 50)) {
+    const m = (ctx.repo.read(f) ?? "").match(/JavaLanguageVersion\.of\((\d+)\)|jvmToolchain\((\d+)\)|sourceCompatibility\s*=\s*(?:JavaVersion\.VERSION_)?['"]?(\d+)/);
+    const v = m?.[1] ?? m?.[2] ?? m?.[3];
+    if (v) out.push({ where: `${f} Java ${v}`, version: [Number(v)], floor: true });
   }
   return out;
 }
@@ -21271,7 +21310,7 @@ function checkVersion(ctx, span) {
   const claim = (m[3] ?? "").split(".").map(Number);
   const atLeast = Boolean(m[2] && m[2] !== "~") || m[4] === "+";
   const depth = claim.length;
-  const sources = tech === "node" ? nodeSources(ctx) : tech === "python" ? pythonSources(ctx) : tech === "go" ? goSources(ctx) : tech === "rust" ? rustSources(ctx) : tech === "ruby" ? rubySources(ctx) : tech === "php" ? phpSources(ctx) : tech === "postgresql" ? composeImages(ctx, /^(postgres|postgis|postgresql|pgvector|timescaledb[\w-]*)$/) : tech === "redis" ? composeImages(ctx, /^(redis|valkey|redis-stack[\w-]*)$/) : tech === "mysql" ? composeImages(ctx, /^(mysql|mariadb)$/) : tech === "mongodb" ? composeImages(ctx, /^(mongo|mongodb)$/) : tech === "elasticsearch" ? composeImages(ctx, /^(elasticsearch)$/) : tech === "kafka" ? composeImages(ctx, /^(kafka|cp-kafka)$/) : tech === "pnpm" || tech === "yarn" || tech === "npm" ? packageManagerSources(ctx, tech) : packageSources(ctx, tech);
+  const sources = tech === "node" ? nodeSources(ctx) : tech === "python" ? pythonSources(ctx) : tech === "go" ? goSources(ctx) : tech === "rust" ? rustSources(ctx) : tech === "ruby" ? rubySources(ctx) : tech === "php" ? phpSources(ctx) : tech === ".net" ? dotnetSources(ctx) : tech === "java" ? javaSources(ctx) : tech === "postgresql" ? composeImages(ctx, /^(postgres|postgis|postgresql|pgvector|timescaledb[\w-]*)$/) : tech === "redis" ? composeImages(ctx, /^(redis|valkey|redis-stack[\w-]*)$/) : tech === "mysql" ? composeImages(ctx, /^(mysql|mariadb)$/) : tech === "mongodb" ? composeImages(ctx, /^(mongo|mongodb)$/) : tech === "elasticsearch" ? composeImages(ctx, /^(elasticsearch)$/) : tech === "kafka" ? composeImages(ctx, /^(kafka|cp-kafka)$/) : tech === "pnpm" || tech === "yarn" || tech === "npm" ? packageManagerSources(ctx, tech) : packageSources(ctx, tech);
   if (sources === null) return blocked(span, `no rule reads ${m[1]} versions yet`);
   if (!sources.length) return unconfirmed(span, `nothing in the repository pins a ${m[1]} version`);
   const evidence = sources.slice(0, 4).map((s) => ({ ref: s.where, level: "declaration" }));
