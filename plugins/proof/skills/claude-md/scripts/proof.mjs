@@ -19529,7 +19529,12 @@ function checkSlashCommand(ctx, span, text4) {
   if (span.expect === "absent") return inPlugin.length ? stale(span, `said to be gone, but ${inPlugin[0]} still defines it`, [{ ref: inPlugin[0] ?? "", level: "definition" }]) : verified(span, "definition", [{ ref: `no command or skill ${name}`, level: "definition" }], "absent, as the statement says");
   if (inPlugin.length) return verified(span, "definition", inPlugin.slice(0, 2).map((f) => ({ ref: f, level: "definition" })), `defined by ${inPlugin[0]}${plugin ? ` in plugin ${plugin}` : ""}`);
   if (plugin && definitions.length) return unconfirmed(span, `${definitions[0]} defines ${name}, but not in a plugin named ${plugin}`, [{ ref: definitions[0] ?? "", level: "reference" }], "reference");
-  return unconfirmed(span, `no command, skill or agent in this repository defines ${text4}; fine if it comes from a user-level skill or an installed plugin`);
+  if (!plugin) {
+    const hits = grep(ctx, text4, false, ["."], 2e3);
+    const route = "error" in hits ? void 0 : hits.find((h) => /["'`]/.test(h.text[h.column - 2] ?? "") && !/[\w-]/.test(h.text[h.column - 1 + text4.length] ?? ""));
+    if (route) return verified(span, "reference", [{ ref: `${route.file}:${route.line}`, excerpt: clip(route.text), level: "reference" }], `a URL path in code at ${route.file}:${route.line}`);
+  }
+  return unconfirmed(span, `no command, skill or agent in this repository defines ${text4}${plugin ? "" : ", and no code spells it as a URL path"}; fine if it comes from a user-level skill or an installed plugin`);
 }
 
 // src/verify/commands.ts
