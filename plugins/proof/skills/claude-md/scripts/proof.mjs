@@ -21378,7 +21378,7 @@ async function checkStatement(ctx, st) {
 }
 
 // src/version.ts
-var VERSION = true ? "0.1.0" : JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")).version;
+var VERSION = true ? "0.2.0" : JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")).version;
 
 // src/pipeline.ts
 var MAX_IMPORT_HOPS = 4;
