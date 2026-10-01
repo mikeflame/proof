@@ -19753,12 +19753,24 @@ function buildFixPrompt(file, source, stale2, records, config) {
   ].join("\n");
 }
 var isRule = (st) => st.residual.some((r) => r.startsWith("rule "));
+var lineCount = (t) => t.split("\n").length;
+var STRUCTURE = /^\s*(?:[-*+]\s|\d+[.)]\s|#|>|```|~~~|\|)|^\s*$/;
+function fitLines(st, old, next) {
+  const want = lineCount(old);
+  const lines = next.split("\n");
+  if (lines.length <= want) return next;
+  if (st.kind !== "item" && st.kind !== "sentence" || lines.slice(1).some((l) => STRUCTURE.test(l))) return null;
+  const tail = lines.slice(want - 1).map((l, i) => i ? l.trim() : l.trimEnd()).join(" ");
+  return [...lines.slice(0, want - 1), tail].join("\n");
+}
 function vetEdit(repo, source, st, raw, scope, opts) {
   if (raw.action !== "replace" && raw.action !== "delete") return null;
   const action = raw.action;
   const tier = raw.tier === "A" || raw.tier === "B" || raw.tier === "C" ? raw.tier : "B";
   const old = typeof raw.old === "string" ? raw.old : action === "delete" ? sourceOf(source, st) : "";
-  const next = action === "delete" ? "" : typeof raw.new === "string" ? raw.new : "";
+  const proposed = action === "delete" ? "" : typeof raw.new === "string" ? raw.new : "";
+  const fitted = action === "replace" ? fitLines(st, old, proposed) : proposed;
+  const next = fitted ?? proposed;
   const cited = Array.isArray(raw.evidence) ? raw.evidence.filter((e) => Boolean(e) && typeof e.ref === "string" && typeof e.kind === "string") : [];
   const evidence = cited.slice(0, 6).map((e) => {
     const c = checkEvidence(repo, e);
@@ -19767,14 +19779,13 @@ function vetEdit(repo, source, st, raw, scope, opts) {
   const edit = { statementId: st.id, line: st.line, endLine: st.endLine, tier, action, old, new: next, evidence, reason: typeof raw.reason === "string" ? raw.reason.slice(0, 600) : "", was: st.text, refused: null };
   const lines = sourceOf(source, st);
   const count = old ? lines.split(old).length - 1 : 0;
-  const lineCount = (t) => t.split("\n").length;
   if (scope === "managed") edit.refused = "a managed policy file: proof reports it and never edits it";
   else if (scope === "user" && !opts.user) edit.refused = "a user-level file: pass --user to let proof edit it";
   else if (!opts.config.autofix[tier]) edit.refused = `tier ${tier} is switched off in .proof.yaml`;
   else if (!old) edit.refused = "no `old` text to replace";
   else if (count !== 1) edit.refused = count ? "`old` appears more than once in the statement" : "`old` is not in the statement as written";
   else if (old === next) edit.refused = "the edit changes nothing";
-  else if (action === "replace" && lineCount(next) > lineCount(old)) edit.refused = "the edit adds lines; proof never adds content (gap proposals need --gaps)";
+  else if (fitted === null) edit.refused = "the edit adds lines; proof never adds content (gap proposals need --gaps)";
   else if (action === "delete" && isRule(st)) edit.refused = "a rule is rewritten to match the tooling, never deleted";
   else if (action === "delete" && /\b(currently empty|(is|are) empty|none yet|not yet|no .{1,30} yet|nothing (here|yet)|placeholder)\b/i.test(st.text)) edit.refused = "the statement itself says the thing is empty or absent; absence does not contradict it";
   else if (action === "delete" && !evidence.some((e) => e.valid && e.kind === "absence") && !st.results.some((r) => r.status === "STALE" && /not found|does not exist|said to be gone/.test(r.reason))) edit.refused = "a deletion needs evidence that the thing is absent";

@@ -86,6 +86,23 @@ interface RawEdit {
 
 const isRule = (st: CheckedStatement) => st.residual.some((r) => r.startsWith('rule '));
 
+const lineCount = (t: string) => t.split('\n').length;
+const STRUCTURE = /^\s*(?:[-*+]\s|\d+[.)]\s|#|>|```|~~~|\|)|^\s*$/;
+
+/**
+ * The fixer's prose wrapped onto more lines than it replaces: joined back onto the same number of lines,
+ * so the file never gains a line. Null when the extra lines start new structure (a list item, a heading,
+ * a blank line, a fence), which is added content, or when the statement is not prose.
+ */
+export function fitLines(st: CheckedStatement, old: string, next: string): string | null {
+  const want = lineCount(old);
+  const lines = next.split('\n');
+  if (lines.length <= want) return next;
+  if ((st.kind !== 'item' && st.kind !== 'sentence') || lines.slice(1).some((l) => STRUCTURE.test(l))) return null;
+  const tail = lines.slice(want - 1).map((l, i) => (i ? l.trim() : l.trimEnd())).join(' ');
+  return [...lines.slice(0, want - 1), tail].join('\n');
+}
+
 /**
  * The policy of spec 5.4, applied by proof to what the fixer returns, so no prompt can loosen it: no
  * added lines, no deleted rules, a deletion only with evidence of absence, a citation that checks out,
@@ -96,7 +113,9 @@ export function vetEdit(repo: RepoContext, source: string, st: CheckedStatement,
   const action = raw.action;
   const tier = raw.tier === 'A' || raw.tier === 'B' || raw.tier === 'C' ? raw.tier : 'B';
   const old = typeof raw.old === 'string' ? raw.old : action === 'delete' ? sourceOf(source, st) : '';
-  const next = action === 'delete' ? '' : typeof raw.new === 'string' ? raw.new : '';
+  const proposed = action === 'delete' ? '' : typeof raw.new === 'string' ? raw.new : '';
+  const fitted = action === 'replace' ? fitLines(st, old, proposed) : proposed;
+  const next = fitted ?? proposed;
   const cited = Array.isArray(raw.evidence) ? raw.evidence.filter((e): e is { kind: string; ref: string; excerpt?: string } => Boolean(e) && typeof (e as { ref?: unknown }).ref === 'string' && typeof (e as { kind?: unknown }).kind === 'string') : [];
   const evidence = cited.slice(0, 6).map((e) => {
     const c = checkEvidence(repo, e);
@@ -105,14 +124,13 @@ export function vetEdit(repo: RepoContext, source: string, st: CheckedStatement,
   const edit: ProposedEdit = { statementId: st.id, line: st.line, endLine: st.endLine, tier, action, old, new: next, evidence, reason: typeof raw.reason === 'string' ? raw.reason.slice(0, 600) : '', was: st.text, refused: null };
   const lines = sourceOf(source, st);
   const count = old ? lines.split(old).length - 1 : 0;
-  const lineCount = (t: string) => t.split('\n').length;
   if (scope === 'managed') edit.refused = 'a managed policy file: proof reports it and never edits it';
   else if (scope === 'user' && !opts.user) edit.refused = 'a user-level file: pass --user to let proof edit it';
   else if (!opts.config.autofix[tier]) edit.refused = `tier ${tier} is switched off in .proof.yaml`;
   else if (!old) edit.refused = 'no `old` text to replace';
   else if (count !== 1) edit.refused = count ? '`old` appears more than once in the statement' : '`old` is not in the statement as written';
   else if (old === next) edit.refused = 'the edit changes nothing';
-  else if (action === 'replace' && lineCount(next) > lineCount(old)) edit.refused = 'the edit adds lines; proof never adds content (gap proposals need --gaps)';
+  else if (fitted === null) edit.refused = 'the edit adds lines; proof never adds content (gap proposals need --gaps)';
   else if (action === 'delete' && isRule(st)) edit.refused = 'a rule is rewritten to match the tooling, never deleted';
   else if (action === 'delete' && /\b(currently empty|(is|are) empty|none yet|not yet|no .{1,30} yet|nothing (here|yet)|placeholder)\b/i.test(st.text)) edit.refused = 'the statement itself says the thing is empty or absent; absence does not contradict it';
   else if (action === 'delete' && !evidence.some((e) => e.valid && e.kind === 'absence') && !st.results.some((r) => r.status === 'STALE' && /not found|does not exist|said to be gone/.test(r.reason))) edit.refused = 'a deletion needs evidence that the thing is absent';

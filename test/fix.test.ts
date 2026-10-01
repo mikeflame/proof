@@ -106,6 +106,14 @@ describe('fixes', () => {
     expect(report?.statements.find((s) => s.text.includes('Node 22+'))?.fix?.reverify).toContain('adds lines');
   });
 
+  it('joins a fix wrapped onto more lines back onto the lines it replaces', () => {
+    f = makeRepo(FILES);
+    const lines = doc().split('\n').length;
+    proof({ fixes: [{ ...NODE_FIX, new: 'Node 24+\n  (`engines` in package.json)' }] }, 'run', 'CLAUDE.md', '--json');
+    expect(doc()).toContain('- Requires Node 24+ (`engines` in package.json).\n');
+    expect(doc().split('\n').length).toBe(lines);
+  });
+
   it('deletes a statement only with evidence that its subject is gone', () => {
     f = makeRepo({ 'CLAUDE.md': '# App\n\n- Sources in `src/`.\n- Helpers live in `src/helpers/`.\n', 'src/a.ts': 'export {};\n' });
     const { report } = proof({ fixes: [{ match: 'Helpers', action: 'delete', reason: 'folder is gone', evidence: [{ kind: 'absence', ref: 'git ls-files src/helpers' }] }] }, 'run', 'CLAUDE.md', '--json');
