@@ -56,7 +56,7 @@ statements it affects are listed as unverified, never as passing.
 | Unconfirmed | part of it has no evidence, and nothing contradicts it | search for it; a vanished name is stale, a match only in comments is not evidence |
 | Unverified with reason | the names check out or nothing is mechanical, and the reason says what is left | verify what the reason names (step 2) |
 | Overrides | silenced by a `proof:ignore` marker with a reason | leave it unless the reason no longer holds |
-| Verified | every name checks out at the level shown | re-read it if it states status, counts or purpose (step 3) |
+| Verified | every name checks out at the level shown, or the verifier proved it with citations | re-read it if it states status, counts or purpose (step 3) |
 | Not checked | outside the repository: system files, external tools | leave it |
 
 Evidence levels: `definition` (where the name is defined), `declaration` (a
@@ -71,8 +71,24 @@ copy of the file. Check the branch people work on before proposing anything.
 
 ## 2. Verify what the checker leaves open
 
-The reason on each unverified statement names what is left: a description, a
-count, a status word, a rule. Sort each into one of two kinds:
+```bash
+proof run                # check, then a verifier agent on every open statement
+proof run CLAUDE.md --budget-usd 5
+```
+
+`proof run` hands every statement the checks did not settle to a verifier agent
+(the `claude` CLI, read-only tools, the file under test kept out of its context)
+and keeps a verdict only when its citations check out: proof re-reads every
+cited `file:line` and re-runs every cited command. A run can take many minutes;
+a long call is working, not stalled. Each verdict shows as a `verifier:` line
+with its evidence (✓ checked, ✗ refused and why) and, for stale lines, the
+proposed text. The `verifier:` header line gives coverage and cost; a file whose
+open statements were not all answered is UNTESTED, never passing. A verifier
+that says true while the mechanical check says stale is a decision for the user.
+
+When `proof run` is unavailable (no `claude` CLI, no budget), do this step
+yourself. The reason on each unverified statement names what is left: a
+description, a count, a status word, a rule. Sort each into one of two kinds:
 
 - **Rule**: how to work ("Don't refactor things that aren't broken", "No inline
   styles"). Check it against the repo's own tooling (lint, formatter, type

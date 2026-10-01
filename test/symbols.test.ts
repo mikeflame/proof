@@ -175,3 +175,23 @@ describe('absence checks', () => {
     expect(spanOf(r, 'review_questions')).toMatchObject({ status: 'UNCONFIRMED', expect: 'absent' });
   });
 });
+
+describe('lookups that fail', () => {
+  it('keep the span open with the error instead of reading it as nothing found', async () => {
+    const { Run } = await import('../src/pipeline.ts');
+    const { makeRepo } = await import('./fixtures/edge.ts');
+    const f = makeRepo({ 'CLAUDE.md': doc('`Executor.Resume` resumes.', 'Reads `channels.json`.', '`runs.parked_ms` is set.', 'Mounted at `/api`.'), 'a.go': 'package x\n' });
+    try {
+      const run = new Run(f.repo);
+      // An invalid pathspec makes every git grep fail.
+      (run.repo as unknown as { generated: string[] }).generated = [':(exclude,bad)x'];
+      const r = await run.checkFile('CLAUDE.md');
+      for (const text of ['Executor.Resume', 'channels.json', 'runs.parked_ms', '/api']) {
+        expect(spanOf(r, text), text).toMatchObject({ status: 'NOT_CHECKED', blocked: true });
+        expect(spanOf(r, text).reason, text).toContain('lookup failed');
+      }
+    } finally {
+      f.cleanup();
+    }
+  });
+});

@@ -109,6 +109,9 @@ function scopeDirs(ctx: CheckContext, scope: string): string[] {
 
 type Grep = GrepHit[] | { error: string };
 
+/** A git lookup that failed: the span reports not checked with this message, never "not found" (D4). */
+export class LookupError extends Error {}
+
 function grep(ctx: CheckContext, needle: string, word: boolean, pathspec: string[] = ['.'], limit = MAX_HITS): Grep {
   const res = gitGrep(ctx.repo.root, needle, { word, pathspec: [...pathspec, ...NOT_CODE, ...ctx.repo.generatedExcludes, ...docExclude(ctx)], limit });
   if (res.status === 'error') return { error: res.message };
@@ -187,7 +190,8 @@ async function checkDotted(ctx: CheckContext, span: Span, text: string): Promise
   if (reasoned) return unconfirmed(span, `${text}: ${reasoned.why}`, [], 'substring');
   const last = segs[segs.length - 1] ?? text;
   const other = await grepClassified(ctx, last, true);
-  if (!('error' in other) && other.length) {
+  if ('error' in other) throw new LookupError(other.error);
+  if (other.length) {
     const sample = other[0];
     return unconfirmed(span, `${text} appears nowhere; ${last} exists elsewhere${sample ? ` (${sample.hit.file}:${sample.hit.line})` : ''}, on something not shown to be ${segs.slice(0, -1).join('.')}`, other.slice(0, 2).map((c) => ({ ...ev(c), level: 'substring' })), 'substring');
   }
@@ -197,7 +201,7 @@ async function checkDotted(ctx: CheckContext, span: Span, text: string): Promise
 /** `Executor.Run`: a definition of `Run` whose owning type, read from the syntax tree, is `Executor`. */
 async function memberOf(ctx: CheckContext, owner: string, member: string, dirs: string[]): Promise<Found[]> {
   const list = await grepClassified(ctx, member, true, dirs.length ? dirs : ['.'], { all: true, prefer: owner });
-  if ('error' in list) return [];
+  if ('error' in list) throw new LookupError(list.error);
   const out: Found[] = [];
   const others = new Set<string>();
   for (const c of list.filter((x) => x.level === 'definition')) {
@@ -216,7 +220,7 @@ const CREATE_TABLE = /\bCREATE\s+(?:TEMP(?:ORARY)?\s+)?TABLE\s+(?:IF\s+NOT\s+EXI
 /** `runs.started_at`: a column the schema declares on that table, in a migration, a .sql file or SQL in a string. */
 function sqlColumn(ctx: CheckContext, table: string, column: string): Found[] {
   const hits = grep(ctx, column, true);
-  if ('error' in hits) return [];
+  if ('error' in hits) throw new LookupError(hits.error);
   const t = esc(table);
   const c = esc(column);
   const alter = new RegExp(`\\bALTER\\s+TABLE\\s+(?:IF\\s+EXISTS\\s+)?(?:\\w+\\.)?["\`[]?${t}["\`\\]]?\\s+ADD\\s+(?:COLUMN\\s+)?(?:IF\\s+NOT\\s+EXISTS\\s+)?["\`[]?${c}\\b`, 'i');
@@ -289,7 +293,8 @@ function configKey(ctx: CheckContext, segs: string[]): Found[] {
   let at = '';
   for (const seg of segs) {
     const hits = grep(ctx, `:"${seg}`, false, ['*.go']);
-    if ('error' in hits || !hits.length) return [];
+    if ('error' in hits) throw new LookupError(hits.error);
+    if (!hits.length) return [];
     const fields: { h: GrepHit; m: RegExpExecArray | null }[] = hits.map((h) => ({ h, m: taggedField(seg).exec(h.text) })).filter((x) => x.m);
     const allowed: string[] | null = types;
     const inType: typeof fields = allowed === null ? fields : fields.filter((x) => allowed.includes(structOf(ctx, x.h.file, x.h.line) ?? ''));
@@ -362,7 +367,7 @@ async function checkLiteral(ctx: CheckContext, span: Span, text: string): Promis
 /** `"answer"`: the value as an exact string literal in code, or null. Quotes of any kind count. */
 export function stringInCode(ctx: CheckContext, value: string, pathspec: string[] = ['.']): Evidence | null {
   const hits = grep(ctx, value, false, pathspec, 2000);
-  if ('error' in hits) return null;
+  if ('error' in hits) throw new LookupError(hits.error);
   const hit = hits.find((h) => {
     const before = h.text[h.column - 2] ?? '';
     const after = h.text[h.column - 1 + value.length] ?? '';
@@ -375,7 +380,8 @@ export function stringInCode(ctx: CheckContext, value: string, pathspec: string[
 /** Code text the classifier could not type (`### Review conversation`): found verbatim outside comments, it is a reference. */
 export async function textInCode(ctx: CheckContext, text: string): Promise<Evidence | null> {
   const hits = grep(ctx, text, false, ['.'], 50);
-  if ('error' in hits || !hits.length) return null;
+  if ('error' in hits) throw new LookupError(hits.error);
+  if (!hits.length) return null;
   for (const hit of hits.slice(0, 10)) {
     // Verbatim as code, or as a whole string (`"### Review conversation"`); inside a message or a comment it is prose.
     const level = await classifyOccurrence(ctx.syntax, ctx.repo, hit.file, hit.line, hit.column, text);
@@ -426,7 +432,8 @@ function checkSlashCommand(ctx: CheckContext, span: Span, text: string): SpanRes
   if (!plugin) {
     // `/api`: a URL path the code serves or calls, spelled at the start of a string.
     const hits = grep(ctx, text, false, ['.'], 2000);
-    const route = 'error' in hits ? undefined : hits.find((h) => /["'`]/.test(h.text[h.column - 2] ?? '') && !/[\w-]/.test(h.text[h.column - 1 + text.length] ?? ''));
+    if ('error' in hits) throw new LookupError(hits.error);
+    const route = hits.find((h) => /["'`]/.test(h.text[h.column - 2] ?? '') && !/[\w-]/.test(h.text[h.column - 1 + text.length] ?? ''));
     if (route) return verified(span, 'reference', [{ ref: `${route.file}:${route.line}`, excerpt: clip(route.text), level: 'reference' }], `a URL path in code at ${route.file}:${route.line}`);
   }
   return unconfirmed(span, `no command, skill or agent in this repository defines ${text}${plugin ? '' : ', and no code spells it as a URL path'}; fine if it comes from a user-level skill or an installed plugin`);

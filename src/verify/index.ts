@@ -3,7 +3,7 @@ import { checkCommand, projectBinary } from './commands.ts';
 import { checkDependency } from './deps.ts';
 import { checkEnv } from './env.ts';
 import { checkGlob, checkImport, checkLink, checkPath, NO_MATCH } from './paths.ts';
-import { checkSymbol, textInCode } from './symbols.ts';
+import { checkSymbol, LookupError, textInCode } from './symbols.ts';
 import { blocked, type CheckContext, notChecked, verified } from './util.ts';
 import { checkVersion } from './versions.ts';
 
@@ -35,6 +35,7 @@ export async function checkSpan(ctx: CheckContext, span: Span): Promise<SpanResu
         return notChecked(span, 'nothing mechanical to check; the verifier reads it');
     }
   } catch (err) {
+    if (err instanceof LookupError) return blocked(span, `lookup failed: ${err.message}`);
     return blocked(span, `check failed: ${err instanceof Error ? err.message : String(err)}`);
   }
 }

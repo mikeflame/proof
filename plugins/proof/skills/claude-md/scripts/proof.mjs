@@ -7468,8 +7468,8 @@ var require_format = __commonJS({
 });
 
 // src/cli.ts
-import { mkdirSync, writeFileSync } from "node:fs";
-import { join as join7, resolve as resolve3 } from "node:path";
+import { mkdirSync as mkdirSync2, writeFileSync as writeFileSync2 } from "node:fs";
+import { join as join8, resolve as resolve3 } from "node:path";
 import { parseArgs } from "node:util";
 
 // src/discover.ts
@@ -7496,7 +7496,7 @@ function gitAvailable() {
 function repoRoot(cwd) {
   return safe(cwd, ["rev-parse", "--show-toplevel"]);
 }
-function workingTreeHash(root) {
+function workingTreeHash(root, excluding = []) {
   const gitDir = run(root, ["rev-parse", "--absolute-git-dir"]);
   const tmp = mkdtempSync(join(tmpdir(), "proof-index-"));
   const index2 = join(tmp, "index");
@@ -7505,6 +7505,7 @@ function workingTreeHash(root) {
     if (existsSync(realIndex)) copyFileSync(realIndex, index2);
     const env = { ...process.env, GIT_INDEX_FILE: index2 };
     run(root, ["add", "--all", "--", "."], env);
+    if (excluding.length) run(root, ["rm", "-q", "-r", "--cached", "--ignore-unmatch", "--", ...excluding], env);
     return run(root, ["write-tree"], env);
   } finally {
     rmSync(tmp, { recursive: true, force: true });
@@ -7684,15 +7685,548 @@ var EXIT_CODE = {
 };
 var LEVEL_RANK = { definition: 5, declaration: 4, reference: 3, comment: 2, substring: 1, none: 0 };
 
+// src/agent/verify.ts
+import { createHash } from "node:crypto";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { homedir as homedir2 } from "node:os";
+import { join as join3 } from "node:path";
+
+// src/agent/claude.ts
+import { spawn, spawnSync as spawnSync2 } from "node:child_process";
+function claudeBinary() {
+  return process.env.PROOF_CLAUDE ?? "claude";
+}
+function claudeVersion(bin = claudeBinary()) {
+  const res = spawnSync2(bin, ["--version"], { encoding: "utf8", timeout: 2e4 });
+  return res.status === 0 ? res.stdout.trim() : null;
+}
+function runClaude(call) {
+  const args = [
+    "-p",
+    "--output-format",
+    "json",
+    "--json-schema",
+    JSON.stringify(call.schema),
+    "--model",
+    call.model,
+    "--effort",
+    call.effort,
+    "--max-budget-usd",
+    call.budgetUsd.toFixed(2),
+    "--setting-sources",
+    "user",
+    "--strict-mcp-config",
+    "--no-session-persistence",
+    "--permission-mode",
+    "dontAsk",
+    "--tools",
+    call.tools.join(","),
+    "--allowedTools",
+    call.allowedTools.join(" "),
+    "--disallowedTools",
+    "Edit Write NotebookEdit WebFetch WebSearch"
+  ];
+  return new Promise((resolve4) => {
+    let out = "";
+    let err = "";
+    let settled = false;
+    const finish = (r) => {
+      if (!settled) {
+        settled = true;
+        resolve4(r);
+      }
+    };
+    const child = spawn(claudeBinary(), args, { cwd: call.cwd, env: { ...process.env, CLAUDE_CODE_DISABLE_AUTO_MEMORY: "1" }, stdio: ["pipe", "pipe", "pipe"] });
+    const timer = setTimeout(() => {
+      child.kill("SIGTERM");
+      finish({ ok: false, structured: null, costUsd: 0, subtype: "timeout", error: `no answer within ${Math.round(call.timeoutMs / 1e3)} s` });
+    }, call.timeoutMs);
+    child.stdout.on("data", (d) => {
+      out += d.toString();
+    });
+    child.stderr.on("data", (d) => {
+      err += d.toString();
+    });
+    child.on("error", (e) => {
+      clearTimeout(timer);
+      finish({ ok: false, structured: null, costUsd: 0, subtype: "spawn", error: `${claudeBinary()} did not start: ${e.message}` });
+    });
+    child.on("close", () => {
+      clearTimeout(timer);
+      try {
+        const json = JSON.parse(out);
+        const subtype = json.subtype ?? "unknown";
+        const ok3 = subtype === "success" && !json.is_error && json.structured_output !== void 0;
+        finish({ ok: ok3, structured: json.structured_output ?? null, costUsd: Number(json.total_cost_usd ?? 0), subtype, error: ok3 ? null : (json.result ?? subtype).slice(0, 300) });
+      } catch {
+        finish({ ok: false, structured: null, costUsd: 0, subtype: "parse", error: (err || out || "no output").trim().split("\n")[0]?.slice(0, 300) ?? "no output" });
+      }
+    });
+    child.stdin.end(call.prompt);
+  });
+}
+
+// src/agent/evidence.ts
+import { spawnSync as spawnSync3 } from "node:child_process";
+
+// src/parse/shell.ts
+import { posix as posix2 } from "node:path";
+var OPERATORS = ["2>&", "&>>", "2>>", "&&", "||", "|&", ";;", ">>", ">&", "&>", "2>", "|", ";", "&", "(", ")", ">", "<"];
+var WRAPPERS = /* @__PURE__ */ new Set(["sudo", "time", "nohup", "exec", "command", "builtin", "env", "nice", "doas"]);
+var WRAPPER_FLAGS_WITH_VALUE = { sudo: /* @__PURE__ */ new Set(["-u", "-g", "-C", "-D"]), nice: /* @__PURE__ */ new Set(["-n"]) };
+function tokenize(line) {
+  const out = [];
+  let word = "";
+  let inWord = false;
+  const flush = () => {
+    if (inWord) out.push({ word });
+    word = "";
+    inWord = false;
+  };
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i] ?? "";
+    if (c === "\\") {
+      word += line[i + 1] ?? "";
+      inWord = true;
+      i++;
+      continue;
+    }
+    if (c === "'") {
+      const end = line.indexOf("'", i + 1);
+      word += end < 0 ? line.slice(i + 1) : line.slice(i + 1, end);
+      inWord = true;
+      i = end < 0 ? line.length : end;
+      continue;
+    }
+    if (c === '"') {
+      let j = i + 1;
+      for (; j < line.length && line[j] !== '"'; j++) {
+        if (line[j] === "\\" && j + 1 < line.length) {
+          word += line[j + 1];
+          j++;
+        } else word += line[j];
+      }
+      inWord = true;
+      i = j;
+      continue;
+    }
+    const placeholder = c === "<" ? /^<[A-Za-z][\w.-]*>/.exec(line.slice(i))?.[0] : void 0;
+    if (placeholder) {
+      word += placeholder;
+      inWord = true;
+      i += placeholder.length - 1;
+      continue;
+    }
+    if (c === "$" && line[i + 1] === "(") {
+      let depth = 0;
+      let j = i + 1;
+      for (; j < line.length; j++) {
+        if (line[j] === "(") depth++;
+        else if (line[j] === ")" && --depth === 0) break;
+      }
+      word += line.slice(i, j + 1);
+      inWord = true;
+      i = j;
+      continue;
+    }
+    if (c === "`") {
+      const end = line.indexOf("`", i + 1);
+      word += line.slice(i, end < 0 ? line.length : end + 1);
+      inWord = true;
+      i = end < 0 ? line.length : end;
+      continue;
+    }
+    if (c === "#" && !inWord) break;
+    if (/\s/.test(c)) {
+      flush();
+      continue;
+    }
+    const op = OPERATORS.find((o) => line.startsWith(o, i));
+    if (op) {
+      if (op.startsWith("2") && inWord) {
+        word += c;
+        continue;
+      }
+      flush();
+      out.push({ op });
+      i += op.length - 1;
+      continue;
+    }
+    word += c;
+    inWord = true;
+  }
+  flush();
+  return out;
+}
+var isAssignment = (w) => /^[A-Za-z_][A-Za-z0-9_]*=/.test(w);
+function unwrap(words) {
+  const env = {};
+  let i = 0;
+  for (; ; ) {
+    while (i < words.length && isAssignment(words[i] ?? "")) {
+      const w = words[i] ?? "";
+      const eq = w.indexOf("=");
+      env[w.slice(0, eq)] = w.slice(eq + 1);
+      i++;
+    }
+    const head = words[i];
+    if (!head || !WRAPPERS.has(head)) break;
+    i++;
+    const withValue = WRAPPER_FLAGS_WITH_VALUE[head] ?? /* @__PURE__ */ new Set();
+    while (i < words.length && (words[i] ?? "").startsWith("-")) {
+      if (withValue.has(words[i] ?? "")) i++;
+      i++;
+    }
+  }
+  return { argv: words.slice(i), env };
+}
+var REDIRECTS = /* @__PURE__ */ new Set([">", ">>", "<", "&>", "&>>", "2>", "2>>", "2>&", ">&"]);
+function splitShell(line, startCwd = "") {
+  const tokens = tokenize(line);
+  const commands = [];
+  const stack = [];
+  let cwd = startCwd;
+  let cwdUnknown = false;
+  let words = [];
+  const end = () => {
+    if (!words.length) return;
+    const { argv, env } = unwrap(words);
+    words = [];
+    if (!argv.length) return;
+    const prefix = Object.entries(env).map(([k, v]) => `${k}=${v}`);
+    commands.push({ argv, env, cwd, cwdUnknown, text: [...prefix, ...argv].join(" ") });
+    if (argv[0] === "cd" || argv[0] === "pushd") {
+      const target = argv[1];
+      if (!target || target === "-" || target.startsWith("~") || target.includes("$") || target.startsWith("/")) {
+        cwd = void 0;
+        cwdUnknown = true;
+      } else if (cwd !== void 0) {
+        cwd = posix2.normalize(posix2.join(cwd, target)).replace(/^\.$/, "").replace(/\/$/, "");
+      }
+    }
+  };
+  for (let i = 0; i < tokens.length; i++) {
+    const t = tokens[i];
+    if (!t) continue;
+    if ("word" in t) {
+      words.push(t.word);
+      continue;
+    }
+    if (REDIRECTS.has(t.op)) {
+      i++;
+      continue;
+    }
+    end();
+    if (t.op === "(") stack.push({ cwd, unknown: cwdUnknown });
+    else if (t.op === ")") {
+      const outer = stack.pop();
+      if (outer) {
+        cwd = outer.cwd;
+        cwdUnknown = outer.unknown;
+      }
+    }
+  }
+  end();
+  return commands;
+}
+
+// src/agent/evidence.ts
+var READ_ONLY = {
+  git: (a2) => ["log", "grep", "ls-files", "show", "blame", "rev-list", "shortlog", "ls-tree", "cat-file", "describe", "rev-parse", "tag", "branch"].includes(a2[1] ?? "") && !a2.some((x) => /^--(output|exec)/.test(x)) && !(a2[1] === "branch" && a2.some((x) => /^-[dDmMcC]$/.test(x))) && !(a2[1] === "tag" && a2.some((x) => /^-[ad]$/.test(x))),
+  ls: () => true,
+  wc: () => true,
+  grep: () => true,
+  rg: (a2) => !a2.some((x) => x.startsWith("--pre")),
+  find: (a2) => !a2.some((x) => ["-exec", "-execdir", "-delete", "-ok", "-okdir", "-fprint", "-fprintf", "-fls"].includes(x)),
+  cat: () => true,
+  head: () => true,
+  tail: () => true,
+  sort: (a2) => !a2.some((x) => x === "-o" || x.startsWith("--output")),
+  uniq: (a2) => a2.filter((x) => !x.startsWith("-")).length <= 2,
+  cut: () => true,
+  jq: () => true,
+  tr: () => true,
+  awk: (a2) => !a2.some((x) => /system|>|getline/.test(x))
+};
+var normalize = (s) => s.replace(/\s+/g, " ").trim();
+function unsafeCommand(ref) {
+  if (/[;&<>`]|\$\(|\|\|/.test(ref.replace(/'[^']*'|"[^"]*"/g, '""'))) return "uses redirection, substitution or chaining";
+  const commands = splitShell(ref);
+  if (!commands.length) return "empty command";
+  for (const c of commands) {
+    const bin = c.argv[0] ?? "";
+    const ok3 = READ_ONLY[bin];
+    if (!ok3) return `\`${bin}\` is not a read-only command proof re-runs`;
+    if (!ok3(c.argv)) return `\`${c.argv.join(" ")}\` could write`;
+    if (Object.keys(c.env).length) return "sets environment variables";
+  }
+  return null;
+}
+function rerun(root, ref) {
+  const res = spawnSync3("bash", ["-c", ref], { cwd: root, encoding: "utf8", timeout: 2e4, maxBuffer: 16 * 1024 * 1024, env: { PATH: process.env.PATH ?? "/usr/bin:/bin", HOME: process.env.HOME ?? "/", LANG: "C", GIT_PAGER: "cat", PAGER: "cat" } });
+  if (res.error) return { out: "", error: res.error.message };
+  if (res.status !== 0 && res.status !== 1) return { out: res.stdout, error: (res.stderr || `exit ${res.status}`).split("\n")[0] ?? "failed" };
+  return { out: res.stdout, error: null };
+}
+function checkEvidence(repo, e) {
+  const bad = (problem) => ({ ...e, valid: false, problem, level: "none" });
+  if (e.kind === "file_line") {
+    const m = /^(.+?):(\d+)(?:-(\d+))?$/.exec(e.ref.trim());
+    if (!m) return bad("ref is not path:line");
+    const file = (m[1] ?? "").replace(/^\.\//, "");
+    const rel = repo.rel(file);
+    if (rel === null) return bad("points outside the repository");
+    const text4 = repo.read(rel);
+    if (text4 === null) return bad(`${file} does not exist`);
+    const lines = text4.split("\n");
+    const from = Number(m[2]);
+    const to = Number(m[3] ?? m[2]);
+    if (from < 1 || to < from || from > lines.length) return bad(`${file} has ${lines.length} lines`);
+    if (e.excerpt) {
+      const window = normalize(lines.slice(Math.max(0, from - 4), Math.min(lines.length, to + 3)).join("\n"));
+      const want = normalize(e.excerpt).replace(/…$/, "");
+      if (want && !window.includes(want)) return bad(`the excerpt is not at ${file}:${from}`);
+    }
+    return { ...e, valid: true, problem: "", level: "definition" };
+  }
+  if (e.kind === "command_output" || e.kind === "count" || e.kind === "git_log" || e.kind === "absence") {
+    const unsafe = unsafeCommand(e.ref);
+    if (unsafe) return bad(`not re-run: ${unsafe}`);
+    const { out, error } = rerun(repo.root, e.ref);
+    if (error) return bad(`re-run failed: ${error}`);
+    if (e.kind === "absence") return out.trim() ? bad(`the search prints ${out.trim().split("\n").length} line(s), so the thing is not absent`) : { ...e, valid: true, problem: "", level: "definition" };
+    const want = normalize(e.excerpt ?? "");
+    if (!want) return bad("a command citation needs an excerpt of its output");
+    if (!normalize(out).includes(want)) return bad("the re-run output does not contain the excerpt");
+    return { ...e, valid: true, problem: "", level: "declaration" };
+  }
+  return bad(`unknown evidence kind ${e.kind}`);
+}
+
+// src/agent/rules.ts
+var VERIFIER_RULES = [
+  "Judge each statement against this repository as it is on disk now, never against your memory of how projects usually look.",
+  "A verdict of true or stale must cite evidence[]. Without evidence the verdict is rejected and the statement stays unverified.",
+  "Evidence is inspectable: a file_line ref is `path:line` (or `path:start-end`) with an excerpt copied from that line; a command, count, git_log or absence ref is a read-only command proof re-runs, and its excerpt must appear in the output (absence: the command prints nothing).",
+  "Do the work before you answer: open the files a statement names, search for what it claims, count what it counts, read the config it relies on. Every number is recounted and the command you used is the evidence. You have time and budget for this.",
+  'An unverified_with_reason answer names the evidence you looked for and did not find, and where you looked. "I did not check" is never a reason.',
+  'Rules ("never", "always", "prefer", "must") are checked against the repository tooling (lint, formatter, type-checker, CI, pre-commit), never against taste. A rule the tooling contradicts is stale, with the config file cited. A rule nothing contradicts is true only with evidence that the tooling or code follows it; otherwise unverified_with_reason.',
+  "Status words (active, legacy, deprecated, canonical, preferred) are checked against `git log` recency and against where new code lands.",
+  "A statement that something was removed or renamed is checked for absence: cite the search that finds nothing, as kind absence with the command as ref (for example `git grep -n old_name`). The same goes for a stale path or name: an absence citation proves it is gone.",
+  "Command refs run from the repository root; write paths relative to it.",
+  "When the mechanical check already proved a name, do not repeat it; verify what the reason says is still open.",
+  "If the mechanical check marked a statement stale, confirm it and propose the corrected text, or dispute it with evidence.",
+  "For a stale statement, proposed_text is the corrected statement in the author's words and format, changed only where the evidence requires.",
+  "When in doubt the verdict is unverified_with_reason, never true. Your confidence is not evidence.",
+  "Never edit, create or delete files. Never run a command that writes."
+];
+var EVIDENCE_KINDS = ["file_line", "command_output", "count", "git_log", "absence"];
+var VERIFIER_VERDICTS = ["true", "stale", "unverified_with_reason"];
+var ACTIONS = ["auto-fix", "fix-with-evidence", "pointer", "needs-decision", "no-op"];
+var VERIFIER_SCHEMA = {
+  type: "object",
+  properties: {
+    results: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          statement_id: { type: "string" },
+          verdict: { type: "string", enum: [...VERIFIER_VERDICTS] },
+          evidence: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                kind: { type: "string", enum: [...EVIDENCE_KINDS] },
+                ref: { type: "string" },
+                excerpt: { type: "string", maxLength: 200 }
+              },
+              required: ["kind", "ref"]
+            }
+          },
+          reason: { type: "string" },
+          proposed_text: { type: "string" },
+          action: { type: "string", enum: [...ACTIONS] }
+        },
+        required: ["statement_id", "verdict", "evidence", "action"]
+      }
+    }
+  },
+  required: ["results"]
+};
+
+// src/agent/verify.ts
+var PROMPT_VERSION = "2";
+var DEFAULT_VERIFY = { model: "claude-sonnet-5-5", effort: "high", budgetUsd: 10, perStatementUsd: 0.25, batchSize: 8, jobs: 2, cache: true, timeoutMs: 15 * 6e4 };
+function needsAgent(st) {
+  if (st.kind === "marker" || st.override?.reason) return false;
+  if (st.status === "VERIFIED") return !st.settled;
+  return st.status === "UNCONFIRMED" || st.status === "UNVERIFIED_WITH_REASON" || st.status === "STALE";
+}
+var TOOLS = ["Read", "Grep", "Glob", "Bash"];
+var ALLOWED = ["Read", "Grep", "Glob", "Bash(git log:*)", "Bash(git grep:*)", "Bash(git ls-files:*)", "Bash(git show:*)", "Bash(git blame:*)", "Bash(git rev-list:*)", "Bash(ls:*)", "Bash(wc:*)", "Bash(find:*)", "Bash(grep:*)", "Bash(rg:*)", "Bash(head:*)", "Bash(cat:*)", "Bash(sort:*)", "Bash(uniq:*)", "Bash(jq:*)"];
+function buildPrompt(file, why, batch) {
+  const items = batch.map(({ key, st }) => ({
+    statement_id: key,
+    line: st.line,
+    section: st.section,
+    text: st.text,
+    mechanical: {
+      status: st.status,
+      reason: st.reason,
+      still_open: st.residual,
+      spans: st.results.filter((r) => r.kind !== "prose").map((r) => ({ text: r.text, status: r.status, level: r.level, expect: r.expect, reason: r.reason, evidence: r.evidence.slice(0, 2).map((e) => e.ref) }))
+    }
+  }));
+  return [
+    `You verify statements from the instruction file ${file} (${why}) against the repository in your working directory.`,
+    "",
+    "Rules:",
+    ...VERIFIER_RULES.map((r, i) => `${i + 1}. ${r}`),
+    "",
+    `Return exactly one result for each of the ${batch.length} statement ids below, in the structured output schema. Evidence kinds: file_line, command_output, count, git_log, absence. Excerpts at most 200 characters.`,
+    "",
+    "<statements>",
+    JSON.stringify(items, null, 1),
+    "</statements>"
+  ].join("\n");
+}
+function judge(repo, raw, model, cached = false) {
+  if (typeof raw.verdict !== "string" || !VERIFIER_VERDICTS.includes(raw.verdict)) return null;
+  const verdict = raw.verdict;
+  const action = typeof raw.action === "string" && ACTIONS.includes(raw.action) ? raw.action : "needs-decision";
+  const cited = Array.isArray(raw.evidence) ? raw.evidence.filter((e) => Boolean(e) && typeof e.ref === "string" && typeof e.kind === "string") : [];
+  const evidence = cited.slice(0, 6).map((e) => {
+    const c = checkEvidence(repo, e);
+    return { kind: c.kind, ref: c.ref, excerpt: c.excerpt, valid: c.valid, problem: c.problem };
+  });
+  const reason = typeof raw.reason === "string" ? raw.reason.slice(0, 600) : "";
+  const proposedText = typeof raw.proposed_text === "string" && raw.proposed_text.trim() ? raw.proposed_text.trim() : null;
+  let rejected = null;
+  if (verdict !== "unverified_with_reason" && !evidence.some((e) => e.valid)) {
+    rejected = evidence.length ? `no citation checks out (${evidence.map((e) => `${e.ref}: ${e.problem}`).join("; ").slice(0, 300)})` : "a verdict without evidence";
+  }
+  if (verdict === "unverified_with_reason" && !reason) rejected = "unverified without a reason";
+  return { verdict, evidence, reason, proposedText, action, rejected, cached, model };
+}
+function applyVerdict(st, v) {
+  const out = { ...st, agent: v };
+  if (v.rejected) return { ...out, status: st.status === "STALE" ? "STALE" : "UNVERIFIED_WITH_REASON", reason: st.status === "STALE" ? st.reason : `verifier answer refused: ${v.rejected}`, settled: false };
+  if (v.verdict === "true") {
+    if (st.status === "STALE") return { ...out, status: "UNVERIFIED_WITH_REASON", reason: `the mechanical check says stale (${st.reason}); the verifier disputes it: ${v.reason || "see evidence"}`, settled: false };
+    return { ...out, status: "VERIFIED", reason: v.reason || "the verifier proved it", settled: true };
+  }
+  if (v.verdict === "stale") return { ...out, status: "STALE", reason: st.status === "STALE" ? st.reason : v.reason || "the verifier found it contradicted", settled: false };
+  return { ...out, status: st.status === "STALE" ? "STALE" : "UNVERIFIED_WITH_REASON", reason: st.status === "STALE" ? st.reason : v.reason, settled: false };
+}
+function cacheDir(root) {
+  const base = process.env.XDG_CACHE_HOME ?? join3(homedir2(), ".cache");
+  return join3(base, "proof", createHash("sha1").update(root).digest("hex").slice(0, 16));
+}
+function loadCache(root) {
+  try {
+    return JSON.parse(readFileSync(join3(cacheDir(root), "verdicts.json"), "utf8"));
+  } catch {
+    return {};
+  }
+}
+function saveCache(root, cache2) {
+  try {
+    mkdirSync(cacheDir(root), { recursive: true });
+    writeFileSync(join3(cacheDir(root), "verdicts.json"), JSON.stringify(cache2));
+  } catch {
+  }
+}
+async function verifyFiles(repo, files, instructionFiles, opts) {
+  const coverage = /* @__PURE__ */ new Map();
+  const version = claudeVersion();
+  const codeTree = repo.isGit ? workingTreeHash(repo.root, [...instructionFiles.filter((f) => !f.startsWith("/")), ":(glob)**/*.proof.json"]) : "no-git";
+  const cache2 = opts.cache ? loadCache(repo.root) : {};
+  let spent = 0;
+  const jobs = [];
+  for (const f of files) {
+    const cov = { sent: 0, answered: 0, cached: 0, costUsd: 0, model: opts.model, failures: [] };
+    coverage.set(f.file, cov);
+    const open = f.statements.map((st, index2) => ({ st, index: index2 })).filter(({ st }) => needsAgent(st));
+    cov.sent = open.length;
+    const fresh = [];
+    for (const { st, index: index2 } of open) {
+      const cacheKey = createHash("sha1").update([PROMPT_VERSION, opts.model, codeTree, f.file, st.id, st.status, st.reason].join("\0")).digest("hex");
+      const hit = cache2[cacheKey];
+      const v = hit ? judge(repo, hit.raw, opts.model, true) : null;
+      if (v) {
+        f.statements[index2] = applyVerdict(st, v);
+        cov.answered += 1;
+        cov.cached += 1;
+      } else fresh.push({ st, index: index2, cacheKey });
+    }
+    if (fresh.length && !version) {
+      cov.failures.push("the claude CLI does not run: install Claude Code, or set PROOF_CLAUDE to its path");
+      continue;
+    }
+    for (let i = 0; i < fresh.length; i += opts.batchSize) {
+      jobs.push({ file: f, cov, batch: fresh.slice(i, i + opts.batchSize).map((x, j) => ({ ...x, key: `s${i + j + 1}` })) });
+    }
+  }
+  const runJob = async (job, retry = false) => {
+    const remaining = opts.budgetUsd - spent;
+    const ceiling = Math.min(remaining, job.batch.length * opts.perStatementUsd);
+    if (ceiling < 0.05) {
+      job.cov.failures.push(`budget of $${opts.budgetUsd.toFixed(2)} spent before L${job.batch[0]?.st.line}\u2013L${job.batch[job.batch.length - 1]?.st.line} were verified`);
+      return;
+    }
+    const prompt = buildPrompt(job.file.file, job.file.why, job.batch);
+    let result = await runClaude({ cwd: repo.root, prompt, schema: VERIFIER_SCHEMA, model: opts.model, effort: opts.effort, budgetUsd: ceiling, tools: TOOLS, allowedTools: ALLOWED, timeoutMs: opts.timeoutMs });
+    spent += result.costUsd;
+    job.cov.costUsd += result.costUsd;
+    if (!result.ok && (result.subtype === "parse" || result.subtype === "error_max_structured_output_retries")) {
+      const again = Math.min(opts.budgetUsd - spent, ceiling);
+      if (again >= 0.05) {
+        result = await runClaude({ cwd: repo.root, prompt, schema: VERIFIER_SCHEMA, model: opts.model, effort: opts.effort, budgetUsd: again, tools: TOOLS, allowedTools: ALLOWED, timeoutMs: opts.timeoutMs });
+        spent += result.costUsd;
+        job.cov.costUsd += result.costUsd;
+      }
+    }
+    if (!result.ok) {
+      job.cov.failures.push(`L${job.batch[0]?.st.line}\u2013L${job.batch[job.batch.length - 1]?.st.line}: ${result.subtype}${result.error ? ` (${result.error})` : ""}`);
+      return;
+    }
+    const answers = result.structured?.results ?? [];
+    const missing = [];
+    for (const item2 of job.batch) {
+      const raw = answers.find((a2) => a2.statement_id === item2.key);
+      const v = raw ? judge(repo, raw, opts.model) : null;
+      if (!v) {
+        missing.push(item2);
+        continue;
+      }
+      job.file.statements[item2.index] = applyVerdict(item2.st, v);
+      job.cov.answered += 1;
+      if (raw && !v.rejected) cache2[item2.cacheKey] = { raw, at: (/* @__PURE__ */ new Date()).toISOString() };
+    }
+    if (missing.length && !retry) await runJob({ ...job, batch: missing }, true);
+    else if (missing.length) job.cov.failures.push(`no well-formed verdict for ${missing.map((m) => `L${m.st.line}`).join(", ")}`);
+  };
+  const queue = [...jobs];
+  await Promise.all(
+    Array.from({ length: Math.max(1, opts.jobs) }, async () => {
+      for (let job = queue.shift(); job; job = queue.shift()) await runJob(job);
+    })
+  );
+  if (opts.cache) saveCache(repo.root, cache2);
+  return coverage;
+}
+
 // src/pipeline.ts
 import { existsSync as existsSync6, realpathSync as realpathSync2 } from "node:fs";
-import { homedir as homedir4 } from "node:os";
-import { isAbsolute as isAbsolute3, join as join6, posix as posix7, resolve as resolve2 } from "node:path";
+import { homedir as homedir5 } from "node:os";
+import { isAbsolute as isAbsolute3, join as join7, posix as posix7, resolve as resolve2 } from "node:path";
 
 // src/core/repo.ts
-import { existsSync as existsSync3, readdirSync as readdirSync2, readFileSync, statSync as statSync2 } from "node:fs";
-import { homedir as homedir2 } from "node:os";
-import { isAbsolute, join as join3, posix as posix2, relative, resolve } from "node:path";
+import { existsSync as existsSync3, readdirSync as readdirSync2, readFileSync as readFileSync2, statSync as statSync2 } from "node:fs";
+import { homedir as homedir3 } from "node:os";
+import { isAbsolute, join as join4, posix as posix3, relative, resolve } from "node:path";
 
 // node_modules/smol-toml/dist/error.js
 function getLineColFromPtr(string3, ptr) {
@@ -8487,24 +9021,24 @@ var RepoContext = class {
   get dirs() {
     if (!this.dirList) {
       const dirs = /* @__PURE__ */ new Set();
-      for (const f of this.files) for (let d = posix2.dirname(f); d !== "." && !dirs.has(d); d = posix2.dirname(d)) dirs.add(d);
+      for (const f of this.files) for (let d = posix3.dirname(f); d !== "." && !dirs.has(d); d = posix3.dirname(d)) dirs.add(d);
       this.dirList = dirs;
     }
     return this.dirList;
   }
   /** Repository-relative path, or null when it leaves the repository. */
   rel(path2, base = "") {
-    const abs = path2.startsWith("~/") ? join3(homedir2(), path2.slice(2)) : isAbsolute(path2) ? path2 : resolve(this.root, base, path2);
+    const abs = path2.startsWith("~/") ? join4(homedir3(), path2.slice(2)) : isAbsolute(path2) ? path2 : resolve(this.root, base, path2);
     const r = relative(this.root, abs).split("\\").join("/");
     if (r.startsWith("..") || isAbsolute(r)) return null;
     return r;
   }
   exists(rel) {
-    return existsSync3(join3(this.root, rel));
+    return existsSync3(join4(this.root, rel));
   }
   isDir(rel) {
     try {
-      return statSync2(join3(this.root, rel)).isDirectory();
+      return statSync2(join4(this.root, rel)).isDirectory();
     } catch {
       return false;
     }
@@ -8522,7 +9056,7 @@ var RepoContext = class {
   read(rel) {
     if (!this.texts.has(rel)) {
       try {
-        this.texts.set(rel, readFileSync(isAbsolute(rel) ? rel : join3(this.root, rel), "utf8"));
+        this.texts.set(rel, readFileSync2(isAbsolute(rel) ? rel : join4(this.root, rel), "utf8"));
       } catch {
         this.texts.set(rel, null);
       }
@@ -8557,7 +9091,7 @@ var RepoContext = class {
   }
   lookupIgnored(all2) {
     const queries = all2.filter((q) => {
-      const n = posix2.normalize(q);
+      const n = posix3.normalize(q);
       const inside = q !== "" && !isAbsolute(q) && !q.startsWith("~") && n !== ".." && !n.startsWith("../");
       if (!inside) this.ignoreCache.set(q, false);
       return inside;
@@ -8579,7 +9113,7 @@ var RepoContext = class {
           const rec = (v) => v && typeof v === "object" && !Array.isArray(v) ? v : {};
           const ws = json.workspaces;
           this.pkgs.push({
-            dir: posix2.dirname(file) === "." ? "" : posix2.dirname(file),
+            dir: posix3.dirname(file) === "." ? "" : posix3.dirname(file),
             file,
             name: typeof json.name === "string" ? json.name : null,
             scripts: rec(json.scripts),
@@ -8605,13 +9139,13 @@ var RepoContext = class {
   get projectDirs() {
     const manifests = /(^|\/)(package\.json|pyproject\.toml|go\.mod|Cargo\.toml|Gemfile|composer\.json|pom\.xml|build\.gradle(\.kts)?|setup\.py|requirements\.txt|mix\.exs|deno\.json)$/;
     const dirs = /* @__PURE__ */ new Set();
-    for (const f of this.files) if (manifests.test(f) && !SKIP_DIRS.test(f) && f.includes("/")) dirs.add(posix2.dirname(f));
+    for (const f of this.files) if (manifests.test(f) && !SKIP_DIRS.test(f) && f.includes("/")) dirs.add(posix3.dirname(f));
     for (const f of this.badManifestDirs()) dirs.add(f);
     return [...dirs].sort((a2, b) => a2.split("/").length - b.split("/").length || a2.localeCompare(b));
   }
   badManifestDirs() {
     void this.packages;
-    return [...this.broken.keys()].map((f) => posix2.dirname(f)).filter((d) => d !== ".");
+    return [...this.broken.keys()].map((f) => posix3.dirname(f)).filter((d) => d !== ".");
   }
   /**
    * A TOML or YAML or JSON file parsed once; a parse failure is recorded as a degradation and returns null.
@@ -8642,7 +9176,7 @@ var RepoContext = class {
     if (!this.generated) {
       const patterns = ["**/*.min.js", "**/*.min.css", "**/*.map", "vendor/**", "**/vendor/**", "third_party/**"];
       for (const file of this.files.filter((f) => /(^|\/)\.gitattributes$/.test(f))) {
-        const base = posix2.dirname(file) === "." ? "" : `${posix2.dirname(file)}/`;
+        const base = posix3.dirname(file) === "." ? "" : `${posix3.dirname(file)}/`;
         for (const line of (this.read(file) ?? "").split("\n")) {
           const [pattern, ...attrs] = line.trim().split(/\s+/);
           if (!pattern || pattern.startsWith("#") || !attrs.some((a2) => /^linguist-(generated|vendored)(=true)?$/.test(a2))) continue;
@@ -8660,14 +9194,14 @@ var RepoContext = class {
   }
   /** Path of `rel` as seen from the folder of `fromFile`. */
   static near(fromFile, rel) {
-    return posix2.normalize(posix2.join(posix2.dirname(fromFile), rel));
+    return posix3.normalize(posix3.join(posix3.dirname(fromFile), rel));
   }
 };
 function walk(root, base = "") {
   const out = [];
   let entries = [];
   try {
-    entries = readdirSync2(join3(root, base), { withFileTypes: true });
+    entries = readdirSync2(join4(root, base), { withFileTypes: true });
   } catch {
     return out;
   }
@@ -8683,7 +9217,7 @@ function walk(root, base = "") {
 // src/core/syntax.ts
 import { existsSync as existsSync4 } from "node:fs";
 import { createRequire } from "node:module";
-import { dirname, join as join4 } from "node:path";
+import { dirname, join as join5 } from "node:path";
 import { fileURLToPath } from "node:url";
 var GRAMMAR_OF = [
   [/\.go$/, "go"],
@@ -8718,7 +9252,7 @@ function grammarFor(file, text4) {
   return null;
 }
 function runtimeIn(dir) {
-  for (const name of ["tree-sitter.cjs", "tree-sitter.js"]) if (existsSync4(join4(dir, name))) return join4(dir, name);
+  for (const name of ["tree-sitter.cjs", "tree-sitter.js"]) if (existsSync4(join5(dir, name))) return join5(dir, name);
   return null;
 }
 function grammarDir() {
@@ -8726,13 +9260,13 @@ function grammarDir() {
   if (process.env.PROOF_GRAMMARS) candidates.push(process.env.PROOF_GRAMMARS);
   try {
     const here = dirname(fileURLToPath(import.meta.url));
-    candidates.push(join4(here, "grammars"));
-    candidates.push(join4(here, "..", "..", "node_modules", "@vscode", "tree-sitter-wasm", "wasm"));
+    candidates.push(join5(here, "grammars"));
+    candidates.push(join5(here, "..", "..", "node_modules", "@vscode", "tree-sitter-wasm", "wasm"));
   } catch {
   }
   try {
     const req = createRequire(import.meta.url);
-    candidates.push(join4(dirname(req.resolve("@vscode/tree-sitter-wasm/package.json")), "wasm"));
+    candidates.push(join5(dirname(req.resolve("@vscode/tree-sitter-wasm/package.json")), "wasm"));
   } catch {
   }
   return candidates.find((d) => runtimeIn(d) !== null) ?? null;
@@ -8759,9 +9293,9 @@ var Syntax = class {
     }
     try {
       const req = createRequire(import.meta.url);
-      const mod = req(runtimeIn(this.dir) ?? join4(this.dir, "tree-sitter.js"));
+      const mod = req(runtimeIn(this.dir) ?? join5(this.dir, "tree-sitter.js"));
       const dir = this.dir;
-      await mod.Parser.init({ locateFile: (f) => join4(dir, f) });
+      await mod.Parser.init({ locateFile: (f) => join5(dir, f) });
       this.mod = mod;
       this.parser = new mod.Parser();
       return true;
@@ -8775,7 +9309,7 @@ var Syntax = class {
     if (this.languages.has(name)) return this.languages.get(name) ?? null;
     let lang = null;
     try {
-      if (this.mod && this.dir) lang = await this.mod.Language.load(join4(this.dir, `tree-sitter-${name}.wasm`));
+      if (this.mod && this.dir) lang = await this.mod.Language.load(join5(this.dir, `tree-sitter-${name}.wasm`));
     } catch (err) {
       this.repo.degrade(`grammar ${name}`, `failed to load (${err instanceof Error ? err.message : String(err)}); ${name} files are matched by line patterns`);
     }
@@ -8989,7 +9523,7 @@ async function shellEntries(syntax, repo, file) {
 }
 
 // src/parse/markdown.ts
-import { createHash } from "node:crypto";
+import { createHash as createHash2 } from "node:crypto";
 
 // node_modules/mdast-util-to-string/lib/index.js
 var emptyOptions = {};
@@ -11286,8 +11820,8 @@ function markdownSpace(code2) {
 var unicodePunctuation = regexCheck(new RegExp("\\p{P}|\\p{S}", "u"));
 var unicodeWhitespace = regexCheck(/\s/);
 function regexCheck(regex) {
-  return check2;
-  function check2(code2) {
+  return check;
+  function check(code2) {
     return code2 !== null && code2 > -1 && regex.test(String.fromCharCode(code2));
   }
 }
@@ -16400,10 +16934,10 @@ function anyFactory(tests) {
     return false;
   }
 }
-function propertiesFactory(check2) {
+function propertiesFactory(check) {
   const checkAsRecord = (
     /** @type {Record<string, unknown>} */
-    check2
+    check
   );
   return castFactory(all2);
   function all2(node2) {
@@ -16413,21 +16947,21 @@ function propertiesFactory(check2) {
       node2
     );
     let key;
-    for (key in check2) {
+    for (key in check) {
       if (nodeAsRecord[key] !== checkAsRecord[key]) return false;
     }
     return true;
   }
 }
-function typeFactory(check2) {
+function typeFactory(check) {
   return castFactory(type);
   function type(node2) {
-    return node2 && node2.type === check2;
+    return node2 && node2.type === check;
   }
 }
 function castFactory(testFunction) {
-  return check2;
-  function check2(value2, index2, parent) {
+  return check;
+  function check(value2, index2, parent) {
     return Boolean(
       looksLikeANode(value2) && testFunction.call(
         this,
@@ -16456,14 +16990,14 @@ var CONTINUE = true;
 var EXIT = false;
 var SKIP = "skip";
 function visitParents(tree, test, visitor, reverse) {
-  let check2;
+  let check;
   if (typeof test === "function" && typeof visitor !== "function") {
     reverse = visitor;
     visitor = test;
   } else {
-    check2 = test;
+    check = test;
   }
-  const is2 = convert(check2);
+  const is2 = convert(check);
   const step = reverse ? -1 : 1;
   factory(tree, void 0, [])();
   function factory(node2, index2, parents) {
@@ -18415,167 +18949,6 @@ var DEPENDENCY_ALIASES = [
   a("AWS", /\bAWS\b/, { npm: ["aws-sdk", "@aws-sdk/", "aws-cdk-lib", "sst"], pypi: ["boto3", "aws-cdk-lib"], go: ["github.com/aws/aws-sdk-go"], files: [/\.tf$/, /(^|\/)serverless\.ya?ml$/, /(^|\/)cdk\.json$/] })
 ];
 
-// src/parse/shell.ts
-import { posix as posix3 } from "node:path";
-var OPERATORS = ["2>&", "&>>", "2>>", "&&", "||", "|&", ";;", ">>", ">&", "&>", "2>", "|", ";", "&", "(", ")", ">", "<"];
-var WRAPPERS = /* @__PURE__ */ new Set(["sudo", "time", "nohup", "exec", "command", "builtin", "env", "nice", "doas"]);
-var WRAPPER_FLAGS_WITH_VALUE = { sudo: /* @__PURE__ */ new Set(["-u", "-g", "-C", "-D"]), nice: /* @__PURE__ */ new Set(["-n"]) };
-function tokenize(line) {
-  const out = [];
-  let word = "";
-  let inWord = false;
-  const flush = () => {
-    if (inWord) out.push({ word });
-    word = "";
-    inWord = false;
-  };
-  for (let i = 0; i < line.length; i++) {
-    const c = line[i] ?? "";
-    if (c === "\\") {
-      word += line[i + 1] ?? "";
-      inWord = true;
-      i++;
-      continue;
-    }
-    if (c === "'") {
-      const end = line.indexOf("'", i + 1);
-      word += end < 0 ? line.slice(i + 1) : line.slice(i + 1, end);
-      inWord = true;
-      i = end < 0 ? line.length : end;
-      continue;
-    }
-    if (c === '"') {
-      let j = i + 1;
-      for (; j < line.length && line[j] !== '"'; j++) {
-        if (line[j] === "\\" && j + 1 < line.length) {
-          word += line[j + 1];
-          j++;
-        } else word += line[j];
-      }
-      inWord = true;
-      i = j;
-      continue;
-    }
-    const placeholder = c === "<" ? /^<[A-Za-z][\w.-]*>/.exec(line.slice(i))?.[0] : void 0;
-    if (placeholder) {
-      word += placeholder;
-      inWord = true;
-      i += placeholder.length - 1;
-      continue;
-    }
-    if (c === "$" && line[i + 1] === "(") {
-      let depth = 0;
-      let j = i + 1;
-      for (; j < line.length; j++) {
-        if (line[j] === "(") depth++;
-        else if (line[j] === ")" && --depth === 0) break;
-      }
-      word += line.slice(i, j + 1);
-      inWord = true;
-      i = j;
-      continue;
-    }
-    if (c === "`") {
-      const end = line.indexOf("`", i + 1);
-      word += line.slice(i, end < 0 ? line.length : end + 1);
-      inWord = true;
-      i = end < 0 ? line.length : end;
-      continue;
-    }
-    if (c === "#" && !inWord) break;
-    if (/\s/.test(c)) {
-      flush();
-      continue;
-    }
-    const op = OPERATORS.find((o) => line.startsWith(o, i));
-    if (op) {
-      if (op.startsWith("2") && inWord) {
-        word += c;
-        continue;
-      }
-      flush();
-      out.push({ op });
-      i += op.length - 1;
-      continue;
-    }
-    word += c;
-    inWord = true;
-  }
-  flush();
-  return out;
-}
-var isAssignment = (w) => /^[A-Za-z_][A-Za-z0-9_]*=/.test(w);
-function unwrap(words) {
-  const env = {};
-  let i = 0;
-  for (; ; ) {
-    while (i < words.length && isAssignment(words[i] ?? "")) {
-      const w = words[i] ?? "";
-      const eq = w.indexOf("=");
-      env[w.slice(0, eq)] = w.slice(eq + 1);
-      i++;
-    }
-    const head = words[i];
-    if (!head || !WRAPPERS.has(head)) break;
-    i++;
-    const withValue = WRAPPER_FLAGS_WITH_VALUE[head] ?? /* @__PURE__ */ new Set();
-    while (i < words.length && (words[i] ?? "").startsWith("-")) {
-      if (withValue.has(words[i] ?? "")) i++;
-      i++;
-    }
-  }
-  return { argv: words.slice(i), env };
-}
-var REDIRECTS = /* @__PURE__ */ new Set([">", ">>", "<", "&>", "&>>", "2>", "2>>", "2>&", ">&"]);
-function splitShell(line, startCwd = "") {
-  const tokens = tokenize(line);
-  const commands = [];
-  const stack = [];
-  let cwd = startCwd;
-  let cwdUnknown = false;
-  let words = [];
-  const end = () => {
-    if (!words.length) return;
-    const { argv, env } = unwrap(words);
-    words = [];
-    if (!argv.length) return;
-    const prefix = Object.entries(env).map(([k, v]) => `${k}=${v}`);
-    commands.push({ argv, env, cwd, cwdUnknown, text: [...prefix, ...argv].join(" ") });
-    if (argv[0] === "cd" || argv[0] === "pushd") {
-      const target = argv[1];
-      if (!target || target === "-" || target.startsWith("~") || target.includes("$") || target.startsWith("/")) {
-        cwd = void 0;
-        cwdUnknown = true;
-      } else if (cwd !== void 0) {
-        cwd = posix3.normalize(posix3.join(cwd, target)).replace(/^\.$/, "").replace(/\/$/, "");
-      }
-    }
-  };
-  for (let i = 0; i < tokens.length; i++) {
-    const t = tokens[i];
-    if (!t) continue;
-    if ("word" in t) {
-      words.push(t.word);
-      continue;
-    }
-    if (REDIRECTS.has(t.op)) {
-      i++;
-      continue;
-    }
-    end();
-    if (t.op === "(") stack.push({ cwd, unknown: cwdUnknown });
-    else if (t.op === ")") {
-      const outer = stack.pop();
-      if (outer) {
-        cwd = outer.cwd;
-        cwdUnknown = outer.unknown;
-      }
-    }
-  }
-  end();
-  return commands;
-}
-
 // src/parse/classify.ts
 var KNOWN_TOOLS = /* @__PURE__ */ new Set([
   "yarn",
@@ -18834,7 +19207,7 @@ var SCRIPT_LANGS = /* @__PURE__ */ new Set(["ts", "tsx", "typescript", "js", "js
 function normalizeText(text4) {
   return text4.replace(/(\*\*|__|~~)/g, "").replace(/\s+/g, " ").trim().replace(/[.;:]+$/, "");
 }
-var statementId = (text4) => createHash("sha1").update(normalizeText(text4)).digest("hex");
+var statementId = (text4) => createHash2("sha1").update(normalizeText(text4)).digest("hex");
 function renderInline(nodes) {
   return nodes.map((n) => {
     switch (n.type) {
@@ -19172,11 +19545,11 @@ var stale = (span, reason, evidence = []) => ({ ...span, status: "STALE", level:
 var unconfirmed = (span, reason, evidence = [], level = "none") => ({ ...span, status: "UNCONFIRMED", level, evidence, reason });
 var notChecked = (span, reason, evidence = []) => ({ ...span, status: "NOT_CHECKED", level: "none", evidence, reason });
 var blocked = (span, reason) => ({ ...span, status: "NOT_CHECKED", level: "none", evidence: [], reason, blocked: true });
-var join5 = (...parts) => parts.filter((p) => Boolean(p)).join("/").replace(/\/+/g, "/").replace(/(^|\/)\.\//g, "$1").replace(/\/$/, "");
+var join6 = (...parts) => parts.filter((p) => Boolean(p)).join("/").replace(/\/+/g, "/").replace(/(^|\/)\.\//g, "$1").replace(/\/$/, "");
 function workingDirs(ctx, span) {
   const out = [];
-  if (span.cwd !== void 0) out.push(join5(ctx.pathBase, span.cwd));
-  for (const h of span.hintDirs ?? []) out.push(join5(ctx.pathBase, h));
+  if (span.cwd !== void 0) out.push(join6(ctx.pathBase, span.cwd));
+  for (const h of span.hintDirs ?? []) out.push(join6(ctx.pathBase, h));
   out.push(ctx.pathBase, ctx.docDir, "");
   return [...new Set(out.map((d) => d.replace(/^\.$/, "")))];
 }
@@ -19269,7 +19642,7 @@ function scopeDirs(ctx, scope) {
   const out = /* @__PURE__ */ new Set();
   for (const s of [scope, scope.replace(/\./g, "/")]) {
     for (const base of ["", ctx.pathBase, ...ctx.repo.projectDirs]) {
-      const d = join5(base, s);
+      const d = join6(base, s);
       if (ctx.repo.dirs.has(d)) out.add(d);
     }
   }
@@ -19281,6 +19654,8 @@ function scopeDirs(ctx, scope) {
   }
   return [...out];
 }
+var LookupError = class extends Error {
+};
 function grep(ctx, needle, word, pathspec = ["."], limit = MAX_HITS) {
   const res = gitGrep(ctx.repo.root, needle, { word, pathspec: [...pathspec, ...NOT_CODE, ...ctx.repo.generatedExcludes, ...docExclude(ctx)], limit });
   if (res.status === "error") return { error: res.message };
@@ -19342,7 +19717,8 @@ async function checkDotted(ctx, span, text4) {
   if (reasoned) return unconfirmed(span, `${text4}: ${reasoned.why}`, [], "substring");
   const last = segs[segs.length - 1] ?? text4;
   const other = await grepClassified(ctx, last, true);
-  if (!("error" in other) && other.length) {
+  if ("error" in other) throw new LookupError(other.error);
+  if (other.length) {
     const sample = other[0];
     return unconfirmed(span, `${text4} appears nowhere; ${last} exists elsewhere${sample ? ` (${sample.hit.file}:${sample.hit.line})` : ""}, on something not shown to be ${segs.slice(0, -1).join(".")}`, other.slice(0, 2).map((c) => ({ ...ev(c), level: "substring" })), "substring");
   }
@@ -19350,7 +19726,7 @@ async function checkDotted(ctx, span, text4) {
 }
 async function memberOf(ctx, owner, member, dirs) {
   const list2 = await grepClassified(ctx, member, true, dirs.length ? dirs : ["."], { all: true, prefer: owner });
-  if ("error" in list2) return [];
+  if ("error" in list2) throw new LookupError(list2.error);
   const out = [];
   const others = /* @__PURE__ */ new Set();
   for (const c of list2.filter((x) => x.level === "definition")) {
@@ -19366,7 +19742,7 @@ var SQL_COLUMN = /^\s*\(?\s*["`[]?(\w+)["`\]]?\s+(?:INTEGER|INT|BIGINT|SMALLINT|
 var CREATE_TABLE = /\bCREATE\s+(?:TEMP(?:ORARY)?\s+)?TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?(?:\w+\.)?["`[]?(\w+)/i;
 function sqlColumn(ctx, table, column) {
   const hits = grep(ctx, column, true);
-  if ("error" in hits) return [];
+  if ("error" in hits) throw new LookupError(hits.error);
   const t = esc2(table);
   const c = esc2(column);
   const alter = new RegExp(`\\bALTER\\s+TABLE\\s+(?:IF\\s+EXISTS\\s+)?(?:\\w+\\.)?["\`[]?${t}["\`\\]]?\\s+ADD\\s+(?:COLUMN\\s+)?(?:IF\\s+NOT\\s+EXISTS\\s+)?["\`[]?${c}\\b`, "i");
@@ -19424,7 +19800,8 @@ function configKey(ctx, segs) {
   let at = "";
   for (const seg of segs) {
     const hits = grep(ctx, `:"${seg}`, false, ["*.go"]);
-    if ("error" in hits || !hits.length) return [];
+    if ("error" in hits) throw new LookupError(hits.error);
+    if (!hits.length) return [];
     const fields = hits.map((h) => ({ h, m: taggedField(seg).exec(h.text) })).filter((x) => x.m);
     const allowed = types;
     const inType = allowed === null ? fields : fields.filter((x) => allowed.includes(structOf(ctx, x.h.file, x.h.line) ?? ""));
@@ -19481,7 +19858,7 @@ async function checkLiteral(ctx, span, text4) {
 }
 function stringInCode(ctx, value2, pathspec = ["."]) {
   const hits = grep(ctx, value2, false, pathspec, 2e3);
-  if ("error" in hits) return null;
+  if ("error" in hits) throw new LookupError(hits.error);
   const hit = hits.find((h) => {
     const before = h.text[h.column - 2] ?? "";
     const after = h.text[h.column - 1 + value2.length] ?? "";
@@ -19491,7 +19868,8 @@ function stringInCode(ctx, value2, pathspec = ["."]) {
 }
 async function textInCode(ctx, text4) {
   const hits = grep(ctx, text4, false, ["."], 50);
-  if ("error" in hits || !hits.length) return null;
+  if ("error" in hits) throw new LookupError(hits.error);
+  if (!hits.length) return null;
   for (const hit of hits.slice(0, 10)) {
     const level = await classifyOccurrence(ctx.syntax, ctx.repo, hit.file, hit.line, hit.column, text4);
     if (VERIFYING_LEVELS.has(level)) return { ref: `${hit.file}:${hit.line}`, excerpt: clip(hit.text), level: "reference" };
@@ -19531,7 +19909,8 @@ function checkSlashCommand(ctx, span, text4) {
   if (plugin && definitions.length) return unconfirmed(span, `${definitions[0]} defines ${name}, but not in a plugin named ${plugin}`, [{ ref: definitions[0] ?? "", level: "reference" }], "reference");
   if (!plugin) {
     const hits = grep(ctx, text4, false, ["."], 2e3);
-    const route = "error" in hits ? void 0 : hits.find((h) => /["'`]/.test(h.text[h.column - 2] ?? "") && !/[\w-]/.test(h.text[h.column - 1 + text4.length] ?? ""));
+    if ("error" in hits) throw new LookupError(hits.error);
+    const route = hits.find((h) => /["'`]/.test(h.text[h.column - 2] ?? "") && !/[\w-]/.test(h.text[h.column - 1 + text4.length] ?? ""));
     if (route) return verified(span, "reference", [{ ref: `${route.file}:${route.line}`, excerpt: clip(route.text), level: "reference" }], `a URL path in code at ${route.file}:${route.line}`);
   }
   return unconfirmed(span, `no command, skill or agent in this repository defines ${text4}${plugin ? "" : ", and no code spells it as a URL path"}; fine if it comes from a user-level skill or an installed plugin`);
@@ -19544,7 +19923,7 @@ var BUN_BUILTINS = /* @__PURE__ */ new Set(["install", "i", "add", "remove", "rm
 var CARGO_BUILTINS = /* @__PURE__ */ new Set(["build", "b", "check", "c", "clean", "doc", "d", "new", "init", "add", "remove", "run", "r", "test", "t", "bench", "update", "search", "publish", "install", "uninstall", "fmt", "clippy", "fix", "tree", "vendor", "metadata", "package", "login", "yank", "owner", "locate-project", "generate-lockfile", "fetch", "rustc", "rustdoc", "version", "help", "nextest", "watch", "expand", "deny", "audit", "llvm-cov", "miri", "machete", "udeps", "outdated"]);
 var MAVEN_PHASES = /* @__PURE__ */ new Set(["clean", "validate", "compile", "test", "package", "verify", "install", "deploy", "site", "test-compile", "integration-test", "spotless:apply", "spotless:check", "dependency:tree"]);
 function pkgIn(ctx, dir) {
-  const file = join5(dir, "package.json");
+  const file = join6(dir, "package.json");
   if (ctx.repo.brokenManifest(file)) return "broken";
   return ctx.repo.packages.find((p) => p.dir === dir) ?? null;
 }
@@ -19556,7 +19935,7 @@ function checkScript(ctx, span, script, dirs, workspace) {
   }
   for (const dir of dirs) {
     const pkg = pkgIn(ctx, dir);
-    if (pkg === "broken") return blocked(span, `${join5(dir, "package.json")} does not parse: ${ctx.repo.brokenManifest(join5(dir, "package.json"))}`);
+    if (pkg === "broken") return blocked(span, `${join6(dir, "package.json")} does not parse: ${ctx.repo.brokenManifest(join6(dir, "package.json"))}`);
     if (!pkg) continue;
     if (script in pkg.scripts) return verified(span, "definition", [{ ref: `${pkg.file} scripts.${script}`, excerpt: pkg.scripts[script], level: "definition" }], `script "${script}" in ${pkg.file}`);
     const elsewhere = ctx.repo.packages.filter((p) => script in p.scripts && p !== pkg);
@@ -19602,18 +19981,18 @@ function packageManager(ctx, span, argv, dirs) {
 function fileArg(ctx, span, file, dirs) {
   if (file.startsWith("/") || file.startsWith("~") || file.includes("$")) return notChecked(span, `runs ${file}, outside the repository`);
   for (const dir of dirs) {
-    const rel = join5(dir, file);
+    const rel = join6(dir, file);
     if (ctx.repo.exists(rel)) return verified(span, "definition", [{ ref: rel, level: "definition" }], `${rel} exists`);
   }
-  const ignoredBy = ctx.repo.ignored(join5(dirs[0], file));
+  const ignoredBy = ctx.repo.ignored(join6(dirs[0], file));
   if (ignoredBy) return notChecked(span, `git ignores ${ignoredBy}: built output, not committed`);
-  return stale(span, `${join5(dirs[0], file)} does not exist`);
+  return stale(span, `${join6(dirs[0], file)} does not exist`);
 }
 async function shellScript(ctx, span, file, sub, dirs) {
-  const ignoredBy = ctx.repo.ignored(join5(dirs[0], file.replace(/^\.\//, "")));
-  if (ignoredBy && !dirs.some((d) => ctx.repo.exists(join5(d, file)))) return notChecked(span, `git ignores ${ignoredBy}: built output, not committed`);
-  const rel = dirs.map((d) => join5(d, file)).find((r) => ctx.repo.exists(r));
-  if (!rel) return stale(span, `${join5(dirs[0], file)} does not exist`);
+  const ignoredBy = ctx.repo.ignored(join6(dirs[0], file.replace(/^\.\//, "")));
+  if (ignoredBy && !dirs.some((d) => ctx.repo.exists(join6(d, file)))) return notChecked(span, `git ignores ${ignoredBy}: built output, not committed`);
+  const rel = dirs.map((d) => join6(d, file)).find((r) => ctx.repo.exists(r));
+  if (!rel) return stale(span, `${join6(dirs[0], file)} does not exist`);
   if (!sub || sub.startsWith("-") || sub.includes("$") || /^["']/.test(sub)) return verified(span, "definition", [{ ref: rel, level: "definition" }], `${rel} exists`);
   const text4 = ctx.repo.read(rel) ?? "";
   const isShell = /\.(sh|bash|zsh)$/.test(rel) || /^#!.*\b(ba|z)?sh\b/.test(text4) || !/^#!/.test(text4);
@@ -19640,14 +20019,14 @@ function make(ctx, span, argv, dirs) {
   const targets = [];
   for (let i = 0; i < args.length; i++) {
     const a2 = args[i] ?? "";
-    if (a2 === "-C" || a2 === "--directory") dirsHere = dirs.map((d) => join5(d, args[++i] ?? ""));
-    else if (a2.startsWith("-C")) dirsHere = dirs.map((d) => join5(d, a2.slice(2)));
+    if (a2 === "-C" || a2 === "--directory") dirsHere = dirs.map((d) => join6(d, args[++i] ?? ""));
+    else if (a2.startsWith("-C")) dirsHere = dirs.map((d) => join6(d, a2.slice(2)));
     else if (a2 === "-f" || a2 === "--file") file = args[++i];
     else if (a2.startsWith("-") || a2.includes("=")) continue;
     else targets.push(a2);
   }
   const names = file ? [file] : ["GNUmakefile", "makefile", "Makefile"];
-  const here = dirsHere.flatMap((d) => names.map((n) => join5(d, n))).find((f) => ctx.repo.exists(f));
+  const here = dirsHere.flatMap((d) => names.map((n) => join6(d, n))).find((f) => ctx.repo.exists(f));
   const all2 = ctx.repo.find(/(^|\/)(GNUmakefile|makefile|Makefile)$/);
   if (!here) {
     if (!all2.length) return stale(span, `no Makefile${dirsHere[0] ? ` in ${dirsHere[0]}/` : ""} or anywhere in the repository`);
@@ -19667,7 +20046,7 @@ function make(ctx, span, argv, dirs) {
 }
 function just(ctx, span, argv, dirs) {
   const recipe = argv.slice(1).find((a2) => !a2.startsWith("-"));
-  const file = dirs.flatMap((d) => ["justfile", "Justfile", ".justfile"].map((n) => join5(d, n))).find((f) => ctx.repo.exists(f));
+  const file = dirs.flatMap((d) => ["justfile", "Justfile", ".justfile"].map((n) => join6(d, n))).find((f) => ctx.repo.exists(f));
   if (!file) return stale(span, "no justfile where this runs");
   if (!recipe) return verified(span, "definition", [{ ref: file, level: "definition" }], `${file} exists`);
   const lines = (ctx.repo.read(file) ?? "").split("\n");
@@ -19676,7 +20055,7 @@ function just(ctx, span, argv, dirs) {
 }
 function task(ctx, span, argv, dirs) {
   const name = argv.slice(1).find((a2) => !a2.startsWith("-"));
-  const file = dirs.flatMap((d) => ["Taskfile.yml", "Taskfile.yaml", "taskfile.yml", "taskfile.yaml"].map((n) => join5(d, n))).find((f) => ctx.repo.exists(f));
+  const file = dirs.flatMap((d) => ["Taskfile.yml", "Taskfile.yaml", "taskfile.yml", "taskfile.yaml"].map((n) => join6(d, n))).find((f) => ctx.repo.exists(f));
   if (!file) return stale(span, "no Taskfile where this runs");
   const data = ctx.repo.structured(file);
   if (!data) return blocked(span, `${file} does not parse`);
@@ -19686,7 +20065,7 @@ function task(ctx, span, argv, dirs) {
 function pythonModule(ctx, mod, dirs) {
   const p = mod.replace(/\./g, "/");
   for (const d of [...dirs, "src", ...ctx.repo.projectDirs]) {
-    for (const c of [`${p}.py`, `${p}/__init__.py`, `${p}/__main__.py`]) if (ctx.repo.exists(join5(d, c))) return join5(d, c);
+    for (const c of [`${p}.py`, `${p}/__init__.py`, `${p}/__main__.py`]) if (ctx.repo.exists(join6(d, c))) return join6(d, c);
   }
   return null;
 }
@@ -19705,7 +20084,7 @@ function python(ctx, span, argv, dirs) {
 }
 function pyprojectScripts(ctx, dirs) {
   for (const d of dirs) {
-    const file = join5(d, "pyproject.toml");
+    const file = join6(d, "pyproject.toml");
     const data = ctx.repo.structured(file);
     if (!data) continue;
     const names = /* @__PURE__ */ new Set([
@@ -19732,7 +20111,7 @@ function pythonRunner(ctx, span, argv, dirs) {
   return notChecked(span, `runs ${target} from the environment${py ? ` (not a script in ${py.file})` : ""}`);
 }
 function tox(ctx, span, argv, dirs) {
-  const file = dirs.map((d) => join5(d, "tox.ini")).find((f) => ctx.repo.exists(f));
+  const file = dirs.map((d) => join6(d, "tox.ini")).find((f) => ctx.repo.exists(f));
   if (!file) return stale(span, "no tox.ini where this runs");
   const e = argv.indexOf("-e");
   const env = e >= 0 ? argv[e + 1] : void 0;
@@ -19742,7 +20121,7 @@ function tox(ctx, span, argv, dirs) {
   return ok3 ? verified(span, "definition", [{ ref: file, level: "definition" }], `env ${env} in ${file}`) : stale(span, `${file} defines no ${env} env`);
 }
 function nox(ctx, span, argv, dirs) {
-  const file = dirs.map((d) => join5(d, "noxfile.py")).find((f) => ctx.repo.exists(f));
+  const file = dirs.map((d) => join6(d, "noxfile.py")).find((f) => ctx.repo.exists(f));
   if (!file) return stale(span, "no noxfile.py where this runs");
   const s = argv.findIndex((a2) => a2 === "-s" || a2 === "--session");
   const session = s >= 0 ? argv[s + 1] : void 0;
@@ -19753,19 +20132,19 @@ function nox(ctx, span, argv, dirs) {
 }
 var GO_VALUE_FLAGS = /* @__PURE__ */ new Set(["-o", "-C", "-p", "-ldflags", "-gcflags", "-asmflags", "-tags", "-mod", "-modfile", "-pkgdir", "-toolexec", "-overlay", "-pgo", "-run", "-skip", "-bench", "-benchtime", "-count", "-cpu", "-timeout", "-parallel", "-coverprofile", "-covermode", "-coverpkg", "-cpuprofile", "-memprofile", "-blockprofile", "-mutexprofile", "-trace", "-outputdir", "-exec", "-json", "-vet", "-shuffle", "-fuzz", "-fuzztime"]);
 function goCmd(ctx, span, argv, dirs) {
-  const mod = [...dirs, ...ctx.repo.projectDirs].map((d) => join5(d, "go.mod")).find((f) => ctx.repo.exists(f));
+  const mod = [...dirs, ...ctx.repo.projectDirs].map((d) => join6(d, "go.mod")).find((f) => ctx.repo.exists(f));
   if (!mod) return stale(span, "no go.mod in this repository");
   const sub = argv[1];
   const pkgs = argv.slice(2).filter((a2, i, all2) => /^\.{1,2}(\/|$)/.test(a2) && !GO_VALUE_FLAGS.has(all2[i - 1] ?? ""));
   for (const p of pkgs) {
     const clean = p.replace(/\/\.\.\.$/, "").replace(/^\.\/?/, "");
     if (clean === "" || clean === "...") continue;
-    if (!dirs.some((d) => ctx.repo.exists(join5(d, clean)))) return stale(span, `go package ${p} does not exist`);
+    if (!dirs.some((d) => ctx.repo.exists(join6(d, clean)))) return stale(span, `go package ${p} does not exist`);
   }
   return verified(span, pkgs.length ? "definition" : "reference", [{ ref: mod, level: "reference" }], `go ${sub ?? ""}${pkgs.length ? ` on ${pkgs.join(" ")}` : ""} in a Go module (${mod})`);
 }
 function cargo(ctx, span, argv, dirs) {
-  const manifest = [...dirs, ...ctx.repo.projectDirs].map((d) => join5(d, "Cargo.toml")).find((f) => ctx.repo.exists(f));
+  const manifest = [...dirs, ...ctx.repo.projectDirs].map((d) => join6(d, "Cargo.toml")).find((f) => ctx.repo.exists(f));
   if (!manifest) return stale(span, "no Cargo.toml in this repository");
   const sub = argv[1] ?? "";
   const aliases = [".cargo/config.toml", ".cargo/config"].map((f) => ctx.repo.structured(f)).flatMap((c) => Object.keys(c?.alias ?? {}));
@@ -19783,8 +20162,8 @@ function compose(ctx, span, argv, dirs) {
   const files = [];
   for (let i = 0; i < args.length; i++) if (args[i] === "-f" || args[i] === "--file") files.push(args[++i] ?? "");
   const candidates = files.length ? files : ["compose.yaml", "compose.yml", "docker-compose.yaml", "docker-compose.yml"];
-  const found = dirs.flatMap((d) => candidates.map((n) => join5(d, n))).filter((f) => ctx.repo.exists(f));
-  if (files.length && found.length < files.length) return stale(span, `compose file ${files.find((f) => !dirs.some((d) => ctx.repo.exists(join5(d, f))))} does not exist`);
+  const found = dirs.flatMap((d) => candidates.map((n) => join6(d, n))).filter((f) => ctx.repo.exists(f));
+  if (files.length && found.length < files.length) return stale(span, `compose file ${files.find((f) => !dirs.some((d) => ctx.repo.exists(join6(d, f))))} does not exist`);
   if (!found.length) return stale(span, "no compose file where this runs");
   const rest = args.filter((a2, i) => !a2.startsWith("-") && args[i - 1] !== "-f" && args[i - 1] !== "--file" && args[i - 1] !== "-p" && args[i - 1] !== "--profile");
   const sub = rest[0];
@@ -19797,7 +20176,7 @@ function compose(ctx, span, argv, dirs) {
 }
 function rake(ctx, span, argv, dirs) {
   const name = argv.slice(argv[0] === "bundle" ? 3 : 1).find((a2) => !a2.startsWith("-"))?.split("[")[0];
-  const files = [...dirs.map((d) => join5(d, "Rakefile")), ...ctx.repo.find(/\.rake$/)].filter((f) => ctx.repo.exists(f));
+  const files = [...dirs.map((d) => join6(d, "Rakefile")), ...ctx.repo.find(/\.rake$/)].filter((f) => ctx.repo.exists(f));
   if (!files.length) return stale(span, "no Rakefile where this runs");
   if (!name) return verified(span, "definition", [{ ref: files[0] ?? "", level: "definition" }], "Rakefile exists");
   const leaf = name.split(":").pop() ?? name;
@@ -19810,7 +20189,7 @@ function rake(ctx, span, argv, dirs) {
 }
 function composer(ctx, span, argv, dirs) {
   const sub = argv[1] === "run" || argv[1] === "run-script" ? argv[2] : argv[1];
-  const file = dirs.map((d) => join5(d, "composer.json")).find((f) => ctx.repo.exists(f));
+  const file = dirs.map((d) => join6(d, "composer.json")).find((f) => ctx.repo.exists(f));
   if (!file) return stale(span, "no composer.json where this runs");
   const data = ctx.repo.structured(file);
   if (!data) return blocked(span, `${file} does not parse`);
@@ -19843,7 +20222,7 @@ function projectBinaries(ctx) {
     const cargo2 = ctx.repo.structured(f, { quiet: true });
     for (const b of cargo2?.bin ?? []) if (b.name) out.set(b.name, f);
     const dir = posix5.dirname(f) === "." ? "" : posix5.dirname(f);
-    if (cargo2?.package?.name && ctx.repo.exists(join5(dir, "src/main.rs"))) out.set(cargo2.package.name, f);
+    if (cargo2?.package?.name && ctx.repo.exists(join6(dir, "src/main.rs"))) out.set(cargo2.package.name, f);
   }
   binCache.set(ctx.repo, out);
   return out;
@@ -19941,7 +20320,7 @@ async function checkCommand(ctx, span) {
       return composer(ctx, span, argv, dirs);
     case "mvn":
     case "./mvnw": {
-      const pom = dirs.map((d) => join5(d, "pom.xml")).find((f) => ctx.repo.exists(f));
+      const pom = dirs.map((d) => join6(d, "pom.xml")).find((f) => ctx.repo.exists(f));
       if (!pom) return stale(span, "no pom.xml where this runs");
       const goals = argv.slice(1).filter((a2) => !a2.startsWith("-"));
       const unknown = goals.filter((g) => !MAVEN_PHASES.has(g));
@@ -19950,8 +20329,8 @@ async function checkCommand(ctx, span) {
     case "./gradlew":
     case "gradle":
     case "gradlew": {
-      const build = dirs.flatMap((d) => ["build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts"].map((n) => join5(d, n))).find((f) => ctx.repo.exists(f));
-      if (bin === "./gradlew" && !dirs.some((d) => ctx.repo.exists(join5(d, "gradlew")))) return stale(span, "no gradlew wrapper where this runs");
+      const build = dirs.flatMap((d) => ["build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts"].map((n) => join6(d, n))).find((f) => ctx.repo.exists(f));
+      if (bin === "./gradlew" && !dirs.some((d) => ctx.repo.exists(join6(d, "gradlew")))) return stale(span, "no gradlew wrapper where this runs");
       if (!build) return stale(span, "no Gradle build file where this runs");
       return unconfirmed(span, "Gradle task names are not read mechanically", [{ ref: build, level: "reference" }]);
     }
@@ -20118,7 +20497,7 @@ function checkEnv(ctx, span) {
 }
 
 // src/verify/paths.ts
-import { homedir as homedir3 } from "node:os";
+import { homedir as homedir4 } from "node:os";
 import { existsSync as existsSync5 } from "node:fs";
 import { isAbsolute as isAbsolute2, join as joinFs, posix as posix6 } from "node:path";
 
@@ -20186,7 +20565,7 @@ function matchGlob(pattern, files, base = "") {
 // src/verify/paths.ts
 function matches(ctx, base, pattern) {
   const wantDir = pattern.endsWith("/");
-  const clean = join5(base, pattern.replace(/^\.\//, "").replace(/\/$/, ""));
+  const clean = join6(base, pattern.replace(/^\.\//, "").replace(/\/$/, ""));
   if (clean === "" || clean === ".") return [""];
   if (!/[*?]/.test(clean)) {
     if (!ctx.repo.exists(clean)) return [];
@@ -20256,8 +20635,8 @@ function checkPath(ctx, span) {
   }
   const pkg = ctx.repo.packages.find((p) => first in p.deps);
   if (pkg) return verified(span, "declaration", [{ ref: `${pkg.file} ${first}`, level: "declaration" }], `an import path into ${first}, which ${pkg.file} declares`);
-  const anchored = segments.length === 1 || candidates.some((b) => ctx.repo.exists(join5(b, first)));
-  if (anchored) return stale(span, `not found: ${join5(primary, t)}`);
+  const anchored = segments.length === 1 || candidates.some((b) => ctx.repo.exists(join6(b, first)));
+  if (anchored) return stale(span, `not found: ${join6(primary, t)}`);
   const homes = /^[\w-]+$/.test(first) ? [...ctx.repo.dirs].filter((d) => posix6.basename(d) === first) : [];
   if (homes.length) return stale(span, `not found: no ${segments.slice(1).join("/")} under any ${first}/ folder (${shown(homes)})`);
   if (/^@?[a-z][\w-]*\/[a-z][\w-]*$/.test(t)) return notChecked(span, `reads as "${t.replace("/", " or ")}" or a rule id, not a path`);
@@ -20275,7 +20654,7 @@ function checkLink(ctx, span) {
 }
 function checkImport(ctx, span) {
   const t = span.text.trim();
-  const abs = t.startsWith("~/") ? joinFs(homedir3(), t.slice(2)) : isAbsolute2(t) ? t : null;
+  const abs = t.startsWith("~/") ? joinFs(homedir4(), t.slice(2)) : isAbsolute2(t) ? t : null;
   if (abs) return notChecked(span, existsSync5(abs) ? "imports a file outside the repository (exists on this machine)" : "imports a file outside the repository (not on this machine)");
   const rel = ctx.repo.rel(t, ctx.docDir);
   if (rel === null) return notChecked(span, "imports a file outside the repository");
@@ -20517,6 +20896,7 @@ async function checkSpan(ctx, span) {
         return notChecked(span, "nothing mechanical to check; the verifier reads it");
     }
   } catch (err) {
+    if (err instanceof LookupError) return blocked(span, `lookup failed: ${err.message}`);
     return blocked(span, `check failed: ${err instanceof Error ? err.message : String(err)}`);
   }
 }
@@ -20589,9 +20969,43 @@ function verdictOf(statements) {
   if (has("UNCONFIRMED") || has("UNVERIFIED_WITH_REASON")) return "PARTLY PROVEN";
   if (!statements.some((x) => x.status === "VERIFIED" || x.status === "DECIDED" || x.status === "FIXED" || x.status === "OVERRIDDEN")) return "PARTLY PROVEN";
   if (has("FIXED")) return "FIXED";
-  const referenceOnly = statements.some((x) => x.status === "VERIFIED" && x.results.some((r) => r.status === "VERIFIED" && r.level === "reference"));
+  const referenceOnly = statements.some((x) => x.status === "VERIFIED" && !x.agent && x.results.some((r) => r.status === "VERIFIED" && r.level === "reference"));
   if (has("OVERRIDDEN") || referenceOnly) return "PROVEN WITH OVERRIDES";
   return "PROVEN";
+}
+function tally(r) {
+  const counts = emptyCounts();
+  const levels = emptyLevels();
+  for (const s of r.statements) {
+    counts[s.status] += 1;
+    for (const x of s.results) if (x.status === "VERIFIED" || x.status === "UNCONFIRMED") levels[x.level] += 1;
+  }
+  r.counts = counts;
+  r.evidenceLevels = levels;
+  r.ownVerdict = verdictOf(r.statements);
+  if (r.agent && r.agent.answered < r.agent.sent) {
+    r.ownVerdict = "UNTESTED";
+    r.reason = `the verifier answered ${r.agent.answered} of ${r.agent.sent} open statements: ${r.agent.failures.join("; ") || "no verdict for the rest"}`;
+  }
+  r.verdict = r.ownVerdict;
+}
+function combineVerdicts(reports) {
+  const byFile = new Map(reports.map((r) => [r.file, r]));
+  const memo = /* @__PURE__ */ new Map();
+  const of = (r, stack) => {
+    const known = memo.get(r.file);
+    if (known) return known;
+    let v = r.ownVerdict;
+    stack.add(r.file);
+    for (const imp of r.imports) {
+      const child = imp.followed && imp.resolved ? byFile.get(imp.resolved) : void 0;
+      if (child && !stack.has(child.file)) v = worst(v, of(child, stack));
+    }
+    stack.delete(r.file);
+    memo.set(r.file, v);
+    return v;
+  };
+  for (const r of reports) r.verdict = of(r, /* @__PURE__ */ new Set());
 }
 var SEVERITY = { PROVEN: 0, FIXED: 1, "PROVEN WITH OVERRIDES": 2, "PARTLY PROVEN": 3, "NOT PROVEN": 4, UNTESTED: 5 };
 var worst = (a2, b) => SEVERITY[b] > SEVERITY[a2] ? b : a2;
@@ -20617,15 +21031,30 @@ var Run = class {
   }
   /** A path as the report names it: repository-relative inside the repository, absolute outside. */
   key(file, base = "") {
-    const abs = file.startsWith("~/") ? join6(homedir4(), file.slice(2)) : isAbsolute3(file) ? file : resolve2(this.repo.root, base, file);
+    const abs = file.startsWith("~/") ? join7(homedir5(), file.slice(2)) : isAbsolute3(file) ? file : resolve2(this.repo.root, base, file);
     return this.repo.rel(abs) ?? abs;
   }
   real(key) {
     try {
-      return realpathSync2(isAbsolute3(key) ? key : join6(this.repo.root, key));
+      return realpathSync2(isAbsolute3(key) ? key : join7(this.repo.root, key));
     } catch {
       return key;
     }
+  }
+  /**
+   * The agent stage over reports from `checkTargets`: open statements go to the verifier, counts and
+   * verdicts are recomputed, and a file whose open statements were not all answered is UNTESTED.
+   */
+  async verify(reports, opts) {
+    const files = reports.filter((r) => r.statements.length).map((r) => ({ file: r.file, why: r.why, statements: r.statements }));
+    const coverage = await verifyFiles(this.repo, files, reports.map((r) => r.file), opts);
+    for (const r of reports) {
+      const cov = coverage.get(r.file);
+      if (cov) r.agent = cov;
+      tally(r);
+    }
+    combineVerdicts(reports);
+    return reports;
   }
   /**
    * Check the targets and every instruction file they import, depth first, so each importer's verdict
@@ -20698,7 +21127,7 @@ var Run = class {
     }
     const imports = doc.imports.map((imp) => {
       const key = this.key(imp.path, isAbsolute3(rel) ? dir : ctx.docDir);
-      const exists = existsSync6(isAbsolute3(key) ? key : join6(this.repo.root, key));
+      const exists = existsSync6(isAbsolute3(key) ? key : join7(this.repo.root, key));
       return { path: imp.path, line: imp.line, resolved: exists ? key : null, followed: false, note: exists ? "" : "does not resolve to a file" };
     });
     const ownVerdict = verdictOf(statements);
@@ -20717,7 +21146,10 @@ var Run = class {
 
 // src/report.ts
 var MARK = { VERIFIED: "\u2713", STALE: "\u2717", UNCONFIRMED: "?", NOT_CHECKED: "\xB7" };
-var clip2 = (t, n = 160) => t.length > n ? `${t.slice(0, n - 1)}\u2026` : t;
+var clip2 = (raw, n = 160) => {
+  const t = raw.replace(/\s+/g, " ").trim();
+  return t.length > n ? `${t.slice(0, n - 1)}\u2026` : t;
+};
 var SECTIONS = [
   { status: "FIXED", title: "Fixed", hint: "Edited and re-verified. Review the diff.", expand: "always" },
   { status: "FIX_REJECTED", title: "Fix rejected", hint: "The re-verifier rejected these edits; they were reverted.", expand: "always" },
@@ -20737,9 +21169,18 @@ function spanLine(r) {
   const cwd = r.cwd ? ` [in ${r.cwd}/]` : "";
   return `  - ${MARK[r.status] ?? "?"}${level}${absent2}${cwd} \`${clip2(r.text, 100)}\` \u2014 ${r.reason}${where}`;
 }
+function agentLines(s) {
+  const a2 = s.agent;
+  if (!a2) return [];
+  const head = `  - verifier${a2.cached ? " (cached)" : ""}: ${a2.verdict.replace(/_/g, " ")}${a2.rejected ? ` \u2014 refused: ${a2.rejected}` : a2.reason ? ` \u2014 ${clip2(a2.reason, 220)}` : ""}`;
+  const evidence = a2.evidence.slice(0, 3).map((e) => `    - ${e.valid ? "\u2713" : "\u2717"} ${e.kind} \`${clip2(e.ref, 100)}\`${e.excerpt ? ` "${clip2(e.excerpt, 90)}"` : ""}${e.valid ? "" : ` \u2014 ${e.problem}`}`);
+  const proposal = a2.proposedText && s.status === "STALE" ? [`  - proposed: ${clip2(a2.proposedText, 300)}`] : [];
+  return [head, ...evidence, ...proposal];
+}
 function item(s, withSpans) {
   const lines = [`- **L${s.line}** ${clip2(s.text)}${s.section ? ` _(${s.section})_` : ""}`];
-  if (s.status === "UNVERIFIED_WITH_REASON" || s.status === "OVERRIDDEN") lines.push(`  - ${s.reason}`);
+  if ((s.status === "UNVERIFIED_WITH_REASON" || s.status === "OVERRIDDEN") && !s.agent) lines.push(`  - ${s.reason}`);
+  lines.push(...agentLines(s));
   if (withSpans) for (const r of s.results.filter((x) => x.kind !== "prose")) lines.push(spanLine(r));
   return lines;
 }
@@ -20760,16 +21201,21 @@ function countsLine(r) {
 }
 function toMarkdown(r, opts = {}) {
   const lines = [`# ${r.file}: ${r.verdict}`, ""];
-  if (r.reason) {
+  if (r.reason && !r.statements.length) {
     lines.push(r.reason, "", "next:", `  Check the path, then re-run: proof check ${r.file}`);
     return `${lines.join("\n")}
 `;
   }
+  if (r.reason) lines.push(`> ${r.reason}`, "");
   lines.push(countsLine(r), "");
   lines.push(`loaded: ${r.why}${r.scope === "managed" || r.scope === "user" ? " (outside the repository: proof reports, never edits)" : ""}`);
   if (r.importedBy.length) lines.push(`imported by: ${r.importedBy.join(", ")}`);
   for (const i of r.imports) lines.push(`imports: @${i.path} (L${i.line}) \u2014 ${i.note || (i.followed ? "checked" : "not checked")}`);
   if (r.verdict !== r.ownVerdict) lines.push(`own statements: ${r.ownVerdict}; with what it imports: ${r.verdict}`);
+  if (r.agent) {
+    lines.push(`verifier: ${r.agent.answered}/${r.agent.sent} open statements answered${r.agent.cached ? ` (${r.agent.cached} cached)` : ""} \xB7 $${r.agent.costUsd.toFixed(2)} \xB7 ${r.agent.model}`);
+    for (const f of r.agent.failures) lines.push(`verifier failed: ${f}`);
+  }
   lines.push("");
   for (const d of r.degraded) lines.push(`degraded: ${d.subject} \u2014 ${d.reason}`);
   if (r.degraded.length) lines.push("");
@@ -20790,18 +21236,20 @@ function toMarkdown(r, opts = {}) {
     for (const s of rows) lines.push(...item(s, sec.status !== "NOT_CHECKED" || Boolean(opts.verbose)));
     lines.push("");
   }
-  lines.push("next:", ...nextLines(r).map((l) => `  ${l}`));
+  lines.push("next:", ...nextLines(r, opts.mode ?? "check").map((l) => `  ${l}`));
   return `${lines.join("\n").trimEnd()}
 `;
 }
-function nextLines(r) {
+function nextLines(r, mode = "check") {
   const c = r.counts;
   const out = [];
   const open = c.UNCONFIRMED + c.UNVERIFIED_WITH_REASON;
-  if (c.STALE) out.push(`Fix ${c.STALE} stale line${c.STALE === 1 ? "" : "s"}: edit ${r.file} by the reasons above`);
-  if (open) out.push(`Verify ${open} open statement${open === 1 ? "" : "s"}: open the cited files, recount, and cite file:line for each`);
+  if (c.STALE) out.push(`Fix ${c.STALE} stale line${c.STALE === 1 ? "" : "s"}: edit ${r.file} by the reasons above${r.statements.some((s) => s.agent?.proposedText) ? " and the proposed text" : ""}`);
+  if (r.agent && r.agent.answered < r.agent.sent) out.push(`Finish verification: proof run ${r.file}${r.agent.failures.some((f) => f.includes("budget")) ? " --budget-usd <more>" : ""}`);
+  else if (open && mode === "check") out.push(`Verify ${open} open statement${open === 1 ? "" : "s"} with the verifier agent: proof run ${r.file}`);
+  else if (open) out.push(`Decide ${open} open statement${open === 1 ? "" : "s"}: each reason says what evidence is missing`);
   if (r.statements.some((s) => s.kind === "marker")) out.push('Give each proof:ignore marker a reason: <!-- proof:ignore reason="\u2026" -->');
-  out.push(`Re-run: proof check ${r.file}`);
+  out.push(`Re-run: proof ${mode} ${r.file}`);
   return out;
 }
 
@@ -20810,46 +21258,88 @@ var HELP = `proof ${VERSION}: is your CLAUDE.md still true?
 
 Usage:
   proof check [file...] [--user] [--json] [--out <dir>] [--verbose]
+  proof run   [file...] [--user] [--model <id>] [--effort <lvl>] [--budget-usd <n>] [--jobs <n>] [--no-cache] [--json] [--out <dir>]
 
-Checks every statement in CLAUDE.md, AGENTS.md and the other instruction files an agent loads
-against the repository, follows their @imports, and prints a markdown report. With no files,
-checks every instruction file it discovers.
+check   Checks every statement in CLAUDE.md, AGENTS.md and the other instruction files an agent loads
+        against the repository with deterministic parsers, follows their @imports, and prints a report.
+        With no files, checks every instruction file it discovers.
+run     Does the same, then hands every statement the checks left open to a verifier agent (the
+        claude CLI, read-only tools), keeps only verdicts whose citations check out, and reports coverage.
+        A run can take many minutes; it is working, not stalled.
 
-  --user        Also check ~/.claude/CLAUDE.md, ~/.claude/rules/ and this machine's managed policy
-                file, and follow imports outside the repository (reported, never edited)
-  --json        Print JSON (an array, one object per file) instead of markdown
-  --out <dir>   Also write <name>.md and <name>.json reports into <dir>
-  --verbose     List verified, decided and not-checked statements too
+  --user          Also check ~/.claude/CLAUDE.md, ~/.claude/rules/ and this machine's managed policy file,
+                  and follow imports outside the repository (reported, never edited)
+  --model <id>    Verifier model (default ${DEFAULT_VERIFY.model})
+  --effort <lvl>  Verifier thinking effort: low, medium, high, xhigh, max (default ${DEFAULT_VERIFY.effort})
+  --budget-usd    Total spend for the verifier across the run (default ${DEFAULT_VERIFY.budgetUsd})
+  --jobs <n>      Verifier calls in parallel (default ${DEFAULT_VERIFY.jobs})
+  --no-cache      Ask again even when the code and the statement are unchanged since the last run
+  --json          Print JSON (an array, one object per file) instead of markdown
+  --out <dir>     Also write <name>.md and <name>.json reports into <dir>
+  --verbose       List verified, decided and not-checked statements too
 
 Exit codes: 0 PROVEN, PROVEN WITH OVERRIDES, FIXED or PARTLY PROVEN; 1 NOT PROVEN; 2 UNTESTED or a usage error.`;
-async function check(argv) {
+var NUMBER = (name, v, fallback) => {
+  if (v === void 0) return fallback;
+  const n = Number(v);
+  if (!Number.isFinite(n) || n <= 0) throw new UsageError(`--${name} needs a positive number, got "${v}"`);
+  return n;
+};
+var UsageError = class extends Error {
+};
+async function pipeline(mode, argv) {
   const { values, positionals } = parseArgs({
     args: argv,
     allowPositionals: true,
-    options: { json: { type: "boolean" }, out: { type: "string" }, verbose: { type: "boolean" }, user: { type: "boolean" } }
+    options: {
+      json: { type: "boolean" },
+      out: { type: "string" },
+      verbose: { type: "boolean" },
+      user: { type: "boolean" },
+      model: { type: "string" },
+      effort: { type: "string" },
+      "budget-usd": { type: "string" },
+      jobs: { type: "string" },
+      "batch-size": { type: "string" },
+      "no-cache": { type: "boolean" },
+      "no-fix": { type: "boolean" }
+    }
   });
   const run2 = new Run(process.cwd());
   const found = discover(run2.repo, { user: Boolean(values.user) });
   const targets = positionals.length ? positionals.map((p) => found.files.find((d) => resolve3(run2.repo.root, d.file) === resolve3(p)) ?? { file: resolve3(p), why: "named on the command line", scope: "project" }) : found.files;
   if (!targets.length) {
-    console.error("No instruction file found. Pass one: proof check path/to/CLAUDE.md");
+    console.error(`No instruction file found. Pass one: proof ${mode} path/to/CLAUDE.md`);
     return 2;
   }
-  const reports = await run2.checkTargets(targets, { user: Boolean(values.user) });
+  let reports = await run2.checkTargets(targets, { user: Boolean(values.user) });
   if (!positionals.length && found.skipped.length && !values.json) {
     console.error(found.skipped.map((s) => `skipped ${s.file}: ${s.reason}`).join("\n"));
   }
+  if (mode === "run") {
+    const opts = {
+      ...DEFAULT_VERIFY,
+      model: values.model ?? DEFAULT_VERIFY.model,
+      effort: values.effort ?? DEFAULT_VERIFY.effort,
+      budgetUsd: NUMBER("budget-usd", values["budget-usd"], DEFAULT_VERIFY.budgetUsd),
+      jobs: NUMBER("jobs", values.jobs, DEFAULT_VERIFY.jobs),
+      batchSize: NUMBER("batch-size", values["batch-size"], DEFAULT_VERIFY.batchSize),
+      cache: !values["no-cache"]
+    };
+    if (!values.json) console.error(`verifying open statements with ${opts.model} (budget $${opts.budgetUsd.toFixed(2)}); this can take minutes`);
+    reports = await run2.verify(reports, opts);
+  }
   if (values.out) {
-    mkdirSync(values.out, { recursive: true });
+    mkdirSync2(values.out, { recursive: true });
     for (const r of reports) {
       const name = r.file.replace(/[^a-z0-9._-]+/gi, "-").toLowerCase();
-      writeFileSync(join7(values.out, `${name}.md`), toMarkdown(r, { verbose: true }));
-      writeFileSync(join7(values.out, `${name}.json`), `${JSON.stringify(r, null, 2)}
+      writeFileSync2(join8(values.out, `${name}.md`), toMarkdown(r, { verbose: true, mode }));
+      writeFileSync2(join8(values.out, `${name}.json`), `${JSON.stringify(r, null, 2)}
 `);
     }
   }
   if (values.json) console.log(JSON.stringify(reports, null, 2));
-  else console.log(reports.map((r) => toMarkdown(r, { verbose: Boolean(values.verbose) })).join("\n---\n\n"));
+  else console.log(reports.map((r) => toMarkdown(r, { verbose: Boolean(values.verbose), mode })).join("\n---\n\n"));
   return Math.max(...reports.map((r) => EXIT_CODE[r.verdict]));
 }
 async function main(argv) {
@@ -20862,8 +21352,16 @@ async function main(argv) {
     console.log(VERSION);
     return 0;
   }
-  if (first === "check") return check(rest);
-  if (!first || first.startsWith("-") || /\.(md|mdc)$|rules$/i.test(first)) return check(argv);
+  try {
+    if (first === "check" || first === "run") return await pipeline(first, rest);
+    if (!first || first.startsWith("-") || /\.(md|mdc)$|rules$/i.test(first)) return await pipeline("check", argv);
+  } catch (err) {
+    if (err instanceof UsageError || err instanceof TypeError && "code" in err && String(err.code).startsWith("ERR_PARSE_ARGS")) {
+      console.error(`${err.message}. Run: proof help`);
+      return 2;
+    }
+    throw err;
+  }
   console.error(`Unknown command "${first}". Run: proof help`);
   return 2;
 }

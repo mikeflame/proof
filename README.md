@@ -36,9 +36,12 @@ evidence: definition 3, declaration 2
   - ✓ [definition] `src/router/` — found at backend/src/router, not relative to CLAUDE.md
 ```
 
-Then the agent does the part a script can't: it verifies what the reasons name, re-reads
-verified lines that state status or purpose, and proposes a diff, which it applies only when you
-say so.
+Then `proof run` does the part a parser can't: a verifier agent reads every statement the checks
+left open, opens the files, recounts, and answers with citations. proof keeps a verdict only when
+every citation checks out: it re-reads each `file:line` and re-runs each read-only command. On the
+65 open statements of a public Go repository's AGENTS.md, a run took 5.5 minutes and $3.27, proved
+57 with checked citations, left 6 open with reasons, and found 2 real contradictions with the code
+that no name check could see.
 
 ## Install
 
@@ -58,6 +61,7 @@ skill tells the agent to run `scripts/proof.mjs` from that folder.
 
 **Just the check**, no agent: `node plugins/proof/skills/claude-md/scripts/proof.mjs check` in
 your repository. It needs Node 22+ and git; the parsers and grammars ship next to it.
+`proof.mjs run` adds the verifier and needs the `claude` CLI (or `PROOF_CLAUDE` set to its path).
 
 ## What it checks
 

@@ -7,6 +7,7 @@ import { NO_GRAMMAR, Syntax } from './core/syntax.ts';
 import type { Discovered, Scope } from './discover.ts';
 import type { CheckedStatement, EvidenceLevel, StatementStatus, Verdict } from './model.ts';
 import { parseDocument } from './parse/markdown.ts';
+import { type AgentCoverage, type VerifyOptions, verifyFiles } from './agent/verify.ts';
 import { checkStatement } from './verify/index.ts';
 import { pathBaseOf } from './verify/util.ts';
 import { VERSION } from './version.ts';
@@ -40,6 +41,8 @@ export interface FileReport {
   evidenceLevels: Record<EvidenceLevel, number>;
   coverage: { statements: number; withResult: number };
   degraded: Degradation[];
+  /** The agent stage, when it ran. */
+  agent?: AgentCoverage;
   git: GitState | null;
   run: { started: string; finished: string; version: string };
   statements: CheckedStatement[];
@@ -57,9 +60,48 @@ export function verdictOf(statements: CheckedStatement[]): Verdict {
   if (has('UNCONFIRMED') || has('UNVERIFIED_WITH_REASON')) return 'PARTLY PROVEN';
   if (!statements.some((x) => x.status === 'VERIFIED' || x.status === 'DECIDED' || x.status === 'FIXED' || x.status === 'OVERRIDDEN')) return 'PARTLY PROVEN';
   if (has('FIXED')) return 'FIXED';
-  const referenceOnly = statements.some((x) => x.status === 'VERIFIED' && x.results.some((r) => r.status === 'VERIFIED' && r.level === 'reference'));
+  // Reference-level proof is weaker; a statement the verifier proved with a citation is not.
+  const referenceOnly = statements.some((x) => x.status === 'VERIFIED' && !x.agent && x.results.some((r) => r.status === 'VERIFIED' && r.level === 'reference'));
   if (has('OVERRIDDEN') || referenceOnly) return 'PROVEN WITH OVERRIDES';
   return 'PROVEN';
+}
+
+/** Recount a report after its statements changed; an incomplete agent stage makes the file UNTESTED. */
+export function tally(r: FileReport): void {
+  const counts = emptyCounts();
+  const levels = emptyLevels();
+  for (const s of r.statements) {
+    counts[s.status] += 1;
+    for (const x of s.results) if (x.status === 'VERIFIED' || x.status === 'UNCONFIRMED') levels[x.level] += 1;
+  }
+  r.counts = counts;
+  r.evidenceLevels = levels;
+  r.ownVerdict = verdictOf(r.statements);
+  if (r.agent && r.agent.answered < r.agent.sent) {
+    r.ownVerdict = 'UNTESTED';
+    r.reason = `the verifier answered ${r.agent.answered} of ${r.agent.sent} open statements: ${r.agent.failures.join('; ') || 'no verdict for the rest'}`;
+  }
+  r.verdict = r.ownVerdict;
+}
+
+/** Each importer's verdict is the worst of its own and of everything it imports, transitively. */
+export function combineVerdicts(reports: FileReport[]): void {
+  const byFile = new Map(reports.map((r) => [r.file, r]));
+  const memo = new Map<string, Verdict>();
+  const of = (r: FileReport, stack: Set<string>): Verdict => {
+    const known = memo.get(r.file);
+    if (known) return known;
+    let v = r.ownVerdict;
+    stack.add(r.file);
+    for (const imp of r.imports) {
+      const child = imp.followed && imp.resolved ? byFile.get(imp.resolved) : undefined;
+      if (child && !stack.has(child.file)) v = worst(v, of(child, stack));
+    }
+    stack.delete(r.file);
+    memo.set(r.file, v);
+    return v;
+  };
+  for (const r of reports) r.verdict = of(r, new Set());
 }
 
 const SEVERITY: Record<Verdict, number> = { PROVEN: 0, FIXED: 1, 'PROVEN WITH OVERRIDES': 2, 'PARTLY PROVEN': 3, 'NOT PROVEN': 4, UNTESTED: 5 };
@@ -104,6 +146,22 @@ export class Run {
     } catch {
       return key;
     }
+  }
+
+  /**
+   * The agent stage over reports from `checkTargets`: open statements go to the verifier, counts and
+   * verdicts are recomputed, and a file whose open statements were not all answered is UNTESTED.
+   */
+  async verify(reports: FileReport[], opts: VerifyOptions): Promise<FileReport[]> {
+    const files = reports.filter((r) => r.statements.length).map((r) => ({ file: r.file, why: r.why, statements: r.statements }));
+    const coverage = await verifyFiles(this.repo, files, reports.map((r) => r.file), opts);
+    for (const r of reports) {
+      const cov = coverage.get(r.file);
+      if (cov) r.agent = cov;
+      tally(r);
+    }
+    combineVerdicts(reports);
+    return reports;
   }
 
   /**

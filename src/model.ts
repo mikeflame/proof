@@ -87,10 +87,25 @@ export interface Statement {
   override?: Override;
 }
 
+/** What the verifier agent returned for a statement, after proof checked its citations. Spec 4.4. */
+export interface AgentVerdict {
+  verdict: 'true' | 'stale' | 'unverified_with_reason';
+  evidence: { kind: string; ref: string; excerpt?: string | undefined; valid: boolean; problem: string }[];
+  reason: string;
+  proposedText: string | null;
+  action: 'auto-fix' | 'fix-with-evidence' | 'pointer' | 'needs-decision' | 'no-op';
+  /** Set when proof refused the verdict (no valid evidence, a dispute with the mechanical check). */
+  rejected: string | null;
+  cached: boolean;
+  model: string;
+}
+
 export interface CheckedStatement extends Statement {
   status: StatementStatus;
   results: SpanResult[];
   reason: string;
+  /** The verifier's answer, when the statement went to the agent stage. */
+  agent?: AgentVerdict;
   /** Settled by mechanical checks alone: every typed span verified at definition or declaration level and nothing residual. */
   settled: boolean;
 }

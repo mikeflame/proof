@@ -39,7 +39,7 @@ export function repoRoot(cwd: string): string | null {
  * Hash the working tree exactly as it is on disk, through a throwaway copy of the index so the
  * real index, stash and history are never touched. A clean checkout hashes to `HEAD^{tree}`.
  */
-export function workingTreeHash(root: string): string {
+export function workingTreeHash(root: string, excluding: string[] = []): string {
   const gitDir = run(root, ['rev-parse', '--absolute-git-dir']);
   const tmp = mkdtempSync(join(tmpdir(), 'proof-index-'));
   const index = join(tmp, 'index');
@@ -48,6 +48,9 @@ export function workingTreeHash(root: string): string {
     if (existsSync(realIndex)) copyFileSync(realIndex, index);
     const env = { ...process.env, GIT_INDEX_FILE: index };
     run(root, ['add', '--all', '--', '.'], env);
+    // The code an instruction file describes, without the instruction files: a verdict about the code
+    // stays valid while only the instructions change.
+    if (excluding.length) run(root, ['rm', '-q', '-r', '--cached', '--ignore-unmatch', '--', ...excluding], env);
     return run(root, ['write-tree'], env);
   } finally {
     rmSync(tmp, { recursive: true, force: true });
