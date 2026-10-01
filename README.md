@@ -98,11 +98,12 @@ your repository. It needs Node 22+ and git; the parsers and grammars ship next t
 ## How well it works
 
 <!-- generated:metrics -->
-Corpus: 12 public repositories pinned to commits (6 tune, 6 held-out, never run while tuning), one instruction file each. Labels: independent agent labels with cited evidence; a second, human review is pending.
+Corpus: 12 public repositories pinned to commits (6 tune, 6 held-out, never run while tuning), one instruction file each. Labels: independent agent labels with cited evidence; a second, human review is pending; 2 labels changed by a second reviewer, with the evidence in the label file.
 
 | Stage, split | Repos | Labeled statements | STALE precision | STALE recall | VERIFIED precision | Fixes kept |
 | --- | --- | --- | --- | --- | --- | --- |
-| `proof check`, tune | 5 | 297 | 100% (4 flagged) | 33.3% (12 stale) | 100% (27) | — |
+| `proof check`, tune | 6 | 364 | 100% (4 flagged) | 25% (16 stale) | 100% (28) | — |
+| `proof run`, tune | 6 | 364 | 100% (15 flagged) | 93.8% (16 stale) | 97.2% (246) | — |
 
 Run time on denoland/deno (14,927 files, 137 open statements in CLAUDE.md): a full `proof run` took 10 minutes and $2.37 (9 statements fixed, 1 fix rejected); the re-run after the fixes took 55 seconds and $0.15.
 <!-- /generated:metrics -->
