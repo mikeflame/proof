@@ -1,0 +1,263 @@
+{
+  "repo": "spring-projects/spring-ai",
+  "sha": "46d05c2fdbab52f6ef04207abe19b12687a47453",
+  "file": "AGENTS.md",
+  "labeler": "agent (independent of proof's output)",
+  "labels": [
+    {
+      "id": "6deacfe2022371c83e3b83dbc9f1d3d8fbdbf76c",
+      "line": 3,
+      "text": "Concise extract of [CONTRIBUTING.md](CONTRIBUTING.md), which remains the reference for humans.",
+      "label": "true",
+      "evidence": [
+        "ls CONTRIBUTING.md => exists (12409 bytes, 278 lines)",
+        "CONTRIBUTING.md:58,120,125-126,232,250,256,267,275 contain the same build commands AGENTS.md lists; CONTRIBUTING.md:132-170 the same style rules; CONTRIBUTING.md:64-95 the same commit rules"
+      ],
+      "note": "The linked file exists and AGENTS.md content is a condensed version of it."
+    },
+    {
+      "id": "83d579aecd9358282d3086742ec1aa34b05cd7a5",
+      "line": 7,
+      "text": "JDK 17 with `-XDaddTypeAnnotationsToSymbol` support (see `.sdkmanrc`, e.g. `17.0.19-librca`), native CPU architecture.",
+      "label": "true",
+      "evidence": [
+        ".sdkmanrc:3 java=17.0.19-librca",
+        "pom.xml:240 <java.version>17</java.version>",
+        "pom.xml:480 <arg>-XDaddTypeAnnotationsToSymbol=true</arg>",
+        "CONTRIBUTING.md:217,223 requires JDK supporting -XDaddTypeAnnotationsToSymbol; 'use a JDK with the same architecture as your processor'"
+      ],
+      "note": "Java version, javac flag, and .sdkmanrc value all match."
+    },
+    {
+      "id": "1898d3c7506fa86fa27bd48237ef6fe53848d012",
+      "line": 8,
+      "text": "Build and unit tests: `./mvnw clean package` (scope with `-am -pl <module>`).",
+      "label": "true",
+      "evidence": [
+        "ls -la mvnw => -rwxrwxr-x mvnw (Maven wrapper present)",
+        "pom.xml:499 maven-surefire-plugin configured (unit tests run in package)",
+        "CONTRIBUTING.md:58,212 './mvnw clean package'",
+        ".github/workflows/pr-check.yml:36 './mvnw -ntp -B -U package'"
+      ],
+      "note": "Wrapper exists and package runs surefire unit tests; -am -pl are standard Maven reactor flags used elsewhere in the repo."
+    },
+    {
+      "id": "cd4b38066431bd1c3449b84c15ef1b4185c8c109",
+      "line": 9,
+      "text": "Format sources: `./mvnw process-sources` (enforced by CI, does not fix import order).",
+      "label": "true",
+      "evidence": [
+        "pom.xml:627-645 profile format-apply (active when !env.CI) binds spring-javaformat 'apply' to <phase>process-sources</phase>",
+        "pom.xml:597-616 profile format-check activated by env.CI=true binds 'validate' goal to validate phase",
+        ".github/workflows/pr-check.yml:36 './mvnw -ntp -B -U package' (GitHub Actions sets CI=true, so format-check runs)",
+        "CONTRIBUTING.md:122 'Note that this will not format the import order'"
+      ],
+      "note": "process-sources applies the formatter locally, CI validates it, and the formatter does not reorder imports."
+    },
+    {
+      "id": "ed7bdf92b95ce6ac45a35b336c244a2a5adddb2d",
+      "line": 10,
+      "text": "Local builds reformat sources automatically: add `-Dspring-javaformat.skip=true` to disable it, or `-P'!format-apply,format-check'` to fail on violations without modifying files.",
+      "label": "true",
+      "evidence": [
+        "pom.xml:626-645 <id>format-apply</id> activation <name>!env.CI</name> -> spring-javaformat apply at process-sources (automatic local reformat)",
+        "pom.xml:596-616 <id>format-check</id> -> spring-javaformat validate goal (fails without modifying)",
+        "pom.xml:317 spring-javaformat-maven-plugin 0.0.47 (its mojos expose the spring-javaformat.skip property)",
+        "CONTRIBUTING.md:124-126 same instructions"
+      ],
+      "note": "Both profile ids exist and behave as described; the skip property belongs to the configured spring-javaformat plugin."
+    },
+    {
+      "id": "4daf8019327b511d191e9a48f0d817db825a39f9",
+      "line": 11,
+      "text": "Integration tests for a module: `./mvnw -am -pl <module> -Pintegration-tests verify`.",
+      "label": "true",
+      "evidence": [
+        "pom.xml:800-817 <id>integration-tests</id> profile binds maven-failsafe-plugin integration-test/verify goals",
+        ".github/workflows/mcp-integration-tests.yml:45 './mvnw --batch-mode -ntp verify -Pintegration-tests -am -pl ...'",
+        "CONTRIBUTING.md:250 './mvnw -am -pl spring-ai-spring-boot-testcontainers -Pintegration-tests verify'"
+      ],
+      "note": "The integration-tests profile exists and CI uses the same command shape."
+    },
+    {
+      "id": "b148a15a462f9e8cbd9f8287a26d08da8b5a8c3e",
+      "line": 12,
+      "text": "Single integration test: add `-Dfailsafe.failIfNoSpecifiedTests=false -Dit.test=<TestClassIT>`; tests needing a missing provider API key are skipped.",
+      "label": "true",
+      "evidence": [
+        "CONTRIBUTING.md:256 '... -Pintegration-tests -Dfailsafe.failIfNoSpecifiedTests=false -Dfailsafe.rerunFailingTestsCount=2 -Dit.test=PgVectorStoreIT verify'",
+        "grep -rl --include=*IT.java EnabledIfEnvironmentVariable . | wc -l => 181 (of 373 IT classes)",
+        "vector-stores/spring-ai-mongodb-atlas-store/src/test/java/.../MongoDBAtlasVectorStoreIT.java:67 @EnabledIfEnvironmentVariable(named = \"OPENAI_API_KEY\", matches = \".+\")"
+      ],
+      "note": "Standard failsafe properties with failsafe in the profile; ITs are gated on API-key env vars."
+    },
+    {
+      "id": "d05521f550a560dae53fabe715048d574ae6b861",
+      "line": 13,
+      "text": "Javadoc check: `./mvnw javadoc:javadoc`. Reference docs: `./mvnw -pl spring-ai-docs antora`.",
+      "label": "true",
+      "evidence": [
+        "pom.xml:574 <artifactId>maven-javadoc-plugin</artifactId>",
+        "spring-ai-docs/pom.xml:21-24 org.antora:antora-maven-plugin with <extensions>true</extensions> (provides the antora lifecycle)",
+        "ls spring-ai-docs => module exists; CONTRIBUTING.md:267,275 same commands"
+      ],
+      "note": "Javadoc plugin and the docs module with the Antora extension plugin exist."
+    },
+    {
+      "id": "a193800ae668e7df4873a9b65aa523b9174d7db4",
+      "line": 14,
+      "text": "Maven build cache is enabled; if the build breaks for no clear reason, retry with `-Dmaven.build.cache.enabled=false`.",
+      "label": "true",
+      "evidence": [
+        ".mvn/extensions.xml:25-27 org.apache.maven.extensions:maven-build-cache-extension 1.2.3",
+        ".mvn/maven-build-cache-config.xml present, no enabled=false",
+        "CONTRIBUTING.md:227-232 'enabled by default' and './mvnw -Dmaven.build.cache.enabled=false clean package'"
+      ],
+      "note": "The build-cache extension is registered and not disabled."
+    },
+    {
+      "id": "8cbaf22bc3997745be8331d1beb4ce92db12f034",
+      "line": 18,
+      "text": "Follow Spring Framework code style; match surrounding code and do not reformat unrelated code.",
+      "label": "true",
+      "evidence": [
+        "pom.xml:596-645 spring-javaformat apply/validate profiles (Spring formatter, validated in CI)",
+        "pom.xml:655-711 checkstyle-check profile (always active via !env.BOGUS, disable.checks=false at pom.xml:320) with spring-javaformat-checkstyle",
+        "src/checkstyle/checkstyle.xml:76-86,193-195 io.spring.javaformat.checkstyle checks (SpringNoThisCheck, SpringLambdaCheck)"
+      ],
+      "note": "Spring code style is enforced by spring-javaformat and checkstyle; the 'do not reformat unrelated code' part is a behavioural rule that tooling keeps moot since all code is already formatted."
+    },
+    {
+      "id": "b434c7c1d7802de04c833e23c59eb35fbfd5d232",
+      "line": 19,
+      "text": "Tabs, LF, UTF-8, no trailing whitespace; wrap Javadoc at 90 and code at ~120 characters.",
+      "label": "true",
+      "evidence": [
+        ".editorconfig:3-9 charset = utf-8; indent_style = tab; end_of_line = lf",
+        "pom.xml:248 <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>",
+        "src/checkstyle/checkstyle.xml:152-157 'indentation should be performed with tabs only'; :172-176 RegexpCheck '[ \\t]+$' 'Trailing whitespace'",
+        "find . -name '*.java' | xargs grep -l $'\\r' | wc -l => 0",
+        "sample of 400 main Java files (tab=4): javadoc lines >90: 41 of 11957; code lines >120: 35 of 38323 (spring-javaformat wraps)"
+      ],
+      "note": "Config and checkstyle enforce tabs/LF/UTF-8/no trailing whitespace, and the code conforms to the 90/120 wrap widths."
+    },
+    {
+      "id": "3c1dda3fae1406354cbfba12e606fe41da2e645c",
+      "line": 20,
+      "text": "Import order, groups separated by a blank line: `java.*`, then `javax.*` + `jakarta.*`, then others, then `org.springframework.*`, then static imports.",
+      "label": "stale",
+      "evidence": [
+        "src/checkstyle/checkstyle.xml:107-113 <module name=\"ImportOrder\"> groups value=\"java,javax,*,org.springframework\", separated=true, ordered=true, option=bottom (jakarta.* is not in the javax group; it falls in the '*' others group)",
+        "auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-bedrock-knowledgebase/src/main/java/org/springframework/ai/vectorstore/bedrockknowledgebase/autoconfigure/BedrockKnowledgeBaseVectorStoreProperties.java:19-23 'import jakarta.validation.constraints.Min;' followed directly (no blank line) by 'import org.jspecify.annotations.Nullable;' and 'import software.amazon...' (jakarta sorted inside the others group)",
+        "grep -rl --include=*.java '^import jakarta\\.' . => only that 1 file"
+      ],
+      "note": "The enforced checkstyle ImportOrder and the only file with jakarta imports put jakarta.* inside the 'others' group, not with javax.*, so following this rule would fail checkstyle."
+    },
+    {
+      "id": "4acf17c355dbd011c86667fc19885b2dd7ef9062",
+      "line": 21,
+      "text": "No wildcard imports. No static imports in production code except constants/enum constants and third-party DSL factory methods; use them in tests (e.g. `assertThat`).",
+      "label": "true",
+      "evidence": [
+        "src/checkstyle/checkstyle.xml:91 AvoidStarImportCheck; :92-95 AvoidStaticImportCheck with an excludes allowlist (enum constants, assertj/mockito/junit test DSLs)",
+        "pom.xml:690 <includeTestSourceDirectory>true (checkstyle covers tests too)",
+        "grep wildcard imports => only ANTLR-generated FiltersLexer.java/FiltersParser.java, suppressed in src/checkstyle/checkstyle-suppressions.xml:8",
+        "static imports in */src/main/java: 14 files, mostly spring-ai-test helpers and Filter.ExpressionType enum constants; AiRuntimeHints.findJsonAnnotatedClassesInPackage is an explicit checkstyle exclusion"
+      ],
+      "note": "Checkstyle enforces both rules; the only exceptions are generated code and allowlisted imports."
+    },
+    {
+      "id": "13c57a23124ad3d139ac9a4af6e8902d3a7ad559",
+      "line": 22,
+      "text": "Every source file: Apache 2.0 license header (`Copyright 2023-present the original author or authors.`, copy from an existing file), package, imports, exactly one top-level class.",
+      "label": "true",
+      "evidence": [
+        "src/checkstyle/checkstyle-header.txt:2 '^\\Q * Copyright 2023-present the original author or authors.\\E$' enforced by RegexpHeaderCheck (src/checkstyle/checkstyle.xml:22-25)",
+        "src/checkstyle/checkstyle.xml:55 OneTopLevelClassCheck",
+        "find . -name '*.java' | xargs grep -L 'Copyright 2023-present the original author or authors.' | wc -l => 0 (of 2303)",
+        "only 2 files lack a package: vector-stores/spring-ai-s3-vector-store/src/test/java/S3FilterExpressionConverterTests.java, S3VectorStoreTests.java"
+      ],
+      "note": "The header and one-top-level-class rules are enforced by checkstyle and followed; only two test files lack a package statement."
+    },
+    {
+      "id": "2d9ba2ac4cde201fb987a4d165d34648b847bfdd",
+      "line": 23,
+      "text": "Add `@since` on new public types and methods (e.g. `@since 2.0.0`).",
+      "label": "true",
+      "evidence": [
+        "git log --since=2026-06-01 --diff-filter=A (src/main/java public types) => 48 added public types, 44 have @since",
+        "missing: AnthropicCacheProperties.java, BedrockCacheProperties.java, OpenAiAudioTranscriptionResponseMetadata.java, ToolSearchTool.java",
+        "CONTRIBUTING.md:194-204 same rule"
+      ],
+      "note": "Not enforced by tooling (Javadoc checks are commented out in checkstyle.xml:116-138), but recent code follows it in about 92% of new public types."
+    },
+    {
+      "id": "5ddbe3e5e97608ffff72b3a571244be66f97b4da",
+      "line": 24,
+      "text": "Add or update tests for any code change.",
+      "label": "judgment",
+      "evidence": [
+        ".github/PULL_REQUEST_TEMPLATE.md 'Add/Update unit tests as needed'",
+        "CONTRIBUTING.md:57 'Add new tests that exercise the code you have added or modified'"
+      ],
+      "note": "Contributor practice; CI runs tests but nothing requires that a change adds tests."
+    },
+    {
+      "id": "40a02ed636673a999492877f2794339201dce476",
+      "line": 25,
+      "text": "In `.adoc` and `.md` files, write one sentence per line.",
+      "label": "judgment",
+      "evidence": [
+        "CONTRIBUTING.md:139 'For plain text documents like .adoc or .md, one sentence per line'",
+        "CONTRIBUTING.md:3 has two sentences on one line; heuristic grep over 128 .adoc files finds ~626 prose lines with '. [A-Z]' mid-line"
+      ],
+      "note": "Writing convention with no tooling; docs follow it only partially."
+    },
+    {
+      "id": "9495926a05924a063bf45d1e832a4a51c299b013",
+      "line": 29,
+      "text": "Title: imperative, capitalized verb, ideally under 50 characters, no `fix:`/`docs:` prefixes and no issue/PR number.",
+      "label": "judgment",
+      "evidence": [
+        "CONTRIBUTING.md:64-70 same rule",
+        "git log --no-merges --since=2026-01-01 => 1121 commits; 57 conventional-commit prefixes, 97 titles with #NNN, 74 lowercase starts, 553 titles >50 chars"
+      ],
+      "note": "Commit-title practice not enforced by any tooling; history follows it only partly."
+    },
+    {
+      "id": "0adff4ef1fa0d8c7b73fa42fd49a58a94c3e18d0",
+      "line": 30,
+      "text": "Body wrapped at ~72 characters, followed by `Fixes #123`/`Closes #123` (or `See #123`), then a `Signed-off-by: Name <email>` trailer (DCO, use `git commit -s`).",
+      "label": "true",
+      "evidence": [
+        ".github/dco.yml 'require: members: false' (DCO check configured)",
+        ".github/PULL_REQUEST_TEMPLATE.md 'Add a Signed-off-by line to each commit (git commit -s) per the DCO'",
+        "git log --no-merges --since=2026-01-01 => 1069 of 1121 commits carry a Signed-off-by trailer; 235 of 10479 body lines exceed 80 chars",
+        "CONTRIBUTING.md:72-94 same structure"
+      ],
+      "note": "The DCO sign-off is configured and followed in about 95% of commits, and bodies are mostly wrapped; the issue-reference part applies only when an issue exists."
+    },
+    {
+      "id": "6692c533b3cb0ea91cf781415891ec3867d92fc7",
+      "line": 31,
+      "text": "Enclose annotations in backticks in commit messages to avoid mentioning GitHub users.",
+      "label": "judgment",
+      "evidence": [
+        "CONTRIBUTING.md:95 same rule",
+        "commit bodies since 2026-01-01: 25 backticked `@Annotation` vs 32 bare @Annotation occurrences"
+      ],
+      "note": "Commit-message convention with mixed adherence and no enforcement."
+    },
+    {
+      "id": "6a641df795223f0715c6ba786204e6d22464e130",
+      "line": 32,
+      "text": "PR titles feed the changelog: short, descriptive, types or file names in backticks; reference related issues in the description, not the title.",
+      "label": "true",
+      "evidence": [
+        ".github/actions/create-github-release/action.yml: 'uses: spring-io/github-changelog-generator@... #v0.0.14' with changelog-generator-oss.yml / changelog-generator-commercial.yml (changelog built from milestone issue/PR titles)",
+        "CONTRIBUTING.md:52-53 'The pull request title is used to generate the changelog ... mention the related issue ... in the PR description (not in the title)'"
+      ],
+      "note": "The release workflow generates the changelog from issue/PR titles; the title-style guidance is a matching practice."
+    }
+  ]
+}

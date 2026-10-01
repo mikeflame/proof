@@ -1,0 +1,675 @@
+{
+ "repo": "modelcontextprotocol/python-sdk",
+ "sha": "d639cf7f97f77388fa7da60c0f9b04f8837b77fd",
+ "file": "AGENTS.md",
+ "labeler": "agent (independent of proof's output)",
+ "labels": [
+  {
+   "id": "9057351159c8b277359aa72b4e8fec8422c9e52f",
+   "line": 5,
+   "text": "If you are an AI coding agent acting for someone who is not a maintainer of this repository, read `CONTRIBUTING.md` before opening issues or pull requests here.",
+   "label": "true",
+   "evidence": [
+    "CONTRIBUTING.md:7-8 '> [!IMPORTANT] ... Pull requests from outside the maintainer team are only reviewed when a maintainer has assigned you the linked issue'",
+    "CONTRIBUTING.md:33 '### AI-Assisted Contributions'"
+   ],
+   "note": "CONTRIBUTING.md exists at the repo root and carries the PR/issue policy and the AI-assisted contribution rules the instruction points to."
+  },
+  {
+   "id": "029cccffb860334b1865fa36e9f32cef315fa47c",
+   "line": 7,
+   "text": "In particular, pull requests that aren't linked to an issue assigned to their author are closed automatically.",
+   "label": "true",
+   "evidence": [
+    ".github/workflows/require-linked-issue.yml:4-7 'a PR from someone without triage rights stays open only if it links an open issue here that is assigned to them (or labeled `help wanted`); otherwise it is labeled `missing-issue-link`, gets one comment, and is closed'",
+    ".github/scripts/pr_intake_gate.js:110 'if (issue.assignees.some((a) => a.login.toLowerCase() === author)) return pass(...)'",
+    ".github/scripts/pr_intake_gate.js:133 'github.rest.pulls.update({ ..., state: 'closed' })'"
+   ],
+   "note": "The intake-gate workflow auto-closes PRs not linked to an issue assigned to the author (help-wanted exception is an omitted detail, not a contradiction)."
+  },
+  {
+   "id": "752057ee83c2f13b39473901abde3d6039d31bc1",
+   "line": 12,
+   "text": "`main` is the current stable line (v2); releases are cut from it (see `RELEASE.md`).",
+   "label": "true",
+   "evidence": [
+    "RELEASE.md:28 '| Current stable | `main` | `v2.X.Y` | not a pre-release; becomes **Latest** |'",
+    "CONTRIBUTING.md:107 '`main` is the current stable line (v2).'",
+    "git describe --tags d639cf7 => v2.2.0-4-gd639cf7"
+   ],
+   "note": "RELEASE.md documents main as the v2 stable line releases are cut from."
+  },
+  {
+   "id": "a54adfeafe495d934273b9afd58ddfbd324dd880",
+   "line": 14,
+   "text": "v2 is released; its public API is a compatibility contract for the 2.x line. Removals, renames, or any change to an existing API's signature or observable behaviour (including ones softened by a `@deprecated` shim) is a design decision a maintainer makes explicitly, and should generally be avoided.",
+   "label": "true",
+   "evidence": [
+    "git tag | sort -V => v2.0.0 ... v2.0.1 v2.1.0 v2.1.1 v2.2.0",
+    "VERSIONING.md:7 'a breaking change to the public API lands only in a new **major**'",
+    "VERSIONING.md:15-18 'Held for the next major: removing or renaming a public name, changing a signature ... or documented behavior'"
+   ],
+   "note": "v2 is tagged and released, and VERSIONING.md makes the 2.x public API a compatibility promise; the maintainer-decision part is policy consistent with it."
+  },
+  {
+   "id": "a7fa2858d450f8d9b6dbe915a71d0f9968cad837",
+   "line": 19,
+   "text": "`docs/migration.md` is the v1 → v2 record and is closed to new entries. Correcting errors or improving clarity in what's there is fine.",
+   "label": "true",
+   "evidence": [
+    "docs/migration.md:1 '# Migration Guide: v1 to v2'",
+    "git diff v2.0.0 d639cf7 -- docs/migration.md | grep -E '^[+-]#' => (no output: no section added since v2.0.0)",
+    "git log --oneline v2.0.0..d639cf7 -- docs/migration.md => 6 commits (c6762e8, d060b36, 0921d94, ...) that only edit existing sections"
+   ],
+   "note": "migration.md is the v1->v2 guide and history since v2.0.0 shows only corrections to existing entries, no new sections."
+  },
+  {
+   "id": "1c229dea5de533f3202741c5d6686367d3fa169f",
+   "line": 21,
+   "text": "`v1.x` is the maintenance branch for the previous major. Backport PRs target it and use a `[v1.x]` title prefix; only critical bug fixes and security fixes land there.",
+   "label": "true",
+   "evidence": [
+    "git log origin/v1.x --oneline | head => '52e64dd [v1.x] Remove AI attribution rule ...', '8c2fa6e [v1.x] Add AuthSettings.validate_token_resource ...', '2106335 [v1.x] Follow redirects only within ...'",
+    "VERSIONING.md:38 '**1.x** (`v1.x`) — critical bug fixes and security fixes.'",
+    "RELEASE.md:87 'Land the `[v1.x]`-prefixed backport PRs'"
+   ],
+   "note": "The v1.x branch exists, backports carry the [v1.x] prefix, and VERSIONING.md restricts it to critical and security fixes."
+  },
+  {
+   "id": "5631219d08076f0222d37941f7efcfca61d812ea",
+   "line": 24,
+   "text": "`README.md` documents v2. The v1 README lives on the `v1.x` branch.",
+   "label": "true",
+   "evidence": [
+    "README.md:20 '[What's new in v2](https://py.sdk.modelcontextprotocol.io/whats-new/)'",
+    "README.md:48 'from mcp.server import MCPServer' (v2 API)",
+    "git show origin/v1.x:README.md => '> **This documents v1.x, the maintenance line of the MCP Python SDK.**'"
+   ],
+   "note": "The main README uses the v2 API and the v1.x branch carries its own v1 README."
+  },
+  {
+   "id": "3fb6979ee6b0327d0a4b4a2d43868cf63910a098",
+   "line": 28,
+   "text": "ONLY use uv, NEVER pip",
+   "label": "true",
+   "evidence": [
+    ".github/workflows/shared.yml:27 'uv sync --frozen --all-extras --python 3.10'",
+    ".pre-commit-config.yaml:33 'entry: uv run --frozen ruff'",
+    "grep -rnE 'pip install|uv pip|python -m pip' .github scripts .pre-commit-config.yaml CONTRIBUTING.md => (no matches)"
+   ],
+   "note": "All dev tooling (CI, pre-commit, scripts, CONTRIBUTING setup) uses uv and none uses pip."
+  },
+  {
+   "id": "f75434ee83e433d66e8d85d997cc65e631aa7b00",
+   "line": 29,
+   "text": "Installation: `uv add <package>`. Exception: the root project's runtime dependencies are dynamic (the published `mcp` wheel exact-pins `mcp-types`), so `uv add` cannot edit them — add the requirement to `[tool.hatch.metadata.hooks.uv-dynamic-versioning].dependencies` in `pyproject.toml` by hand, then run `uv lock`. Dependency groups, extras, and the example packages still take plain `uv add`.",
+   "label": "true",
+   "evidence": [
+    "pyproject.toml:3 'dynamic = [\"version\", \"dependencies\"]'",
+    "pyproject.toml:127-135 '[tool.hatch.metadata.hooks.uv-dynamic-versioning] dependencies = [ ... \"mcp-types=={{ version }}\",'",
+    "examples/servers/simple-tool/pyproject.toml:17 'dependencies = [\"anyio>=4.5\", \"click>=8.2.0\", \"httpx2>=2.5.0\", \"mcp\"]' (static, uv add works)",
+    "RELEASE.md:8-10 'The root `mcp` project's runtime dependencies are dynamic and live under `[tool.hatch.metadata.hooks.uv-dynamic-versioning].dependencies`.'"
+   ],
+   "note": "Root dependencies are dynamic under the named hatch hook table with an exact mcp-types pin, while example packages declare static dependencies."
+  },
+  {
+   "id": "8077ec84c60e22fbf4af06ff476db3d5c2c98821",
+   "line": 35,
+   "text": "Running tools: `uv run --frozen <tool>`. Always pass `--frozen` so uv doesn't rewrite `uv.lock` as a side effect.",
+   "label": "true",
+   "evidence": [
+    ".pre-commit-config.yaml:33,40,47 'entry: uv run --frozen ruff' / 'entry: uv run --frozen pyright'",
+    "scripts/test:5-12 'uv run --frozen coverage erase' ... 'UV_FROZEN=1 uv run --frozen strict-no-cover'",
+    ".github/workflows/shared.yml:90-93 'uv run --frozen --no-sync coverage run -m pytest -n auto'"
+   ],
+   "note": "Every tool invocation in pre-commit, scripts/test and CI passes --frozen."
+  },
+  {
+   "id": "52b5934965bb5a5b1716211d2a76f9475f5454df",
+   "line": 37,
+   "text": "Cross-version testing: `uv run --frozen --python 3.10 pytest ...` to run against a specific interpreter (CI covers 3.10–3.14).",
+   "label": "true",
+   "evidence": [
+    ".github/workflows/shared.yml:58 'python-version: [\"3.10\", \"3.11\", \"3.12\", \"3.13\", \"3.14\"]'",
+    "pyproject.toml:6 'requires-python = \">=3.10\"'"
+   ],
+   "note": "The CI test matrix covers Python 3.10 through 3.14."
+  },
+  {
+   "id": "0f2a2a5d8af2fcbcf43ff24a5cab1a2bf2737022",
+   "line": 39,
+   "text": "Upgrading: `uv lock --upgrade-package <package>`",
+   "label": "true",
+   "evidence": [
+    "RELEASE.md:11-12 'Regenerate the lock with `uv lock` (or `uv lock --upgrade-package <package>` to move just that package's locked version).'"
+   ],
+   "note": "RELEASE.md documents the same uv lock --upgrade-package upgrade mechanic."
+  },
+  {
+   "id": "d597f0f29177c6c9fc4984583b1c411192f2e6ee",
+   "line": 40,
+   "text": "FORBIDDEN: `uv pip install`, `@latest` syntax",
+   "label": "true",
+   "evidence": [
+    "git grep -n 'uv pip' => AGENTS.md:40 and examples/mcpserver/memory.py:5 ('# uv pip install ... ' user-facing comment in a demo), no tooling usage",
+    "git grep -n '@latest' -- ':!uv.lock' => AGENTS.md:40 only"
+   ],
+   "note": "No CI workflow, script or pre-commit hook uses uv pip install or @latest; the only hit is a user-facing install comment in one example."
+  },
+  {
+   "id": "3e1efdcaa4aaaec2c90859dc269941c27f0b4523",
+   "line": 41,
+   "text": "Don't raise dependency floors for CVEs alone. The `>=` constraint already lets users upgrade. Only raise a floor when the SDK needs functionality from the newer version, and don't add SDK code to work around a dependency's vulnerability. See Kludex/uvicorn#2643 and python-sdk #1552 for reasoning.",
+   "label": "true",
+   "evidence": [
+    "DEPENDENCY_POLICY.md 'A floor is raised only when the SDK starts relying on functionality or a fix that first appeared in that version — not because the dependency published a security advisory ... nor does the SDK add code to work around a dependency's vulnerability ... ([background](https://github.com/Kludex/uvicorn/discussions/2643), [python-sdk#1552](...issues/1552))'"
+   ],
+   "note": "DEPENDENCY_POLICY.md states the same floor policy and cites the same two references."
+  },
+  {
+   "id": "2ea60af1ff1637d1d9281c29e13763081da058ed",
+   "line": 48,
+   "text": "Keep comments brief. Explain only non-obvious reasons or constraints; do not narrate the code or restate names, types, or assertions.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Comment-style preference that no tooling enforces."
+  },
+  {
+   "id": "ff9aa7fe1e45eb6f33470d4113bf837708dcd7f6",
+   "line": 50,
+   "text": "Type hints required for all code",
+   "label": "judgment",
+   "evidence": [
+    "pyproject.toml:160 'typeCheckingMode = \"strict\"' (enforces parameter annotations)",
+    "git grep -nE '^\\s*(async )?def \\w+\\(.*\\):\\s*$' -- tests | grep -v -- '->' | wc -l => 1457 (unannotated returns); same in src => 52"
+   ],
+   "note": "pyright strict covers parameter types, but many functions omit return annotations, so the 'all code' rule is only partly followed or enforced."
+  },
+  {
+   "id": "3531015005786bbd4eb7b12502e69dd89fb85899",
+   "line": 51,
+   "text": "Public APIs must have docstrings. When a public API raises exceptions a caller would reasonably catch, document them in a `Raises:` section. Don't list exceptions from argument validation or programmer error.",
+   "label": "judgment",
+   "evidence": [
+    "pyproject.toml:208-218 ruff select includes only 'D212' from pydocstyle (no D1xx missing-docstring rules)"
+   ],
+   "note": "Docstring and Raises-section rule is not lint-enforced; it is a documentation convention."
+  },
+  {
+   "id": "f051d92de31f28f3c8cd3e3df848ba058808eb59",
+   "line": 54,
+   "text": "`src/mcp/__init__.py` defines the public API surface via `__all__`. Adding a symbol there is a deliberate API decision, not a convenience re-export.",
+   "label": "true",
+   "evidence": [
+    "src/mcp/__init__.py:74 '__all__ = ['",
+    "VERSIONING.md:11 'The promise covers every name exported by `mcp` and `mcp_types` (their `__all__`)'"
+   ],
+   "note": "src/mcp/__init__.py defines __all__, and VERSIONING.md makes it the public API surface."
+  },
+  {
+   "id": "afcee45534c5df004d55483e343ba05e09910746",
+   "line": 56,
+   "text": "IMPORTANT: All imports go at the top of the file — inline imports hide dependencies and obscure circular-import bugs. Only exception: when a top-level import genuinely can't work (lazy-loading optional deps, or tests that re-import a module).",
+   "label": "judgment",
+   "evidence": [
+    "src/mcp/client/session.py:1136-1137 'from jsonschema import exceptions as jsonschema_exceptions' inside a method (lazy import of a required dependency for import cost, see session.py:62-64)",
+    "pyproject.toml:208-218 ruff select has no PLC0415 (import-outside-toplevel)"
+   ],
+   "note": "Not lint-enforced, and the code has deliberate inline imports beyond the stated exceptions, so the repo cannot settle the rule."
+  },
+  {
+   "id": "4b3a2776cbe3d55888cfe04bf89ff42f9c500d71",
+   "line": 60,
+   "text": "Always pass `encoding=` to text-mode `open()`, `Path.read_text()`/`write_text()`, `tempfile` and `subprocess` text pipes — normally `\"utf-8\"`, or `\"locale\"` when the platform encoding is genuinely intended; the default is the process locale, not UTF-8. CI and `scripts/test` run pytest with `PYTHONWARNDEFAULTENCODING=1` (PEP 597), which makes any omission an error under the `error` filter.",
+   "label": "true",
+   "evidence": [
+    ".github/workflows/shared.yml:86-88 'PEP 597: text I/O without encoding= raises EncodingWarning ... PYTHONWARNDEFAULTENCODING: \"1\"'",
+    "scripts/test:7 'PYTHONWARNDEFAULTENCODING=1 uv run --frozen coverage run -m pytest -n auto \"$@\"'",
+    "pyproject.toml:270-271 'filterwarnings = [ \"error\",'"
+   ],
+   "note": "CI and scripts/test both set PYTHONWARNDEFAULTENCODING=1 and pytest's error filter makes a missing encoding= fatal."
+  },
+  {
+   "id": "2bb50565bd7db640f551168b8bff1d2128dde4f2",
+   "line": 68,
+   "text": "When writing or reviewing tests, conform to `.claude/skills/test-quality/SKILL.md` — it defines the bar for naming, abstraction level, assertions, and determinism.",
+   "label": "true",
+   "evidence": [
+    ".claude/skills/test-quality/SKILL.md:1-3 'name: test-quality ... covers naming, abstraction level, assertions, determinism'",
+    "grep '^#' SKILL.md => '## Naming & shape', '## Level of abstraction', '## Assertions', '## Determinism'"
+   ],
+   "note": "The referenced skill file exists and has the named sections."
+  },
+  {
+   "id": "c1cb82ca97a5a2f6d68f4293f774db58467f09ad",
+   "line": 70,
+   "text": "Framework: `uv run --frozen pytest`",
+   "label": "true",
+   "evidence": [
+    "pyproject.toml:66 '\"pytest>=8.4.0\",' (dev group)",
+    "pyproject.toml:256 '[tool.pytest.ini_options]'"
+   ],
+   "note": "pytest is the configured test framework and is run through uv run --frozen."
+  },
+  {
+   "id": "99236e6acdbd74927fc5a7391b5395cfe0214ed8",
+   "line": 71,
+   "text": "Async testing: use anyio, not asyncio",
+   "label": "true",
+   "evidence": [
+    "pyproject.toml:264-267 'addopts = \"\"\" ... -p anyio'",
+    "git grep -c 'pytest.mark.asyncio' -- tests => (no matches); files using pytest.mark.anyio => 200",
+    ".claude/skills/test-quality/SKILL.md:84 'Async tests use anyio, not asyncio.'"
+   ],
+   "note": "The suite runs on the anyio plugin, and no test uses pytest-asyncio markers."
+  },
+  {
+   "id": "7ab142648d170b29ff908bb9b8cdd1587f45723b",
+   "line": 72,
+   "text": "Do not use `Test` prefixed classes — write plain top-level `test_*` functions. Legacy files still contain `Test*` classes; do NOT follow that pattern for new tests even when adding to such a file.",
+   "label": "true",
+   "evidence": [
+    "git grep -lE '^class Test' -- tests => 12 legacy files (e.g. tests/client/test_auth.py, tests/server/mcpserver/test_server.py), 49 classes",
+    "git log --since=2026-05-01 -p -G'^class Test' -- tests | grep '^+class Test' => (no added Test classes)"
+   ],
+   "note": "Legacy Test* classes exist as stated, and no new ones have been added in recent history."
+  },
+  {
+   "id": "105f9bbc02461d31495bfabf6d5ab3f6abd75dc2",
+   "line": 75,
+   "text": "IMPORTANT: Tests should be fast and deterministic. Prefer in-memory async execution; reach for threads only when necessary, and subprocesses only as a last resort.",
+   "label": "judgment",
+   "evidence": [
+    ".claude/skills/test-quality/SKILL.md:40-43 'In-memory / in-process first ... threads only when necessary, subprocesses only when the process boundary is itself the thing under test.'"
+   ],
+   "note": "Testing principle that the skill restates but no tooling enforces."
+  },
+  {
+   "id": "203b618068513a717adcc00ba722490f15f72feb",
+   "line": 77,
+   "text": "For end-to-end behavior, an in-memory `Client(server)` is usually the cleanest approach (see `tests/client/test_client.py` for the canonical pattern). For narrower changes, testing the function directly is fine. Use judgment.",
+   "label": "true",
+   "evidence": [
+    "tests/client/test_client.py:135 'async with Client(simple_server) as client:'",
+    "tests/client/test_client.py:152 'async with Client(app) as client:'"
+   ],
+   "note": "tests/client/test_client.py exists and uses the in-memory Client(server) pattern."
+  },
+  {
+   "id": "fc7f30a4741a1e1efd391220eb228fee96b43069",
+   "line": 81,
+   "text": "Test files mirror the source tree: `src/mcp/client/stdio.py` → `tests/client/test_stdio.py`. Add tests to the existing file for that module.",
+   "label": "true",
+   "evidence": [
+    "ls src/mcp/client/stdio.py tests/client/test_stdio.py => both exist",
+    "mirror check over src/mcp modules => 56/101 have tests/<same dir>/test_<module>.py"
+   ],
+   "note": "The named example mirrors exactly and the tests tree follows the src layout for most tested modules."
+  },
+  {
+   "id": "bed49cb76ee8849690da19d335370e175aad7e72",
+   "line": 83,
+   "text": "Avoid `anyio.sleep()` with a fixed duration to wait for async operations. Instead:",
+   "label": "judgment",
+   "evidence": [
+    "git grep -nE 'anyio\\.sleep\\(' -- tests => 24 hits, e.g. tests/shared/test_streamable_http.py:272 'await anyio.sleep(0.1)'"
+   ],
+   "note": "Guideline not enforced by tooling; fixed-duration sleeps remain in legacy tests."
+  },
+  {
+   "id": "dd5177e70475ef05e72993218a313768d1e0d7d3",
+   "line": 84,
+   "text": "Use `anyio.Event` — set it in the callback/handler, `await event.wait()` in the test",
+   "label": "true",
+   "evidence": [
+    "git grep -c 'anyio.Event()' -- tests => 244 total",
+    ".claude/skills/test-quality/SKILL.md:67 'Coordinate with `anyio.Event` so the wait ends exactly when the condition holds'"
+   ],
+   "note": "The Event-based coordination pattern is used widely across the tests."
+  },
+  {
+   "id": "c7269650cead82c39e554487603376b4a49c2bfd",
+   "line": 85,
+   "text": "For stream messages, use `await stream.receive()` instead of `sleep()` + `receive_nowait()`",
+   "label": "true",
+   "evidence": [
+    "git grep -nE 'await [a-z_]*\\.receive\\(\\)' -- tests => 96 hits",
+    "git grep -n -B3 'receive_nowait' -- tests | grep sleep => (no sleep+receive_nowait pairs)"
+   ],
+   "note": "Tests await stream.receive(), and no sleep followed by receive_nowait pattern exists."
+  },
+  {
+   "id": "5b5104f3db8fa76d5a24804c8546c4ac2bc89847",
+   "line": 86,
+   "text": "Exception: `sleep()` is appropriate when testing time-based features (e.g., timeouts)",
+   "label": "true",
+   "evidence": [
+    ".claude/skills/test-quality/SKILL.md:68-69 'Sole exception: tests *of* time-based features, with a comment.'",
+    "tests/server/test_streamable_http_modern.py:510-515 '_SSE_PING_INTERVAL ... await anyio.sleep(2.5)' (time-based ping test)"
+   ],
+   "note": "The skill grants the same exception and existing time-based tests use it."
+  },
+  {
+   "id": "8e4f6ffb7d00c58a7891c876f6b43e8eaf724aff",
+   "line": 87,
+   "text": "Wrap indefinite waits (`event.wait()`, `stream.receive()`) in `anyio.fail_after(5)` to prevent hangs",
+   "label": "true",
+   "evidence": [
+    "git grep -c 'fail_after(5)' -- tests => 566 total",
+    ".claude/skills/test-quality/SKILL.md:70 'Bound every indefinite wait with `anyio.fail_after(5)`. **5 is the standard**'"
+   ],
+   "note": "fail_after(5) is the dominant bound for indefinite waits in tests."
+  },
+  {
+   "id": "4e1a3da842d0ddb052d3dd15d683c9c49c2e72f2",
+   "line": 88,
+   "text": "Pytest is configured with `filterwarnings = [\"error\"]`, so warnings fail tests. Don't silence warnings from your own code; fix the underlying cause. Scoped `ignore::` entries for upstream libraries are acceptable in `pyproject.toml` with a comment explaining why.",
+   "label": "true",
+   "evidence": [
+    "pyproject.toml:270-271 'filterwarnings = [ \"error\",'",
+    "pyproject.toml:272-286 scoped 'ignore:...' entries each with an explanatory comment (e.g. '# pywin32 internal deprecation warning')"
+   ],
+   "note": "pytest config is filterwarnings=error with commented, scoped ignore entries."
+  },
+  {
+   "id": "5e6f2bdfeb489aef58f540ae7934718bf9bf4647",
+   "line": 92,
+   "text": "New features from the 2026-07-28 spec must have a matching test in the [conformance suite](https://github.com/modelcontextprotocol/conformance) that passes against this SDK (CI runs it via `.github/workflows/conformance.yml`). If no matching test exists, stop and tell the user so they can raise an issue on the conformance repo.",
+   "label": "true",
+   "evidence": [
+    ".github/workflows/conformance.yml:59-65 'Run server conformance (all suite, 2026-07-28 wire) ... --spec-version 2026-07-28'",
+    ".github/workflows/conformance.yml:116-124 'Run client conformance (all suite, 2026-07-28 wire)'"
+   ],
+   "note": "conformance.yml exists and runs the conformance suite against the 2026-07-28 spec revision in CI."
+  },
+  {
+   "id": "943a050385b22cb27b181ebb27dd9c36f02e1b34",
+   "line": 100,
+   "text": "CI requires 100% (`fail_under = 100`, `branch = true`).",
+   "label": "true",
+   "evidence": [
+    "pyproject.toml:302 'branch = true'",
+    "pyproject.toml:315 'fail_under = 100'",
+    ".github/workflows/shared.yml:93 'uv run --frozen --no-sync coverage report'"
+   ],
+   "note": "Coverage config and the CI report step require 100% branch coverage."
+  },
+  {
+   "id": "1cf593adba25f7ccdd80f25e4e12129be389d4b9",
+   "line": 102,
+   "text": "Full check: `./scripts/test` (~23s). Runs coverage + `strict-no-cover` on the default Python. Not identical to CI: CI runs 3.10–3.14 × {ubuntu, windows} × {locked, lowest-direct}, and some branch-coverage quirks only surface on specific matrix entries.",
+   "label": "true",
+   "evidence": [
+    "scripts/test:5-12 'coverage erase' / 'coverage run -m pytest -n auto' / 'coverage report' / 'UV_FROZEN=1 uv run --frozen strict-no-cover' (no --python flag)",
+    ".github/workflows/shared.yml:58-64 'python-version: [\"3.10\"...\"3.14\"]', 'lowest-direct' / 'locked', 'os: [ubuntu-latest, windows-latest]'"
+   ],
+   "note": "scripts/test runs coverage plus strict-no-cover and CI's matrix is exactly 3.10-3.14 x two OSes x two resolutions; the ~23s timing was not measured."
+  },
+  {
+   "id": "aa8a1a0e27a9533f721d1ef4b3a2075d29e5b526",
+   "line": 109,
+   "text": "uv run --frozen coverage erase",
+   "label": "true",
+   "evidence": [
+    "scripts/test:5 'uv run --frozen coverage erase'",
+    "pyproject.toml:75 '\"coverage[toml]>=7.10.7,<=7.13\",'"
+   ],
+   "note": "Same command is used in scripts/test with coverage in the dev group."
+  },
+  {
+   "id": "b8e7429202120069270da327c5ad638d33d242d2",
+   "line": 110,
+   "text": "uv run --frozen coverage run -m pytest tests/path/test_foo.py",
+   "label": "true",
+   "evidence": [
+    "scripts/test:7 'uv run --frozen coverage run -m pytest -n auto \"$@\"'"
+   ],
+   "note": "Matches the scripts/test invocation, scoped to one test file."
+  },
+  {
+   "id": "3a60a067356ac167504f7b9956d117a4d6816ca8",
+   "line": 111,
+   "text": "uv run --frozen coverage combine",
+   "label": "true",
+   "evidence": [
+    "scripts/test:8 'uv run --frozen coverage combine'",
+    "pyproject.toml:304 'concurrency = [\"multiprocessing\", \"thread\"]' (parallel data files need combining)"
+   ],
+   "note": "combine is required by the multiprocessing coverage config and used in scripts/test."
+  },
+  {
+   "id": "62203a97d97ecbbb5f32dc6c1985b13995fb233f",
+   "line": 112,
+   "text": "uv run --frozen coverage report --include='src/mcp/path/foo.py' --fail-under=0",
+   "label": "true",
+   "evidence": [
+    "scripts/test:9 'uv run --frozen coverage report'",
+    "pyproject.toml:315 'fail_under = 100' (hence --fail-under=0 override for partial runs)"
+   ],
+   "note": "Valid coverage report invocation overriding the configured fail_under for partial runs."
+  },
+  {
+   "id": "d6c562b4f5cb00dd84111f728d1d0166d9e2e037",
+   "line": 114,
+   "text": "UV_FROZEN=1 uv run --frozen strict-no-cover",
+   "label": "true",
+   "evidence": [
+    "scripts/test:10-12 '# strict-no-cover spawns `uv run coverage json` internally without --frozen; UV_FROZEN=1 propagates to that subprocess ... UV_FROZEN=1 uv run --frozen strict-no-cover'",
+    "pyproject.toml:77,254 '\"strict-no-cover\",' / 'strict-no-cover = { git = \"https://github.com/pydantic/strict-no-cover\" }'"
+   ],
+   "note": "Identical to the last line of scripts/test."
+  },
+  {
+   "id": "1ed88d040820c851ee76def3d858dcd906c6a4d8",
+   "line": 117,
+   "text": "Partial runs can't hit 100% (coverage tracks `tests/` too), so `--fail-under=0` and `--include` scope the report. `strict-no-cover` has no false positives on partial runs — if your new test executes a line marked `# pragma: no cover`, even a single-file run catches it.",
+   "label": "true",
+   "evidence": [
+    "pyproject.toml:305 'source = [\"src\", \"src/mcp-types/mcp_types\", \"tests\"]'",
+    "pyproject.toml:315 'fail_under = 100'"
+   ],
+   "note": "Coverage measures tests/ too, so partial runs cannot reach the 100% gate; strict-no-cover's partial-run behaviour is consistent with its purpose but not locally verifiable."
+  },
+  {
+   "id": "cfaacf6a6ff9046cb29474e74448407d562be1cd",
+   "line": 122,
+   "text": "Avoid adding new `# pragma: no cover`, `# type: ignore`, or `# noqa` comments.",
+   "label": "judgment",
+   "evidence": [
+    "git grep -c 'pragma: no cover' -- src => 141; git grep -c 'type: ignore' -- tests => 29"
+   ],
+   "note": "Preference against new suppressions that no tooling enforces."
+  },
+  {
+   "id": "3f1b3abb6b598cc36f711d16c63fee44fc49461c",
+   "line": 123,
+   "text": "In tests, use `assert isinstance(x, T)` to narrow types instead of `# type: ignore`.",
+   "label": "true",
+   "evidence": [
+    "git grep -c 'assert isinstance(' -- tests => 901 total vs 'type: ignore' in tests => 29",
+    ".claude/skills/test-quality/SKILL.md:101-102 'In tests, narrow types with `assert isinstance`'"
+   ],
+   "note": "Tests overwhelmingly narrow types with assert isinstance rather than type: ignore."
+  },
+  {
+   "id": "7ccd40a3c50d33e1fb34eb9f2c80b1efca8b1ad0",
+   "line": 124,
+   "text": "In library code (`src/`), a `# pragma: no cover` needs very good reasoning — it usually means a test is missing.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Review-standard guidance on justifying pragmas in src that the repo cannot settle."
+  },
+  {
+   "id": "1a00adc57e412f23fdb4f72da023e900ca57918c",
+   "line": 128,
+   "text": "git diff origin/main... | grep -E '^\\+.*(pragma|type: ignore|noqa)'",
+   "label": "true",
+   "evidence": [
+    "git branch -a => 'remotes/origin/main' exists, so 'git diff origin/main...' resolves"
+   ],
+   "note": "Valid read-only audit command against the existing origin/main ref."
+  },
+  {
+   "id": "db3c9994ef236721ef45df3f66aed12c05adb5f2",
+   "line": 133,
+   "text": "`# pragma: no cover` — line is never executed. CI's `strict-no-cover` (skipped on Windows runners) fails if it IS executed. When your test starts covering such a line, remove the pragma.",
+   "label": "true",
+   "evidence": [
+    ".github/workflows/shared.yml:95-97 'name: Check for unnecessary no cover pragmas / if: runner.os != 'Windows' / run: uv run --frozen --no-sync strict-no-cover'"
+   ],
+   "note": "CI runs strict-no-cover on non-Windows runners only."
+  },
+  {
+   "id": "34e9f36ce755a8e7d70d1af14809142720003ad5",
+   "line": 136,
+   "text": "`# pragma: lax no cover` — excluded from coverage but not checked by `strict-no-cover`. Use for lines covered on some platforms/versions but not others.",
+   "label": "true",
+   "evidence": [
+    "pyproject.toml:320-321 'exclude_also = [ \"pragma: lax no cover\",'",
+    "src/mcp/server/stdio.py:32 'import fcntl  # pragma: lax no cover - POSIX-only line, uncovered on Windows runners'"
+   ],
+   "note": "lax no cover is a custom coverage exclusion used for platform-dependent lines."
+  },
+  {
+   "id": "9515f6f7d44ed681882c5830fc603a019329bc01",
+   "line": 139,
+   "text": "`# pragma: no branch` — excludes branch arcs only. coverage.py misreports the `->exit` arc for nested `async with` on Python 3.11+ (worse on 3.14/Windows).",
+   "label": "true",
+   "evidence": [
+    "tests/transports/stdio/test_lifecycle.py:125-126 '# Coverage mis-traces nested `async with` exit arcs on Python 3.11+.' / 'async with stdio_client(params):  # pragma: no branch'",
+    "git grep -c 'pragma: no branch' -- src tests => 227"
+   ],
+   "note": "Repo uses no branch on nested async with for exactly the stated coverage.py exit-arc quirk."
+  },
+  {
+   "id": "e1cccc5effafb5df52c4a2c762f0e0a2473b38ef",
+   "line": 144,
+   "text": "When a change affects public API or user-visible behaviour, update the relevant page(s) under `docs/` in the same PR.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "PR process rule about updating docs alongside changes; not enforced by tooling."
+  },
+  {
+   "id": "936ee26e34be06cd28aa172fc72577f9828faca8",
+   "line": 145,
+   "text": "Docs are organised by the `nav:` sections in `mkdocs.yml` (Get started, Servers, Inside your handler, Running your server, Clients, Advanced), not by the on-disk directory names.",
+   "label": "true",
+   "evidence": [
+    "mkdocs.yml:18 '- Get started:', :24 '- Servers:', :34 '- Inside your handler:', :45 '- Running your server:', :52 '- Clients:', :63 '- Advanced:'",
+    "ls docs => get-started, servers, handlers, run, client, advanced (on-disk names differ from nav labels)"
+   ],
+   "note": "mkdocs.yml nav has exactly those six sections, and their directory names differ from the labels."
+  },
+  {
+   "id": "6b6924dc73ab2b65e79d7ec328170cae1546e241",
+   "line": 147,
+   "text": "Find the page covering the feature you touched in `mkdocs.yml` rather than adding a new one.",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Guidance on preferring existing pages over new ones; the repo cannot settle it."
+  },
+  {
+   "id": "ddbe111c759479f5ee26f3a11901c685540e594b",
+   "line": 152,
+   "text": "Format: `uv run --frozen ruff format .`",
+   "label": "true",
+   "evidence": [
+    ".pre-commit-config.yaml:31-34 'id: ruff-format ... entry: uv run --frozen ruff / args: [format]'"
+   ],
+   "note": "Pre-commit runs ruff format via uv run --frozen."
+  },
+  {
+   "id": "fe453b946790016164f83e016da57705cce971fe",
+   "line": 153,
+   "text": "Lint: `uv run --frozen ruff check . --fix`",
+   "label": "true",
+   "evidence": [
+    ".pre-commit-config.yaml:38-41 'id: ruff ... entry: uv run --frozen ruff / args: [\"check\", \"--fix\", \"--exit-non-zero-on-fix\"]'"
+   ],
+   "note": "Pre-commit runs ruff check --fix via uv run --frozen."
+  },
+  {
+   "id": "6280cae8cc9cba8a5cd67f35a8f4a707c151c6a8",
+   "line": 154,
+   "text": "Type check: `uv run --frozen pyright`",
+   "label": "true",
+   "evidence": [
+    ".pre-commit-config.yaml:45-47 'id: pyright ... entry: uv run --frozen pyright'"
+   ],
+   "note": "Pre-commit runs pyright via uv run --frozen."
+  },
+  {
+   "id": "2228eb2c35a559edcd8e880e49cc0f04fbf82807",
+   "line": 155,
+   "text": "Pre-commit runs all of the above plus markdownlint, a `uv.lock` consistency check, and README checks — see `.pre-commit-config.yaml`",
+   "label": "true",
+   "evidence": [
+    ".pre-commit-config.yaml:15-18 'markdownlint-cli ... id: markdownlint'",
+    ".pre-commit-config.yaml:51-53 'id: uv-lock-check / name: Check uv.lock is up to date / entry: uv lock --check'",
+    ".pre-commit-config.yaml:57-59 'id: readme-snippets / name: Check README snippets are up to date'"
+   ],
+   "note": "Pre-commit includes ruff format, ruff, pyright, markdownlint, uv lock --check and README snippet checks."
+  },
+  {
+   "id": "2196bc97a7ef1e1fc93760dc259db8a299a03ea4",
+   "line": 160,
+   "text": "Always use `logger.exception()` instead of `logger.error()` when catching exceptions",
+   "label": "judgment",
+   "evidence": [
+    "git grep -c 'logger.exception(' -- src => 57; logger.error inside except blocks still exists, e.g. src/mcp/cli/cli.py:283-284 'except subprocess.CalledProcessError as e: logger.error('"
+   ],
+   "note": "Not lint-enforced (no TRY400), and the code follows it only partly."
+  },
+  {
+   "id": "a273bf1e9eca8738471d88937f353d77db2586ff",
+   "line": 161,
+   "text": "Don't include the exception in the message: `logger.exception(\"Failed\")` not `logger.exception(f\"Failed: {e}\")`",
+   "label": "true",
+   "evidence": [
+    "git grep -nE 'logger\\.exception\\(' -- src | grep -E '\\{(e|exc|err|error|ex)\\b|, (e|exc|err)\\)' => (no matches across 57 logger.exception calls)"
+   ],
+   "note": "None of the logger.exception calls in src embed the caught exception in the message."
+  },
+  {
+   "id": "a3d4b64c2c0f4640559a5c449338f41442c9e689",
+   "line": 163,
+   "text": "File ops: `except (OSError, PermissionError):`",
+   "label": "judgment",
+   "evidence": [
+    "git grep -nF 'except (OSError, PermissionError)' -- src => 0 matches"
+   ],
+   "note": "Illustrative catch pattern; the repo neither uses nor contradicts it."
+  },
+  {
+   "id": "949c626515ffb0bbbd23b13b3f81edffa4cf6479",
+   "line": 164,
+   "text": "JSON: `except json.JSONDecodeError:`",
+   "label": "judgment",
+   "evidence": [
+    "git grep -nF 'except json.JSONDecodeError' -- src => 0 matches"
+   ],
+   "note": "Illustrative catch pattern; the repo neither uses nor contradicts it."
+  },
+  {
+   "id": "9e069f0bdcfec44382d6f1936d19604a6b71e955",
+   "line": 165,
+   "text": "Network: `except (ConnectionError, TimeoutError):`",
+   "label": "judgment",
+   "evidence": [
+    "git grep -nF 'except (ConnectionError, TimeoutError)' -- src => 0 matches"
+   ],
+   "note": "Illustrative catch pattern; the repo neither uses nor contradicts it."
+  },
+  {
+   "id": "e6165261b5556098ea823205864411f08c827380",
+   "line": 166,
+   "text": "FORBIDDEN `except Exception:` - unless in top-level handlers",
+   "label": "judgment",
+   "evidence": [
+    "git grep -nE 'except Exception( as \\w+)?:' -- src | wc -l => 69, many marked as boundaries (e.g. src/mcp/client/caching.py:236 '# boundary around user store code')",
+    "pyproject.toml:208-218 ruff select has no BLE (blind-except) rule"
+   ],
+   "note": "Not lint-enforced, and whether each broad except is a top-level handler is a judgment call."
+  }
+ ]
+}
