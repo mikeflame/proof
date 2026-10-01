@@ -1,0 +1,14 @@
+{
+  "name": "proof",
+  "description": "Skills that make coding agents prove their claims with evidence from the repository.",
+  "owner": {
+    "name": "Mykhailo Savonik"
+  },
+  "plugins": [
+    {
+      "name": "proof",
+      "source": "./plugins/proof",
+      "description": "/proof:claude-md checks every statement in CLAUDE.md and AGENTS.md against the repository and proposes fixes, with evidence."
+    }
+  ]
+}

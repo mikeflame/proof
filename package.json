@@ -1,0 +1,23 @@
+{
+  "name": "proof-claude-md",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Prove your CLAUDE.md is still true: every statement checked against the repo, with evidence.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "esbuild src/cli.ts --bundle --platform=node --format=esm --target=node22 --legal-comments=none --outfile=plugins/proof/skills/claude-md/scripts/claims.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && vitest run",
+    "validate": "claude plugin validate . && claude plugin validate ./plugins/proof"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.3"
+  }
+}
