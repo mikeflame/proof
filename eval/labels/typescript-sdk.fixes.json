@@ -149,6 +149,98 @@
     "packages/core/src/schemas.ts:1468 \"export const CallToolRequestSchema = RequestSchema.extend({\""
    ],
    "note": "src/types.ts does not exist; the repo says new spec schemas must be added in packages/core/src/schemas.ts."
+  },
+  {
+   "statement_id": "ab53ac6db365f1586d675ec265d83d365660c862",
+   "line": 57,
+   "old": "All JSON-RPC message types, schemas, and protocol constants are defined here using Zod v4.",
+   "new": "The JSON-RPC message types are defined here; the Zod v4 schemas and protocol constants live in `packages/core/src/schemas.ts` and `packages/core/src/constants.ts`.",
+   "keep": true,
+   "evidence": [
+    "packages/core-internal/src/types/schemas.ts:1 \"// Moved: the spec Zod schemas now live in @modelcontextprotocol/core (packages/core/src/schemas.ts).\"",
+    "packages/core-internal/src/types/constants.ts:1 \"// Moved: the protocol constants now live in @modelcontextprotocol/core (packages/core/src/constants.ts).\"",
+    "packages/core/src/schemas.ts:136 \"export const JSONRPCRequestSchema = z\"; packages/core/src/constants.ts:110 \"export const JSONRPC_VERSION = '2.0';\"",
+    "packages/core-internal/src/types/types.ts:229-236 \"export type JSONRPCRequest = Infer<typeof JSONRPCRequestSchema>; ... export type JSONRPCMessage = ...\""
+   ],
+   "note": "types.ts now holds only the TypeScript types (inferred from imported schemas); the Zod schemas and constants moved to packages/core/src/schemas.ts and constants.ts, as the new text says."
+  },
+  {
+   "statement_id": "81ca2fc964c26cf3abccc2eb709658386bad1f71",
+   "line": 98,
+   "old": "`packages/client/src/client/auth-extensions.ts`",
+   "new": "`packages/client/src/client/authExtensions.ts`",
+   "keep": true,
+   "evidence": [
+    "git ls-files packages/client/src/client/ => authExtensions.ts present, no auth-extensions.ts",
+    "packages/client/src/index.ts:62 \"} from './client/authExtensions';\""
+   ],
+   "note": "The file is authExtensions.ts; the hyphenated path does not exist."
+  },
+  {
+   "statement_id": "00860aae98c4f61e9c260ffe6a75f2aa8820e092",
+   "line": 172,
+   "old": "`signal`, `sessionId`, `sendNotification`, `sendRequest`, etc.",
+   "new": "`sessionId` and `mcpReq` (`signal`, `send`, `notify`), etc.",
+   "keep": true,
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:333-443 BaseContext = { sessionId?: string; mcpReq: { id, method, _meta?, ..., signal: AbortSignal; send: {...}; notify: (...) => Promise<void> }; http?: {...} }",
+    "packages/core-internal/src/shared/protocol.ts:1068-1110 \"const baseCtx: BaseContext = { sessionId: ..., mcpReq: { ..., signal: abortController.signal, send: ..., notify: sendNotification }, http: ... }\"",
+    "grep sendNotification/sendRequest in protocol.ts => only local consts at 1047/1052, not BaseContext fields"
+   ],
+   "note": "BaseContext has no top-level signal/sendNotification/sendRequest; they are mcpReq.signal/send/notify, matching the new text and CLAUDE.md:197-208."
+  },
+  {
+   "statement_id": "a3343b1bb53e2ee10d8634446951f5bdfd8f07d1",
+   "line": 39,
+   "old": "Lowercase with hyphens",
+   "new": "camelCase (`unicorn/filename-case` in `common/eslint-config/eslint.config.mjs`)",
+   "keep": true,
+   "evidence": [
+    "common/eslint-config/eslint.config.mjs:86-91 'unicorn/filename-case': ['error', { case: 'camelCase' }] (in the base block, no files filter)",
+    "ls packages/client/src/client => authExtensions.ts, streamableHttp.ts, versionNegotiation.ts, crossAppAccess.ts",
+    "git ls-files 'packages/**' *.ts basenames with '-' => only 4 (spec.types.2025-11-25*.ts, spec.types.2026-07-28*.ts, date versions); 280 of 428 contain uppercase"
+   ],
+   "note": "File names are camelCase and the shared ESLint config enforces camelCase via unicorn/filename-case, so 'lowercase with hyphens' was wrong."
+  },
+  {
+   "statement_id": "ab53ac6db365f1586d675ec265d83d365660c862",
+   "line": 57,
+   "old": "All JSON-RPC message types, schemas, and protocol constants are defined here using Zod v4.",
+   "new": "All JSON-RPC message types are defined here; the Zod v4 schemas and protocol constants live in `packages/core/src/schemas.ts` and `packages/core/src/constants.ts`.",
+   "keep": true,
+   "evidence": [
+    "packages/core-internal/src/types/schemas.ts:1 // Moved: the spec Zod schemas now live in @modelcontextprotocol/core (packages/core/src/schemas.ts).",
+    "packages/core-internal/src/types/constants.ts:1 // Moved: the protocol constants now live in @modelcontextprotocol/core (packages/core/src/constants.ts).",
+    "packages/core/src/schemas.ts:1 import * as z from 'zod/v4'; :136 export const JSONRPCRequestSchema = z",
+    "packages/core/src/constants.ts:1 export const LATEST_PROTOCOL_VERSION; :110 JSONRPC_VERSION; :113 PARSE_ERROR",
+    "packages/core-internal/src/types/types.ts:229-236 export type JSONRPCRequest/JSONRPCNotification/JSONRPCResponse/JSONRPCMessage (type-only imports of the schemas)"
+   ],
+   "note": "types.ts now only holds the inferred TS types; the Zod v4 schemas and constants are defined in packages/core/src/schemas.ts and constants.ts, which the new text names correctly."
+  },
+  {
+   "statement_id": "d4710bd7781e2a2e9403958bd283dddace068c23",
+   "line": 92,
+   "old": "`McpServer.tool()`, `.resource()`, `.prompt()`",
+   "new": "`McpServer.registerTool()`, `.registerResource()`, `.registerPrompt()`",
+   "keep": true,
+   "evidence": [
+    "packages/server/src/server/mcp.ts:633 registerResource( ; :995/1011/1025 registerTool ; :1085/1098/1112/1124 registerPrompt",
+    "grep -nE '^\\s+(...)?(tool|resource|prompt)\\s*[<(]' packages/server/src/server/mcp.ts => only register* methods; no tool()/resource()/prompt() in packages/*/src (server-legacy holds only auth and sse)"
+   ],
+   "note": "McpServer exposes only registerTool/registerResource/registerPrompt; the .tool()/.resource()/.prompt() methods no longer exist."
+  },
+  {
+   "statement_id": "00860aae98c4f61e9c260ffe6a75f2aa8820e092",
+   "line": 172,
+   "old": "`signal`, `sessionId`, `sendNotification`, `sendRequest`",
+   "new": "`sessionId`, `mcpReq.signal`, `mcpReq.send`, `mcpReq.notify`",
+   "keep": true,
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:938 private _onrequest(",
+    "packages/core-internal/src/shared/protocol.ts:1068-1110 const baseCtx: BaseContext = { sessionId: capturedTransport?.sessionId, mcpReq: { ..., signal: abortController.signal, send: (...), notify: sendNotification } }",
+    "packages/core-internal/src/shared/protocol.ts:414 signal: AbortSignal; :424 send: {...}; :441 notify: (notification: Notification) => Promise<void>; (all inside mcpReq)"
+   ],
+   "note": "_onrequest builds BaseContext with top-level sessionId and mcpReq.signal/send/notify; there are no top-level signal/sendNotification/sendRequest fields (those are local closures)."
   }
  ]
 }

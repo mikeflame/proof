@@ -1,7 +1,7 @@
 {
- "proof": "03eeed6bb0b8",
+ "proof": "6a991a8ff9bf",
  "stage": "run",
- "seconds": 137,
+ "seconds": 3,
  "exit": 0,
  "report": {
   "file": "AGENTS.md",
@@ -10,10 +10,10 @@
   "imports": [],
   "importedBy": [],
   "counts": {
-   "VERIFIED": 27,
+   "VERIFIED": 28,
    "STALE": 0,
    "UNCONFIRMED": 0,
-   "UNVERIFIED_WITH_REASON": 26,
+   "UNVERIFIED_WITH_REASON": 25,
    "DECIDED": 0,
    "OVERRIDDEN": 0,
    "NOT_CHECKED": 9,
@@ -37,10 +37,10 @@
    "behind": 0
   },
   "run": {
-   "started": "2026-10-01T13:16:13.465Z",
-   "finished": "2026-10-01T13:16:15.827Z",
+   "started": "2026-10-01T15:18:27.086Z",
+   "finished": "2026-10-01T15:18:29.350Z",
    "version": "0.2.0",
-   "budgetUsedUsd": 0.888326
+   "budgetUsedUsd": 0
   },
   "decisions": [],
   "reopened": [],
@@ -112,7 +112,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -165,7 +165,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -256,7 +256,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -330,7 +330,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -394,7 +394,7 @@
      "proposedText": null,
      "action": "needs-decision",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -494,7 +494,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -559,31 +559,38 @@
      }
     ],
     "status": "UNVERIFIED_WITH_REASON",
-    "reason": "verifier answer refused: no citation checks out (README.md:20: the excerpt is not at README.md:20; git show origin/v1.x:README.md | sed -n 15,18p: not re-run: `sed` is not a read-only command proof re-runs)",
+    "reason": "The first half holds: README.md points to \"What's new in v2\" and the migration guide, and the latest README commit removed the v2 notice. The v1.x branch exists as origin/v1.x and is the v1 maintenance line. I could not read README.md on that branch, because git commands were denied in this environment. So I can't prove the v1 README lives there. I searched .git/packed-refs and scripts/build-docs.sh. They show only that the branch exists and holds v1 docs.",
     "settled": false,
     "agent": {
-     "verdict": "true",
+     "verdict": "unverified_with_reason",
      "evidence": [
       {
        "kind": "file_line",
        "ref": "README.md:20",
-       "excerpt": "It has a [Get started guide](...), [What's new in v2](https://py.sdk.modelcontextprotocol.io/whats-new/), the [API reference]...",
-       "valid": false,
-       "problem": "the excerpt is not at README.md:20"
+       "excerpt": "[What's new in v2](https://py.sdk.modelcontextprotocol.io/whats-new/)",
+       "valid": true,
+       "problem": ""
       },
       {
-       "kind": "command_output",
-       "ref": "git show origin/v1.x:README.md | sed -n 15,18p",
-       "excerpt": "> **This documents v1.x, the maintenance line of the MCP Python SDK.**",
-       "valid": false,
-       "problem": "not re-run: `sed` is not a read-only command proof re-runs"
+       "kind": "file_line",
+       "ref": ".git/packed-refs:149",
+       "excerpt": "52e64ddb9f8f897bcb74de0bc9417f820af35a59 refs/remotes/origin/v1.x",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "scripts/build-docs.sh:6",
+       "excerpt": "the v1 maintenance line (from the v1.x branch) is placed under",
+       "valid": true,
+       "problem": ""
       }
      ],
-     "reason": "The main README points to the v2 docs and what's new in v2. The README on origin/v1.x opens with 'This documents v1.x'.",
+     "reason": "The first half holds: README.md points to \"What's new in v2\" and the migration guide, and the latest README commit removed the v2 notice. The v1.x branch exists as origin/v1.x and is the v1 maintenance line. I could not read README.md on that branch, because git commands were denied in this environment. So I can't prove the v1 README lives there. I searched .git/packed-refs and scripts/build-docs.sh. They show only that the branch exists and holds v1 docs.",
      "proposedText": null,
      "action": "no-op",
-     "rejected": "no citation checks out (README.md:20: the excerpt is not at README.md:20; git show origin/v1.x:README.md | sed -n 15,18p: not re-run: `sed` is not a read-only command proof re-runs)",
-     "cached": false,
+     "rejected": null,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -645,7 +652,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -833,7 +840,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -939,7 +946,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1005,7 +1012,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1111,7 +1118,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1182,7 +1189,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1229,7 +1236,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1284,7 +1291,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1344,7 +1351,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1428,7 +1435,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1482,7 +1489,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1802,7 +1809,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1859,7 +1866,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1951,7 +1958,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2055,7 +2062,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2110,7 +2117,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2200,7 +2207,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2258,32 +2265,32 @@
       "reason": "tests/client/test_stdio.py"
      }
     ],
-    "status": "UNVERIFIED_WITH_REASON",
-    "reason": "verifier answer refused: no citation checks out (tests/client/test_stdio.py:1: the excerpt is not at tests/client/test_stdio.py:1; ls tests/server tests/shared: the re-run output does not contain the excerpt)",
-    "settled": false,
+    "status": "VERIFIED",
+    "reason": "src/mcp/client/stdio.py exists and tests/client/test_stdio.py is its test file. The same mapping holds for src/mcp/server/stdio.py -> tests/server/test_stdio.py and src/mcp/shared/uri_template.py -> tests/shared/test_uri_template.py. The tests/ top level mirrors src/mcp with cli, client, server and shared directories. The statement leaves out that tests/ also has directories that don't mirror src, such as interaction, docs_src, examples and issues. It also leaves out that some source modules have several split test files, such as tests/client/test_session_*.py. Neither makes what it states fal",
+    "settled": true,
     "agent": {
      "verdict": "true",
      "evidence": [
       {
-       "kind": "file_line",
-       "ref": "tests/client/test_stdio.py:1",
-       "excerpt": "tests/client/test_stdio.py (mirrors src/mcp/client/stdio.py)",
-       "valid": false,
-       "problem": "the excerpt is not at tests/client/test_stdio.py:1"
+       "kind": "command_output",
+       "ref": "ls tests/client/test_stdio.py tests/server/test_stdio.py tests/shared/test_uri_template.py src/mcp/shared/uri_template.py",
+       "excerpt": "tests/client/test_stdio.py",
+       "valid": true,
+       "problem": ""
       },
       {
        "kind": "command_output",
-       "ref": "ls tests/server tests/shared",
-       "excerpt": "tests/server/test_session.py, test_runner.py, test_subscriptions.py; tests/shared/test_peer.py, test_uri_template.py",
-       "valid": false,
-       "problem": "the re-run output does not contain the excerpt"
+       "ref": "ls tests/client/test_stdio.py tests/server/test_stdio.py tests/shared/test_uri_template.py src/mcp/shared/uri_template.py",
+       "excerpt": "tests/shared/test_uri_template.py",
+       "valid": true,
+       "problem": ""
       }
      ],
-     "reason": "Tests directories mirror src/mcp (client, server, shared) with test_<module>.py files, e.g. stdio.py -> tests/client/test_stdio.py. Some extra topic files exist (e.g. tests/client/test_scope_bug_1630.py), but the stated convention and example hold.",
+     "reason": "src/mcp/client/stdio.py exists and tests/client/test_stdio.py is its test file. The same mapping holds for src/mcp/server/stdio.py -> tests/server/test_stdio.py and src/mcp/shared/uri_template.py -> tests/shared/test_uri_template.py. The tests/ top level mirrors src/mcp with cli, client, server and shared directories. The statement leaves out that tests/ also has directories that don't mirror src, such as interaction, docs_src, examples and issues. It also leaves out that some source modules have several split test files, such as tests/client/test_session_*.py. Neither makes what it states fal",
      "proposedText": null,
      "action": "no-op",
-     "rejected": "no citation checks out (tests/client/test_stdio.py:1: the excerpt is not at tests/client/test_stdio.py:1; ls tests/server tests/shared: the re-run output does not contain the excerpt)",
-     "cached": false,
+     "rejected": null,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2354,7 +2361,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2449,7 +2456,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2547,7 +2554,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2599,7 +2606,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2726,7 +2733,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2821,7 +2828,7 @@
      "proposedText": null,
      "action": "needs-decision",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2886,7 +2893,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2978,7 +2985,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3082,7 +3089,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3389,7 +3396,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3487,7 +3494,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3572,7 +3579,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3651,7 +3658,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3754,7 +3761,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3840,7 +3847,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3932,7 +3939,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4067,7 +4074,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4124,7 +4131,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4217,7 +4224,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4274,7 +4281,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4404,7 +4411,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4502,7 +4509,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4605,7 +4612,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4701,7 +4708,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4761,7 +4768,7 @@
      "proposedText": null,
      "action": "needs-decision",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4825,7 +4832,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4876,7 +4883,7 @@
      "proposedText": null,
      "action": "needs-decision",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4950,7 +4957,7 @@
      "proposedText": null,
      "action": "needs-decision",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    }
@@ -4958,8 +4965,8 @@
   "agent": {
    "sent": 53,
    "answered": 53,
-   "cached": 0,
-   "costUsd": 0.888326,
+   "cached": 53,
+   "costUsd": 0,
    "model": "claude-sonnet-5-5",
    "failures": []
   }

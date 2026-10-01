@@ -18,6 +18,34 @@
     "CONTRIBUTING.md:145-147 lists javax.* + jakarta.* in one group, but the enforced checkstyle config and the code disagree with it"
    ],
    "note": "The enforced checkstyle groups (java,javax,*,org.springframework) and the only jakarta-importing file put jakarta.* in the others group, so dropping the javax+jakarta pairing removes a false claim and keeps the rest true."
+  },
+  {
+   "statement_id": "3c1dda3fae1406354cbfba12e606fe41da2e645c",
+   "line": 20,
+   "old": "`javax.*` + `jakarta.*`, then others,",
+   "new": "`javax.*`, then others (including `jakarta.*`),",
+   "keep": true,
+   "evidence": [
+    "src/checkstyle/checkstyle.xml:107-113 ImportOrder groups=\"java,javax,*,org.springframework\", ordered=true, separated=true, option=bottom",
+    "pom.xml:655-700 checkstyle-check profile active unless env.BOGUS, runs src/checkstyle/checkstyle.xml at process-sources with failOnViolation true; pom.xml:320 disable.checks=false",
+    "auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-bedrock-knowledgebase/.../BedrockKnowledgeBaseVectorStoreProperties.java:19-23 jakarta.validation.* imports sit in one block with org.jspecify and software.amazon (the only jakarta-importing file)",
+    "CONTRIBUTING.md:141-152 lists javax then jakarta together (doc conflicts with the enforced config)"
+   ],
+   "note": "The enforced Checkstyle groups have no jakarta group, so jakarta.* falls into the catch-all group, as the only jakarta-importing source file shows; the new text matches what the build enforces."
+  },
+  {
+   "statement_id": "3c1dda3fae1406354cbfba12e606fe41da2e645c",
+   "line": 20,
+   "old": "then `javax.*` + `jakarta.*`, then others,",
+   "new": "then `javax.*`, then others (including `jakarta.*`),",
+   "keep": true,
+   "evidence": [
+    "src/checkstyle/checkstyle.xml:107-113 ImportOrder groups=java,javax,*,org.springframework ordered=true separated=true option=bottom (a non-regex group 'javax' matches only the 'javax.' prefix, so jakarta.* falls into '*')",
+    "pom.xml:654-660 profile checkstyle-check activated by !env.BOGUS (always on), points at src/checkstyle/checkstyle.xml, failOnViolation true",
+    "the only jakarta importer, auto-configurations/.../BedrockKnowledgeBaseVectorStoreProperties.java:19-23, has jakarta.validation.* then org.jspecify.* then software.amazon.* in one group with no blank line",
+    "CONTRIBUTING.md:145-147 still lists javax.* and jakarta.* together (stale against the enforced checkstyle rule)"
+   ],
+   "note": "The enforced checkstyle ImportOrder and the repo's only jakarta-importing file both put jakarta.* in the 'others' group, so the edit matches what CI accepts, even though CONTRIBUTING.md is stale."
   }
  ]
 }

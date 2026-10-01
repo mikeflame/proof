@@ -1,7 +1,7 @@
 {
- "proof": "03eeed6bb0b8",
+ "proof": "6a991a8ff9bf",
  "stage": "check",
- "seconds": 3,
+ "seconds": 2,
  "exit": 0,
  "report": {
   "file": "AGENTS.md",
@@ -37,8 +37,8 @@
    "behind": 0
   },
   "run": {
-   "started": "2026-10-01T13:16:10.928Z",
-   "finished": "2026-10-01T13:16:13.321Z",
+   "started": "2026-10-01T15:18:24.653Z",
+   "finished": "2026-10-01T15:18:26.937Z",
    "version": "0.2.0"
   },
   "decisions": [],

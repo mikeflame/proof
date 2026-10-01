@@ -103,7 +103,7 @@ Corpus: 12 public repositories pinned to commits (6 tune, 6 held-out, never run 
 | Stage, split | Repos | Labeled statements | STALE precision | STALE recall | VERIFIED precision | Fixes kept |
 | --- | --- | --- | --- | --- | --- | --- |
 | `proof check`, tune | 6 | 364 | 100% (4 flagged) | 25% (16 stale) | 100% (28) | — |
-| `proof run`, tune | 6 | 364 | 100% (15 flagged) | 93.8% (16 stale) | 97.2% (246) | 94.1% (17) |
+| `proof run`, tune | 6 | 364 | 100% (15 flagged) | 93.8% (16 stale) | 97.2% (246) | 100% (14) |
 | `proof check`, held-out | 6 | 316 | 0% (6 flagged) | 0% (7 stale) | 100% (17) | — |
 | `proof run`, held-out | 6 | 316 | 87.5% (8 flagged) | 100% (7 stale) | 93.8% (145) | 90.9% (11) |
 
@@ -111,7 +111,8 @@ Run time on denoland/deno (14,927 files, 137 open statements in CLAUDE.md): a fu
 <!-- /generated:metrics -->
 
 Scored by `node eval/score.mjs` against `eval/labels/`; `eval/` holds the corpus, the reports and
-the labels, so every number can be re-derived.
+the labels, so every number can be re-derived. "Fixes kept" is one sample: the fixer words its fixes
+differently on each run, and an independent reviewer judges the fixes of that run.
 
 The held-out rows are the frozen build's one run on repositories it had never seen. Its mechanical
 stage failed there: all six of its stale flags were false, from MSBuild file types it did not know,

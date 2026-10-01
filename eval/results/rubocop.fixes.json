@@ -1,7 +1,7 @@
 {
- "proof": "03eeed6bb0b8",
+ "proof": "6a991a8ff9bf",
  "stage": "fixes",
- "seconds": 85,
+ "seconds": 216,
  "exit": 1,
  "report": {
   "file": "AGENTS.md",
@@ -11,14 +11,14 @@
   "importedBy": [],
   "counts": {
    "VERIFIED": 58,
-   "STALE": 3,
+   "STALE": 2,
    "UNCONFIRMED": 0,
    "UNVERIFIED_WITH_REASON": 15,
    "DECIDED": 0,
    "OVERRIDDEN": 0,
    "NOT_CHECKED": 0,
    "FIXED": 0,
-   "FIX_REJECTED": 0
+   "FIX_REJECTED": 1
   },
   "evidenceLevels": {
    "definition": 61,
@@ -37,10 +37,10 @@
    "behind": 0
   },
   "run": {
-   "started": "2026-10-01T13:33:39.677Z",
-   "finished": "2026-10-01T13:33:42.620Z",
+   "started": "2026-10-01T15:20:49.762Z",
+   "finished": "2026-10-01T15:20:58.143Z",
    "version": "0.2.0",
-   "budgetUsedUsd": 0.2580854
+   "budgetUsedUsd": 0.19041560000000002
   },
   "decisions": [],
   "reopened": [],
@@ -3228,36 +3228,29 @@
      "tier": "B",
      "action": "replace",
      "old": "the three `Layout` alignment cops that\nused to live in `Lint`.",
-     "new": "the three `Layout` alignment cops, two of\nwhich used to live in `Lint`.",
-     "reason": "Three Layout cops carry Severity: warning (BeginEndAlignment, DefEndAlignment, EndAlignment), but only DefEndAlignment and EndAlignment moved from Lint (obsoletion.yml). BeginEndAlignment was added in 0.91 as a Layout cop and has no Lint obsoletion entry, so not all three used to live in Lint.",
+     "new": "the three `Layout` alignment cops\n(`Layout/BeginEndAlignment`, `Layout/DefEndAlignment`, `Layout/EndAlignment`).",
+     "reason": "Three Layout alignment cops set Severity: warning in config/default.yml, but Layout/BeginEndAlignment never lived in Lint (added in 0.91 as Layout, no obsoletion entry), and Layout/BlockAlignment, which did live in Lint, sets no Severity. The rest of the sentence still holds.",
      "evidence": [
       {
        "kind": "file_line",
        "ref": "config/default.yml:498",
-       "excerpt": "Severity: warning (Layout/BeginEndAlignment, 486)",
+       "excerpt": "Severity: warning (under Layout/BeginEndAlignment, VersionAdded '0.91')",
        "valid": false,
        "problem": "the excerpt is not at config/default.yml:498"
       },
       {
        "kind": "file_line",
        "ref": "config/default.yml:610",
-       "excerpt": "Severity: warning (Layout/DefEndAlignment, 597)",
+       "excerpt": "Severity: warning (under Layout/DefEndAlignment)",
        "valid": false,
        "problem": "the excerpt is not at config/default.yml:610"
       },
       {
        "kind": "file_line",
        "ref": "config/default.yml:802",
-       "excerpt": "Severity: warning (Layout/EndAlignment, 781)",
+       "excerpt": "Severity: warning (under Layout/EndAlignment)",
        "valid": false,
        "problem": "the excerpt is not at config/default.yml:802"
-      },
-      {
-       "kind": "file_line",
-       "ref": "config/default.yml:489",
-       "excerpt": "VersionAdded: '0.91'",
-       "valid": true,
-       "problem": ""
       },
       {
        "kind": "file_line",
@@ -3267,9 +3260,9 @@
        "problem": ""
       },
       {
-       "kind": "file_line",
-       "ref": "config/obsoletion.yml:23",
-       "excerpt": "Lint/EndAlignment: Layout/EndAlignment",
+       "kind": "absence",
+       "ref": "grep -n 'Lint/BeginEndAlignment' config/obsoletion.yml",
+       "excerpt": "(no output)",
        "valid": true,
        "problem": ""
       }
@@ -5364,8 +5357,8 @@
       "reason": "nothing mechanical to check; the verifier reads it"
      }
     ],
-    "status": "STALE",
-    "reason": "No CI workflow checks for a missing changelog entry. The only reminder is a checkbox in the PR template. spec/project_spec.rb validates the format of entries that exist, not whether one is present. The only presence-related check is `changelog:check_clean`, which runs at release time and fails when entries are still pending (unmerged).",
+    "status": "FIX_REJECTED",
+    "reason": "the fix was reverted: unverified with reason: no citation checks out (.github/PULL_REQUEST_TEMPLATE.md:15: the excerpt is not at .github/PULL_REQUEST_TEMPLATE.md:15)",
     "settled": false,
     "agent": {
      "verdict": "stale",
@@ -5403,8 +5396,8 @@
      "tier": "B",
      "action": "replace",
      "old": "CI will flag it.",
-     "new": "the PR template asks for it.",
-     "reason": "No CI workflow checks for a changelog entry (no 'changelog' match under .github/workflows). The PR template checklist asks for one, and the Rakefile only checks for pending entries before release.",
+     "new": "the PR template asks for one when the change is user-observable.",
+     "reason": "No CI workflow checks for a changelog entry. The PR template checklist asks for an entry, and the Rakefile only checks for pending entries before a release.",
      "evidence": [
       {
        "kind": "absence",
@@ -5416,7 +5409,7 @@
       {
        "kind": "file_line",
        "ref": ".github/PULL_REQUEST_TEMPLATE.md:15",
-       "excerpt": "* [ ] Added an entry (file) to the [changelog folder](...) named `{change_type}_{change_description}.md`",
+       "excerpt": "* [ ] Added an entry (file) to the [changelog folder](...) named `{change_type}_{change_description}.md` if the new code introduces user-observable changes.",
        "valid": false,
        "problem": "the excerpt is not at .github/PULL_REQUEST_TEMPLATE.md:15"
       },
@@ -5428,8 +5421,8 @@
        "problem": ""
       }
      ],
-     "outcome": "dry-run",
-     "reverify": "verified"
+     "outcome": "rejected",
+     "reverify": "unverified with reason: no citation checks out (.github/PULL_REQUEST_TEMPLATE.md:15: the excerpt is not at .github/PULL_REQUEST_TEMPLATE.md:15)"
     }
    },
    {
@@ -6446,8 +6439,8 @@
      "tier": "B",
      "action": "replace",
      "old": "the heading lowercased with everything but letters removed\n    (`#allowmultilinefinalelement`), not",
-     "new": "the heading lowercased with spaces as hyphens\n    (`#setting-the-target-ruby-version`), not",
-     "reason": "Hand-written manual pages use hyphenated lowercase anchors, e.g. the heading 'Setting the target Ruby version' is linked as #setting-the-target-ruby-version, so 'everything but letters removed' is wrong. The generated cop-page anchors are produced by to_anchor, which also keeps hyphens and digits.",
+     "new": "the heading lowercased with spaces turned into hyphens\n    (`#setting-the-target-ruby-version`), not",
+     "reason": "Manual xref anchors keep hyphens between words. The heading 'Setting the target Ruby version' is referenced as #setting-the-target-ruby-version. The generator also turns spaces into hyphens. The old example was a cop-page anchor generated by the cops documentation generator.",
      "evidence": [
       {
        "kind": "file_line",
@@ -6484,7 +6477,7 @@
    "model": "claude-sonnet-5-5",
    "failures": []
   },
-  "diff": "--- a/AGENTS.md\n+++ b/AGENTS.md\n@@ -185,8 +185,8 @@ in `Cop::Base`: `Lint` and `Security` report as `warning`, `Metrics` as\n `config/default.yml` unless it genuinely differs from its department;\n `spec/project_spec.rb` rejects a line that restates the default. The few\n existing exceptions are lint-like cops in mixed departments\n-(`Bundler/InsecureProtocolSource`) and the three `Layout` alignment cops that\n-used to live in `Lint`.\n+(`Bundler/InsecureProtocolSource`) and the three `Layout` alignment cops, two of\n+which used to live in `Lint`.\n \n `AllCops: FailLevel` (default `refactor`) is the lowest severity that fails a\n run; `--fail-level` overrides it. Under `Preview` it is `warning`.\n@@ -282,7 +282,7 @@ Format (single line):\n 5. **Missing `RESTRICT_ON_SEND`** — always define this when using `on_send`.\n 6. **Missing `@!method` YARD tag** — every `def_node_matcher` /\n    `def_node_search` needs a `@!method` tag above it.\n-7. **Forgetting changelog entry** — CI will flag it.\n+7. **Forgetting changelog entry** — the PR template asks for it.\n 8. **Manually creating changelog files** — use the rake tasks instead to get\n    the correct filename format.\n 9. **Missing `extend AutoCorrector`** — required if the cop provides a\n@@ -307,6 +307,6 @@ Format (single line):\n     every cop merged since the last release. Those files are regenerated at\n     release time; don't include them in a PR.\n 16. **Guessing Antora anchors**: cross-page `xref` anchors in the manual are\n-    the heading lowercased with everything but letters removed\n-    (`#allowmultilinefinalelement`), not Asciidoctor's `_`-prefixed default.\n+    the heading lowercased with spaces as hyphens\n+    (`#setting-the-target-ruby-version`), not Asciidoctor's `_`-prefixed default.\n     When in doubt, put an explicit `[#my-anchor]` above the heading.\n",
+  "diff": "--- a/AGENTS.md\n+++ b/AGENTS.md\n@@ -185,8 +185,8 @@ in `Cop::Base`: `Lint` and `Security` report as `warning`, `Metrics` as\n `config/default.yml` unless it genuinely differs from its department;\n `spec/project_spec.rb` rejects a line that restates the default. The few\n existing exceptions are lint-like cops in mixed departments\n-(`Bundler/InsecureProtocolSource`) and the three `Layout` alignment cops that\n-used to live in `Lint`.\n+(`Bundler/InsecureProtocolSource`) and the three `Layout` alignment cops\n+(`Layout/BeginEndAlignment`, `Layout/DefEndAlignment`, `Layout/EndAlignment`).\n \n `AllCops: FailLevel` (default `refactor`) is the lowest severity that fails a\n run; `--fail-level` overrides it. Under `Preview` it is `warning`.\n@@ -307,6 +307,6 @@ Format (single line):\n     every cop merged since the last release. Those files are regenerated at\n     release time; don't include them in a PR.\n 16. **Guessing Antora anchors**: cross-page `xref` anchors in the manual are\n-    the heading lowercased with everything but letters removed\n-    (`#allowmultilinefinalelement`), not Asciidoctor's `_`-prefixed default.\n+    the heading lowercased with spaces turned into hyphens\n+    (`#setting-the-target-ruby-version`), not Asciidoctor's `_`-prefixed default.\n     When in doubt, put an explicit `[#my-anchor]` above the heading.\n",
   "fixes": [
    {
     "statement_id": "91928fd31a310b972b7c320d2a2cedaff416c970",
@@ -6492,7 +6485,7 @@
     "tier": "B",
     "action": "replace",
     "old": "the three `Layout` alignment cops that\nused to live in `Lint`.",
-    "new": "the three `Layout` alignment cops, two of\nwhich used to live in `Lint`.",
+    "new": "the three `Layout` alignment cops\n(`Layout/BeginEndAlignment`, `Layout/DefEndAlignment`, `Layout/EndAlignment`).",
     "outcome": "dry-run",
     "reverify": "verified",
     "refused": null
@@ -6503,9 +6496,9 @@
     "tier": "B",
     "action": "replace",
     "old": "CI will flag it.",
-    "new": "the PR template asks for it.",
-    "outcome": "dry-run",
-    "reverify": "verified",
+    "new": "the PR template asks for one when the change is user-observable.",
+    "outcome": "rejected",
+    "reverify": "unverified with reason: no citation checks out (.github/PULL_REQUEST_TEMPLATE.md:15: the excerpt is not at .github/PULL_REQUEST_TEMPLATE.md:15)",
     "refused": null
    },
    {
@@ -6514,7 +6507,7 @@
     "tier": "B",
     "action": "replace",
     "old": "the heading lowercased with everything but letters removed\n    (`#allowmultilinefinalelement`), not",
-    "new": "the heading lowercased with spaces as hyphens\n    (`#setting-the-target-ruby-version`), not",
+    "new": "the heading lowercased with spaces turned into hyphens\n    (`#setting-the-target-ruby-version`), not",
     "outcome": "dry-run",
     "reverify": "verified",
     "refused": null

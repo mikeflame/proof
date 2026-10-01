@@ -1,7 +1,7 @@
 {
- "proof": "03eeed6bb0b8",
+ "proof": "6a991a8ff9bf",
  "stage": "run",
- "seconds": 273,
+ "seconds": 9,
  "exit": 1,
  "report": {
   "file": "AGENTS.md",
@@ -37,10 +37,10 @@
    "behind": 0
   },
   "run": {
-   "started": "2026-10-01T13:29:06.354Z",
-   "finished": "2026-10-01T13:29:12.069Z",
+   "started": "2026-10-01T15:20:40.271Z",
+   "finished": "2026-10-01T15:20:48.058Z",
    "version": "0.2.0",
-   "budgetUsedUsd": 1.8583090000000002
+   "budgetUsedUsd": 0
   },
   "decisions": [],
   "reopened": [],
@@ -101,7 +101,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -165,7 +165,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -393,7 +393,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -465,7 +465,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -716,7 +716,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -872,7 +872,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -936,7 +936,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -982,7 +982,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1035,7 +1035,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1107,7 +1107,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1221,7 +1221,7 @@
      "proposedText": null,
      "action": "needs-decision",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1329,7 +1329,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1473,7 +1473,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1532,7 +1532,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1649,7 +1649,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1754,7 +1754,7 @@
      "proposedText": null,
      "action": "needs-decision",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1815,7 +1815,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1861,7 +1861,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1948,7 +1948,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2014,7 +2014,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2211,7 +2211,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2272,7 +2272,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2326,7 +2326,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2440,7 +2440,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2493,7 +2493,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2559,7 +2559,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2618,7 +2618,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2676,7 +2676,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2729,7 +2729,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2987,7 +2987,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3086,7 +3086,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3221,7 +3221,7 @@
      "proposedText": "The few existing exceptions are lint-like cops in mixed departments (`Bundler/InsecureProtocolSource`, the `Gemspec` cops) and the three `Layout` alignment cops, two of which (`DefEndAlignment`, `EndAlignment`) used to live in `Lint`.",
      "action": "fix-with-evidence",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3339,7 +3339,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3490,7 +3490,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3576,7 +3576,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3634,7 +3634,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3714,7 +3714,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3774,7 +3774,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3868,7 +3868,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3936,7 +3936,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4103,7 +4103,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4163,7 +4163,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4227,7 +4227,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4266,7 +4266,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4338,7 +4338,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4398,7 +4398,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4437,7 +4437,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4485,7 +4485,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4568,7 +4568,7 @@
      "proposedText": null,
      "action": "needs-decision",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4639,7 +4639,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4733,7 +4733,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4863,7 +4863,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4962,7 +4962,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -5045,7 +5045,7 @@
      "proposedText": null,
      "action": "needs-decision",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -5138,7 +5138,7 @@
      "proposedText": null,
      "action": "needs-decision",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -5283,7 +5283,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -5343,7 +5343,7 @@
      "proposedText": "Forgetting changelog entry — the PR template asks for one; CI does not check for it.",
      "action": "fix-with-evidence",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -5403,7 +5403,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -5510,7 +5510,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -5567,7 +5567,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -5660,7 +5660,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -5790,7 +5790,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -5981,7 +5981,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -6111,7 +6111,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -6219,7 +6219,7 @@
      "proposedText": null,
      "action": "needs-decision",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -6354,7 +6354,7 @@
      "proposedText": "Guessing Antora anchors: cross-page `xref` anchors for ordinary headings are the heading lowercased with spaces turned into hyphens (`#setting-the-target-ruby-version`), not Asciidoctor's `_`-prefixed default. Anchors in `cops_*.adoc` are explicit `[#...]` ids written by `to_anchor` in `lib/rubocop/cops_documentation_generator.rb` (the cop name without `/`, lowercased, e.g. `#layoutfirstarrayelementlinebreak`). When in doubt, put an explicit `[#my-anchor]` above the heading.",
      "action": "fix-with-evidence",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    }
@@ -6362,8 +6362,8 @@
   "agent": {
    "sent": 66,
    "answered": 66,
-   "cached": 0,
-   "costUsd": 1.8583090000000002,
+   "cached": 66,
+   "costUsd": 0,
    "model": "claude-sonnet-5-5",
    "failures": []
   }

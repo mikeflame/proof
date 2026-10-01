@@ -1,7 +1,7 @@
 {
- "proof": "03eeed6bb0b8",
+ "proof": "6a991a8ff9bf",
  "stage": "fixes",
- "seconds": 36,
+ "seconds": 12,
  "exit": 1,
  "report": {
   "file": "AGENTS.md",
@@ -37,10 +37,10 @@
    "behind": 0
   },
   "run": {
-   "started": "2026-10-01T13:28:24.377Z",
-   "finished": "2026-10-01T13:28:26.637Z",
+   "started": "2026-10-01T15:20:20.041Z",
+   "finished": "2026-10-01T15:20:22.270Z",
    "version": "0.2.0",
-   "budgetUsedUsd": 0.09976619999999999
+   "budgetUsedUsd": 0.022428
   },
   "decisions": [],
   "reopened": [],
@@ -1028,9 +1028,9 @@
     "fix": {
      "tier": "B",
      "action": "replace",
-     "old": "`javax.*` + `jakarta.*`, then others",
-     "new": "`javax.*`, then others",
-     "reason": "The ImportOrder groups are java, javax, *, org.springframework. jakarta is not a separate group with javax, so it falls into the others group. Static imports are at the bottom (option=bottom), so the rest of the line still holds.",
+     "old": "then `javax.*` + `jakarta.*`, then others,",
+     "new": "then `javax.*`, then others (including `jakarta.*`),",
+     "reason": "The checkstyle ImportOrder groups are java, javax, *, org.springframework. There is no jakarta group, so jakarta.* imports fall into the catch-all group with other imports and are not grouped with javax. The rest of the statement matches the config: groups are separated by blank lines and static imports are at the bottom.",
      "evidence": [
       {
        "kind": "file_line",
@@ -1041,15 +1041,15 @@
       },
       {
        "kind": "file_line",
-       "ref": "src/checkstyle/checkstyle.xml:111",
-       "excerpt": "<property name=\"option\" value=\"bottom\"/>",
+       "ref": "src/checkstyle/checkstyle.xml:110",
+       "excerpt": "<property name=\"separated\" value=\"true\"/>",
        "valid": true,
        "problem": ""
       },
       {
        "kind": "file_line",
-       "ref": "src/checkstyle/checkstyle.xml:110",
-       "excerpt": "<property name=\"separated\" value=\"true\"/>",
+       "ref": "src/checkstyle/checkstyle.xml:111",
+       "excerpt": "<property name=\"option\" value=\"bottom\"/>",
        "valid": true,
        "problem": ""
       }
@@ -1752,15 +1752,15 @@
    "model": "claude-sonnet-5-5",
    "failures": []
   },
-  "diff": "--- a/AGENTS.md\n+++ b/AGENTS.md\n@@ -17,7 +17,7 @@ Concise extract of [CONTRIBUTING.md](CONTRIBUTING.md), which remains the referen\n \n - Follow Spring Framework code style; match surrounding code and do not reformat unrelated code.\n - Tabs, LF, UTF-8, no trailing whitespace; wrap Javadoc at 90 and code at ~120 characters.\n-- Import order, groups separated by a blank line: `java.*`, then `javax.*` + `jakarta.*`, then others, then `org.springframework.*`, then static imports.\n+- Import order, groups separated by a blank line: `java.*`, then `javax.*`, then others, then `org.springframework.*`, then static imports.\n - No wildcard imports. No static imports in production code except constants/enum constants and third-party DSL factory methods; use them in tests (e.g. `assertThat`).\n - Every source file: Apache 2.0 license header (`Copyright 2023-present the original author or authors.`, copy from an existing file), package, imports, exactly one top-level class.\n - Add `@since` on new public types and methods (e.g. `@since 2.0.0`).\n",
+  "diff": "--- a/AGENTS.md\n+++ b/AGENTS.md\n@@ -17,7 +17,7 @@ Concise extract of [CONTRIBUTING.md](CONTRIBUTING.md), which remains the referen\n \n - Follow Spring Framework code style; match surrounding code and do not reformat unrelated code.\n - Tabs, LF, UTF-8, no trailing whitespace; wrap Javadoc at 90 and code at ~120 characters.\n-- Import order, groups separated by a blank line: `java.*`, then `javax.*` + `jakarta.*`, then others, then `org.springframework.*`, then static imports.\n+- Import order, groups separated by a blank line: `java.*`, then `javax.*`, then others (including `jakarta.*`), then `org.springframework.*`, then static imports.\n - No wildcard imports. No static imports in production code except constants/enum constants and third-party DSL factory methods; use them in tests (e.g. `assertThat`).\n - Every source file: Apache 2.0 license header (`Copyright 2023-present the original author or authors.`, copy from an existing file), package, imports, exactly one top-level class.\n - Add `@since` on new public types and methods (e.g. `@since 2.0.0`).\n",
   "fixes": [
    {
     "statement_id": "3c1dda3fae1406354cbfba12e606fe41da2e645c",
     "line": 20,
     "tier": "B",
     "action": "replace",
-    "old": "`javax.*` + `jakarta.*`, then others",
-    "new": "`javax.*`, then others",
+    "old": "then `javax.*` + `jakarta.*`, then others,",
+    "new": "then `javax.*`, then others (including `jakarta.*`),",
     "outcome": "dry-run",
     "reverify": "verified",
     "refused": null

@@ -406,7 +406,7 @@ All seven phases are built. Each criterion of section 10 is listed with its proo
 | 3 | Green | `test/acceptance.test.ts`, "criterion 3 and 4", on the synthetic edge repository built by `test/fixtures/edge.ts` |
 | 4 | Green | `test/acceptance.test.ts`, "checks a negated mention as an absence" |
 | 5 | Green | `test/acceptance.test.ts`, "criteria 1 and 5"; every result carries its evidence level |
-| 6 | Green on a fixture; open on the tuning monorepo | `test/fix.test.ts`, "a second run after fixes and decisions…". On the tuning monorepo, the second run cannot reach zero open judgment items until its owner decides them (D5: proof never records a decision a person did not make) |
+| 6 | Green on a fixture; open on the tuning monorepo | `test/fix.test.ts`, "a second run after fixes and decisions…". On the tuning monorepo the first pass fixed 1 statement, had 1 fix rejected, and left open 6 stale statements (5 conventions the code breaks in places, 1 line about a locally generated folder) and 58 judgment lines. The second run reaches zero only after its owner decides them (D5: proof never records a decision a person did not make) |
 | 7 | Green | `test/pipeline.test.ts`, "reports a marker without a reason and honors one with a reason" |
 | 8 | Green | `test/fix.test.ts`, "reverts a fix the re-verifier rejects" |
 | 9 | Green | `test/fix.test.ts`, "never adds lines without --gaps", and `vetEdit` in `src/agent/fix.ts` refuses any edit that adds a line |
@@ -419,14 +419,16 @@ All seven phases are built. Each criterion of section 10 is listed with its proo
 
 Labels come from agents independent of proof, each with cited evidence; two were changed by a second reviewer. A human review of the labels is still pending. Numbers are from `eval/metrics.json`.
 
-| Stage, split | STALE precision | STALE recall | VERIFIED precision | Fixes kept | Cost |
+| Stage, split | STALE precision | STALE recall | VERIFIED precision | Fixes kept | Cost, uncached |
 | --- | --- | --- | --- | --- | --- |
 | `proof check`, tune | 100% (4 flagged) | 25% (16 stale) | 100% (28) | — | $0 |
-| `proof run`, tune | 100% (15) | 93.8% | 97.2% (246) | 16 of 17 | $11.95 |
+| `proof run`, tune | 100% (15) | 93.8% | 97.2% (246) | 14 of 14 | $11.95 |
 | `proof check`, held-out | 0% (6 flagged) | 0% (7 stale) | 100% (17) | — | $0 |
 | `proof run`, held-out | 87.5% (8) | 100% | 93.8% (145) | 10 of 11 | $7.93 |
 
 Tuning froze at `79a4318`; the held-out split ran once on that build. Its mechanical stage broke D3 on unseen ground: six stale flags, all false, from four causes (MSBuild file types, example project names read as paths, CI bot commands read as programs, `{name}` templates). The fixes for them came after (`7bd47be`), and `eval/after-heldout.json` records the result: on the held-out repositories `proof check` flags nothing false and verifies 21 statements, all correct; the tune split is unchanged. Those are no longer held-out numbers, and are not reported as such.
+
+After the freeze the verifier prompt stayed at v4. A v5/v6 rule that kept conventions open was tried on the tuning monorepo and reverted, because it also kept false facts open ("is observability only and never changes gate resolution") and lost two gold stale lines on the tune split. The fixer gained four guards instead: it never rewrites a convention into a description of the code that breaks it, a fix it wraps onto more lines is joined back onto the lines it replaces, an edit stays inside its own statement, and the empty-subject guard reads the statement's whole line. The tune rows are measured at `6a991a8`, with the verifier's verdicts reused from the cache (same prompt, same code). Fixes kept is one sample: the fixer words its fixes differently on each run, and the sample before the last fixer change kept 14 of 16.
 
 ### Known limits
 
@@ -434,4 +436,6 @@ Tuning froze at `79a4318`; the held-out split ran once on that build. Its mechan
 - The verifier is not deterministic: two runs of the same file can disagree on a statement at the margin. Decisions (D5) and the verdict cache are what make a second run stable.
 - The verifier calls some guidance lines VERIFIED that the labels call judgment ("Use `logger.Fatal` for core invariant violations"): nothing in the repository contradicts them, but nothing proves them either. Nine of the 145 held-out VERIFIED lines are of this kind.
 - The fixer checks that a new path exists, not whether the code there is deprecated. The one rejected held-out fix pointed a stale `/components` entry at a package whose own doc comment marks it deprecated.
+- A correct fix to a fact inside a convention the code breaks is rejected: the re-verifier still finds the convention false, and nothing in the edit verifies mechanically. The person sees the proposed text under rejected fixes and can apply it.
+- The fix stage varies between runs in wording and, at the margin, in whether a statement gets a fix at all. A second run picks up what the first left; rejected fixes are never proposed again.
 - A new ecosystem can still surprise the mechanical stage, as .NET did. The held-out failure is the evidence, and the reason the check stage defers to the verifier whenever a lookup is uncertain.

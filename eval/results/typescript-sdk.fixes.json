@@ -1,7 +1,7 @@
 {
- "proof": "03eeed6bb0b8",
+ "proof": "6a991a8ff9bf",
  "stage": "fixes",
- "seconds": 170,
+ "seconds": 95,
  "exit": 1,
  "report": {
   "file": "CLAUDE.md",
@@ -37,10 +37,10 @@
    "behind": 0
   },
   "run": {
-   "started": "2026-10-01T13:23:42.761Z",
-   "finished": "2026-10-01T13:23:45.887Z",
+   "started": "2026-10-01T15:18:39.607Z",
+   "finished": "2026-10-01T15:18:42.733Z",
    "version": "0.2.0",
-   "budgetUsedUsd": 0.6488177999999999
+   "budgetUsedUsd": 0.20367629999999998
   },
   "decisions": [],
   "reopened": [],
@@ -1080,21 +1080,14 @@
     "fix": {
      "tier": "B",
      "action": "replace",
-     "old": "Lowercase with hyphens, test files",
-     "new": "camelCase (enforced by `unicorn/filename-case` in `common/eslint-config/eslint.config.mjs`), test files",
-     "reason": "ESLint enforces camelCase filenames, not lowercase-with-hyphens; the `.test.ts` suffix part still holds.",
+     "old": "Lowercase with hyphens",
+     "new": "camelCase (`unicorn/filename-case` in `common/eslint-config/eslint.config.mjs`)",
+     "reason": "ESLint enforces camelCase filenames, and the repo uses names like authErrors.ts. The `.test.ts` suffix is correct and stays.",
      "evidence": [
       {
        "kind": "file_line",
        "ref": "common/eslint-config/eslint.config.mjs:86-89",
        "excerpt": "'unicorn/filename-case': [ 'error', { case: 'camelCase'",
-       "valid": true,
-       "problem": ""
-      },
-      {
-       "kind": "command_output",
-       "ref": "git ls-files 'packages/*/test/*' | grep authExtensions",
-       "excerpt": "packages/client/test/client/authExtensions.test.ts",
        "valid": true,
        "problem": ""
       }
@@ -1258,19 +1251,12 @@
      "action": "replace",
      "old": "2-space indentation",
      "new": "4-space indentation",
-     "reason": "Prettier config sets tabWidth 4 with spaces; semicolons and single quotes still hold.",
+     "reason": "Prettier config sets tabWidth 4. Semicolons and single quotes match the config.",
      "evidence": [
       {
        "kind": "file_line",
        "ref": ".prettierrc.json:3",
        "excerpt": "\"tabWidth\": 4,",
-       "valid": true,
-       "problem": ""
-      },
-      {
-       "kind": "file_line",
-       "ref": ".prettierrc.json:4",
-       "excerpt": "\"useTabs\": false,",
        "valid": true,
        "problem": ""
       }
@@ -1728,11 +1714,11 @@
      "model": "claude-sonnet-5-5"
     },
     "fix": {
-     "tier": "B",
+     "tier": "A",
      "action": "replace",
      "old": "`Client_connect_basicUsage`",
      "new": "`Client_connect_stdio`",
-     "reason": "No `Client_connect_basicUsage` region exists; client.examples.ts has Client_connect_stdio and Client_connect_sseFallback, and stdio is used as the example of the pattern.",
+     "reason": "Region Client_connect_basicUsage does not exist. client.examples.ts defines Client_connect_stdio as the matching ClassName_methodName_variant region.",
      "evidence": [
       {
        "kind": "absence",
@@ -1926,8 +1912,8 @@
      "tier": "B",
      "action": "replace",
      "old": "All JSON-RPC message types, schemas, and protocol constants are defined here using Zod v4.",
-     "new": "All JSON-RPC message types are defined here, inferred from the Zod v4 schemas and protocol constants in `@modelcontextprotocol/core` (`packages/core/src/schemas.ts`, `packages/core/src/constants.ts`).",
-     "reason": "Schemas and constants moved to the core package; core-internal's schemas.ts and constants.ts only forward, and types.ts only imports types from zod/v4.",
+     "new": "All JSON-RPC message types are defined here; the Zod v4 schemas and protocol constants live in `packages/core/src/schemas.ts` and `packages/core/src/constants.ts`.",
+     "reason": "types.ts now only imports types from zod. The schemas and constants files in core-internal say they moved to packages/core.",
      "evidence": [
       {
        "kind": "file_line",
@@ -3882,11 +3868,11 @@
      "model": "claude-sonnet-5-5"
     },
     "fix": {
-     "tier": "B",
+     "tier": "A",
      "action": "replace",
      "old": "`packages/server/src/server/sse.ts`",
      "new": "`packages/server-legacy/src/sse/sse.ts`",
-     "reason": "The server SSE transport is no longer in packages/server; SSEServerTransport lives in server-legacy.",
+     "reason": "The server SSE transport no longer exists in packages/server. The only server-side SSE transport is in the server-legacy package.",
      "evidence": [
       {
        "kind": "absence",
@@ -3896,8 +3882,8 @@
       },
       {
        "kind": "command_output",
-       "ref": "grep -rln SSEServerTransport packages --include=*.ts",
-       "excerpt": "packages/server-legacy/src/sse/sse.ts",
+       "ref": "ls packages/server-legacy/src/sse",
+       "excerpt": "index.ts sse.ts",
        "valid": true,
        "problem": ""
       }
@@ -4106,20 +4092,14 @@
     "fix": {
      "tier": "B",
      "action": "replace",
-     "old": "`McpServer.tool()`, `.resource()`, `.prompt()` methods",
-     "new": "`McpServer.registerTool()`, `.registerResource()`, `.registerPrompt()` methods",
-     "reason": "McpServer exposes registerTool/registerResource/registerPrompt; no tool()/resource()/prompt() methods exist.",
+     "old": "`McpServer.tool()`, `.resource()`, `.prompt()`",
+     "new": "`McpServer.registerTool()`, `.registerResource()`, `.registerPrompt()`",
+     "reason": "mcp.ts defines registerTool, registerResource and registerPrompt. It has no tool(), resource() or prompt() methods.",
      "evidence": [
       {
-       "kind": "absence",
-       "ref": "git grep -n -E \"^\\s+(tool|resource|prompt)\\(\" -- packages/*/src",
-       "valid": true,
-       "problem": ""
-      },
-      {
        "kind": "file_line",
-       "ref": "packages/server/src/server/mcp.ts:995",
-       "excerpt": "registerTool<OutputArgs extends StandardSchemaWithJSON, InputArgs extends StandardSchemaWithJSON | undefined = undefined>(",
+       "ref": "packages/server/src/server/mcp.ts:1025",
+       "excerpt": "registerTool(",
        "valid": true,
        "problem": ""
       },
@@ -4134,6 +4114,12 @@
        "kind": "file_line",
        "ref": "packages/server/src/server/mcp.ts:1085",
        "excerpt": "registerPrompt(",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "absence",
+       "ref": "git grep -n -E \"^\\s+(tool|resource|prompt)\\(\" -- packages/*/src",
        "valid": true,
        "problem": ""
       }
@@ -4209,11 +4195,11 @@
      "model": "claude-sonnet-5-5"
     },
     "fix": {
-     "tier": "B",
+     "tier": "A",
      "action": "replace",
      "old": "`packages/server/src/server/auth/`",
      "new": "`packages/server-legacy/src/auth/`",
-     "reason": "The auth server directory is absent from packages/server; the OAuth authorization server code lives in server-legacy.",
+     "reason": "packages/server/src/server/auth does not exist. The OAuth authorization server code is in packages/server-legacy/src/auth, the only candidate.",
      "evidence": [
       {
        "kind": "absence",
@@ -4222,11 +4208,11 @@
        "problem": ""
       },
       {
-       "kind": "command_output",
-       "ref": "git ls-files packages | grep server-legacy/src/auth",
-       "excerpt": "packages/server-legacy/src/auth/router.ts",
-       "valid": true,
-       "problem": ""
+       "kind": "file_line",
+       "ref": "packages/server-legacy/src/auth/index.ts",
+       "excerpt": "server-legacy OAuth auth directory",
+       "valid": false,
+       "problem": "ref is not path:line"
       }
      ],
      "outcome": "dry-run",
@@ -4307,7 +4293,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4391,9 +4377,9 @@
     "fix": {
      "tier": "A",
      "action": "replace",
-     "old": "auth-extensions.ts",
-     "new": "authExtensions.ts",
-     "reason": "File is named authExtensions.ts; single candidate.",
+     "old": "`packages/client/src/client/auth-extensions.ts`",
+     "new": "`packages/client/src/client/authExtensions.ts`",
+     "reason": "The file is named authExtensions.ts, and it is the only candidate.",
      "evidence": [
       {
        "kind": "absence",
@@ -4941,9 +4927,9 @@
     "fix": {
      "tier": "B",
      "action": "delete",
-     "old": "Located in `packages/*/src/experimental/`. Currently empty.",
+     "old": "Located in `packages/*/src/experimental/`. ",
      "new": "",
-     "reason": "No experimental directory exists in any package, so the statement is false.",
+     "reason": "No experimental directory exists under packages, so the location claim is absent. 'Currently empty.' stays because it is still consistent.",
      "evidence": [
       {
        "kind": "absence",
@@ -4958,8 +4944,8 @@
        "problem": ""
       }
      ],
-     "outcome": "dry-run",
-     "reverify": "removed, with evidence of absence"
+     "outcome": "refused",
+     "reverify": "the statement itself says the thing is empty or absent; absence does not contradict it"
     }
    },
    {
@@ -7245,17 +7231,10 @@
     "fix": {
      "tier": "B",
      "action": "replace",
-     "old": "`signal`, `sessionId`, `sendNotification`, `sendRequest`, etc.",
-     "new": "`sessionId`, `mcpReq` (`signal`, `send`, `notify`), etc.",
-     "reason": "BaseContext has no top-level signal/sendNotification/sendRequest; they are mcpReq.signal, mcpReq.send and mcpReq.notify.",
+     "old": "`signal`, `sessionId`, `sendNotification`, `sendRequest`",
+     "new": "`sessionId`, `mcpReq.signal`, `mcpReq.send`, `mcpReq.notify`",
+     "reason": "BaseContext has sessionId at the top level. signal, send and notify are under mcpReq. There are no sendNotification or sendRequest fields.",
      "evidence": [
-      {
-       "kind": "file_line",
-       "ref": "packages/core-internal/src/shared/protocol.ts:338",
-       "excerpt": "sessionId?: string;",
-       "valid": true,
-       "problem": ""
-      },
       {
        "kind": "file_line",
        "ref": "packages/core-internal/src/shared/protocol.ts:414",
@@ -7267,6 +7246,13 @@
        "kind": "file_line",
        "ref": "packages/core-internal/src/shared/protocol.ts:441",
        "excerpt": "notify: (notification: Notification) => Promise<void>;",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "packages/core-internal/src/shared/protocol.ts:1069",
+       "excerpt": "sessionId: capturedTransport?.sessionId,",
        "valid": true,
        "problem": ""
       }
@@ -8022,7 +8008,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -9032,7 +9018,7 @@
      "action": "replace",
      "old": "`src/types.ts`",
      "new": "`packages/core/src/schemas.ts`",
-     "reason": "Spec Zod schemas now live in packages/core/src/schemas.ts; core-internal forwards only and says never to add schemas there.",
+     "reason": "Spec schemas now live in packages/core/src/schemas.ts. core-internal's schemas.ts says to add new schemas there.",
      "evidence": [
       {
        "kind": "file_line",
@@ -9385,20 +9371,20 @@
   "agent": {
    "sent": 102,
    "answered": 102,
-   "cached": 100,
-   "costUsd": 0.09025860000000001,
+   "cached": 102,
+   "costUsd": 0,
    "model": "claude-sonnet-5-5",
    "failures": []
   },
-  "diff": "--- a/CLAUDE.md\n+++ b/CLAUDE.md\n@@ -36,15 +36,15 @@ Include what changed, why, and how to migrate. Search for related sections and g\n \n - **TypeScript**: Strict type checking, ES modules, explicit return types\n - **Naming**: PascalCase for classes/types, camelCase for functions/variables\n-- **Files**: Lowercase with hyphens, test files with `.test.ts` suffix\n+- **Files**: camelCase (enforced by `unicorn/filename-case` in `common/eslint-config/eslint.config.mjs`), test files with `.test.ts` suffix\n - **Imports**: ES module style, no `.js` extension on relative imports (project uses `moduleResolution: bundler`), group imports logically\n-- **Formatting**: 2-space indentation, semicolons required, single quotes preferred\n+- **Formatting**: 4-space indentation, semicolons required, single quotes preferred\n - **Testing**: Place tests under each package's `test/` directory (vitest only includes `test/**/*.test.ts`), use descriptive test names\n - **Comments**: JSDoc for public APIs, inline comments for complex logic\n \n ### JSDoc `@example` Code Snippets\n \n-JSDoc `@example` tags should pull type-checked code from companion `.examples.ts` files (e.g., `client.ts` → `client.examples.ts`). Use ` ```ts source=\"./file.examples.ts#regionName\" ` fences referencing `//#region regionName` blocks; region names follow `exportedName_variant` or `ClassName_methodName_variant` pattern (e.g., `applyMiddlewares_basicUsage`, `Client_connect_basicUsage`). For whole-file inclusion (any file type), omit the `#regionName`.\n+JSDoc `@example` tags should pull type-checked code from companion `.examples.ts` files (e.g., `client.ts` → `client.examples.ts`). Use ` ```ts source=\"./file.examples.ts#regionName\" ` fences referencing `//#region regionName` blocks; region names follow `exportedName_variant` or `ClassName_methodName_variant` pattern (e.g., `applyMiddlewares_basicUsage`, `Client_connect_stdio`). For whole-file inclusion (any file type), omit the `#regionName`.\n \n Run `pnpm sync:snippets` to sync example content into JSDoc comments and markdown files.\n \n@@ -54,7 +54,7 @@ Run `pnpm sync:snippets` to sync example content into JSDoc comments and markdow\n \n The SDK is organized into three main layers:\n \n-1. **Types Layer** (`packages/core-internal/src/types/types.ts`) - Protocol types generated from the MCP specification. All JSON-RPC message types, schemas, and protocol constants are defined here using Zod v4.\n+1. **Types Layer** (`packages/core-internal/src/types/types.ts`) - Protocol types generated from the MCP specification. All JSON-RPC message types are defined here, inferred from the Zod v4 schemas and protocol constants in `@modelcontextprotocol/core` (`packages/core/src/schemas.ts`, `packages/core/src/constants.ts`).\n \n 2. **Protocol Layer** (`packages/core-internal/src/shared/protocol.ts`) - The abstract `Protocol` class that handles JSON-RPC message routing, request/response correlation, capability negotiation, and transport management. Both `Client` and `Server` extend this class.\n \n@@ -84,18 +84,18 @@ When modifying exports:\n Transports (`packages/core-internal/src/shared/transport.ts`) provide the communication layer:\n \n - **Streamable HTTP** (`packages/server/src/server/streamableHttp.ts`, `packages/client/src/client/streamableHttp.ts`) - Recommended transport for remote servers, supports SSE for streaming\n-- **SSE** (`packages/server/src/server/sse.ts`, `packages/client/src/client/sse.ts`) - Legacy HTTP+SSE transport for backwards compatibility\n+- **SSE** (`packages/server-legacy/src/sse/sse.ts`, `packages/client/src/client/sse.ts`) - Legacy HTTP+SSE transport for backwards compatibility\n - **stdio** (`packages/server/src/server/stdio.ts`, `packages/client/src/client/stdio.ts`) - For local process-spawned integrations\n \n ### Server-Side Features\n \n-- **Tools/Resources/Prompts**: Registered via `McpServer.tool()`, `.resource()`, `.prompt()` methods\n-- **OAuth/Auth**: Full OAuth 2.0 server implementation in `packages/server/src/server/auth/`\n+- **Tools/Resources/Prompts**: Registered via `McpServer.registerTool()`, `.registerResource()`, `.registerPrompt()` methods\n+- **OAuth/Auth**: Full OAuth 2.0 server implementation in `packages/server-legacy/src/auth/`\n - **Completions**: Auto-completion support via `packages/server/src/server/completable.ts`\n \n ### Client-Side Features\n \n-- **Auth**: OAuth client support in `packages/client/src/client/auth.ts` and `packages/client/src/client/auth-extensions.ts`\n+- **Auth**: OAuth client support in `packages/client/src/client/auth.ts` and `packages/client/src/client/authExtensions.ts`\n - **Client middleware**: Request middleware in `packages/client/src/client/middleware.ts` (unrelated to the framework adapter packages below)\n - **Sampling**: Clients can handle `sampling/createMessage` requests from servers (LLM completions)\n - **Elicitation**: Clients can handle `elicitation/create` requests for user input (form or URL mode)\n@@ -107,7 +107,6 @@ The repo also ships “middleware” packages under `packages/middleware/` (e.g.\n \n ### Experimental Features\n \n-Located in `packages/*/src/experimental/`. Currently empty.\n \n ### Zod Schemas\n \n@@ -169,7 +168,7 @@ When a request arrives from the remote side:\n 2. **`Protocol.connect()`** routes to `_onrequest()`, `_onresponse()`, or `_onnotification()`\n 3. **`Protocol._onrequest()`**:\n     - Looks up handler in `_requestHandlers` map (keyed by method name)\n-    - Creates `BaseContext` with `signal`, `sessionId`, `sendNotification`, `sendRequest`, etc.\n+    - Creates `BaseContext` with `sessionId`, `mcpReq` (`signal`, `send`, `notify`), etc.\n     - Calls `buildContext()` to let subclasses enrich the context (e.g., Server adds HTTP request info)\n     - Invokes handler, sends JSON-RPC response back via transport\n 4. **Handler** was registered via `setRequestHandler('method', handler)`\n@@ -224,7 +223,7 @@ Both sides declare capabilities during initialization. The SDK enforces these:\n \n ### Adding a New Request Type\n \n-1. **Define schema** in `src/types.ts` (request params, result schema)\n+1. **Define schema** in `packages/core/src/schemas.ts` (request params, result schema)\n 2. **Add capability** to `ClientCapabilities` or `ServerCapabilities` in types\n 3. **Implement sender** method in Client or Server class\n 4. **Add capability check** in the appropriate `assertCapabilityForMethod()`\n",
+  "diff": "--- a/CLAUDE.md\n+++ b/CLAUDE.md\n@@ -36,15 +36,15 @@ Include what changed, why, and how to migrate. Search for related sections and g\n \n - **TypeScript**: Strict type checking, ES modules, explicit return types\n - **Naming**: PascalCase for classes/types, camelCase for functions/variables\n-- **Files**: Lowercase with hyphens, test files with `.test.ts` suffix\n+- **Files**: camelCase (`unicorn/filename-case` in `common/eslint-config/eslint.config.mjs`), test files with `.test.ts` suffix\n - **Imports**: ES module style, no `.js` extension on relative imports (project uses `moduleResolution: bundler`), group imports logically\n-- **Formatting**: 2-space indentation, semicolons required, single quotes preferred\n+- **Formatting**: 4-space indentation, semicolons required, single quotes preferred\n - **Testing**: Place tests under each package's `test/` directory (vitest only includes `test/**/*.test.ts`), use descriptive test names\n - **Comments**: JSDoc for public APIs, inline comments for complex logic\n \n ### JSDoc `@example` Code Snippets\n \n-JSDoc `@example` tags should pull type-checked code from companion `.examples.ts` files (e.g., `client.ts` → `client.examples.ts`). Use ` ```ts source=\"./file.examples.ts#regionName\" ` fences referencing `//#region regionName` blocks; region names follow `exportedName_variant` or `ClassName_methodName_variant` pattern (e.g., `applyMiddlewares_basicUsage`, `Client_connect_basicUsage`). For whole-file inclusion (any file type), omit the `#regionName`.\n+JSDoc `@example` tags should pull type-checked code from companion `.examples.ts` files (e.g., `client.ts` → `client.examples.ts`). Use ` ```ts source=\"./file.examples.ts#regionName\" ` fences referencing `//#region regionName` blocks; region names follow `exportedName_variant` or `ClassName_methodName_variant` pattern (e.g., `applyMiddlewares_basicUsage`, `Client_connect_stdio`). For whole-file inclusion (any file type), omit the `#regionName`.\n \n Run `pnpm sync:snippets` to sync example content into JSDoc comments and markdown files.\n \n@@ -54,7 +54,7 @@ Run `pnpm sync:snippets` to sync example content into JSDoc comments and markdow\n \n The SDK is organized into three main layers:\n \n-1. **Types Layer** (`packages/core-internal/src/types/types.ts`) - Protocol types generated from the MCP specification. All JSON-RPC message types, schemas, and protocol constants are defined here using Zod v4.\n+1. **Types Layer** (`packages/core-internal/src/types/types.ts`) - Protocol types generated from the MCP specification. All JSON-RPC message types are defined here; the Zod v4 schemas and protocol constants live in `packages/core/src/schemas.ts` and `packages/core/src/constants.ts`.\n \n 2. **Protocol Layer** (`packages/core-internal/src/shared/protocol.ts`) - The abstract `Protocol` class that handles JSON-RPC message routing, request/response correlation, capability negotiation, and transport management. Both `Client` and `Server` extend this class.\n \n@@ -84,18 +84,18 @@ When modifying exports:\n Transports (`packages/core-internal/src/shared/transport.ts`) provide the communication layer:\n \n - **Streamable HTTP** (`packages/server/src/server/streamableHttp.ts`, `packages/client/src/client/streamableHttp.ts`) - Recommended transport for remote servers, supports SSE for streaming\n-- **SSE** (`packages/server/src/server/sse.ts`, `packages/client/src/client/sse.ts`) - Legacy HTTP+SSE transport for backwards compatibility\n+- **SSE** (`packages/server-legacy/src/sse/sse.ts`, `packages/client/src/client/sse.ts`) - Legacy HTTP+SSE transport for backwards compatibility\n - **stdio** (`packages/server/src/server/stdio.ts`, `packages/client/src/client/stdio.ts`) - For local process-spawned integrations\n \n ### Server-Side Features\n \n-- **Tools/Resources/Prompts**: Registered via `McpServer.tool()`, `.resource()`, `.prompt()` methods\n-- **OAuth/Auth**: Full OAuth 2.0 server implementation in `packages/server/src/server/auth/`\n+- **Tools/Resources/Prompts**: Registered via `McpServer.registerTool()`, `.registerResource()`, `.registerPrompt()` methods\n+- **OAuth/Auth**: Full OAuth 2.0 server implementation in `packages/server-legacy/src/auth/`\n - **Completions**: Auto-completion support via `packages/server/src/server/completable.ts`\n \n ### Client-Side Features\n \n-- **Auth**: OAuth client support in `packages/client/src/client/auth.ts` and `packages/client/src/client/auth-extensions.ts`\n+- **Auth**: OAuth client support in `packages/client/src/client/auth.ts` and `packages/client/src/client/authExtensions.ts`\n - **Client middleware**: Request middleware in `packages/client/src/client/middleware.ts` (unrelated to the framework adapter packages below)\n - **Sampling**: Clients can handle `sampling/createMessage` requests from servers (LLM completions)\n - **Elicitation**: Clients can handle `elicitation/create` requests for user input (form or URL mode)\n@@ -169,7 +169,7 @@ When a request arrives from the remote side:\n 2. **`Protocol.connect()`** routes to `_onrequest()`, `_onresponse()`, or `_onnotification()`\n 3. **`Protocol._onrequest()`**:\n     - Looks up handler in `_requestHandlers` map (keyed by method name)\n-    - Creates `BaseContext` with `signal`, `sessionId`, `sendNotification`, `sendRequest`, etc.\n+    - Creates `BaseContext` with `sessionId`, `mcpReq.signal`, `mcpReq.send`, `mcpReq.notify`, etc.\n     - Calls `buildContext()` to let subclasses enrich the context (e.g., Server adds HTTP request info)\n     - Invokes handler, sends JSON-RPC response back via transport\n 4. **Handler** was registered via `setRequestHandler('method', handler)`\n@@ -224,7 +224,7 @@ Both sides declare capabilities during initialization. The SDK enforces these:\n \n ### Adding a New Request Type\n \n-1. **Define schema** in `src/types.ts` (request params, result schema)\n+1. **Define schema** in `packages/core/src/schemas.ts` (request params, result schema)\n 2. **Add capability** to `ClientCapabilities` or `ServerCapabilities` in types\n 3. **Implement sender** method in Client or Server class\n 4. **Add capability check** in the appropriate `assertCapabilityForMethod()`\n",
   "fixes": [
    {
     "statement_id": "a3343b1bb53e2ee10d8634446951f5bdfd8f07d1",
     "line": 39,
     "tier": "B",
     "action": "replace",
-    "old": "Lowercase with hyphens, test files",
-    "new": "camelCase (enforced by `unicorn/filename-case` in `common/eslint-config/eslint.config.mjs`), test files",
+    "old": "Lowercase with hyphens",
+    "new": "camelCase (`unicorn/filename-case` in `common/eslint-config/eslint.config.mjs`)",
     "outcome": "dry-run",
     "reverify": "verified",
     "refused": null
@@ -9417,7 +9403,7 @@
    {
     "statement_id": "597157be70296601307fcb6939073ae1237fec6f",
     "line": 47,
-    "tier": "B",
+    "tier": "A",
     "action": "replace",
     "old": "`Client_connect_basicUsage`",
     "new": "`Client_connect_stdio`",
@@ -9431,7 +9417,7 @@
     "tier": "B",
     "action": "replace",
     "old": "All JSON-RPC message types, schemas, and protocol constants are defined here using Zod v4.",
-    "new": "All JSON-RPC message types are defined here, inferred from the Zod v4 schemas and protocol constants in `@modelcontextprotocol/core` (`packages/core/src/schemas.ts`, `packages/core/src/constants.ts`).",
+    "new": "All JSON-RPC message types are defined here; the Zod v4 schemas and protocol constants live in `packages/core/src/schemas.ts` and `packages/core/src/constants.ts`.",
     "outcome": "dry-run",
     "reverify": "verified",
     "refused": null
@@ -9439,7 +9425,7 @@
    {
     "statement_id": "2c1cf118c5317ecd8129248d294e3154dbf241ee",
     "line": 87,
-    "tier": "B",
+    "tier": "A",
     "action": "replace",
     "old": "`packages/server/src/server/sse.ts`",
     "new": "`packages/server-legacy/src/sse/sse.ts`",
@@ -9452,8 +9438,8 @@
     "line": 92,
     "tier": "B",
     "action": "replace",
-    "old": "`McpServer.tool()`, `.resource()`, `.prompt()` methods",
-    "new": "`McpServer.registerTool()`, `.registerResource()`, `.registerPrompt()` methods",
+    "old": "`McpServer.tool()`, `.resource()`, `.prompt()`",
+    "new": "`McpServer.registerTool()`, `.registerResource()`, `.registerPrompt()`",
     "outcome": "dry-run",
     "reverify": "verified",
     "refused": null
@@ -9461,7 +9447,7 @@
    {
     "statement_id": "ac4a70986df9dd63d7277e6643114493a19b2f5d",
     "line": 93,
-    "tier": "B",
+    "tier": "A",
     "action": "replace",
     "old": "`packages/server/src/server/auth/`",
     "new": "`packages/server-legacy/src/auth/`",
@@ -9474,8 +9460,8 @@
     "line": 98,
     "tier": "A",
     "action": "replace",
-    "old": "auth-extensions.ts",
-    "new": "authExtensions.ts",
+    "old": "`packages/client/src/client/auth-extensions.ts`",
+    "new": "`packages/client/src/client/authExtensions.ts`",
     "outcome": "dry-run",
     "reverify": "verified",
     "refused": null
@@ -9485,19 +9471,19 @@
     "line": 110,
     "tier": "B",
     "action": "delete",
-    "old": "Located in `packages/*/src/experimental/`. Currently empty.",
+    "old": "Located in `packages/*/src/experimental/`. ",
     "new": "",
-    "outcome": "dry-run",
-    "reverify": "removed, with evidence of absence",
-    "refused": null
+    "outcome": "refused",
+    "reverify": "",
+    "refused": "the statement itself says the thing is empty or absent; absence does not contradict it"
    },
    {
     "statement_id": "00860aae98c4f61e9c260ffe6a75f2aa8820e092",
     "line": 172,
     "tier": "B",
     "action": "replace",
-    "old": "`signal`, `sessionId`, `sendNotification`, `sendRequest`, etc.",
-    "new": "`sessionId`, `mcpReq` (`signal`, `send`, `notify`), etc.",
+    "old": "`signal`, `sessionId`, `sendNotification`, `sendRequest`",
+    "new": "`sessionId`, `mcpReq.signal`, `mcpReq.send`, `mcpReq.notify`",
     "outcome": "dry-run",
     "reverify": "verified",
     "refused": null

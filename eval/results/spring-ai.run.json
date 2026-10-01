@@ -1,7 +1,7 @@
 {
- "proof": "03eeed6bb0b8",
+ "proof": "6a991a8ff9bf",
  "stage": "run",
- "seconds": 109,
+ "seconds": 3,
  "exit": 1,
  "report": {
   "file": "AGENTS.md",
@@ -37,10 +37,10 @@
    "behind": 0
   },
   "run": {
-   "started": "2026-10-01T13:26:35.257Z",
-   "finished": "2026-10-01T13:26:37.490Z",
+   "started": "2026-10-01T15:20:17.355Z",
+   "finished": "2026-10-01T15:20:19.567Z",
    "version": "0.2.0",
-   "budgetUsedUsd": 0.6345426000000001
+   "budgetUsedUsd": 0
   },
   "decisions": [],
   "reopened": [],
@@ -117,7 +117,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -237,7 +237,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -352,7 +352,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -430,7 +430,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -505,7 +505,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -571,7 +571,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -638,7 +638,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -728,7 +728,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -788,7 +788,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -842,7 +842,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -910,7 +910,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1022,7 +1022,7 @@
      "proposedText": "- Import order, groups separated by a blank line: `java.*`, then `javax.*`, then others (including `jakarta.*`), then `org.springframework.*`, then static imports.",
      "action": "fix-with-evidence",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1101,7 +1101,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1183,7 +1183,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1265,7 +1265,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1318,7 +1318,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1399,7 +1399,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1481,7 +1481,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1607,7 +1607,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1654,7 +1654,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1707,7 +1707,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    }
@@ -1715,8 +1715,8 @@
   "agent": {
    "sent": 21,
    "answered": 21,
-   "cached": 0,
-   "costUsd": 0.6345426000000001,
+   "cached": 21,
+   "costUsd": 0,
    "model": "claude-sonnet-5-5",
    "failures": []
   }

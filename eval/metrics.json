@@ -16,7 +16,7 @@
    "fixes": 0,
    "fixAcceptance": null,
    "costUsd": 0,
-   "seconds": 21
+   "seconds": 23
   },
   "check/heldout": {
    "repos": 6,
@@ -46,7 +46,7 @@
    "fixes": 0,
    "fixAcceptance": null,
    "costUsd": 0,
-   "seconds": 56
+   "seconds": 58
   },
   "run/tune": {
    "repos": 6,
@@ -58,10 +58,10 @@
    "staleRecall": 93.8,
    "verified": 246,
    "verifiedPrecision": 97.2,
-   "fixes": 17,
-   "fixAcceptance": 94.1,
-   "costUsd": 11.95,
-   "seconds": 1788
+   "fixes": 14,
+   "fixAcceptance": 100,
+   "costUsd": 0.58,
+   "seconds": 412
   },
   "run/heldout": {
    "repos": 6,
@@ -88,10 +88,10 @@
    "staleRecall": 95.7,
    "verified": 391,
    "verifiedPrecision": 95.9,
-   "fixes": 28,
-   "fixAcceptance": 92.9,
-   "costUsd": 19.89,
-   "seconds": 3425
+   "fixes": 25,
+   "fixAcceptance": 96,
+   "costUsd": 8.52,
+   "seconds": 2049
   }
  },
  "perRepo": [
@@ -110,7 +110,7 @@
    "fixes": 0,
    "fixesKept": 0,
    "cost": 0,
-   "seconds": 5,
+   "seconds": 6,
    "repos": 1,
    "misses": [
     "L51 `runs.awaiting_agent_since` is observability only and never changes gate resolution.",
@@ -132,10 +132,10 @@
    "fn": 1,
    "verified": 56,
    "verifiedTrue": 54,
-   "fixes": 2,
-   "fixesKept": 2,
-   "cost": 4.987726,
-   "seconds": 588,
+   "fixes": 1,
+   "fixesKept": 1,
+   "cost": 0.16602129999999998,
+   "seconds": 65,
    "repos": 1,
    "misses": [
     "L66 The whole feature is OPT-IN and off by default: trusted `review.conversation` (repository-"
@@ -161,7 +161,7 @@
    "fixes": 0,
    "fixesKept": 0,
    "cost": 0,
-   "seconds": 3,
+   "seconds": 2,
    "repos": 1,
    "misses": [],
    "falseAlarms": [],
@@ -181,8 +181,8 @@
    "verifiedTrue": 27,
    "fixes": 0,
    "fixesKept": 0,
-   "cost": 1.0027055999999999,
-   "seconds": 177,
+   "cost": 0,
+   "seconds": 6,
    "repos": 1,
    "misses": [],
    "falseAlarms": [],
@@ -229,10 +229,10 @@
    "fn": 0,
    "verified": 67,
    "verifiedTrue": 67,
-   "fixes": 11,
+   "fixes": 10,
    "fixesKept": 10,
-   "cost": 2.5944688,
-   "seconds": 439,
+   "cost": 0.20367629999999998,
+   "seconds": 99,
    "repos": 1,
    "misses": [],
    "falseAlarms": [],
@@ -275,8 +275,8 @@
    "verifiedTrue": 10,
    "fixes": 1,
    "fixesKept": 1,
-   "cost": 0.7343088000000001,
-   "seconds": 145,
+   "cost": 0.022428,
+   "seconds": 15,
    "repos": 1,
    "misses": [],
    "falseAlarms": [],
@@ -297,7 +297,7 @@
    "fixes": 0,
    "fixesKept": 0,
    "cost": 0,
-   "seconds": 6,
+   "seconds": 8,
    "repos": 1,
    "misses": [
     "L186 The few existing exceptions are lint-like cops in mixed departments (`Bundler/InsecureProt",
@@ -319,10 +319,10 @@
    "fn": 0,
    "verified": 58,
    "verifiedTrue": 56,
-   "fixes": 3,
-   "fixesKept": 3,
-   "cost": 2.1163944000000003,
-   "seconds": 358,
+   "fixes": 2,
+   "fixesKept": 2,
+   "cost": 0.19041560000000002,
+   "seconds": 225,
    "repos": 1,
    "misses": [],
    "falseAlarms": [],
@@ -366,8 +366,8 @@
    "verifiedTrue": 25,
    "fixes": 0,
    "fixesKept": 0,
-   "cost": 0.5164374,
-   "seconds": 81,
+   "cost": 0,
+   "seconds": 2,
    "repos": 1,
    "misses": [],
    "falseAlarms": [],

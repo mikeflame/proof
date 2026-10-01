@@ -1,8 +1,8 @@
 {
- "proof": "03eeed6bb0b8",
+ "proof": "6a991a8ff9bf",
  "stage": "run",
- "seconds": 355,
- "exit": 2,
+ "seconds": 6,
+ "exit": 1,
  "report": {
   "file": "AGENTS.md",
   "scope": "project",
@@ -10,10 +10,10 @@
   "imports": [],
   "importedBy": [],
   "counts": {
-   "VERIFIED": 49,
-   "STALE": 1,
-   "UNCONFIRMED": 4,
-   "UNVERIFIED_WITH_REASON": 12,
+   "VERIFIED": 56,
+   "STALE": 2,
+   "UNCONFIRMED": 0,
+   "UNVERIFIED_WITH_REASON": 8,
    "DECIDED": 0,
    "OVERRIDDEN": 0,
    "NOT_CHECKED": 1,
@@ -37,15 +37,15 @@
    "behind": 2
   },
   "run": {
-   "started": "2026-10-01T13:06:23.603Z",
-   "finished": "2026-10-01T13:06:28.755Z",
+   "started": "2026-10-01T15:17:20.161Z",
+   "finished": "2026-10-01T15:17:25.709Z",
    "version": "0.2.0",
-   "budgetUsedUsd": 3.7600740000000004
+   "budgetUsedUsd": 0
   },
   "decisions": [],
   "reopened": [],
-  "verdict": "UNTESTED",
-  "ownVerdict": "UNTESTED",
+  "verdict": "NOT PROVEN",
+  "ownVerdict": "NOT PROVEN",
   "coverage": {
    "statements": 67,
    "withResult": 67
@@ -101,7 +101,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -169,7 +169,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -482,7 +482,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -553,7 +553,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -676,7 +676,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -793,7 +793,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -872,7 +872,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1134,7 +1134,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1232,7 +1232,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1375,7 +1375,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1485,7 +1485,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1732,7 +1732,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1874,7 +1874,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -1984,7 +1984,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2214,7 +2214,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2275,7 +2275,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2363,7 +2363,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2568,7 +2568,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2659,7 +2659,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2798,7 +2798,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -2891,7 +2891,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3086,7 +3086,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3264,7 +3264,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3335,7 +3335,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3449,7 +3449,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3616,7 +3616,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3716,7 +3716,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3807,7 +3807,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -3954,7 +3954,7 @@
      "proposedText": null,
      "action": "needs-decision",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4171,7 +4171,7 @@
      "proposedText": null,
      "action": "needs-decision",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4281,7 +4281,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4420,7 +4420,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4492,7 +4492,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4656,7 +4656,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4776,7 +4776,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4855,7 +4855,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -4929,7 +4929,7 @@
      "proposedText": "`runs.awaiting_agent_since` is an observability signal and the crash-recovery marker for a parked run; it never changes gate resolution.",
      "action": "fix-with-evidence",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -5027,7 +5027,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -5147,7 +5147,7 @@
      "proposedText": null,
      "action": "needs-decision",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -5319,7 +5319,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -5507,7 +5507,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -5581,7 +5581,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -5715,7 +5715,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -5851,7 +5851,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -5915,7 +5915,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -5998,7 +5998,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -6484,7 +6484,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -6861,7 +6861,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -7086,9 +7086,55 @@
       "reason": "definition at internal/cli/axi_test.go:1223"
      }
     ],
-    "status": "UNCONFIRMED",
-    "reason": "`review_questions`: said to be gone, but review_questions is still used: reference at internal/db/review_questions.go:83",
-    "settled": false
+    "status": "STALE",
+    "reason": "Most of this holds. The structured `review_questions`/`waiting_on` block is gone from the CLI, IPC and TUI code (the `review_questions` hit the mechanical check found is the unrelated DB table). Both affordances key on `pipeline.HasUnansweredReviewQuestion` (axi_render.go:559, axi.go:218). AXI itself does not bound the description (axi_render.go:628). The last clause is false: the question step appends the Options line after the question text, then cuts the whole description at 2000 runes. A question over that length loses its Options and Answer lines before AXI sees it, so the options line do",
+    "settled": false,
+    "agent": {
+     "verdict": "stale",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/steps/review_questions.go:489",
+       "excerpt": "b.WriteString(\"\\nOptions: \")",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/steps/review_questions.go:504",
+       "excerpt": "Description: boundReviewQuestionText(b.String(), maxReviewQuestionDescription),",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/steps/review_questions.go:395",
+       "excerpt": "maxReviewQuestionDescription   = 2000",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/steps/review_questions.go:409",
+       "excerpt": "return string(runes[:limit]) + fmt.Sprintf(\"… (truncated, %d chars total)\", len(runes))",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/cli/axi_render.go:628",
+       "excerpt": "Description: f.Description,",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "Most of this holds. The structured `review_questions`/`waiting_on` block is gone from the CLI, IPC and TUI code (the `review_questions` hit the mechanical check found is the unrelated DB table). Both affordances key on `pipeline.HasUnansweredReviewQuestion` (axi_render.go:559, axi.go:218). AXI itself does not bound the description (axi_render.go:628). The last clause is false: the question step appends the Options line after the question text, then cuts the whole description at 2000 runes. A question over that length loses its Options and Answer lines before AXI sees it, so the options line do",
+     "proposedText": "`axi` renders an open question as an ORDINARY finding row (`question-<id>` plus the reviewer's own description) and nothing else: the structured `review_questions`/`waiting_on` block was deleted (captain's ruling), because reconstructing question and options by string-splitting the prose `openReviewQuestionFindings` had just formatted was a lossy round trip that rendered a wrong row for any question whose text contained its own `Options: ` line. Both surviving affordances - the gate help and the home-view help - key on `pipeline.HasUnansweredReviewQuestion`, never on the ID prefix or the prose. AXI never bounds a finding description, but `openReviewQuestionFindings` bounds each question's description at 2000 runes (`boundReviewQuestionText`), so the options line survives in its row unless the question text alone runs past that bound. Regressions: `TestReviewQuestionGate_LeadsWithAnswering`, `TestReviewQuestionGateHelpKeysOnTheCategory`, `TestAxiHomeLeadsWithAnsweringWhenTheGateHasAnOpenQuestion`.",
+     "action": "fix-with-evidence",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
    },
    {
     "id": "eba8f306948c904505e88aaf71be1accf48e505b",
@@ -7248,9 +7294,48 @@
       "reason": "declaration at internal/config/config.go:231"
      }
     ],
-    "status": "UNVERIFIED_WITH_REASON",
-    "reason": "names verified; still to check: quantifier \"all\", rule \"Do not\", description \"unanswered question becomes one ask-user warning …\"",
-    "settled": false
+    "status": "VERIFIED",
+    "reason": "openReviewQuestionFindings emits one ask-user warning per open question with category review-question and ID `question-<id>` (review_questions.go:433-510). Its doc comment says it reuses the existing approval park, and the step status set (types.go:260-267) has no waiting-on-answers status, so the code follows the 'do not add a durable status' rule. The mechanical check had already verified awaiting_agent_since, parked_ms and review_agent_timeout.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/steps/review_questions.go:504",
+       "excerpt": "Description: boundReviewQuestionText(b.String(), maxReviewQuestionDescription),",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/steps/review_questions.go:419",
+       "excerpt": "// openReviewQuestionFindings turns each unanswered question into one ask-user",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/types/types.go:262",
+       "excerpt": "StepStatusAwaitingApproval StepStatus = \"awaiting_approval\"",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "command_output",
+       "ref": "grep -n \"StepStatus[A-Za-z]* *StepStatus = \" internal/types/types.go",
+       "excerpt": "StepStatusFixReview        StepStatus = \"fix_review\"",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "openReviewQuestionFindings emits one ask-user warning per open question with category review-question and ID `question-<id>` (review_questions.go:433-510). Its doc comment says it reuses the existing approval park, and the step status set (types.go:260-267) has no waiting-on-answers status, so the code follows the 'do not add a durable status' rule. The mechanical check had already verified awaiting_agent_since, parked_ms and review_agent_timeout.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
    },
    {
     "id": "af9da2c54a1ec7d4d9befe5b3549fc76d514c366",
@@ -7569,9 +7654,55 @@
       "reason": "definition at internal/pipeline/executor_resume_evidence_test.go:64"
      }
     ],
-    "status": "UNVERIFIED_WITH_REASON",
-    "reason": "names verified; still to check: quantifier \"all\", rule \"must\", description \"Reusing approval park has one cost …\"",
-    "settled": false
+    "status": "VERIFIED",
+    "reason": "ReviewStep.ResumeApprovalGate re-checks on the gate_reconcile_interval timer (executor.go:1750-1797). It returns ActionAnswer and never resolves the step. Only CIStep implements ApprovalGateReconciler, so completion semantics are untouched. The three guards are present: the conversation is readable, the gate carries review-question findings, and nothing is open. The recovered-gate StepContext in Resume sets EvidenceDir at executor.go:482.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/steps/review_questions.go:598",
+       "excerpt": "func (s *ReviewStep) ResumeApprovalGate(sctx *pipeline.StepContext, findingsJSON string) (types.ActionApproval",
+       "valid": false,
+       "problem": "the excerpt is not at internal/pipeline/steps/review_questions.go:598"
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/steps/review_questions.go:630",
+       "excerpt": "return types.ActionAnswer, true, nil",
+       "valid": false,
+       "problem": "internal/pipeline/steps/review_questions.go has 625 lines"
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/executor.go:482",
+       "excerpt": "EvidenceDir: e.runEvidenceDir(run.ID),",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/executor.go:1768",
+       "excerpt": "if action, resume, err := e.resumeApprovalGate(ctx, step, sctx, findings); resume {",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "command_output",
+       "ref": "grep -rn \"ReconcileApprovalGate\" internal --include=*.go | grep -v _test",
+       "excerpt": "internal/pipeline/steps/ci.go:110:func (s *CIStep) ReconcileApprovalGate(sctx *pipeline.StepContext) (bool, error) {",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "ReviewStep.ResumeApprovalGate re-checks on the gate_reconcile_interval timer (executor.go:1750-1797). It returns ActionAnswer and never resolves the step. Only CIStep implements ApprovalGateReconciler, so completion semantics are untouched. The three guards are present: the conversation is readable, the gate carries review-question findings, and nothing is open. The recovered-gate StepContext in Resume sets EvidenceDir at executor.go:482.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
    },
    {
     "id": "81d51457b30060eb4f8c6c4d46055f394cce7cbb",
@@ -8240,9 +8371,62 @@
       "reason": "definition at internal/pipeline/executor_answer_trigger_test.go:188"
      }
     ],
-    "status": "UNVERIFIED_WITH_REASON",
-    "reason": "could not check `axi respond --action answer`: not a path, command, name or version this tool can check",
-    "settled": false
+    "status": "VERIFIED",
+    "reason": "`axi respond` accepts only approve, fix and skip and rejects other actions with 'unknown action' (axi_drive.go:1302). The answer command has no --run flag, pinned by TestAxiAnswerHasNoRunFlag. HandleAnswerReviewQuestion appends the answer, then calls Respond(ActionAnswer) only when the answer closes a question that was open, and it sets ClosedLast and Resumed. The CLI follows the run on `ClosedLast || Resumed`, with a comment that Resumed alone covers older daemons. The follow grace is GateReconcileTimeout from the config. In executeStep `case state.answering` comes before `case sctx.Fixing`. ",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "internal/cli/axi_drive.go:1302",
+       "excerpt": "case types.ActionApprove, types.ActionFix, types.ActionSkip:",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/cli/axi_review_questions_test.go:108",
+       "excerpt": "func TestAxiAnswerHasNoRunFlag(t *testing.T) {",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/daemon/manager.go:2041",
+       "excerpt": "if err := reviewqa.AppendAnswer(dir, reviewqa.Answer{",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/cli/axi_answer.go:165",
+       "excerpt": "grace := env.cfg.GateReconcileTimeout",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/executor.go:1096",
+       "excerpt": "case state.answering:",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/executor.go:611",
+       "excerpt": "if gate.stepResult.Status == types.StepStatusFixReview {",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "`axi respond` accepts only approve, fix and skip and rejects other actions with 'unknown action' (axi_drive.go:1302). The answer command has no --run flag, pinned by TestAxiAnswerHasNoRunFlag. HandleAnswerReviewQuestion appends the answer, then calls Respond(ActionAnswer) only when the answer closes a question that was open, and it sets ClosedLast and Resumed. The CLI follows the run on `ClosedLast || Resumed`, with a comment that Resumed alone covers older daemons. The follow grace is GateReconcileTimeout from the config. In executeStep `case state.answering` comes before `case sctx.Fixing`. ",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
    },
    {
     "id": "3a8f4cc9e04b67c9a56af29b04d3e7b2ab0419b1",
@@ -8587,9 +8771,62 @@
       "reason": "definition at internal/pipeline/executor_answer_trigger_test.go:305"
      }
     ],
-    "status": "UNVERIFIED_WITH_REASON",
-    "reason": "could not check `question-`: appears verbatim in code at internal/cli/axi_answer_follow_test.go:117; what the example illustrates is not checked",
-    "settled": false
+    "status": "VERIFIED",
+    "reason": "The three carve-outs are in the code. Questions are dropped from the carry-forward and from the verification input, keyed on category (findings.go:778-805). Withdrawals apply only when FinalizingAnswers is set, and dropWithdrawnFindingsJSON exempts operator-authored findings. The answer-round branch adds no pendingVerificationIDs entries; they are added only when a fix is dispatched (executor.go:1273, 1419). CarriedFindings is set on the live and recovered paths. Omissions: the helper also drops the unreadable-history marker, by ID, and operator-authored findings cannot be withdrawn. Neither c",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/findings.go:778",
+       "excerpt": "func dropReviewQuestionFindingsJSON(raw string) string {",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/executor.go:1169",
+       "excerpt": "verificationFindings := dropReviewQuestionFindingsJSON(roundFindings)",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/executor.go:1176",
+       "excerpt": "if sctx.FinalizingAnswers {",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/executor.go:1465",
+       "excerpt": "sctx.CarriedFindings = answerRoundCarriedFindings(true, outstandingFindings)",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/executor.go:1058",
+       "excerpt": "CarriedFindings:   answerRoundCarriedFindings(state.answering, outstandingFindings),",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/executor.go:1273",
+       "excerpt": "pendingVerificationIDs = combineFindingIDLists(pendingVerificationIDs, findingIDList(fixableFindings))",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The three carve-outs are in the code. Questions are dropped from the carry-forward and from the verification input, keyed on category (findings.go:778-805). Withdrawals apply only when FinalizingAnswers is set, and dropWithdrawnFindingsJSON exempts operator-authored findings. The answer-round branch adds no pendingVerificationIDs entries; they are added only when a fix is dispatched (executor.go:1273, 1419). CarriedFindings is set on the live and recovered paths. Omissions: the helper also drops the unreadable-history marker, by ID, and operator-authored findings cannot be withdrawn. Neither c",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
    },
    {
     "id": "54cf3f8f99c19c758c2304af22402613cd077a0d",
@@ -8706,9 +8943,55 @@
       "reason": "definition at internal/pipeline/sessions.go:44"
      }
     ],
-    "status": "UNCONFIRMED",
-    "reason": "`Sessions.Forget()`: Sessions.Forget: Forget is defined on RunSessions, not on Sessions",
-    "settled": false
+    "status": "VERIFIED",
+    "reason": "The mechanical flag on `Sessions.Forget` is a naming shorthand. StepContext.Sessions is a *RunSessions (pipeline.go:114) and Forget is defined on RunSessions (sessions.go:169). The role is set only when the conversation dir is non-empty and the round is not Fixing (review.go:426). Sessions are enabled only with session_reuse (executor.go:337). Forget runs whenever the turn is not a finalize resume, which includes before fix rounds. A new run gets a new RunSessions. The finalize prompt is the whole prompt plus the answers (review.go:447).",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/steps/review.go:78",
+       "excerpt": "sctx.Sessions.Forget(pipeline.SessionRoleReviewer)",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/steps/review.go:427",
+       "excerpt": "sessionRole = pipeline.SessionRoleReviewer",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/executor.go:337",
+       "excerpt": "sessionsEnabled := e.config != nil && e.config.SessionReuse && e.agent != nil",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/executor.go:338",
+       "excerpt": "e.sessions = NewRunSessions(e.db, runID, e.agent, sessionsEnabled)",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/steps/review.go:447",
+       "excerpt": "turnPrompt = prompt + answers + carriedFindingsPromptSection(sctx.CarriedFindings)",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The mechanical flag on `Sessions.Forget` is a naming shorthand. StepContext.Sessions is a *RunSessions (pipeline.go:114) and Forget is defined on RunSessions (sessions.go:169). The role is set only when the conversation dir is non-empty and the round is not Fixing (review.go:426). Sessions are enabled only with session_reuse (executor.go:337). Forget runs whenever the turn is not a finalize resume, which includes before fix rounds. A new run gets a new RunSessions. The finalize prompt is the whole prompt plus the answers (review.go:447).",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
    },
    {
     "id": "ca58193519cdcec01bb9a3184013e74d1b8306b3",
@@ -9254,9 +9537,62 @@
       "reason": "definition at internal/reviewqa/reviewqa_test.go:398"
      }
     ],
-    "status": "UNCONFIRMED",
-    "reason": "`asked_at`: asked_at appears only in comments (internal/daemon/answer_review_question_test.go:79)",
-    "settled": false
+    "status": "VERIFIED",
+    "reason": "The review_questions primary key is (repo_id, branch, question_id, run_id, ask_ordinal). RecordReviewAnswer is called per settled ask from SettledAsks(). The 'Settled questions on this branch (do not re-raise)' section is rendered apart from acceptance criteria. The PR body gets a '### Review conversation' group inside the Pipeline section. settlingAnswer matches only answers whose AskOrdinal equals the ask's, so an unstamped answer settles nothing. The daemon's HandleAnswerReviewQuestion is the only caller of AppendAnswer. The mechanical flag on `asked_at` is a comment-only mention: the proto",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "internal/db/schema.go:218",
+       "excerpt": "PRIMARY KEY (repo_id, branch, question_id, run_id, ask_ordinal)",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/steps/review_questions.go:353",
+       "excerpt": "for _, ask := range conv.SettledAsks() {",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/steps/review_questions.go:283",
+       "excerpt": "\"Settled questions on this branch (do not re-raise):\",",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/steps/prsummary_conversation.go:57",
+       "excerpt": "b.WriteString(\"### Review conversation\\n\\n\")",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/reviewqa/reviewqa.go:451",
+       "excerpt": "func settlingAnswer(answers []Answer, ordinal int) *Answer {",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "command_output",
+       "ref": "grep -rn \"AppendAnswer(\" internal --include=*.go | grep -v _test",
+       "excerpt": "internal/daemon/manager.go:2041:\tif err := reviewqa.AppendAnswer(dir, reviewqa.Answer{",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The review_questions primary key is (repo_id, branch, question_id, run_id, ask_ordinal). RecordReviewAnswer is called per settled ask from SettledAsks(). The 'Settled questions on this branch (do not re-raise)' section is rendered apart from acceptance criteria. The PR body gets a '### Review conversation' group inside the Pipeline section. settlingAnswer matches only answers whose AskOrdinal equals the ask's, so an unstamped answer settles nothing. The daemon's HandleAnswerReviewQuestion is the only caller of AppendAnswer. The mechanical flag on `asked_at` is a comment-only mention: the proto",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
    },
    {
     "id": "a903f73719ccad14c98f7aa3280b4cd3b503a0d1",
@@ -9525,9 +9861,55 @@
       "reason": "definition at internal/tui/yolo_test.go:132"
      }
     ],
-    "status": "UNCONFIRMED",
-    "reason": "`HasProtectedPathRefusal.driveRunWithReconciler`: HasProtectedPathRefusal.driveRunWithReconciler appears nowhere; driveRunWithReconciler exists elsewhere (internal/cli/axi_drive.go:919), on something not shown to be HasProtectedPathRefusal",
-    "settled": false
+    "status": "VERIFIED",
+    "reason": "The only auto-resolve paths are driveRunWithReconciler's --yes (axi_drive.go:938-956) and the TUI's maybeAutoApproveCmd (commands.go:99-118). Both read pipeline.HasUnansweredReviewQuestion, a JSON-string wrapper over types.HasReviewQuestion that keys on the category. The predicate is not called from respondCmd or RespondWithOverrides, so a human's approve or fix stays allowed. HasProtectedPathRefusal is used in the same carve-out shape. The mechanical UNCONFIRMED entries come from a misparsed 'HasProtectedPathRefusal.x' compound, not from a repository problem.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "internal/cli/axi_drive.go:956",
+       "excerpt": "if pipeline.HasUnansweredReviewQuestion(gate.FindingsJSON) {",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/tui/commands.go:118",
+       "excerpt": "if pipeline.HasUnansweredReviewQuestion(m.stepFindings[step.StepName]) {",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/pipeline/protected_paths.go:57",
+       "excerpt": "func HasUnansweredReviewQuestion(findingsJSON string) bool {",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "command_output",
+       "ref": "grep -rn \"HasUnansweredReviewQuestion\" internal --include=*.go | grep -v _test",
+       "excerpt": "internal/tui/commands.go:118:\tif pipeline.HasUnansweredReviewQuestion(m.stepFindings[step.StepName]) {",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/tui/yolo_test.go:70",
+       "excerpt": "TestModel_Yolo_OpenReviewQuestionSendsNoAutomaticResponse",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The only auto-resolve paths are driveRunWithReconciler's --yes (axi_drive.go:938-956) and the TUI's maybeAutoApproveCmd (commands.go:99-118). Both read pipeline.HasUnansweredReviewQuestion, a JSON-string wrapper over types.HasReviewQuestion that keys on the category. The predicate is not called from respondCmd or RespondWithOverrides, so a human's approve or fix stays allowed. HasProtectedPathRefusal is used in the same carve-out shape. The mechanical UNCONFIRMED entries come from a misparsed 'HasProtectedPathRefusal.x' compound, not from a repository problem.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
    },
    {
     "id": "5933ecea2a0ab63320a508d69a56601c6a1f7f1e",
@@ -9830,7 +10212,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -10362,7 +10744,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -10476,7 +10858,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -10704,7 +11086,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -10865,7 +11247,7 @@
      "proposedText": null,
      "action": "needs-decision",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -10912,7 +11294,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -10959,7 +11341,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -11006,7 +11388,7 @@
      "proposedText": null,
      "action": "no-op",
      "rejected": null,
-     "cached": false,
+     "cached": true,
      "model": "claude-sonnet-5-5"
     }
    },
@@ -11036,21 +11418,63 @@
      }
     ],
     "status": "UNVERIFIED_WITH_REASON",
-    "reason": "nothing mechanical settles it: quantifier \"all\", description \"updating file preserve bar agents keep …\"",
-    "settled": false
+    "reason": "This is a maintenance rule, so I checked it against tooling. I found no lint, formatter, CI or pre-commit check that enforces conciseness or the stated bar. The only related config is the document-step prompt at .no-mistakes.yaml:37-41, which limits edits to AGENTS.md and CLAUDE.md to factual corrections. That fits the rule but does not enforce it. The rule is not wrong to follow: AGENTS.md exists, CLAUDE.md imports it with `@AGENTS.md`, and the 'Maintaining this file' section is intact. The file does not always follow the rule. Many entries, such as lines 66 and 80, are very long multi-senten",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "AGENTS.md:85",
+       "excerpt": "Keep this file for knowledge useful to almost every future agent session in this project.",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "AGENTS.md:66",
+       "excerpt": "- The whole feature is OPT-IN and off by default: trusted `review.conversation`",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "AGENTS.md:80",
+       "excerpt": "- There is NO review round cap and none may be added (captain's ruling 2026-09-15).",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".no-mistakes.yaml:37-41",
+       "excerpt": "AGENTS.md and CLAUDE.md are agent memory files loaded into every session:",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "CLAUDE.md:2",
+       "excerpt": "@AGENTS.md",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "This is a maintenance rule, so I checked it against tooling. I found no lint, formatter, CI or pre-commit check that enforces conciseness or the stated bar. The only related config is the document-step prompt at .no-mistakes.yaml:37-41, which limits edits to AGENTS.md and CLAUDE.md to factual corrections. That fits the rule but does not enforce it. The rule is not wrong to follow: AGENTS.md exists, CLAUDE.md imports it with `@AGENTS.md`, and the 'Maintaining this file' section is intact. The file does not always follow the rule. Many entries, such as lines 66 and 80, are very long multi-senten",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
    }
   ],
   "agent": {
    "sent": 65,
-   "answered": 56,
-   "cached": 0,
-   "costUsd": 3.7600740000000004,
+   "answered": 65,
+   "cached": 65,
+   "costUsd": 0,
    "model": "claude-sonnet-5-5",
-   "failures": [
-    "L68–L75: error_max_budget_usd (error_max_budget_usd)",
-    "L88–L88: error_max_budget_usd (error_max_budget_usd)"
-   ]
-  },
-  "reason": "the verifier answered 56 of 65 open statements: L68–L75: error_max_budget_usd (error_max_budget_usd); L88–L88: error_max_budget_usd (error_max_budget_usd)"
+   "failures": []
+  }
  }
 }

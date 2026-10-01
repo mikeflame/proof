@@ -43,6 +43,75 @@
     "lib/rubocop/cops_documentation_generator.rb:229-233 #allowmultilinefinalelement is a hardcoded same-page xref (cops_layout.adoc -> cops_layout.adoc) and no [#allowmultilinefinalelement] anchor exists (only allowmultilinefinalelement_-false-_default_-...), so the old example is neither cross-page nor a real anchor"
    ],
    "note": "Every hand-written cross-page xref that points to an implicit heading ID uses the lowercased, hyphen-separated, unprefixed form, so the new rule and example are correct; the old \"letters only\" rule would get every one of them wrong."
+  },
+  {
+   "statement_id": "91928fd31a310b972b7c320d2a2cedaff416c970",
+   "line": 186,
+   "old": "and the three `Layout` alignment cops that\nused to live in `Lint`.",
+   "new": "and the three `Layout` `end` alignment cops, two of which\nused to live in `Lint`.",
+   "keep": true,
+   "evidence": [
+    "config/default.yml:486-498 \"Layout/BeginEndAlignment: ... VersionAdded: '0.91' ... Severity: warning\"",
+    "config/default.yml:610 (Layout/DefEndAlignment) and :802 (Layout/EndAlignment) \"Severity: warning\"; no Severity on Layout/BlockAlignment (500-)",
+    "config/obsoletion.yml:20-23 \"Lint/BlockAlignment: Layout/BlockAlignment\", \"Lint/DefEndAlignment: Layout/DefEndAlignment\", \"Lint/EndAlignment: Layout/EndAlignment\"",
+    "relnotes/v0.91.0.md:4 \"Add new `Layout/BeginEndAlignment` cop.\" (never in Lint)"
+   ],
+   "note": "The three Layout cops with Severity: warning are BeginEnd/DefEnd/EndAlignment and only two came from Lint (the third ex-Lint cop, BlockAlignment, has no override), so the new text corrects the original."
+  },
+  {
+   "statement_id": "0313bb54075fab6d060f9704bc2eb05645b255d2",
+   "line": 285,
+   "old": "CI will flag it.",
+   "new": "the PR template asks for one.",
+   "keep": true,
+   "evidence": [
+    "grep -n -i \"changelog|danger\" .github/workflows/*.yml => (no output)",
+    ".github/PULL_REQUEST_TEMPLATE.md:15 \"* [ ] Added an entry (file) to the [changelog folder](...)\"",
+    "spec/project_spec.rb:213-350 only validates the format of existing entries; tasks/changelog.rake:27-32 check_clean runs before release (Rakefile:7-8)"
+   ],
+   "note": "No CI job checks that a PR adds a changelog entry; the PR template checkbox is the real reminder."
+  },
+  {
+   "statement_id": "2d9b2a854f6517c92d2414db63214ca6755e9679",
+   "line": 309,
+   "old": "the heading lowercased with everything but letters removed",
+   "new": "the heading lowercased, `/` removed, spaces turned into `-` and other non-alphanumerics into `_`",
+   "keep": false,
+   "evidence": [
+    "lib/rubocop/cops_documentation_generator.rb:421-422 \"def to_anchor(title) title.delete('/').tr(' ', '-').gsub(/[^a-zA-Z0-9-]/, '_').downcase\" (applied only to generated cops_*.adoc anchors)",
+    "docs/modules/ROOT/pages/plugins.adoc:44-45 blank line then \"=== Loading Legacy Extensions via `require`\" (no explicit anchor)",
+    "docs/modules/ROOT/pages/usage/cli_reference.adoc:166 \"xref:plugins.adoc#loading-legacy-extensions-via-require[...]\" => backticks dropped, not turned into \"_\" as the new rule predicts (loading-legacy-extensions-via-_require_)",
+    "git grep xref anchors into hand-written pages => none contains \"_\" (setting-the-target-ruby-version, custom-allcops-settings, merging-arrays-using-inherit-mode, ...)"
+   ],
+   "note": "The new rule is the cop-doc generator's to_anchor, but the statement covers all manual xref anchors and hand-written headings use Asciidoctor auto-IDs that drop punctuation, so \"other non-alphanumerics into `_`\" is wrong for them (plugins.adoc:45 vs cli_reference.adoc:166)."
+  },
+  {
+   "statement_id": "91928fd31a310b972b7c320d2a2cedaff416c970",
+   "line": 186,
+   "old": "the three `Layout` alignment cops that\nused to live in `Lint`.",
+   "new": "the three `Layout` alignment cops\n(`Layout/BeginEndAlignment`, `Layout/DefEndAlignment`, `Layout/EndAlignment`).",
+   "keep": true,
+   "evidence": [
+    "config/default.yml Severity overrides in Layout => only :498 Layout/BeginEndAlignment, :610 Layout/DefEndAlignment, :802 Layout/EndAlignment (Severity: warning)",
+    "config/obsoletion.yml:20-23 Lint/BlockAlignment, Lint/DefEndAlignment, Lint/EndAlignment renamed to Layout; no Lint/BeginEndAlignment",
+    "relnotes/v0.91.0.md:4 Add new `Layout/BeginEndAlignment` cop; git log -S 'Lint/BeginEndAlignment' => no commits",
+    "config/default.yml:500-513 Layout/BlockAlignment (formerly Lint) has no Severity line"
+   ],
+   "note": "The three warning-severity Layout cops are BeginEndAlignment/DefEndAlignment/EndAlignment, and BeginEndAlignment never lived in Lint (while ex-Lint BlockAlignment has no override), so naming the cops is correct and drops a misleading description."
+  },
+  {
+   "statement_id": "2d9b2a854f6517c92d2414db63214ca6755e9679",
+   "line": 309,
+   "old": "the heading lowercased with everything but letters removed\n    (`#allowmultilinefinalelement`), not",
+   "new": "the heading lowercased with spaces turned into hyphens\n    (`#setting-the-target-ruby-version`), not",
+   "keep": true,
+   "evidence": [
+    "docs/modules/ROOT/pages/configuration.adoc:112 == Setting the target Ruby version (no explicit anchor) <= compatibility.adoc:41 xref:configuration.adoc#setting-the-target-ruby-version",
+    "docs/modules/ROOT/pages/usage/caching.adoc:37 == Cache Path <= xref:usage/caching.adoc#cache-path",
+    "docs/modules/ROOT/pages/plugins.adoc:17 === Loading Plugin Extensions <= xref:plugins.adoc#loading-plugin-extensions",
+    "docs/modules/ROOT/partials/cops_layout_footer.adoc:1 ==  AllowMultilineFinalElement <= #allowmultilinefinalelement (single word, still matches the new rule)"
+   ],
+   "note": "Multi-word headings without explicit anchors resolve to hyphenated ids (setting-the-target-ruby-version, cache-path), which falsifies 'everything but letters removed'; the new rule and example are right for the usual headings, though it does not mention that punctuation such as backticks is dropped."
   }
  ]
 }
