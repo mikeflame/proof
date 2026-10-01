@@ -10,7 +10,7 @@ import { type AgentEvidence, checkEvidence } from './evidence.ts';
 import { ACTIONS, VERIFIER_RULES, VERIFIER_SCHEMA, VERIFIER_VERDICTS } from './rules.ts';
 
 /** Bumped when the prompt or the rules change, so cached verdicts from older rules are not reused. */
-export const PROMPT_VERSION = '4';
+export const PROMPT_VERSION = '5';
 
 export interface VerifyOptions {
   model: string;
