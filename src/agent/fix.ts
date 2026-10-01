@@ -123,7 +123,7 @@ export function vetEdit(repo: RepoContext, source: string, st: CheckedStatement,
 export async function proposeFixes(repo: RepoContext, file: string, scope: Scope, stale: CheckedStatement[], records: DecisionRecord[], opts: FixOptions): Promise<{ edits: ProposedEdit[]; costUsd: number; failure: string | null }> {
   const source = repo.read(file) ?? '';
   const keyed = stale.map((st, i) => ({ key: `s${i + 1}`, st }));
-  const result = await runClaude({ cwd: repo.root, prompt: buildFixPrompt(file, source, keyed, records, opts.config), schema: FIXER_SCHEMA, model: opts.model, effort: opts.effort, budgetUsd: opts.budgetUsd, tools: TOOLS, allowedTools: ALLOWED, timeoutMs: opts.timeoutMs });
+  const result = await runClaude({ cwd: repo.root, prompt: buildFixPrompt(file, source, keyed, records, opts.config), schema: FIXER_SCHEMA, model: opts.model, effort: opts.effort, budgetUsd: opts.budgetUsd * 0.8, tools: TOOLS, allowedTools: ALLOWED, timeoutMs: opts.timeoutMs });
   if (!result.ok) return { edits: [], costUsd: result.costUsd, failure: `${result.subtype}${result.error ? ` (${result.error})` : ''}` };
   const raw = (result.structured as { edits?: RawEdit[] } | null)?.edits ?? [];
   const edits: ProposedEdit[] = [];

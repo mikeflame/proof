@@ -72,15 +72,46 @@ if (existsSync(grammars)) {
 const template = readFileSync(join(root, 'src/skill/SKILL.md.tmpl'), 'utf8');
 emit(join(skill, 'SKILL.md'), template.replace('{{STATUS_TABLE}}', statusTable()).replace('{{VERDICT_TABLE}}', verdictTable()));
 
+/** The evaluation numbers of spec 9.6 and the run times of criterion 13, from eval/. */
+function metricsBlock(metrics, perf, corpus) {
+  if (!metrics) return '_No evaluation has been scored yet: run `node eval/score.mjs`._';
+  const pct = (v) => (v === null || v === undefined ? '—' : `${v}%`);
+  const row = (key, label) => {
+    const g = metrics.groups[key];
+    if (!g) return null;
+    return `| ${label} | ${g.repos} | ${g.labeled} | ${pct(g.stalePrecision)} (${g.staleFlagged} flagged) | ${pct(g.staleRecall)} (${g.staleGold} stale) | ${pct(g.verifiedPrecision)} (${g.verified}) | ${g.fixes ? `${pct(g.fixAcceptance)} (${g.fixes})` : '—'} |`;
+  };
+  const rows = [
+    row('check/tune', '`proof check`, tune'),
+    row('run/tune', '`proof run`, tune'),
+    row('check/heldout', '`proof check`, held-out'),
+    row('run/heldout', '`proof run`, held-out'),
+  ].filter(Boolean);
+  const tune = corpus.filter((c) => c.split === 'tune').length;
+  const held = corpus.filter((c) => c.split === 'heldout').length;
+  const lines = [
+    `Corpus: ${corpus.length} public repositories pinned to commits (${tune} tune, ${held} held-out, never run while tuning), one instruction file each. Labels: ${metrics.labeler}.`,
+    '',
+    '| Stage, split | Repos | Labeled statements | STALE precision | STALE recall | VERIFIED precision | Fixes kept |',
+    '| --- | --- | --- | --- | --- | --- | --- |',
+    ...rows,
+  ];
+  if (perf) lines.push('', `Run time on ${perf.repo} (${perf.files.toLocaleString('en-US')} files, ${perf.full.open} open statements in ${perf.file}): a full \`proof run\` took ${Math.round(perf.full.seconds / 60)} minutes and $${perf.full.spentUsd} (${perf.full.fixed} statements fixed, ${perf.full.fixRejected} fix rejected); the re-run after the fixes took ${perf.rerun.seconds} seconds and $${perf.rerun.spentUsd}.`);
+  return lines.join('\n');
+}
+
 // The README's generated blocks.
 const corpusFile = join(root, 'eval', 'corpus.json');
 const corpus = existsSync(corpusFile) ? JSON.parse(readFileSync(corpusFile, 'utf8')).repos : [];
-const blocks = { statuses: statusTable(), verdicts: verdictTable(), commands: commandTable(), matrix: matrixTable(corpus) };
+const metricsFile = join(root, 'eval', 'metrics.json');
+const perfFile = join(root, 'eval', 'perf.json');
+const blocks = { statuses: statusTable(), verdicts: verdictTable(), commands: commandTable(), matrix: matrixTable(corpus), metrics: metricsBlock(existsSync(metricsFile) ? JSON.parse(readFileSync(metricsFile, 'utf8')) : null, existsSync(perfFile) ? JSON.parse(readFileSync(perfFile, 'utf8')) : null, corpus) };
 let readme = readFileSync(join(root, 'README.md'), 'utf8');
 for (const [name, body] of Object.entries(blocks)) {
   const re = new RegExp(`(<!-- generated:${name} -->\\n)[\\s\\S]*?(<!-- /generated:${name} -->)`);
   if (!re.test(readme)) throw new Error(`README.md has no generated:${name} block`);
-  readme = readme.replace(re, `$1${body}\n$2`);
+  // A replacer function: `$2.37` in the body must not read as a backreference.
+  readme = readme.replace(re, (_, open, close) => `${open}${body}\n${close}`);
 }
 emit(join(root, 'README.md'), readme);
 

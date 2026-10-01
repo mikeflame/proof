@@ -1,0 +1,21 @@
+{
+ "repo": "denoland/deno",
+ "sha": "b8681dfa6442a0dfa5c7ddc43b279c504079cf2a",
+ "files": 14927,
+ "file": "CLAUDE.md",
+ "proof": "9d176c0",
+ "model": "claude-sonnet-5-5",
+ "full": {
+  "seconds": 598,
+  "statements": 152,
+  "open": 137,
+  "fixed": 9,
+  "fixRejected": 1,
+  "spentUsd": 2.37
+ },
+ "rerun": {
+  "seconds": 55,
+  "spentUsd": 0.15,
+  "fixes": 0
+ }
+}

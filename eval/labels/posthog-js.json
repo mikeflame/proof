@@ -1,0 +1,122 @@
+{
+  "repo": "PostHog/posthog-js",
+  "sha": "c7bf8ca76b5aaad2a4badd1d1476dc499ca0009a",
+  "file": "AGENTS.md",
+  "labeler": "agent (independent of proof's output)",
+  "labels": [
+    {
+      "id": "70c995636fef46e1e2b81210a6555b7c46d8249a",
+      "line": 3,
+      "text": "Read and follow [CONTRIBUTING.md](./CONTRIBUTING.md) before contributing to the SDKs. It contains repository structure, environment setup, development commands, testing, linting, dependency policies, and PR requirements.",
+      "label": "true",
+      "evidence": [
+        "CONTRIBUTING.md:26 '## Folder Structure' and :35 '## SDK Packages' (repository structure)",
+        "CONTRIBUTING.md:14 '## Tooling' with :22-23 'nvm use' / 'pnpm install --frozen-lockfile' (environment setup)",
+        "CONTRIBUTING.md:98 '## Development Commands'",
+        "CONTRIBUTING.md:119-120 '# Run unit tests ... pnpm test:unit' and :270 '## CI-aligned checks' (testing)",
+        "CONTRIBUTING.md:318 '## Code Style and Linting' (linting)",
+        "CONTRIBUTING.md:79 '## Dependency cooldown' and :91 '## Dependency Release-Age Exceptions' (dependency policies)",
+        "CONTRIBUTING.md:344 '## Opening a new PR' / :346 'PR titles must follow [Conventional Commits]' (PR requirements)"
+      ],
+      "note": "CONTRIBUTING.md exists at the root and contains every listed topic."
+    },
+    {
+      "id": "b4f6453b977269483064fa4489a853af0ab41642",
+      "line": 4,
+      "text": "Read and follow [RELEASING.md](./RELEASING.md) when adding changesets or working on publishing or release recovery.",
+      "label": "true",
+      "evidence": [
+        "RELEASING.md:5 '### Creating a changeset'",
+        "RELEASING.md:19 '### Publishing'",
+        "RELEASING.md:50 '## Manual S3 recovery' / :52 'S3 recovery is an exceptional path for repairing a failed or incomplete browser release'"
+      ],
+      "note": "RELEASING.md exists and covers changesets, publishing and release recovery."
+    },
+    {
+      "id": "dedc8d599b1508b83911e956296c7f17b63a2573",
+      "line": 5,
+      "text": "Public API changes: follow \"Public API changes\" in [CONTRIBUTING.md](./CONTRIBUTING.md). As an agent, also:",
+      "label": "true",
+      "evidence": [
+        "CONTRIBUTING.md:330 '## Public API changes'",
+        "CONTRIBUTING.md:332 'Public API is hard to change once it ships, so agree on it before writing the implementation.'"
+      ],
+      "note": "The referenced 'Public API changes' section exists in CONTRIBUTING.md."
+    },
+    {
+      "id": "ca3c368466a5f96768169c5ac40df17e9c32a451",
+      "line": 6,
+      "text": "When reviewing or fixing someone else's PR, don't ask for or open an issue, but note in the review when an external contributor's PR changes public API without one.",
+      "label": "judgment",
+      "evidence": [
+        "CONTRIBUTING.md:338 '**Already have a PR open?** Don't stop or rewrite it. Call out the public API change at the top of the PR description, and link or open an issue' (contributor-side rule; the agent-specific review behavior is not encoded anywhere)"
+      ],
+      "note": "Agent review-process instruction that no tooling or code in the repository can confirm or contradict."
+    },
+    {
+      "id": "85145c338415296737ab90ad494b82f97fa4b73e",
+      "line": 7,
+      "text": "The author is a PostHog maintainer when the PR's `author_association` is `MEMBER` or `OWNER` (`gh api repos/PostHog/posthog-js/pulls/<number> --jq .author_association`) or, before a PR exists, when `gh api orgs/PostHog/members/$(gh api user --jq .login)` succeeds. If the check fails or can't run, treat the author as an external contributor.",
+      "label": "judgment",
+      "evidence": [
+        "CONTRIBUTING.md:334 'PostHog maintainers (members of the PostHog GitHub org) agree on API shape in the PR itself' (consistent definition)",
+        "packages/browser/package.json:8 '\"repository\": \"https://github.com/PostHog/posthog-js\"' (repo slug in the command is correct)",
+        "grep -rn 'author_association' .github => no matches (no tooling implements this check)"
+      ],
+      "note": "Depends on the external GitHub API and is an agent process rule; the repo slug and maintainer definition are consistent but the check itself cannot be settled from the repository."
+    },
+    {
+      "id": "b56fd227c6d56b943ead831c8187722a8272b97a",
+      "line": 8,
+      "text": "A published [sdk-spec](https://github.com/PostHog/sdk-specs) that defines the API counts as the agreement, so no issue is needed.",
+      "label": "true",
+      "evidence": [
+        "CONTRIBUTING.md:337 '**Already specified?** If a published [sdk-spec](https://github.com/PostHog/sdk-specs) defines the API, that's the agreement, so you don't need an issue.'"
+      ],
+      "note": "The canonical contributor policy in CONTRIBUTING.md states the same rule nearly verbatim."
+    },
+    {
+      "id": "e8a9e455592aa601997fe0a71d46a8e02702055b",
+      "line": 9,
+      "text": "For an external contributor with no agreed issue and no spec, stop before implementing and draft the issue body for the user to post. Open it only if they ask.",
+      "label": "judgment",
+      "evidence": [
+        "CONTRIBUTING.md:336 '**Before you start:** ... open an issue describing your use case. Wait for a maintainer to agree on the API shape there before you implement it.' (related contributor rule; the agent-specific draft-only behavior is not encoded)"
+      ],
+      "note": "Agent workflow instruction that the repository cannot verify or contradict."
+    },
+    {
+      "id": "b83481735d58e44ab6a21d915c66077422cacbca",
+      "line": 10,
+      "text": "Before implementing or reviewing SDK behavior, check [PostHog/sdk-specs](https://github.com/PostHog/sdk-specs) for a spec covering it (its README lists every capability). If one exists, use it as the cross-SDK contract for the behavior the PR changes, and call out any divergence in that behavior in the PR description. Don't fix or flag discrepancies between the spec and code the PR doesn't touch. If none exists, carry on.",
+      "label": "judgment",
+      "evidence": [
+        ".github/workflows/sdk-compliance-tests-node-v2.yml:151 '// Packaged feature paths are relative to the sdk-specs repository root.' (repo does use PostHog/sdk-specs, but its README contents are external)"
+      ],
+      "note": "Process instruction about an external repository whose README contents cannot be checked from this repo."
+    },
+    {
+      "id": "50da6df6eea93a8083d4d9f8c027cfc5984b84e7",
+      "line": 11,
+      "text": "Check for package-level `AGENTS.md` files and contributor guides before working in a package.",
+      "label": "true",
+      "evidence": [
+        "find . \\( -iname AGENTS.md -o -iname CONTRIBUTING.md \\) => ./packages/browser/AGENTS.md (110 lines), ./packages/browser-next/AGENTS.md (13 lines), ./packages/{browser,react-native,convex,nuxt}/CONTRIBUTING.md",
+        "CONTRIBUTING.md:65-67 '### Package-specific guides ... Some packages have their own contributor guides with extra package-level checks'"
+      ],
+      "note": "Package-level AGENTS.md files and contributor guides exist, so the instruction's premise holds."
+    },
+    {
+      "id": "d669eff71dc7b65168ec297c08af0e88e1e787f9",
+      "line": 12,
+      "text": "Keep shared development guidance in `CONTRIBUTING.md` and release guidance in `RELEASING.md` rather than duplicating it here.",
+      "label": "true",
+      "evidence": [
+        "git show --stat 8f5ca0e2 => 'docs: consolidate contributor and release guidance (#4817)' AGENTS.md | 302 +---, CONTRIBUTING.md | 271 +++, RELEASING.md | 12 ++ (guidance moved out of AGENTS.md)",
+        "wc -l AGENTS.md => 12 lines, consisting of pointers to CONTRIBUTING.md/RELEASING.md plus agent-specific notes",
+        "CONTRIBUTING.md:98 '## Development Commands'; RELEASING.md:1 '## Releases'"
+      ],
+      "note": "The repo follows this: dev/release guidance was consolidated out of AGENTS.md into CONTRIBUTING.md/RELEASING.md (only line 8 lightly restates CONTRIBUTING.md:337)."
+    }
+  ]
+}

@@ -43,7 +43,7 @@ const RULES = [
 /** Ask for gap proposals for one file; keep those whose citations check out. */
 export async function proposeGaps(repo: RepoContext, file: string, text: string, opts: { model: string; effort: string; budgetUsd: number; timeoutMs: number }): Promise<{ proposals: GapProposal[]; costUsd: number; failure: string | null }> {
   const prompt = [`You look for what the instruction file ${file} is missing, against the repository in your working directory.`, '', 'Rules:', ...RULES.map((r, i) => `${i + 1}. ${r}`), '', '<file>', text, '</file>'].join('\n');
-  const result = await runClaude({ cwd: repo.root, prompt, schema: SCHEMA, model: opts.model, effort: opts.effort, budgetUsd: opts.budgetUsd, tools: ['Read', 'Grep', 'Glob', 'Bash'], allowedTools: ['Read', 'Grep', 'Glob', 'Bash(git log:*)', 'Bash(git ls-files:*)', 'Bash(ls:*)', 'Bash(cat:*)', 'Bash(grep:*)'], timeoutMs: opts.timeoutMs });
+  const result = await runClaude({ cwd: repo.root, prompt, schema: SCHEMA, model: opts.model, effort: opts.effort, budgetUsd: opts.budgetUsd * 0.8, tools: ['Read', 'Grep', 'Glob', 'Bash'], allowedTools: ['Read', 'Grep', 'Glob', 'Bash(git log:*)', 'Bash(git ls-files:*)', 'Bash(ls:*)', 'Bash(cat:*)', 'Bash(grep:*)'], timeoutMs: opts.timeoutMs });
   if (!result.ok) return { proposals: [], costUsd: result.costUsd, failure: `${result.subtype}${result.error ? ` (${result.error})` : ''}` };
   const raw = (result.structured as { proposals?: { text?: unknown; section?: unknown; reason?: unknown; evidence?: unknown }[] } | null)?.proposals ?? [];
   const proposals: GapProposal[] = [];

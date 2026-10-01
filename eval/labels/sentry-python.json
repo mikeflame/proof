@@ -1,0 +1,362 @@
+{
+ "repo": "getsentry/sentry-python",
+ "sha": "014769c4ba1db2810e0a1a5c59659b4689b80d32",
+ "file": "AGENTS.md",
+ "labeler": "agent (independent of proof's output)",
+ "labels": [
+  {
+   "id": "103cbc79fc73544a3f655a5657f9a0f6b259f423",
+   "line": 5,
+   "text": "Run tox via uv: `uv run tox -e <env>`",
+   "label": "true",
+   "evidence": [
+    "scripts/runtox.sh:34 exec uv run \"${TOX_ENV[@]}\" tox -e \"$ENV\" -- \"${@:2}\"",
+    "pyproject.toml:4 # Run tox with: `uv run tox -e <env>`",
+    "CONTRIBUTING.md:139 Invoke tox via `uv run tox ...`."
+   ],
+   "note": "CI test runner script and docs invoke tox through uv exactly this way."
+  },
+  {
+   "id": "87d434a2ad65634c8dd53cd6cffa6ae8da1c6a6b",
+   "line": 6,
+   "text": "`tox` + `tox-uv` are declared as the project's default dev dependencies in `pyproject.toml`, so uv installs them automatically into `.venv`.",
+   "label": "true",
+   "evidence": [
+    "pyproject.toml:3 # `dev` is installed by default; `typing` is opt-in via `uv run --group typing`.",
+    "pyproject.toml:8-11 [dependency-groups] dev = [ \"tox\", \"tox-uv\", ...",
+    "uv.lock:20-26 [manifest.dependency-groups] dev = [... { name = \"tox\" }, { name = \"tox-uv\" } ]",
+    ".github/workflows/ci.yml:32 run: uv run ruff check tests sentry_sdk (dev-group tool used without explicit install)"
+   ],
+   "note": "tox and tox-uv are in the dev group, which uv installs by default (uv's default-groups is dev)."
+  },
+  {
+   "id": "25427a796f192329a30c8c9c61cb61bc1ab04328",
+   "line": 10,
+   "text": "Use tox for testing (not pytest directly):",
+   "label": "true",
+   "evidence": [
+    ".github/workflows/test-integrations-common.yml:43 ./scripts/runtox.sh \"py${{ matrix.python-version }}-common\"",
+    "scripts/runtox.sh:34 exec uv run ... tox -e \"$ENV\"",
+    "tox.ini:19834 python -m pytest -W error::pytest.PytestUnraisableExceptionWarning {env:TESTPATH:{env:_TESTPATH}} ... {posargs}",
+    "tox.ini setenv: django: DJANGO_SETTINGS_MODULE=...; common: PYTEST_ADDOPTS=\"--ignore=tests/test_shadowed_module.py\""
+   ],
+   "note": "CI runs every test suite through tox, and tox supplies per-env settings that plain pytest would lack."
+  },
+  {
+   "id": "48e8681902a55d8df85d43e6f0fcbfbc6567461a",
+   "line": 11,
+   "text": "Test matrix configuration is in `tox.ini`",
+   "label": "true",
+   "evidence": [
+    "tox.ini:15-20 [tox] requires = tox-uv / envlist = ... {py3.6,...,py3.15t}-common",
+    "CONTRIBUTING.md:137 automatically generated and stored in the tox.ini file. The `envlist` defines the environments"
+   ],
+   "note": "tox.ini holds the full envlist test matrix."
+  },
+  {
+   "id": "92f3b488bab1760a81f6df162fefdfb1719a6705",
+   "line": 12,
+   "text": "Integration tests: `uv run tox -e py3.14-{integration}-v{version}`",
+   "label": "true",
+   "evidence": [
+    "tox.ini:59 {py3.10,py3.13,py3.14,py3.14t}-mcp-v1.30.0",
+    "tox.ini:660 py3.14-mcp-v1.30.0: httpx==0.28.1",
+    "grep -c 'py3.14-.*-v[0-9]' tox.ini => 1833"
+   ],
+   "note": "Integration envs follow the py<ver>-<integration>-v<version> naming pattern."
+  },
+  {
+   "id": "b63652fabaab9205a9348ca5e303563d3796637a",
+   "line": 13,
+   "text": "Common tests: `uv run tox -e py3.14-common`",
+   "label": "true",
+   "evidence": [
+    "tox.ini:20 {py3.6,py3.7,py3.8,py3.9,py3.10,py3.11,py3.12,py3.13,py3.14,py3.14t,py3.15,py3.15t}-common",
+    "CONTRIBUTING.md:87 (e.g. `uv run tox -e py3.14-common`)"
+   ],
+   "note": "py3.14-common is in the envlist."
+  },
+  {
+   "id": "225a570c8c5c2ae6249088d19e7332e08e03ddd1",
+   "line": 14,
+   "text": "Run specific test file: `TESTPATH=tests/integrations/logging/test_logging.py uv run tox -e py3.14-common`",
+   "label": "true",
+   "evidence": [
+    "ls tests/integrations/logging => test_logging.py",
+    "tox.ini:19814 passenv = ... TESTPATH",
+    "tox.ini:19834 python -m pytest ... {env:TESTPATH:{env:_TESTPATH}} ...",
+    "CONTRIBUTING.md:164 TESTPATH=tests/integrations/logging/test_logging.py uv run tox -e py3.12-common"
+   ],
+   "note": "TESTPATH is passed through and overrides _TESTPATH, and the named test file exists."
+  },
+  {
+   "id": "08562ca75eb95f5b3b638cd91ac513f0b252e1b6",
+   "line": 15,
+   "text": "Run single test: `TESTPATH=tests/path/to/test_file.py uv run tox -e py3.14-common -- -k \"test_name\"`",
+   "label": "true",
+   "evidence": [
+    "tox.ini:19834 ... --junitxml=.junitxml-{envname} {posargs}",
+    "CONTRIBUTING.md:176 TESTPATH=<file_path> uv run tox -e <tox_env> -- <pytest_args>"
+   ],
+   "note": "Arguments after -- reach pytest via {posargs}, so -k works."
+  },
+  {
+   "id": "e36529927d1379fec5281919c48a6423c5ac3600",
+   "line": 19,
+   "text": "Mypy and its type stubs live in the opt-in `typing` dependency group:",
+   "label": "true",
+   "evidence": [
+    "pyproject.toml:3 `typing` is opt-in via `uv run --group typing`.",
+    "pyproject.toml:43-55 typing = [ \"mypy\", ... \"types-protobuf\", \"types-gevent\", \"types-greenlet\", \"types-redis\", \"types-setuptools<71\", \"types-webob\", ...",
+    "pyproject.toml:9-15 dev group (default) does not contain mypy"
+   ],
+   "note": "mypy and its types-* stubs are only in the non-default typing group."
+  },
+  {
+   "id": "e639c5bb658ccd12640d09b12c02035217394020",
+   "line": 20,
+   "text": "Run `uv run --group typing mypy sentry_sdk` before committing (must pass with zero errors)",
+   "label": "true",
+   "evidence": [
+    ".github/workflows/ci.yml:40-41 - name: Mypy / run: uv run --group typing mypy sentry_sdk",
+    "pyproject.toml:5 # Run mypy with: `uv run --group typing mypy sentry_sdk`"
+   ],
+   "note": "CI's lint job runs this exact command and fails on any mypy error."
+  },
+  {
+   "id": "f016418475c17abf100921e02e830349da9b2efa",
+   "line": 21,
+   "text": "Strict mode enabled (`check_untyped_defs`, `disallow_untyped_defs`)",
+   "label": "true",
+   "evidence": [
+    "pyproject.toml:140 [tool.mypy]",
+    "pyproject.toml:142 check_untyped_defs = true",
+    "pyproject.toml:147 disallow_untyped_defs = true",
+    "pyproject.toml also sets disallow_any_generics, disallow_incomplete_defs, strict_optional, warn_unused_ignores = true"
+   ],
+   "note": "Both named flags are on, along with most other strict flags (strict = true itself is not set, and a few modules are exempted)."
+  },
+  {
+   "id": "ae2a22761e2f54c0bdf4559e05022b35a8b001cf",
+   "line": 26,
+   "text": "`uv run ruff check --fix tests sentry_sdk`",
+   "label": "true",
+   "evidence": [
+    ".pre-commit-config.yaml: entry: uv run ruff check --force-exclude --fix",
+    ".github/workflows/ci.yml:32 run: uv run ruff check tests sentry_sdk",
+    "pyproject.toml:14 dev group includes \"ruff\"; pyproject.toml:280 [tool.ruff]"
+   ],
+   "note": "ruff check on tests and sentry_sdk is enforced in CI and pre-commit runs it with --fix."
+  },
+  {
+   "id": "5e37bf6829c399e67413cab86d8132ef17cce803",
+   "line": 27,
+   "text": "`uv run ruff format tests sentry_sdk`",
+   "label": "true",
+   "evidence": [
+    ".github/workflows/ci.yml:35 run: uv run ruff format --check tests sentry_sdk",
+    ".pre-commit-config.yaml: entry: uv run ruff format --force-exclude",
+    "pyproject.toml:319 [tool.ruff.format]"
+   ],
+   "note": "CI enforces ruff format on exactly these paths."
+  },
+  {
+   "id": "914064222e27e3e5f2ac62520e6c9fd901cbf0e5",
+   "line": 32,
+   "text": "`tox.ini` — generated by `scripts/populate_tox/populate_tox.py` from `scripts/populate_tox/tox.jinja`",
+   "label": "true",
+   "evidence": [
+    "tox.ini:1-2 # DON'T EDIT THIS FILE BY HAND. This file has been generated from a template by `scripts/populate_tox/populate_tox.py`.",
+    "tox.ini:8 - or in the template in `scripts/populate_tox/tox.jinja`",
+    "scripts/populate_tox/populate_tox.py:862 template = ENV.get_template(\"tox.jinja\")",
+    "scripts/populate_tox/populate_tox.py:934 with open(TOX_FILE, \"w\") as file:"
+   ],
+   "note": "populate_tox.py renders tox.jinja into tox.ini."
+  },
+  {
+   "id": "5d90543746ab56cf9d2e0d86f56d82e1cf407e9e",
+   "line": 33,
+   "text": "`.github/workflows/test-integrations-*.yml` — generated by `scripts/split_tox_gh_actions/split_tox_gh_actions.py`",
+   "label": "true",
+   "evidence": [
+    ".github/workflows/test-integrations-ai.yml:1-2 # Do not edit this YAML file. This file is generated automatically by executing / # python scripts/split_tox_gh_actions/split_tox_gh_actions.py (same header in all 15 test-integrations-*.yml)",
+    "scripts/split_tox_gh_actions/split_tox_gh_actions.py:377 outfile = OUT_DIR / f\"test-integrations-{group}.yml\""
+   ],
+   "note": "Every test-integrations-*.yml is produced by split_tox_gh_actions.py."
+  },
+  {
+   "id": "00370ffa9c5e793e08d6392f624e1b6584c1934b",
+   "line": 34,
+   "text": "Regenerate all: `scripts/generate-test-files.sh`",
+   "label": "true",
+   "evidence": [
+    "scripts/generate-test-files.sh:3 # This script generates tox.ini and CI YAML files in one go.",
+    "scripts/generate-test-files.sh:11-12 ... python populate_tox/populate_tox.py \"$@\" / ... python split_tox_gh_actions/split_tox_gh_actions.py"
+   ],
+   "note": "The script runs both generators."
+  },
+  {
+   "id": "3c973acd8321dff7e56a1ef5dd206c756ac2711b",
+   "line": 38,
+   "text": "Add minimum version to `_MIN_VERSIONS` in `sentry_sdk/integrations/__init__.py`",
+   "label": "true",
+   "evidence": [
+    "sentry_sdk/integrations/__init__.py:120 _MIN_VERSIONS = {",
+    "scripts/populate_tox/README.md:221 1. Add the minimum supported version of the framework/library to `_MIN_VERSIONS` in `integrations/__init__.py`.",
+    "scripts/populate_tox/populate_tox.py:36 from sentry_sdk.integrations import _MIN_VERSIONS"
+   ],
+   "note": "_MIN_VERSIONS exists there and the generator reads it."
+  },
+  {
+   "id": "76053f7689b2f4dbe757dab05bb3c3be3b786802",
+   "line": 39,
+   "text": "Add config to `TEST_SUITE_CONFIG` in `scripts/populate_tox/config.py`",
+   "label": "true",
+   "evidence": [
+    "scripts/populate_tox/config.py:7 TEST_SUITE_CONFIG = {",
+    "scripts/populate_tox/README.md:227 2. Add the integration and any constraints to `TEST_SUITE_CONFIG`."
+   ],
+   "note": "TEST_SUITE_CONFIG is defined in that file."
+  },
+  {
+   "id": "dbdf3fad2ef268ffa5df2ded18f813bef73153a2",
+   "line": 40,
+   "text": "Add to group in `scripts/split_tox_gh_actions/split_tox_gh_actions.py`",
+   "label": "true",
+   "evidence": [
+    "scripts/split_tox_gh_actions/split_tox_gh_actions.py:72 GROUPS = {",
+    "scripts/split_tox_gh_actions/split_tox_gh_actions.py:197-199 \"Please add the following frameworks to the corresponding group in `GROUPS` ...\"",
+    "scripts/populate_tox/README.md:229 3. Add the integration to one of the groups in the `GROUPS` dictionary in `scripts/split_tox_gh_actions/split_tox_gh_actions.py`."
+   ],
+   "note": "Groups live in GROUPS in that script, and the script fails when a framework has no group."
+  },
+  {
+   "id": "c6bc5912874602ba776d4a86e9c416ada5dc5dc2",
+   "line": 41,
+   "text": "Run `scripts/generate-test-files.sh`",
+   "label": "true",
+   "evidence": [
+    "scripts/generate-test-files.sh exists (runs populate_tox.py and split_tox_gh_actions.py)",
+    "scripts/populate_tox/README.md:231 4. Run `scripts/generate-test-files.sh` and commit the changes."
+   ],
+   "note": "The script exists and is the documented last step."
+  },
+  {
+   "id": "350c83986f2fc4f4986b67c391ec69575f20b16b",
+   "line": 45,
+   "text": "Don't crash applications or swallow exceptions",
+   "label": "true",
+   "evidence": [
+    "sentry_sdk/utils.py:235 def capture_internal_exceptions() (SDK-internal errors are logged, not raised: utils.py:238-246)",
+    "grep -rln capture_internal_exceptions sentry_sdk/integrations | wc -l => 65",
+    "sentry_sdk/integrations/asgi.py:222 reraise(*exc_info) (grep -rn 'reraise(' sentry_sdk/integrations | wc -l => 50)",
+    "tests/conftest.py:170-185 autouse internal_exceptions fixture re-raises any internal SDK exception in tests",
+    ".github/workflows/ci.yml:37-38 Find raise from None (scripts/find_raise_from_none.py blocks exception-chain suppression)"
+   ],
+   "note": "Integrations wrap SDK logic in capture_internal_exceptions and re-raise user exceptions, and tests fail on internal SDK errors."
+  },
+  {
+   "id": "b7a22b2f6be8fa36fbe13fb522a0dc1cc2ad44cc",
+   "line": 46,
+   "text": "Don't mutate object references or alter function signatures",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Design principle with no tooling enforcing it; integrations monkeypatch framework objects by design, so the repo cannot settle it either way."
+  },
+  {
+   "id": "1e5733e8400a2907d69e140f38bd6d4b29a3c741",
+   "line": 47,
+   "text": "Don't leak file descriptors or make unexpected DB requests",
+   "label": "judgment",
+   "evidence": [
+    "tests/conftest.py:199 if isinstance(warning.message, ResourceWarning): continue"
+   ],
+   "note": "No check for fd leaks or unexpected DB requests (ResourceWarnings are skipped in the warnings check), so this stays a design principle."
+  },
+  {
+   "id": "d10879ab83109c2525ff92ea1b39774feef7a003",
+   "line": 48,
+   "text": "Write defensive code",
+   "label": "judgment",
+   "evidence": [],
+   "note": "Vague coding principle that the repository cannot verify."
+  },
+  {
+   "id": "0445fff2633671d7631985a08aa2593942c8d889",
+   "line": 49,
+   "text": "Use end-to-end tests (not mocks)",
+   "label": "judgment",
+   "evidence": [
+    "grep -rln 'unittest.mock|mock.patch|import mock' tests | wc -l => 84"
+   ],
+   "note": "Testing preference; mocks appear in 84 test files, so the code does not show the rule being followed, but a preference cannot be stale."
+  },
+  {
+   "id": "41ffad8496d28f25fbfcf592711b1170abfa32b0",
+   "line": 55,
+   "text": "`sentry_sdk/integrations/` · integration modules",
+   "label": "true",
+   "evidence": [
+    "ls sentry_sdk/integrations => aiohttp.py aiomysql.py anthropic.py ... django/ celery/ ...",
+    "sentry_sdk/integrations/__init__.py:120 _MIN_VERSIONS (integration registry)"
+   ],
+   "note": "The directory holds the integration modules."
+  },
+  {
+   "id": "0f75e60b81b6c9a96621d5e76a7ef2999847052d",
+   "line": 56,
+   "text": "`sentry_sdk/ai/` · AI monitoring",
+   "label": "true",
+   "evidence": [
+    "ls sentry_sdk/ai => consts.py __init__.py monitoring.py _openai_completions_api.py _openai_responses_api.py utils.py",
+    "sentry_sdk/ai/monitoring.py:32 def ai_track(description: str, **span_kwargs) / :186 def record_token_usage("
+   ],
+   "note": "The directory exists and holds the AI monitoring helpers."
+  },
+  {
+   "id": "2b9224e501ceb813dd42cc6959342d242ecd65c8",
+   "line": 57,
+   "text": "`sentry_sdk/crons/` · Cron monitoring",
+   "label": "true",
+   "evidence": [
+    "ls sentry_sdk/crons => api.py consts.py decorator.py __init__.py",
+    "sentry_sdk/crons/api.py:39 def capture_checkin(",
+    "sentry_sdk/crons/decorator.py:29 class monitor:"
+   ],
+   "note": "The directory exists and holds the cron check-in and monitor API."
+  },
+  {
+   "id": "cd55450097e360b765c44907e47705dfac6d4d8d",
+   "line": 58,
+   "text": "`sentry_sdk/profiler/` · Performance profiling",
+   "label": "true",
+   "evidence": [
+    "ls sentry_sdk/profiler => continuous_profiler.py __init__.py transaction_profiler.py utils.py",
+    "sentry_sdk/profiler/__init__.py:1-6 from sentry_sdk.profiler.continuous_profiler import (start_profile_session, start_profiler, ..."
+   ],
+   "note": "The directory exists and holds the profilers."
+  },
+  {
+   "id": "703cf3087763499a12d534b3b299ea19b4816e01",
+   "line": 59,
+   "text": "`tests/integrations/{name}/` · Integration test suites",
+   "label": "true",
+   "evidence": [
+    "ls tests/integrations | wc -l => 84 (aiohttp/, django/, logging/, ...)",
+    "tox.ini setenv: aiohttp: _TESTPATH=tests/integrations/aiohttp"
+   ],
+   "note": "Each integration has its own test directory under tests/integrations/."
+  },
+  {
+   "id": "86eba8d79c4c58189a73848dbe47c92156774f3c",
+   "line": 60,
+   "text": "`scripts/populate_tox/config.py` · Test suite configuration",
+   "label": "true",
+   "evidence": [
+    "scripts/populate_tox/config.py:1 # The TEST_SUITE_CONFIG dictionary defines, for each integration test suite, at least the main package ...",
+    "scripts/populate_tox/config.py:7 TEST_SUITE_CONFIG = {"
+   ],
+   "note": "The file holds the test suite configuration."
+  }
+ ]
+}

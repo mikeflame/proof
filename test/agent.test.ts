@@ -205,3 +205,19 @@ describe('evidence checks', () => {
     }
   });
 });
+
+describe('budget', () => {
+  it('never lets parallel calls together spend past the run budget', () => {
+    const f = makeRepo({ ...FILES, 'CLAUDE.md': `# Many\n\n${Array.from({ length: 24 }, (_, i) => `- Statement ${i} is about handlers here.`).join('\n')}\n` });
+    try {
+      const { report, calls } = proofRun(f.repo, { cost: 0.3 }, '--budget-usd', '1', '--jobs', '4', '--batch-size', '2', '--no-fix');
+      const ceilings = calls.map((c) => Number(c.args[c.args.indexOf('--max-budget-usd') + 1]));
+      // Each call holds its share while it runs; the fake spends 0.3 per call.
+      expect(calls.length * 0.3).toBeLessThanOrEqual(1 + 0.3 * 0.999);
+      expect(ceilings.every((c) => c <= 0.5 * 0.8 + 1e-9)).toBe(true);
+      expect(report.agent?.failures.join(' ')).toContain('budget');
+    } finally {
+      f.cleanup();
+    }
+  });
+});

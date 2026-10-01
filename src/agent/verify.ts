@@ -209,22 +209,34 @@ export async function verifyFiles(repo: RepoContext, files: FileToVerify[], inst
     }
   }
 
+  // Calls in flight hold their ceiling, so parallel jobs cannot together spend past the budget. The CLI
+  // checks its own ceiling between turns, so a call can run one turn over: it gets HEADROOM of its share.
+  let reserved = 0;
+  const HEADROOM = 0.8;
+  const call = async (prompt: string, ceiling: number): Promise<ClaudeResult> => {
+    reserved += ceiling;
+    try {
+      return await runClaude({ cwd: repo.root, prompt, schema: VERIFIER_SCHEMA, model: opts.model, effort: opts.effort, budgetUsd: ceiling * HEADROOM, tools: TOOLS, allowedTools: ALLOWED, timeoutMs: opts.timeoutMs });
+    } finally {
+      reserved -= ceiling;
+    }
+  };
+
   const runJob = async (job: Job, retry = false): Promise<void> => {
-    const remaining = opts.budgetUsd - spent;
-    const ceiling = Math.min(remaining, job.batch.length * opts.perStatementUsd);
+    const ceiling = Math.min(opts.budgetUsd - spent - reserved, job.batch.length * opts.perStatementUsd);
     if (ceiling < 0.05) {
       job.cov.failures.push(`budget of $${opts.budgetUsd.toFixed(2)} spent before L${job.batch[0]?.st.line}–L${job.batch[job.batch.length - 1]?.st.line} were verified`);
       return;
     }
     const prompt = buildPrompt(job.file.file, job.file.why, job.batch, job.file.note);
-    let result: ClaudeResult = await runClaude({ cwd: repo.root, prompt, schema: VERIFIER_SCHEMA, model: opts.model, effort: opts.effort, budgetUsd: ceiling, tools: TOOLS, allowedTools: ALLOWED, timeoutMs: opts.timeoutMs });
+    let result: ClaudeResult = await call(prompt, ceiling);
     spent += result.costUsd;
     job.cov.costUsd += result.costUsd;
     // One retry for output that did not parse; a budget or timeout failure is final.
     if (!result.ok && (result.subtype === 'parse' || result.subtype === 'error_max_structured_output_retries')) {
-      const again = Math.min(opts.budgetUsd - spent, ceiling);
+      const again = Math.min(opts.budgetUsd - spent - reserved, ceiling);
       if (again >= 0.05) {
-        result = await runClaude({ cwd: repo.root, prompt, schema: VERIFIER_SCHEMA, model: opts.model, effort: opts.effort, budgetUsd: again, tools: TOOLS, allowedTools: ALLOWED, timeoutMs: opts.timeoutMs });
+        result = await call(prompt, again);
         spent += result.costUsd;
         job.cov.costUsd += result.costUsd;
       }

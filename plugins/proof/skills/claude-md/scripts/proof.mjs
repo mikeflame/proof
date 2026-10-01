@@ -8124,7 +8124,7 @@ var RULES = [
 ];
 async function proposeGaps(repo, file, text4, opts) {
   const prompt = [`You look for what the instruction file ${file} is missing, against the repository in your working directory.`, "", "Rules:", ...RULES.map((r, i) => `${i + 1}. ${r}`), "", "<file>", text4, "</file>"].join("\n");
-  const result = await runClaude({ cwd: repo.root, prompt, schema: SCHEMA, model: opts.model, effort: opts.effort, budgetUsd: opts.budgetUsd, tools: ["Read", "Grep", "Glob", "Bash"], allowedTools: ["Read", "Grep", "Glob", "Bash(git log:*)", "Bash(git ls-files:*)", "Bash(ls:*)", "Bash(cat:*)", "Bash(grep:*)"], timeoutMs: opts.timeoutMs });
+  const result = await runClaude({ cwd: repo.root, prompt, schema: SCHEMA, model: opts.model, effort: opts.effort, budgetUsd: opts.budgetUsd * 0.8, tools: ["Read", "Grep", "Glob", "Bash"], allowedTools: ["Read", "Grep", "Glob", "Bash(git log:*)", "Bash(git ls-files:*)", "Bash(ls:*)", "Bash(cat:*)", "Bash(grep:*)"], timeoutMs: opts.timeoutMs });
   if (!result.ok) return { proposals: [], costUsd: result.costUsd, failure: `${result.subtype}${result.error ? ` (${result.error})` : ""}` };
   const raw = result.structured?.proposals ?? [];
   const proposals = [];
@@ -8272,21 +8272,30 @@ async function verifyFiles(repo, files2, instructionFiles, opts) {
       jobs.push({ file: f, cov, batch: fresh.slice(i, i + opts.batchSize).map((x, j) => ({ ...x, key: `s${i + j + 1}` })) });
     }
   }
+  let reserved = 0;
+  const HEADROOM = 0.8;
+  const call = async (prompt, ceiling) => {
+    reserved += ceiling;
+    try {
+      return await runClaude({ cwd: repo.root, prompt, schema: VERIFIER_SCHEMA, model: opts.model, effort: opts.effort, budgetUsd: ceiling * HEADROOM, tools: TOOLS, allowedTools: ALLOWED, timeoutMs: opts.timeoutMs });
+    } finally {
+      reserved -= ceiling;
+    }
+  };
   const runJob = async (job, retry = false) => {
-    const remaining = opts.budgetUsd - spent;
-    const ceiling = Math.min(remaining, job.batch.length * opts.perStatementUsd);
+    const ceiling = Math.min(opts.budgetUsd - spent - reserved, job.batch.length * opts.perStatementUsd);
     if (ceiling < 0.05) {
       job.cov.failures.push(`budget of $${opts.budgetUsd.toFixed(2)} spent before L${job.batch[0]?.st.line}\u2013L${job.batch[job.batch.length - 1]?.st.line} were verified`);
       return;
     }
     const prompt = buildPrompt(job.file.file, job.file.why, job.batch, job.file.note);
-    let result = await runClaude({ cwd: repo.root, prompt, schema: VERIFIER_SCHEMA, model: opts.model, effort: opts.effort, budgetUsd: ceiling, tools: TOOLS, allowedTools: ALLOWED, timeoutMs: opts.timeoutMs });
+    let result = await call(prompt, ceiling);
     spent += result.costUsd;
     job.cov.costUsd += result.costUsd;
     if (!result.ok && (result.subtype === "parse" || result.subtype === "error_max_structured_output_retries")) {
-      const again = Math.min(opts.budgetUsd - spent, ceiling);
+      const again = Math.min(opts.budgetUsd - spent - reserved, ceiling);
       if (again >= 0.05) {
-        result = await runClaude({ cwd: repo.root, prompt, schema: VERIFIER_SCHEMA, model: opts.model, effort: opts.effort, budgetUsd: again, tools: TOOLS, allowedTools: ALLOWED, timeoutMs: opts.timeoutMs });
+        result = await call(prompt, again);
         spent += result.costUsd;
         job.cov.costUsd += result.costUsd;
       }
@@ -19772,7 +19781,7 @@ function vetEdit(repo, source, st, raw, scope, opts) {
 async function proposeFixes(repo, file, scope, stale2, records, opts) {
   const source = repo.read(file) ?? "";
   const keyed = stale2.map((st, i) => ({ key: `s${i + 1}`, st }));
-  const result = await runClaude({ cwd: repo.root, prompt: buildFixPrompt(file, source, keyed, records, opts.config), schema: FIXER_SCHEMA, model: opts.model, effort: opts.effort, budgetUsd: opts.budgetUsd, tools: TOOLS2, allowedTools: ALLOWED2, timeoutMs: opts.timeoutMs });
+  const result = await runClaude({ cwd: repo.root, prompt: buildFixPrompt(file, source, keyed, records, opts.config), schema: FIXER_SCHEMA, model: opts.model, effort: opts.effort, budgetUsd: opts.budgetUsd * 0.8, tools: TOOLS2, allowedTools: ALLOWED2, timeoutMs: opts.timeoutMs });
   if (!result.ok) return { edits: [], costUsd: result.costUsd, failure: `${result.subtype}${result.error ? ` (${result.error})` : ""}` };
   const raw = result.structured?.edits ?? [];
   const edits = [];

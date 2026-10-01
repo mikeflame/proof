@@ -95,11 +95,26 @@ your repository. It needs Node 22+ and git; the parsers and grammars ship next t
 | a rule's `paths:` (`globs:`, `applyTo:`) | the files each pattern matches, read with Claude Code's glob rules (`[` is a bracket expression) |
 <!-- proof:ignore-end -->
 
+## How well it works
+
+<!-- generated:metrics -->
+Corpus: 12 public repositories pinned to commits (6 tune, 6 held-out, never run while tuning), one instruction file each. Labels: independent agent labels with cited evidence; a second, human review is pending.
+
+| Stage, split | Repos | Labeled statements | STALE precision | STALE recall | VERIFIED precision | Fixes kept |
+| --- | --- | --- | --- | --- | --- | --- |
+| `proof check`, tune | 5 | 297 | 100% (4 flagged) | 33.3% (12 stale) | 100% (27) | — |
+
+Run time on denoland/deno (14,927 files, 137 open statements in CLAUDE.md): a full `proof run` took 10 minutes and $2.37 (9 statements fixed, 1 fix rejected); the re-run after the fixes took 55 seconds and $0.15.
+<!-- /generated:metrics -->
+
+Scored by `node eval/score.mjs` against `eval/labels/`; `eval/` holds the corpus, the reports and
+the labels, so every number can be re-derived.
+
 ## Where it works
 
 What the checks read mechanically in each ecosystem, each cell proven by a fixture in
 `test/matrix.test.ts`. The verifier agent covers the rest, and the corpus column counts the pinned
-public repositories of the evaluation below.
+public repositories of the evaluation above.
 
 <!-- proof:ignore-start reason="names the kinds of files proof reads in other repositories, not files of this one" -->
 <!-- generated:matrix -->
