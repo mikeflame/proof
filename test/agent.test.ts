@@ -86,6 +86,14 @@ describe('verifier answers', () => {
     expect(st(report, 'Lint forbids').agent?.rejected).toBe('a verdict without evidence');
   });
 
+  it('keeps a true verdict open when its own reason says the claim is not shown', () => {
+    const { report } = proofRun(f.repo, {
+      answers: [{ match: 'Lint forbids', verdict: 'true', reason: 'The rule exists, but whether CI runs lint is not shown here.', evidence: [{ kind: 'file_line', ref: '.eslintrc.json:1', excerpt: '"import/no-default-export": "error"' }] }],
+    });
+    expect(st(report, 'Lint forbids')).toMatchObject({ status: 'UNVERIFIED_WITH_REASON', agent: { verdict: 'unverified_with_reason', rejected: null } });
+    expect(st(report, 'Lint forbids').reason).toContain('is not shown here');
+  });
+
   it('marks a contradicted statement stale and carries the proposed text', () => {
     const { report, status } = proofRun(f.repo, {
       answers: [{ match: '2 handlers', verdict: 'stale', reason: 'there are 2 files but the doc', proposed_text: 'The API has 2 handlers.', action: 'fix-with-evidence', evidence: [{ kind: 'absence', ref: 'git ls-files src/api' }] }],

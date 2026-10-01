@@ -8184,9 +8184,11 @@ function buildPrompt(file, why, batch, note) {
     "</statements>"
   ].join("\n");
 }
+var UNPROVEN = /\b(is not shown|not shown here|could not (?:confirm|verify|establish)|cannot (?:confirm|verify|tell|establish)|can.t (?:confirm|verify|tell)|unable to (?:confirm|verify)|unclear whether|not clear whether|no way to (?:confirm|verify|tell)|(?:cannot|could not) be (?:confirmed|verified)|is unproven|not proven)\b/i;
 function judge(repo, raw, model, cached = false) {
   if (typeof raw.verdict !== "string" || !VERIFIER_VERDICTS.includes(raw.verdict)) return null;
-  const verdict = raw.verdict;
+  const said = typeof raw.reason === "string" ? raw.reason : "";
+  const verdict = raw.verdict === "true" && UNPROVEN.test(said) ? "unverified_with_reason" : raw.verdict;
   const action = typeof raw.action === "string" && ACTIONS.includes(raw.action) ? raw.action : "needs-decision";
   const cited = Array.isArray(raw.evidence) ? raw.evidence.filter((e) => Boolean(e) && typeof e.ref === "string" && typeof e.kind === "string") : [];
   const evidence = cited.slice(0, 6).map((e) => {

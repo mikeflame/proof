@@ -88,10 +88,17 @@ interface RawResult {
   action?: unknown;
 }
 
-/** Validate one raw answer and its citations; a true or stale verdict needs at least one citation that checks out. */
+/** A verifier's own words that the claim is not proven ("whether X loads it is not shown here"). */
+const UNPROVEN = /\b(is not shown|not shown here|could not (?:confirm|verify|establish)|cannot (?:confirm|verify|tell|establish)|can.t (?:confirm|verify|tell)|unable to (?:confirm|verify)|unclear whether|not clear whether|no way to (?:confirm|verify|tell)|(?:cannot|could not) be (?:confirmed|verified)|is unproven|not proven)\b/i;
+
+/**
+ * Validate one raw answer and its citations; a true or stale verdict needs at least one citation that checks out.
+ * A true verdict whose reason says the claim is not shown stays open with that reason (D3).
+ */
 export function judge(repo: RepoContext, raw: RawResult, model: string, cached = false): AgentVerdict | null {
   if (typeof raw.verdict !== 'string' || !(VERIFIER_VERDICTS as readonly string[]).includes(raw.verdict)) return null;
-  const verdict = raw.verdict as AgentVerdict['verdict'];
+  const said = typeof raw.reason === 'string' ? raw.reason : '';
+  const verdict = (raw.verdict === 'true' && UNPROVEN.test(said) ? 'unverified_with_reason' : raw.verdict) as AgentVerdict['verdict'];
   const action = typeof raw.action === 'string' && (ACTIONS as readonly string[]).includes(raw.action) ? (raw.action as AgentVerdict['action']) : 'needs-decision';
   const cited: AgentEvidence[] = Array.isArray(raw.evidence) ? raw.evidence.filter((e): e is AgentEvidence => Boolean(e) && typeof (e as AgentEvidence).ref === 'string' && typeof (e as AgentEvidence).kind === 'string') : [];
   const evidence = cited.slice(0, 6).map((e) => {
