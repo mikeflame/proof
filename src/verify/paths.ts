@@ -54,6 +54,8 @@ function absent(span: Span, found: string[] | null): SpanResult {
 }
 
 const PLACEHOLDER_PATH = /(^|\/)path\/to\/|(^|[/_.-])(foo|bar|baz|qux|xxx|yyy)([/_.-]|$)|(^|\/)(your|my|some)[-_]/i;
+/** `tests/ProjectName.Tests/ProjectName.Tests.csproj`: a segment named for what goes there, not something that is there. */
+const PLACEHOLDER_SEGMENT = /(^|[/._-])(ProjectName|PackageName|ComponentName|ModuleName|ClassName|TestName|FeatureName|ServiceName|AppName|Namespace|MyProject|YourProject|MyApp|YourApp|Project|Example|Sample)(?=[/._-]|$)/;
 
 /** `core-internal/public` → `packages/core-internal/package.json exports["./public"]`, when a workspace package exports it. */
 function exportOf(ctx: CheckContext, segments: string[]): string | null {
@@ -107,7 +109,7 @@ export function checkPath(ctx: CheckContext, span: Span): SpanResult {
     return unconfirmed(span, `no file named ${first} in the repository`);
   }
   // `tests/path/test_foo.py`, `path/to/file.ts`: an example of the shape, not a file anyone claims exists.
-  if (PLACEHOLDER_PATH.test(t)) return notChecked(span, 'an example path, not a file the statement claims exists');
+  if (PLACEHOLDER_PATH.test(t) || PLACEHOLDER_SEGMENT.test(t)) return notChecked(span, 'an example path, not a file the statement claims exists');
   // `lodash/fp`: an import path into a declared package.
   const pkg = ctx.repo.packages.find((p) => first in p.deps);
   if (pkg) return verified(span, 'declaration', [{ ref: `${pkg.file} ${first}`, level: 'declaration' }], `an import path into ${first}, which ${pkg.file} declares`);
@@ -115,7 +117,7 @@ export function checkPath(ctx: CheckContext, span: Span): SpanResult {
   const exported = exportOf(ctx, segments);
   if (exported) return verified(span, 'declaration', [{ ref: exported, level: 'declaration' }], `an export of a workspace package: ${exported}`);
   // A shape with placeholders (`examples/<section>/`) that nothing matches yet is a convention, not a contradiction.
-  if (/<[^>]+>/.test(t)) return unconfirmed(span, `no file matches the pattern ${t} yet`);
+  if (/<[^>]+>|\{[A-Za-z_][\w-]*\}/.test(t)) return unconfirmed(span, `no file matches the pattern ${t} yet`);
   // `sampling/createMessage`: neither a file extension nor a trailing slash, and the code spells it: a method or route name.
   const bare = !t.endsWith('/') && !posix.extname(segments[segments.length - 1] ?? '');
   if (bare) {

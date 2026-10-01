@@ -140,6 +140,8 @@ export async function checkSymbol(ctx: CheckContext, span: Span): Promise<SpanRe
   if (KEBAB.test(text) || HOST.test(text) || text.includes('<') || text.startsWith('refs/')) return checkLiteral(ctx, span, text);
 
   const q = qualifiedName(text);
+  // `eng/Testing.targets`: a file that exists is a file, whatever its extension.
+  if (q && q.scope.includes('/') && (ctx.repo.files.includes(text) || ctx.repo.dirs.has(text))) return verified(span, 'definition', [{ ref: text, level: 'definition' }], `${text} is a file of this repository`);
   if (q && (q.scope.includes('/') || scopeDirs(ctx, q.scope).length)) {
     const dirs = scopeDirs(ctx, q.scope);
     if (dirs.length) {

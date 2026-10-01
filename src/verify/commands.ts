@@ -513,6 +513,11 @@ export async function checkCommand(ctx: CheckContext, span: Span): Promise<SpanR
     default:
       break;
   }
+  if (/^\/[a-z][\w-]*$/.test(bin)) {
+    // A single-segment `/name` is a command typed for a bot or agent, not an absolute path to a program.
+    const handler = stringInCode(ctx, bin.slice(1), ['.github']) ?? stringInCode(ctx, bin, ['.github']);
+    return handler ? verified(span, 'reference', [handler], `a bot command handled at ${handler.ref}`) : notChecked(span, `a command for a bot (${bin}), not a program in this repository`);
+  }
   if (/^\.{0,2}\//.test(bin) || /^[\w.-]+\/[\w./-]+$/.test(bin)) {
     const file = bin.replace(/^\.\//, '');
     if (/^\.\/(gradlew|mvnw)$/.test(bin)) return fileArg(ctx, span, file, dirs);

@@ -114,6 +114,7 @@ export function vetEdit(repo: RepoContext, source: string, st: CheckedStatement,
   else if (old === next) edit.refused = 'the edit changes nothing';
   else if (action === 'replace' && lineCount(next) > lineCount(old)) edit.refused = 'the edit adds lines; proof never adds content (gap proposals need --gaps)';
   else if (action === 'delete' && isRule(st)) edit.refused = 'a rule is rewritten to match the tooling, never deleted';
+  else if (action === 'delete' && /\b(currently empty|(is|are) empty|none yet|not yet|no .{1,30} yet|nothing (here|yet)|placeholder)\b/i.test(st.text)) edit.refused = 'the statement itself says the thing is empty or absent; absence does not contradict it';
   else if (action === 'delete' && !evidence.some((e) => e.valid && e.kind === 'absence') && !st.results.some((r) => r.status === 'STALE' && /not found|does not exist|said to be gone/.test(r.reason))) edit.refused = 'a deletion needs evidence that the thing is absent';
   else if (!evidence.some((e) => e.valid)) edit.refused = evidence.length ? `no citation checks out (${evidence.map((e) => `${e.ref}: ${e.problem}`).join('; ').slice(0, 240)})` : 'an edit without evidence';
   return edit;

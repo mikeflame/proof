@@ -196,3 +196,21 @@ describe('rake', () => {
     expect(r.counts.STALE).toBe(0);
   });
 });
+
+describe('shapes from the held-out run', () => {
+  it('reads MSBuild files, placeholder project names, bot commands and {name} templates for what they are', async () => {
+    const r = await checkFiles({
+      'CLAUDE.md': '# Doc\n\n- Shared targets in `build/Shared.targets`.\n- Run `dotnet test tests/ProjectName.Tests/ProjectName.Tests.csproj`.\n- Each integration has tests in `suites/{name}/`.\n\n```bash\n/ci run nightly\n/retry-test Some.Test.Name\n```\n',
+      'build/Shared.targets': '<Project />\n',
+      'App.sln': '\n',
+      'suites/redis/test_redis.py': 'def test_x(): pass\n',
+      '.github/workflows/retry.yml': "on: issue_comment\njobs:\n  retry:\n    if: startsWith(github.event.comment.body, '/retry-test')\n    runs-on: ubuntu-latest\n    steps: []\n",
+    });
+    expect(spanOf(r, 'build/Shared.targets').status).toBe('VERIFIED');
+    expect(spanOf(r, 'tests/ProjectName.Tests/ProjectName.Tests.csproj').status).toBe('NOT_CHECKED');
+    expect(spanOf(r, 'suites/{name}/').status).toBe('VERIFIED');
+    expect(spanOf(r, '/ci run nightly').status).toBe('NOT_CHECKED');
+    expect(spanOf(r, '/retry-test Some.Test.Name')).toMatchObject({ status: 'VERIFIED', level: 'reference' });
+    expect(r.counts.STALE).toBe(0);
+  });
+});
