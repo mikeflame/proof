@@ -86,6 +86,10 @@ export function makeRepo(files: Record<string, string>, outside: Record<string, 
   write(root, outside);
   const git = (...args: string[]) => spawnSync('git', args, { cwd: repo, encoding: 'utf8' });
   git('init', '-q', '-b', 'main');
+  // CI runners have no git identity; commits made by the code under test need one.
+  git('config', 'user.name', 'fixture');
+  git('config', 'user.email', 'fixture@example.com');
+  git('config', 'commit.gpgsign', 'false');
   git('add', '-A');
   git('-c', 'user.name=fixture', '-c', 'user.email=fixture@example.com', 'commit', '-q', '-m', 'fixture');
   return { root, repo, cleanup: () => rmSync(root, { recursive: true, force: true }) };
