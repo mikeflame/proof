@@ -1,6 +1,6 @@
 # proof rework: from checker to verification pipeline
 
-Status: draft spec, 2026-10-01. Owner: Mykhailo Savonik.
+Status: implemented through phase 7, 2026-10-01; section 13 gives the standing of each criterion. Owner: Mykhailo Savonik.
 Reference implementation studied: [kunchenguid/no-mistakes](https://github.com/kunchenguid/no-mistakes) at `f4b85ae` (release 1.85.3).
 
 This document replaces the first review of the repo. It is the working spec for the next version of `/proof:claude-md`. Every section ends in acceptance criteria that fail against the current code, so a session can pick one up and know when it is done.
@@ -392,3 +392,46 @@ Phases run forward. Each phase ends with its acceptance criteria green and the b
 - **Do not copy the surface area.** no-mistakes is a daemon, a TUI, a git proxy and a 397-line skill. proof is one pipeline with one skill. Copy the protocol discipline, the fail-closed defaults, the recorded decisions and the eval loop.
 - **Do not copy its autofix default.** no-mistakes parks review findings for a human by default. proof fixes by default (D2). What carries over is that every fix is evidence-backed, recorded, re-verified by a fresh context, and reviewable afterwards.
 - **The etalon drifted where it relied on prose.** Three of its documents say `make lint` fails CI on skill drift, but its CI workflow runs only gofmt and go vet. Its pipeline-steps page still says the document step "finds every documentation gap", which its own prompt forbids. Its test-quality rule bans substring checks, and several of its workflow tests use them. Generation plus drift tests held; hand-written sentences did not. That is the strongest argument for proof to exist, and for proof to apply the same generation and drift tests to itself.
+
+---
+
+## 13. Status, 2026-10-01
+
+All seven phases are built. Each criterion of section 10 is listed with its proof and its standing. "Green" means a test or scripted check in the repository fails if the criterion breaks.
+
+| # | Standing | Where it is proven |
+| --- | --- | --- |
+| 1 | Green | `test/acceptance.test.ts`, "criteria 1 and 5", against no-mistakes at the pinned commit (CI clones it) |
+| 2 | Green | `test/discovery.test.ts` (imports, 4 hops) and `test/acceptance.test.ts` (no-mistakes `CLAUDE.md` → `AGENTS.md`) |
+| 3 | Green | `test/acceptance.test.ts`, "criterion 3 and 4", on the synthetic edge repository built by `test/fixtures/edge.ts` |
+| 4 | Green | `test/acceptance.test.ts`, "checks a negated mention as an absence" |
+| 5 | Green | `test/acceptance.test.ts`, "criteria 1 and 5"; every result carries its evidence level |
+| 6 | Green on a fixture; open on the tuning monorepo | `test/fix.test.ts`, "a second run after fixes and decisions…". On the tuning monorepo, the second run cannot reach zero open judgment items until its owner decides them (D5: proof never records a decision a person did not make) |
+| 7 | Green | `test/pipeline.test.ts`, "reports a marker without a reason and honors one with a reason" |
+| 8 | Green | `test/fix.test.ts`, "reverts a fix the re-verifier rejects" |
+| 9 | Green | `test/fix.test.ts`, "never adds lines without --gaps", and `vetEdit` in `src/agent/fix.ts` refuses any edit that adds a line |
+| 10 | Green | `test/surfaces.test.ts`, "one vocabulary": `node scripts/build.mjs --check` plus table, command and option agreement |
+| 11 | Green | CI runs `build:check` (red on a probe branch with a stale bundle); `test/surfaces.test.ts`, "install", runs the installed copy |
+| 12 | Green | README metrics block, generated from `eval/metrics.json` by `scripts/build.mjs` and drift-tested with it |
+| 13 | Green | `eval/perf.json`: deno (14,927 files), full run 598 s, re-run 55 s |
+
+### Evaluation
+
+Labels come from agents independent of proof, each with cited evidence; two were changed by a second reviewer. A human review of the labels is still pending. Numbers are from `eval/metrics.json`.
+
+| Stage, split | STALE precision | STALE recall | VERIFIED precision | Fixes kept | Cost |
+| --- | --- | --- | --- | --- | --- |
+| `proof check`, tune | 100% (4 flagged) | 25% (16 stale) | 100% (28) | — | $0 |
+| `proof run`, tune | 100% (15) | 93.8% | 97.2% (246) | 16 of 17 | $11.95 |
+| `proof check`, held-out | 0% (6 flagged) | 0% (7 stale) | 100% (17) | — | $0 |
+| `proof run`, held-out | 87.5% (8) | 100% | 93.8% (145) | 10 of 11 | $7.93 |
+
+Tuning froze at `79a4318`; the held-out split ran once on that build. Its mechanical stage broke D3 on unseen ground: six stale flags, all false, from four causes (MSBuild file types, example project names read as paths, CI bot commands read as programs, `{name}` templates). The fixes for them came after (`7bd47be`), and `eval/after-heldout.json` records the result: on the held-out repositories `proof check` flags nothing false and verifies 21 statements, all correct; the tune split is unchanged. Those are no longer held-out numbers, and are not reported as such.
+
+### Known limits
+
+- Mechanical recall is low by design: `proof check` flags 25% of the tune split's stale statements and the agent stage carries the rest. The check stage's job is to never be wrong (100% precision on the tune split), not to be complete.
+- The verifier is not deterministic: two runs of the same file can disagree on a statement at the margin. Decisions (D5) and the verdict cache are what make a second run stable.
+- The verifier calls some guidance lines VERIFIED that the labels call judgment ("Use `logger.Fatal` for core invariant violations"): nothing in the repository contradicts them, but nothing proves them either. Nine of the 145 held-out VERIFIED lines are of this kind.
+- The fixer checks that a new path exists, not whether the code there is deprecated. The one rejected held-out fix pointed a stale `/components` entry at a package whose own doc comment marks it deprecated.
+- A new ecosystem can still surprise the mechanical stage, as .NET did. The held-out failure is the evidence, and the reason the check stage defers to the verifier whenever a lookup is uncertain.

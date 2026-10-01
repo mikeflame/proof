@@ -1,0 +1,37 @@
+{
+ "note": "proof check (mechanical stage only) re-run after the held-out run, with the fixes for its false alarms. The held-out split was seen by then, so these are not held-out numbers. The frozen held-out results stay in results/ and metrics.json.",
+ "proof": "d61c3ec",
+ "measured": "2026-10-01",
+ "groups": {
+  "check/tune": {
+   "repos": 6,
+   "statements": 386,
+   "labeled": 364,
+   "staleFlagged": 4,
+   "staleGold": 16,
+   "stalePrecision": 100,
+   "staleRecall": 25,
+   "verified": 28,
+   "verifiedPrecision": 100,
+   "fixes": 0,
+   "fixAcceptance": null,
+   "costUsd": 0,
+   "seconds": 21
+  },
+  "check/heldout": {
+   "repos": 6,
+   "statements": 535,
+   "labeled": 316,
+   "staleFlagged": 0,
+   "staleGold": 7,
+   "stalePrecision": null,
+   "staleRecall": 0,
+   "verified": 21,
+   "verifiedPrecision": 100,
+   "fixes": 0,
+   "fixAcceptance": null,
+   "costUsd": 0,
+   "seconds": 34
+  }
+ }
+}

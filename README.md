@@ -113,6 +113,13 @@ Run time on denoland/deno (14,927 files, 137 open statements in CLAUDE.md): a fu
 Scored by `node eval/score.mjs` against `eval/labels/`; `eval/` holds the corpus, the reports and
 the labels, so every number can be re-derived.
 
+The held-out rows are the frozen build's one run on repositories it had never seen. Its mechanical
+stage failed there: all six of its stale flags were false, from MSBuild file types it did not know,
+example project names read as real paths, CI bot commands (`/azp run`) read as programs, and `{name}`
+templates. Those causes are fixed since, and `proof check` on the same repositories now flags nothing
+false and verifies 21 statements, all correct (`eval/after-heldout.json`). The split has been seen
+now, so that is no longer a held-out number.
+
 ## Where it works
 
 What the checks read mechanically in each ecosystem, each cell proven by a fixture in
