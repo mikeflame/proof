@@ -20089,7 +20089,7 @@ async function memberOf(ctx, owner, member, dirs) {
     const of = await ownerOf(ctx.syntax, c.hit.file, c.hit.line, c.hit.column, member);
     if (of === owner) return [{ level: "definition", evidence: [ev(c)], why: `${member} is defined on ${owner} at ${c.hit.file}:${c.hit.line}` }];
     if (of) others.add(of);
-    else out.push({ level: "reference", evidence: [{ ...ev(c), level: "reference" }], why: `${member} is defined at ${c.hit.file}:${c.hit.line}; its owning type could not be read` });
+    else out.push({ level: "substring", evidence: [{ ...ev(c), level: "substring" }], why: `${member} is defined at ${c.hit.file}:${c.hit.line}, but not shown to be a member of ${owner}` });
   }
   if (others.size && !out.length) out.push({ level: "substring", evidence: [], why: `${member} is defined on ${[...others].slice(0, 3).join(", ")}, not on ${owner}` });
   return out;
@@ -21328,7 +21328,7 @@ async function checkUnknown(ctx, span) {
   const text4 = span.text.trim();
   if (text4.length >= 4 && !/^[\w-]+:$/.test(text4)) {
     const found = await textInCode(ctx, text4);
-    if (found) return verified(span, "reference", [found], `appears verbatim in code at ${found.ref}`);
+    if (found) return { ...unconfirmed(span, `appears verbatim in code at ${found.ref}; what the example illustrates is not checked`, [found], "reference"), status: "NOT_CHECKED", blocked: true };
   }
   return blocked(span, "not a path, command, name or version this tool can check");
 }
@@ -21365,9 +21365,27 @@ function mentionedProjects(ctx, st) {
   }
   return [...out];
 }
+var MEMBER_WORDS = /\b(?:with|has|have|having|contains?|exposes?|provides?|includes?|fields?|propert(?:y|ies)|methods?|members?|keys?)\b/i;
+var TYPE_NAME = /^[A-Z][A-Za-z0-9]*$/;
+var MEMBER_NAME = /^[a-z_$][\w$]*(\(\))?$/;
+function impliedSpans(st) {
+  const spans = st.spans.map((s) => {
+    const fragment = s.kind === "unknown" ? /^\.([A-Za-z_$][\w$]*(?:\(\))?)$/.exec(s.text) : null;
+    if (!fragment) return s;
+    const owner = [...st.spans].reverse().find((o) => o.kind === "symbol" && /^[A-Z][\w$]*\.[\w$]+/.test(o.text) && st.text.indexOf(o.text) < st.text.indexOf(s.text));
+    return owner ? { ...s, kind: "symbol", text: `${owner.text.split(".")[0]}.${fragment[1]}` } : s;
+  });
+  const type = spans.find((s) => s.kind === "symbol" && TYPE_NAME.test(s.text));
+  if (!type) return spans;
+  const after = st.text.slice(st.text.indexOf(`\`${type.text}\``) + type.text.length + 2);
+  const cue = MEMBER_WORDS.exec(after);
+  if (!cue || cue.index > 12) return spans;
+  return spans.map((s) => s !== type && s.kind === "symbol" && MEMBER_NAME.test(s.text) && after.includes(`\`${s.text}\``) ? { ...s, text: `${type.text}.${s.text}` } : s);
+}
 async function checkStatement(ctx, st) {
   const projects = mentionedProjects(ctx, st);
-  const withHints = projects.length ? st.spans.map((s) => s.kind === "command" && s.cwd === void 0 ? { ...s, hintDirs: [...s.hintDirs ?? [], ...projects.map((d) => ctx.pathBase && d.startsWith(`${ctx.pathBase}/`) ? d.slice(ctx.pathBase.length + 1) : d)] } : s) : st.spans;
+  const implied = impliedSpans(st);
+  const withHints = projects.length ? implied.map((s) => s.kind === "command" && s.cwd === void 0 ? { ...s, hintDirs: [...s.hintDirs ?? [], ...projects.map((d) => ctx.pathBase && d.startsWith(`${ctx.pathBase}/`) ? d.slice(ctx.pathBase.length + 1) : d)] } : s) : implied;
   const spans = withHints.length ? withHints : [{ kind: "prose", text: "(statement)", expect: "present" }];
   const results = [];
   for (const span of spans) results.push(await checkSpan(ctx, span));

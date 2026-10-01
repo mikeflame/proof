@@ -208,7 +208,8 @@ async function memberOf(ctx: CheckContext, owner: string, member: string, dirs: 
     const of = await ownerOf(ctx.syntax, c.hit.file, c.hit.line, c.hit.column, member);
     if (of === owner) return [{ level: 'definition', evidence: [ev(c)], why: `${member} is defined on ${owner} at ${c.hit.file}:${c.hit.line}` }];
     if (of) others.add(of);
-    else out.push({ level: 'reference', evidence: [{ ...ev(c), level: 'reference' }], why: `${member} is defined at ${c.hit.file}:${c.hit.line}; its owning type could not be read` });
+    // A definition whose owner cannot be read proves nothing about `Owner.member`.
+    else out.push({ level: 'substring', evidence: [{ ...ev(c), level: 'substring' }], why: `${member} is defined at ${c.hit.file}:${c.hit.line}, but not shown to be a member of ${owner}` });
   }
   if (others.size && !out.length) out.push({ level: 'substring', evidence: [], why: `${member} is defined on ${[...others].slice(0, 3).join(', ')}, not on ${owner}` });
   return out;

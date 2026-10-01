@@ -5,7 +5,7 @@ import { checkDependency } from './deps.ts';
 import { checkEnv } from './env.ts';
 import { checkGlob, checkImport, checkLink, checkPath, NO_MATCH } from './paths.ts';
 import { checkSymbol, LookupError, textInCode } from './symbols.ts';
-import { blocked, type CheckContext, notChecked, verified } from './util.ts';
+import { blocked, type CheckContext, notChecked, unconfirmed, verified } from './util.ts';
 import { checkVersion } from './versions.ts';
 
 /** Remote URLs as `host/owner/repo`, so `git@github.com:a/b.git` and `https://github.com/a/b` compare equal. */
@@ -70,8 +70,9 @@ async function checkUnknown(ctx: CheckContext, span: Span): Promise<SpanResult> 
   if (projectBinary(ctx, first)) return checkCommand(ctx, { ...span, kind: 'command' });
   const text = span.text.trim();
   if (text.length >= 4 && !/^[\w-]+:$/.test(text)) {
+    // Verbatim in code, the snippet exists; what it illustrates ("catch this") is for the verifier.
     const found = await textInCode(ctx, text);
-    if (found) return verified(span, 'reference', [found], `appears verbatim in code at ${found.ref}`);
+    if (found) return { ...unconfirmed(span, `appears verbatim in code at ${found.ref}; what the example illustrates is not checked`, [found], 'reference'), status: 'NOT_CHECKED', blocked: true };
   }
   return blocked(span, 'not a path, command, name or version this tool can check');
 }
@@ -117,9 +118,34 @@ function mentionedProjects(ctx: CheckContext, st: Statement): string[] {
   return [...out];
 }
 
+const MEMBER_WORDS = /\b(?:with|has|have|having|contains?|exposes?|provides?|includes?|fields?|propert(?:y|ies)|methods?|members?|keys?)\b/i;
+const TYPE_NAME = /^[A-Z][A-Za-z0-9]*$/;
+const MEMBER_NAME = /^[a-z_$][\w$]*(\(\))?$/;
+
+/**
+ * Spans the statement implies but does not spell out: `.resource()` after `McpServer.tool()` is
+ * `McpServer.resource()`, and in "`BaseContext` with `signal`, `sessionId`" each name is a member claim,
+ * checked as `BaseContext.signal`.
+ */
+export function impliedSpans(st: Statement): Span[] {
+  const spans = st.spans.map((s): Span => {
+    const fragment = s.kind === 'unknown' ? /^\.([A-Za-z_$][\w$]*(?:\(\))?)$/.exec(s.text) : null;
+    if (!fragment) return s;
+    const owner = [...st.spans].reverse().find((o) => o.kind === 'symbol' && /^[A-Z][\w$]*\.[\w$]+/.test(o.text) && st.text.indexOf(o.text) < st.text.indexOf(s.text));
+    return owner ? { ...s, kind: 'symbol', text: `${owner.text.split('.')[0]}.${fragment[1]}` } : s;
+  });
+  const type = spans.find((s) => s.kind === 'symbol' && TYPE_NAME.test(s.text));
+  if (!type) return spans;
+  const after = st.text.slice(st.text.indexOf(`\`${type.text}\``) + type.text.length + 2);
+  const cue = MEMBER_WORDS.exec(after);
+  if (!cue || cue.index > 12) return spans;
+  return spans.map((s) => (s !== type && s.kind === 'symbol' && MEMBER_NAME.test(s.text) && after.includes(`\`${s.text}\``) ? { ...s, text: `${type.text}.${s.text}` } : s));
+}
+
 export async function checkStatement(ctx: CheckContext, st: Statement): Promise<CheckedStatement> {
   const projects = mentionedProjects(ctx, st);
-  const withHints = projects.length ? st.spans.map((s) => (s.kind === 'command' && s.cwd === undefined ? { ...s, hintDirs: [...(s.hintDirs ?? []), ...projects.map((d) => (ctx.pathBase && d.startsWith(`${ctx.pathBase}/`) ? d.slice(ctx.pathBase.length + 1) : d))] } : s)) : st.spans;
+  const implied = impliedSpans(st);
+  const withHints = projects.length ? implied.map((s) => (s.kind === 'command' && s.cwd === undefined ? { ...s, hintDirs: [...(s.hintDirs ?? []), ...projects.map((d) => (ctx.pathBase && d.startsWith(`${ctx.pathBase}/`) ? d.slice(ctx.pathBase.length + 1) : d))] } : s)) : implied;
   const spans: Span[] = withHints.length ? withHints : [{ kind: 'prose', text: '(statement)', expect: 'present' }];
   const results: SpanResult[] = [];
   for (const span of spans) results.push(await checkSpan(ctx, span));

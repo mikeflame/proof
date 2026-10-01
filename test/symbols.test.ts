@@ -195,3 +195,23 @@ describe('lookups that fail', () => {
     }
   });
 });
+
+describe('what a sentence implies about members', () => {
+  it('checks "`Type` with `a`, `b`" as members of the type, and `.m()` after `Type.x()` as `Type.m()`', async () => {
+    const r = await checkFiles({
+      'CLAUDE.md': doc('Creates `Context` with `signal`, `sessionId`.', 'Register with `Server.tool()`, `.prompt()` methods.'),
+      'ctx.ts': 'export interface Context {\n  sessionId: string;\n}\nexport function run() {\n  const signal = new AbortController().signal;\n  return signal;\n}\n',
+      'server.ts': 'export class Server {\n  prompt(): void {}\n}\nexport function tool(): void {}\n',
+    });
+    expect(spanOf(r, 'Context.sessionId')).toMatchObject({ status: 'VERIFIED', level: 'definition' });
+    expect(spanOf(r, 'Context.signal').status).toBe('UNCONFIRMED');
+    expect(spanOf(r, 'Server.prompt()')).toMatchObject({ status: 'VERIFIED', level: 'definition' });
+    expect(spanOf(r, 'Server.tool()').status).toBe('UNCONFIRMED');
+    expect(r.statements.every((s) => s.status !== 'VERIFIED')).toBe(true);
+  });
+
+  it('never verifies a code example from the code merely containing it', async () => {
+    const r = await checkFiles({ 'CLAUDE.md': doc('JSON: `except json.JSONDecodeError:`'), 'a.py': 'try:\n    pass\nexcept json.JSONDecodeError:\n    pass\n' });
+    expect(r.statements[0]?.status).toBe('UNVERIFIED_WITH_REASON');
+  });
+});

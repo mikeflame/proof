@@ -1,0 +1,842 @@
+{
+ "repo": "rubocop/rubocop",
+ "sha": "8cdbb3bffe672b47aed6b8da7443060373458629",
+ "file": "AGENTS.md",
+ "labeler": "agent (independent of proof's output)",
+ "labels": [
+  {
+   "id": "248a81d55190a8e9aa5b1b6b9875e85e05239c5f",
+   "line": 3,
+   "text": "RuboCop is a Ruby static code analyzer and formatter.",
+   "label": "true",
+   "evidence": [
+    "README.md:14 **RuboCop** is a Ruby static code analyzer (a.k.a. `linter`) and code formatter."
+   ],
+   "note": "README states the same description."
+  },
+  {
+   "id": "17666073bd48470cecfee76d6cfe0a61db5efde9",
+   "line": 4,
+   "text": "Before contributing, read [CONTRIBUTING.md](CONTRIBUTING.md) and the [development docs](https://docs.rubocop.org/rubocop/development.html).",
+   "label": "true",
+   "evidence": [
+    "CONTRIBUTING.md exists (## Pull requests section)",
+    "CONTRIBUTING.md:30 read the [Development docs](https://docs.rubocop.org/rubocop/development.html)",
+    "docs/modules/ROOT/pages/development.adoc:1 = Development (source of the linked page; nav.adoc:39 xref:development.adoc[Development])"
+   ],
+   "note": "Both referenced documents exist and CONTRIBUTING links the same development docs URL."
+  },
+  {
+   "id": "2cdac35944cef27ae364d0ce3053188c1ae9cebc",
+   "line": 10,
+   "text": "bundle exec rake # Full CI: codespell + doc syntax check + specs + self-lint",
+   "label": "true",
+   "evidence": [
+    "Rakefile:31 task default: %i[codespell documentation_syntax_check spec internal_investigation]"
+   ],
+   "note": "The default rake task is exactly codespell + doc syntax check + specs + self-lint."
+  },
+  {
+   "id": "995a4147893d9034406faa04818acdffc2294bd7",
+   "line": 11,
+   "text": "bundle exec rake spec # Run specs (Parser)",
+   "label": "true",
+   "evidence": [
+    "tasks/spec_runner.rake:297-300 desc 'Run RSpec code examples' task :spec",
+    "lib/rubocop/rspec/cop_helper.rb:21 ENV.fetch('PARSER_ENGINE', :parser_whitequark)",
+    "docs/modules/ROOT/pages/development.adoc: 'By default, tests are executed with the Parser: $ bundle exec rake spec'"
+   ],
+   "note": "spec task exists and defaults to the Parser gem engine."
+  },
+  {
+   "id": "437a9f8cc07c70a9a38e225d11400d7e70af7df1",
+   "line": 12,
+   "text": "bundle exec rake prism_spec # Run specs (Prism parser)",
+   "label": "true",
+   "evidence": [
+    "tasks/spec_runner.rake:307-310 desc 'Run RSpec code examples with Prism' task :prism_spec do sh('PARSER_ENGINE=parser_prism bundle exec rake spec')"
+   ],
+   "note": "prism_spec task exists and runs specs with Prism."
+  },
+  {
+   "id": "0b459342cc8f476eccaa30eacb1b309a14f85955",
+   "line": 13,
+   "text": "bundle exec rake internal_investigation # RuboCop linting itself",
+   "label": "true",
+   "evidence": [
+    "Rakefile:24-25 desc 'Run RuboCop over itself' RuboCop::RakeTask.new(:internal_investigation)"
+   ],
+   "note": "internal_investigation task lints RuboCop itself."
+  },
+  {
+   "id": "9b413df00d79f09871d1c1e920c13b906632c674",
+   "line": 14,
+   "text": "bundle exec rubocop --only Department/CopName # Lint with a single cop",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/options.rb:594 only: 'Run only the given cop(s).'"
+   ],
+   "note": "--only option exists."
+  },
+  {
+   "id": "8bdcc7b17fd2861eb92d3bbd8f25ff5bec616c9e",
+   "line": 17,
+   "text": "Always run `bundle exec rake` before opening a PR.",
+   "label": "judgment",
+   "evidence": [
+    "docs/modules/ROOT/pages/development.adoc: '`bundle exec rake` runs the full CI suite ... Always run this before submitting a PR.'",
+    ".github/PULL_REQUEST_TEMPLATE.md:14 * [ ] Ran `bundle exec rake default`."
+   ],
+   "note": "Contributor process rule; documented but a local pre-PR run cannot be enforced (CI re-runs the checks separately)."
+  },
+  {
+   "id": "324a9ec2d5f5c432926767da879d5b8ef3bfdd66",
+   "line": 29,
+   "text": "Departments: `Bundler`, `Gemspec`, `Layout`, `Lint`, `Metrics`, `Migration`, `Naming`, `Security`, `Style`, `InternalAffairs`.",
+   "label": "true",
+   "evidence": [
+    "ls -d lib/rubocop/cop/*/ => bundler gemspec internal_affairs layout lint metrics migration naming security style (+ non-department dirs correctors generator legacy mixin utils variable_force)",
+    "spec/project_spec.rb:424-433 Bundler Gemspec Layout Lint Metrics Migration Naming Security Style",
+    "lib/rubocop/cop/internal_affairs.rb exists"
+   ],
+   "note": "The ten departments listed match the cop directories."
+  },
+  {
+   "id": "7fdefceccf298c3d9f85577a28a195dabb027b4c",
+   "line": 37,
+   "text": "bundle exec rake 'new_cop[Department/CopName]'",
+   "label": "true",
+   "evidence": [
+    "tasks/new_cop.rake:4-7 task :new_cop, [:cop] ... warn \"usage: bundle exec rake 'new_cop[Department/Name]'\""
+   ],
+   "note": "new_cop rake task exists with that argument form."
+  },
+  {
+   "id": "a9cba1fcfb946613088f5109dd4759de6b47a574",
+   "line": 40,
+   "text": "This generates the source file, spec file, `config/default.yml` entry, and a `register_cop` directive in the department module (`lib/rubocop/cop/<department>.rb`), which registers the cop for lazy loading.",
+   "label": "true",
+   "evidence": [
+    "tasks/new_cop.rake:12-20 generator.write_source; generator.write_spec; ... generator.inject_registration; generator.inject_config",
+    "lib/rubocop/cop/generator/registration_injector.rb:6-7 injects a `register_cop` directive into the cop's department module so that the new cop is registered for lazy loading",
+    "lib/rubocop/cop/bundler.rb:8-10 extend LazyLoader; register_cop :DuplicatedGem, ..."
+   ],
+   "note": "Generator writes source, spec, config entry and register_cop directive (InternalAffairs uses a require instead)."
+  },
+  {
+   "id": "d14d9fdb30d6e1f03845629d2e9ad09206e38bea",
+   "line": 44,
+   "text": "Update the description in `config/default.yml`.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/generator.rb:159 1. Modify the description of #{badge} in config/default.yml",
+    "lib/rubocop/cop/generator/configuration_injector.rb:11 Description: 'TODO: Write a description of the cop.'"
+   ],
+   "note": "Matches the generator's own TODO step 1."
+  },
+  {
+   "id": "0c8c2642c38f8d1d1c95565462cd8077199a2028",
+   "line": 45,
+   "text": "Implement the cop.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/generator.rb:160 2. Implement your new cop in the generated file!"
+   ],
+   "note": "Matches the generator's TODO step 2."
+  },
+  {
+   "id": "04bde972c199b22e7dfded2538858334c3fac8ec",
+   "line": 46,
+   "text": "Write specs.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/generator.rb:97 # TODO: Write test code (in SPEC_TEMPLATE)"
+   ],
+   "note": "Generated spec is a TODO template to be filled in."
+  },
+  {
+   "id": "5ad99d0dd5473b09e70199e36aca3bd57065e569",
+   "line": 47,
+   "text": "Add a changelog entry: `bundle exec rake changelog:new`.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/generator.rb:163 4. Run `bundle exec rake changelog:new` to generate a changelog entry",
+    "tasks/changelog.rake:4-5 %i[new fix change].each do |type| ... task type"
+   ],
+   "note": "changelog:new task exists and is the generator's suggested step."
+  },
+  {
+   "id": "2c041f88b75991209d9daa341e261c544f583ac5",
+   "line": 97,
+   "text": "`RESTRICT_ON_SEND` — list method names so `on_send` is only called for those methods (performance optimization). Required when using `on_send`.",
+   "label": "judgment",
+   "evidence": [
+    "lib/rubocop/cop/commissioner.rb:150-156 restricted_map: cops with non-empty restrict_on_send only get on_send for listed names; empty restrictions get every send",
+    "lib/rubocop/cop/base.rb:52 RESTRICT_ON_SEND = Set[].freeze # the base class default",
+    "docs/modules/ROOT/pages/development.adoc: 'When your cop uses `on_send`, define a `RESTRICT_ON_SEND` constant'",
+    "45 cop files under lib/rubocop/cop/<dept>/ define on_send without RESTRICT_ON_SEND (e.g. lint/argument_mismatch.rb:49, lint/name_typo.rb:90, layout/first_argument_indentation.rb:155)"
+   ],
+   "note": "Mechanism description is correct; 'Required' matches the dev docs but is not enforced and many cops (including 2026 additions) legitimately omit it."
+  },
+  {
+   "id": "5eabc710cc0e33cfcae90b0296ed436c905685f4",
+   "line": 99,
+   "text": "`alias on_csend on_send` — handle safe navigation (`&.`). Add this whenever you define `on_send`, unless the cop explicitly does not apply to safe navigation.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/internal_affairs/on_send_without_on_csend.rb:6 Checks for cops that define `on_send` without define `on_csend`.",
+    "config/internal_affairs.yml:21-23 InternalAffairs/OnSendWithoutOnCSend Include lib/rubocop/cop/**/*.rb",
+    ".rubocop.yml InternalAffairs/OnSendWithoutOnCSend: Exclude list of cops where safe navigation does not apply"
+   ],
+   "note": "Enforced by an internal cop with explicit exclusions for inapplicable cops."
+  },
+  {
+   "id": "eca9e8e6930d413082318f509c4bf4045f8d0c43",
+   "line": 102,
+   "text": "`alias on_numblock on_block` and `alias on_itblock on_block` — handle numbered-parameter blocks (`_1`) and `it`-blocks. Add these whenever you define `on_block`.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/internal_affairs/numblock_handler.rb:6-9 Cops that define `block` handlers need to define `numblock` handlers",
+    "lib/rubocop/cop/internal_affairs/itblock_handler.rb:6-9 Cops that define `block` handlers need to define `itblock` handlers"
+   ],
+   "note": "Enforced by InternalAffairs/NumblockHandler and ItblockHandler."
+  },
+  {
+   "id": "7d0416e55f376ca7da157d3a08a237c01bd013c5",
+   "line": 105,
+   "text": "`extend AutoCorrector` — declare this when the cop provides autocorrect.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/base.rb:467-468 elsif !self.class.support_autocorrect? raise \"The Cop #{name} must `extend AutoCorrector` to be able to autocorrect\"",
+    "lib/rubocop/cop/mixin/auto_corrector.rb:5-8 extend this module to signal autocorrection support"
+   ],
+   "note": "Base raises when a corrector is used without AutoCorrector."
+  },
+  {
+   "id": "2b373cf204051c7e40ec8ebc0ca545c266fef1b4",
+   "line": 106,
+   "text": "`def_node_matcher` / `def_node_search` — DSL for AST pattern matching. Document with a `@!method` YARD tag above each matcher.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/internal_affairs/node_matcher_directive.rb:6-8 Checks that node matcher definitions are tagged with a YARD `@!method` directive",
+    "lib/rubocop/cop/internal_affairs/node_matcher_directive.rb:35 RESTRICT_ON_SEND = %i[def_node_matcher def_node_search]"
+   ],
+   "note": "@!method on both matcher macros is enforced by InternalAffairs/NodeMatcherDirective."
+  },
+  {
+   "id": "8f2073d41aaf8f75703c7ebf0f7cc8e4bb745fbe",
+   "line": 108,
+   "text": "YARD `@example` — every cop must have at least one `# bad` / `# good` example pair. Examples must be valid Ruby syntax (the CI doc-syntax check parses them).",
+   "label": "judgment",
+   "evidence": [
+    "Rakefile:36-91 task documentation_syntax_check parses each cop's @example tags and aborts on syntax errors",
+    ".github/workflows/rubocop.yml:118-119 run: bundle exec rake documentation_syntax_check",
+    "lib/rubocop/cop/lint/syntax.rb and lib/rubocop/cop/style/copyright.rb have no @example; metrics/abc_size.rb etc. have no # bad/# good pair"
+   ],
+   "note": "Syntax-check half is verified; the 'every cop must have a bad/good pair' rule is documented but not enforced and has existing exceptions."
+  },
+  {
+   "id": "0b43ddb7caf966998e3c2807e40944951ca663f3",
+   "line": 111,
+   "text": "Cop description — the first line of the YARD comment must be a complete sentence starting with a verb and ending with a period.",
+   "label": "judgment",
+   "evidence": [
+    "lib/rubocop/cop/internal_affairs/cop_description.rb:6 Enforces the cop description to start with a word such as verb (only rejects 'This cop ...' and an empty first line)",
+    "329 of 612 department cops have a first description line not ending in '.' (wrapped sentences), e.g. bundler/gem_comment.rb 'Each gem in the Gemfile should have a comment explaining'"
+   ],
+   "note": "Style rule only partly enforced by InternalAffairs/CopDescription; the period/verb requirement is not checked."
+  },
+  {
+   "id": "79e53dec67c2c2e41092973e7cf29b2ae322fdbf",
+   "line": 113,
+   "text": "Method definition order: define methods in the order they are called, so a new method is placed where the call flow reaches it.",
+   "label": "judgment",
+   "evidence": [
+    "git show aa00c4859: 'This is deliberately a guideline for newly added methods, not a cop.'"
+   ],
+   "note": "Ordering guideline with no tooling; repository cannot verify it."
+  },
+  {
+   "id": "761ca0528499d6b8d2c68033409f745778a20b0e",
+   "line": 118,
+   "text": "`AllCops: Preview` (or `--preview`) is the opt-in channel for changes that are not ready to be the default.",
+   "label": "true",
+   "evidence": [
+    "config/default.yml:122-126 Projects opt in to preview with `Preview: true` here, or with the `--preview` command line option",
+    "lib/rubocop/options.rb:720-723 preview: 'Opt in to unstable behavior ...'"
+   ],
+   "note": "AllCops: Preview and --preview are the opt-in switch."
+  },
+  {
+   "id": "c4cafce990107d099811972dc2067d9a238f30e8",
+   "line": 119,
+   "text": "Cops read it via `preview?`.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/base.rb:301-306 def preview? @config.preview?(@options) end"
+   ],
+   "note": "Base#preview? exists for cops to branch on."
+  },
+  {
+   "id": "c4a3ccac014ec4bd439097a510f8eb00eea69968",
+   "line": 123,
+   "text": "A cop's default should change in the next major release (its `Enabled` state, a `Max` threshold, an `EnforcedStyle`). Add a `Preview` section to the cop's entry in `config/default.yml` with the new values. `AllCops` can carry one too. This needs no code: the configuration loader applies the section under preview and drops it otherwise. This is the most common case.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/config_loader_resolver.rb:172-184 apply_preview_defaults: params.delete('Preview'); preview ? params.merge(preview_params) : params",
+    "config/default.yml:126-129 AllCops: Preview: FailLevel: warning",
+    "grep -c '^  Preview:' config/default.yml => 51; grep -rl 'preview?' lib/rubocop/cop (excl. base.rb) => only registry.rb"
+   ],
+   "note": "Preview sections are applied by the loader without cop code and are by far the most common use."
+  },
+  {
+   "id": "b69faa83e3543f11a421de70a7be61bdfe75f1fa",
+   "line": 129,
+   "text": "An existing cop should start reporting a case it currently misses, and the change is contested enough that turning it on for everyone would be rude. Without preview this waits for a major release.",
+   "label": "true",
+   "evidence": [
+    "docs/modules/ROOT/pages/versioning.adoc:56-60 'A cop that starts reporting a case it used to miss ... changes results for everybody ... Either way the change waits'",
+    "docs/modules/ROOT/pages/versioning.adoc:90-92 A cop can put an unstable change behind `preview?` and ship it in a minor release"
+   ],
+   "note": "Matches the documented versioning policy."
+  },
+  {
+   "id": "f8a22b1712b4e6f4d30d25616eb3e4edd77c5adb",
+   "line": 132,
+   "text": "An existing cop should correct something differently, and the new correction needs real-world exposure before it becomes the default.",
+   "label": "true",
+   "evidence": [
+    "docs/modules/ROOT/pages/versioning.adoc:56-57 'A cop that starts reporting a case it used to miss, or corrects one differently'",
+    "docs/modules/ROOT/pages/development.adoc:634-636 Making an existing cop ... correct one differently ... `preview?` is the way to ship it sooner"
+   ],
+   "note": "Matches the documented preview policy."
+  },
+  {
+   "id": "d7cce390c864a5f1d9d68343cecc42c6c3afcc5e",
+   "line": 134,
+   "text": "A new cop is too speculative even for `pending`, so it ships as `Enabled: preview` in `config/default.yml`. It is opt-in only and, unlike a pending cop, is never reported as needing a decision.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/registry.rb:285-286 cop_cfg.fetch('Enabled') == 'preview' && config.preview?(@options)",
+    "lib/rubocop/config.rb:355 next unless cop_metadata['Enabled'] == 'pending' (pending_cops report)",
+    "docs/modules/ROOT/pages/versioning.adoc:104-105 Unlike pending cops, they are not reported as needing a decision"
+   ],
+   "note": "Enabled: preview is opt-in only and excluded from the pending-cops report."
+  },
+  {
+   "id": "7d23b7173e2fb90f4520d54ed516c1814c41b956",
+   "line": 140,
+   "text": "The change is a plain bug fix. Those just ship.",
+   "label": "true",
+   "evidence": [
+    "docs/modules/ROOT/pages/development.adoc:669-670 A change that is plainly a bug fix should just ship",
+    "docs/modules/ROOT/pages/versioning.adoc:32 | Bug fixes to existing cops | Patch"
+   ],
+   "note": "Matches documented policy."
+  },
+  {
+   "id": "afead4c176ad5eb2b20c87179d53bb0fd49b0b1e",
+   "line": 141,
+   "text": "The cop is new and you already expect it to be on by default eventually. That is what `Enabled: pending` is for.",
+   "label": "true",
+   "evidence": [
+    "docs/modules/ROOT/pages/development.adoc:670 a whole new cop belongs in `pending` instead",
+    "lib/rubocop/cop/generator/configuration_injector.rb:13 Enabled: pending",
+    "docs/modules/ROOT/pages/versioning.adoc:118 If we already know something should become the default, it is `pending`."
+   ],
+   "note": "New cops ship as pending per generator and docs."
+  },
+  {
+   "id": "08ea23f99419412fc93cf6df00e0f6791533a5cc",
+   "line": 144,
+   "text": "The rule of thumb: if you already know it should become the default, it is `pending`.",
+   "label": "true",
+   "evidence": [
+    "docs/modules/ROOT/pages/versioning.adoc:118 * If we already know something should become the default, it is `pending`."
+   ],
+   "note": "Restates versioning.adoc rule of thumb."
+  },
+  {
+   "id": "e0c860427a0b4be9688b585d98e87a445a8591a1",
+   "line": 145,
+   "text": "If you are asking users to help you find out, it is `preview`.",
+   "label": "true",
+   "evidence": [
+    "docs/modules/ROOT/pages/versioning.adoc:121 * If we are asking users to help us find out, it is `preview`."
+   ],
+   "note": "Restates versioning.adoc rule of thumb."
+  },
+  {
+   "id": "343b5062b4b2e48f93d79107b9ca8cb6b50f88dd",
+   "line": 177,
+   "text": "Preview behavior is unstable by contract: it can change or be withdrawn in any release.",
+   "label": "true",
+   "evidence": [
+    "docs/modules/ROOT/pages/versioning.adoc:162-164 NOTE: Preview is provisional by definition ... an entry can change or be withdrawn in any minor release"
+   ],
+   "note": "Matches the documented contract."
+  },
+  {
+   "id": "0bd783849774a30d4deebdc4b6de9ff13bda644d",
+   "line": 178,
+   "text": "See `docs/modules/ROOT/pages/versioning.adoc` for the lifecycle.",
+   "label": "true",
+   "evidence": [
+    "docs/modules/ROOT/pages/versioning.adoc:54 == Preview; :124-126 The intended lifecycle for a new cop is `preview` ... to `pending` ..."
+   ],
+   "note": "File exists and documents the lifecycle."
+  },
+  {
+   "id": "78f0980ba246bbc7618a8bfce0d63a66ff4d8304",
+   "line": 182,
+   "text": "A cop's default severity comes from its department, via `DEPARTMENT_SEVERITIES` in `Cop::Base`: `Lint` and `Security` report as `warning`, `Metrics` as `refactor`, everything else as `convention`.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/base.rb:57 DEPARTMENT_SEVERITIES = { Lint: :warning, Security: :warning, Metrics: :refactor }.freeze",
+    "lib/rubocop/cop/base.rb:591 DEPARTMENT_SEVERITIES.fetch(self.class.department, :convention)"
+   ],
+   "note": "Department severity table matches."
+  },
+  {
+   "id": "d35a97b4e8ae26759ab361bc2199b9a8b9557daf",
+   "line": 184,
+   "text": "Do not add `Severity:` to a cop in `config/default.yml` unless it genuinely differs from its department; `spec/project_spec.rb` rejects a line that restates the default.",
+   "label": "true",
+   "evidence": [
+    "spec/project_spec.rb:111-121 it 'does not restate the severity its department already implies' ... expect(severity.to_sym).not_to eq(implied)"
+   ],
+   "note": "project_spec rejects redundant Severity lines."
+  },
+  {
+   "id": "91928fd31a310b972b7c320d2a2cedaff416c970",
+   "line": 186,
+   "text": "The few existing exceptions are lint-like cops in mixed departments (`Bundler/InsecureProtocolSource`) and the three `Layout` alignment cops that used to live in `Lint`.",
+   "label": "stale",
+   "evidence": [
+    "awk over config/default.yml Severity lines => Bundler/DuplicatedGem, Bundler/DuplicatedGroup, Bundler/InsecureProtocolSource, Gemspec/DeprecatedAttributeAssignment, Gemspec/DuplicatedAssignment, Gemspec/RequireMFA, Gemspec/RequiredRubyVersion, Gemspec/RubyVersionGlobalsUsage, Layout/BeginEndAlignment, Layout/DefEndAlignment, Layout/EndAlignment",
+    "relnotes/v0.91.0.md:4 Add new `Layout/BeginEndAlignment` cop (created in Layout, never in Lint; no Lint/BeginEndAlignment anywhere)",
+    "config/obsoletion.yml:20-23 Lint/BlockAlignment: Layout/BlockAlignment, Lint/DefEndAlignment, Lint/EndAlignment (the three moved cops)",
+    "config/default.yml:500-513 Layout/BlockAlignment has no Severity line"
+   ],
+   "note": "Of the three Layout exceptions, BeginEndAlignment never lived in Lint and the third moved cop (BlockAlignment) is not an exception; also 8 Bundler/Gemspec exceptions, not one."
+  },
+  {
+   "id": "412806631d065beb6d23354b3def4cd655ec264c",
+   "line": 191,
+   "text": "`AllCops: FailLevel` (default `refactor`) is the lowest severity that fails a run; `--fail-level` overrides it.",
+   "label": "true",
+   "evidence": [
+    "config/default.yml:63-65 The lowest severity that makes a run fail ... Can be overridden by the `--fail-level` command line option. FailLevel: refactor",
+    "lib/rubocop/options.rb:226 option(opts, '--fail-level SEVERITY'"
+   ],
+   "note": "Default and override match."
+  },
+  {
+   "id": "304a0b5d7b1aef06bc533c9d29847d0c170974fb",
+   "line": 192,
+   "text": "Under `Preview` it is `warning`.",
+   "label": "true",
+   "evidence": [
+    "config/default.yml:126-129 Preview: ... FailLevel: warning"
+   ],
+   "note": "AllCops Preview section sets FailLevel warning."
+  },
+  {
+   "id": "12c51075d555663a34cdda986ea4eef930501d83",
+   "line": 219,
+   "text": "`expect_offense` — `^` carets mark the offense range and must align exactly under the offending code. The message follows the last caret.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/rspec/expect_offense.rb:7-11 annotate code by writing '^'s underneath each character that should be highlighted, and follow the carets with a string (separated by a space) that is the message"
+   ],
+   "note": "Matches helper documentation and behavior."
+  },
+  {
+   "id": "6edce0abe70e50e9361fc160bea3854db66ff3b7",
+   "line": 221,
+   "text": "`expect_correction` — expected source after autocorrect. Must follow `expect_offense` in the same example.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/rspec/expect_offense.rb:150 raise '`expect_correction` must follow `expect_offense`' unless @processed_source"
+   ],
+   "note": "Enforced by the helper."
+  },
+  {
+   "id": "497604a3ce0ce407d67118adabd6f3b3181e453a",
+   "line": 223,
+   "text": "`expect_no_offenses` — assert no violations.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/rspec/expect_offense.rb:55-58 companion method `expect_no_offenses` ... checks that there were no offenses"
+   ],
+   "note": "Helper exists with that meaning."
+  },
+  {
+   "id": "bcbc72bbbf91b71b0a1e205016bc0055aa64d506",
+   "line": 224,
+   "text": "Use `%{variable}` in `expect_offense` heredocs to interpolate dynamic values.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/rspec/expect_offense.rb:80 - `%{foo}`: Interpolates `foo`",
+    "lib/rubocop/rspec/expect_offense.rb:111-117 format_offense gsub(\"%{#{keyword}}\", value)"
+   ],
+   "note": "Supported interpolation marker."
+  },
+  {
+   "id": "255c9065993d3dd9d2193b6f38d4a01e052ea2f6",
+   "line": 225,
+   "text": "Use `_{variable}` for offense-range placeholders.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/rspec/expect_offense.rb:81-82 `^{foo}`: dynamic offense range length; `_{foo}`: Inserts ' ' * foo.size for dynamic offense range indentation"
+   ],
+   "note": "_{} exists as an offense-range (indentation) placeholder; ^{} is the length counterpart."
+  },
+  {
+   "id": "00d3da17814a69dcc518df237448b19ddb3a39fd",
+   "line": 226,
+   "text": "Use RSpec metadata tags like `:ruby27`, `:ruby34` to set the target Ruby version for a test.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/rspec/support.rb:27 config.include_context 'ruby 2.7', :ruby27",
+    "lib/rubocop/rspec/support.rb:32 config.include_context 'ruby 3.4', :ruby34",
+    "lib/rubocop/rspec/shared_contexts.rb:310 let(:ruby_version) { 3.4 }"
+   ],
+   "note": "Metadata tags set target Ruby version."
+  },
+  {
+   "id": "5391388a5d0f873e4ab7a53f91f3da3738789639",
+   "line": 228,
+   "text": "Configuration: `let(:cop_config) { { 'EnforcedStyle' => 'bar' } }`.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/rspec/shared_contexts.rb:130 let(:cop_config) { {} }",
+    "lib/rubocop/rspec/shared_contexts.rb:159-166 cur_cop_config ... .merge(cop_config)"
+   ],
+   "note": "cop_config let is merged into the cop configuration."
+  },
+  {
+   "id": "0dc074672a2908541361329f6c7adec544622f2b",
+   "line": 235,
+   "text": "bundle exec rake changelog:fix # Bug fix",
+   "label": "true",
+   "evidence": [
+    "tasks/changelog.rake:4-5 %i[new fix change].each do |type| task type",
+    "tasks/changelog.rb:9 TYPE_TO_HEADER = { new: 'New features', fix: 'Bug fixes', change: 'Changes' }"
+   ],
+   "note": "changelog:fix exists for bug fixes."
+  },
+  {
+   "id": "917047a9b7550314d436dd1c59a4ff3f81dbab7e",
+   "line": 236,
+   "text": "bundle exec rake changelog:new # New feature",
+   "label": "true",
+   "evidence": [
+    "tasks/changelog.rake:4-5 %i[new fix change].each ...",
+    "tasks/changelog.rb:9 new: 'New features'"
+   ],
+   "note": "changelog:new exists for new features."
+  },
+  {
+   "id": "22d4d1c36e4840acb0f54751f698cd658f6000b1",
+   "line": 237,
+   "text": "bundle exec rake changelog:change # Changed behavior",
+   "label": "true",
+   "evidence": [
+    "tasks/changelog.rake:4-5 %i[new fix change].each ...",
+    "tasks/changelog.rb:9 change: 'Changes'"
+   ],
+   "note": "changelog:change exists for changes."
+  },
+  {
+   "id": "3b2caaeaa3c32e384b9603d839f5920bf2165788",
+   "line": 240,
+   "text": "Commit first; the task derives the entry's text from the last commit title.",
+   "label": "true",
+   "evidence": [
+    "tasks/changelog.rb:20 def initialize(type:, body: last_commit_title, ...)",
+    "tasks/changelog.rb:57-59 def last_commit_title `git log -1 --pretty=%B`.lines.first.chomp"
+   ],
+   "note": "Entry body defaults to the last commit title."
+  },
+  {
+   "id": "38f1cef54a13a7898b181ef41b91c694267ebc7d",
+   "line": 248,
+   "text": "Must end with `([@username][])`.",
+   "label": "true",
+   "evidence": [
+    "spec/project_spec.rb:359-361 it 'has a link to the contributors at the end' expect(entries).to all(match(/\\(\\[@\\S+\\]\\[\\](?:, \\[@\\S+\\]\\[\\])*\\)$/))",
+    "tasks/changelog.rb:48 \"* #{ref}: #{body}#{period} ([@#{user}][])\\n\""
+   ],
+   "note": "Entries must end with the contributor link."
+  },
+  {
+   "id": "773ae23f1b952557233a10ef9dcd5e409e54deab",
+   "line": 249,
+   "text": "`spec/project_spec.rb` validates the format in CI.",
+   "label": "true",
+   "evidence": [
+    "spec/project_spec.rb:339-391 Dir[\"#{dir}/*.md\"].each ... include_examples 'has Changelog format'; 'has a single line'; 'starts with new_, fix_, or change_'",
+    ".github/workflows/rubocop.yml:43 run: bundle exec rake spec"
+   ],
+   "note": "project_spec validates changelog entry format and runs in CI."
+  },
+  {
+   "id": "b9d59d13b15709b7f6c0f805484a0dddc4a92ea9",
+   "line": 250,
+   "text": "Skip the changelog only for purely internal changes (refactors with no user-visible effect).",
+   "label": "judgment",
+   "evidence": [
+    ".github/PULL_REQUEST_TEMPLATE.md:15 Added an entry ... if the new code introduces user-observable changes."
+   ],
+   "note": "Contributor policy consistent with the PR template; not tool-checkable."
+  },
+  {
+   "id": "61b6755a02b7a3095ffe2ffe7159faa4ba29dfca",
+   "line": 252,
+   "text": "Generate the entry after committing the change, then amend it into that commit. `rake changelog:*` names the file after the last commit subject, so committing first gives the entry the right filename.",
+   "label": "true",
+   "evidence": [
+    "tasks/changelog.rb:32-36 def path format(ENTRIES_PATH_TEMPLATE, type: type, name: filename_body, ...)",
+    "tasks/changelog.rb:42-43 def filename_body str_to_filename(body)... (body = last_commit_title, line 20)"
+   ],
+   "note": "File name is derived from the last commit subject, so committing first is required for a meaningful name."
+  },
+  {
+   "id": "a62ae783e92f0a1068e6969edad4c16d09015212",
+   "line": 258,
+   "text": "Prefix commit messages with `[Fix #N]` when an issue exists.",
+   "label": "true",
+   "evidence": [
+    "CONTRIBUTING.md:39 prefix the commit message with `[Fix #github-issue-number]`",
+    ".github/PULL_REQUEST_TEMPLATE.md:10 Commit message starts with `[Fix #issue-number]`",
+    "tasks/changelog.rb:61-63 extract_id: /^\\[Fix(?:es)? #(\\d+)\\] (.*)/",
+    "git log --since=2026-08-01 --no-merges => 45 of 302 subjects start with '[Fix #'"
+   ],
+   "note": "Documented convention, consumed by the changelog tooling and followed in history."
+  },
+  {
+   "id": "29e454ff9595312a3dee6359997f8ee689571fcc",
+   "line": 259,
+   "text": "Each distinct fix belongs in its own logical commit. When a PR bundles several unrelated fixes (e.g. multiple cops, multiple false positives), give each one a separate commit with its own changelog entry rather than squashing them all into a single commit. Squash only commits that are part of the same fix.",
+   "label": "judgment",
+   "evidence": [
+    "CONTRIBUTING.md:49-52 Put each distinct fix in its own logical commit with its own changelog entry ... Squash only commits that are part of the same fix."
+   ],
+   "note": "Commit-granularity rule stated in CONTRIBUTING; not enforceable by tooling."
+  },
+  {
+   "id": "c473f375b0024c9bc3d94952f9ff68936d711ec0",
+   "line": 263,
+   "text": "A changelog entry belongs in the same commit as the change it describes. Never add a changelog-only commit, including a follow-up that just fills in the PR number. Amend the entry into the commit it belongs to instead.",
+   "label": "judgment",
+   "evidence": [
+    "git log --since=2026-08-01 changelog-only commits: ab8194550 2026-10-01 'Fix an incorrect pull request number', 3f52020ab 2026-09-10 'Add CHANGELOG entry for the preview fail level'"
+   ],
+   "note": "Process rule with no enforcement; maintainer history includes changelog-only commits."
+  },
+  {
+   "id": "0884239dbaa6804ea69ea936c4f96e18c7634ca8",
+   "line": 266,
+   "text": "Never add AI attribution to a commit or a PR description: no `Co-authored-by` or `Assisted-by` trailers naming a tool or model, and no \"generated with\" footers. CONTRIBUTING.md asks the same of human contributors.",
+   "label": "true",
+   "evidence": [
+    "CONTRIBUTING.md:33-36 Keep AI attribution out of commit messages and pull request descriptions ... trailers like `Co-authored-by: Claude` or `Assisted-by: Codex`, and \"generated with\" footers.",
+    "git log --since=2026-09-28 (rule added in ca98dab5c) => 103 commits, 0 with AI co-author/assisted-by trailers"
+   ],
+   "note": "CONTRIBUTING asks the same and history since the rule was added follows it."
+  },
+  {
+   "id": "5b51a45b27bbfd34403e5b316d9ea5f17a5a6c13",
+   "line": 269,
+   "text": "Run `bundle exec rake` and ensure it passes before pushing.",
+   "label": "judgment",
+   "evidence": [
+    "CONTRIBUTING.md:47-48 Make sure the test suite is passing ... (usually this is as simple as running `bundle exec rake`)."
+   ],
+   "note": "Local pre-push process rule; cannot be verified from the repository."
+  },
+  {
+   "id": "a347cdb59cbe2d012c5e50302ed525aaccdabe61",
+   "line": 273,
+   "text": "Missing `alias on_csend on_send` — cops that check `on_send` must also handle safe navigation unless explicitly inapplicable.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/internal_affairs/on_send_without_on_csend.rb:6 Checks for cops that define `on_send` without define `on_csend`.",
+    "config/internal_affairs.yml:21-23 Include lib/rubocop/cop/**/*.rb"
+   ],
+   "note": "Enforced by InternalAffairs/OnSendWithoutOnCSend with exclusions for inapplicable cops."
+  },
+  {
+   "id": "4c068ea1d36b4579a1d9a83187a902f55ec6f6db",
+   "line": 275,
+   "text": "Missing `alias on_numblock on_block` / `alias on_itblock on_block` — cops that check `on_block` must also handle numbered-parameter and `it`-parameter block forms.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/internal_affairs/numblock_handler.rb:19 MSG = 'Define on_numblock to handle blocks with numbered arguments.'",
+    "lib/rubocop/cop/internal_affairs/itblock_handler.rb:6-9 Cops that define `block` handlers need to define `itblock` handlers"
+   ],
+   "note": "Enforced by internal cops."
+  },
+  {
+   "id": "1f5fc46d2c54d8dc0b99908cca1d9f5359ea80aa",
+   "line": 278,
+   "text": "Invalid Ruby in YARD examples — the CI `documentation_syntax_check` task parses every `@example` block. Use only valid syntax.",
+   "label": "true",
+   "evidence": [
+    "Rakefile:36-91 task documentation_syntax_check ... examples = ... code_object.tags('example') ... parser.parse(buffer) ... abort unless ok",
+    ".github/workflows/rubocop.yml:118-119 Check documentation syntax: bundle exec rake documentation_syntax_check"
+   ],
+   "note": "CI parses every cop @example block."
+  },
+  {
+   "id": "1755c8bccd8bfdd701a8da73d3928650e1f85553",
+   "line": 280,
+   "text": "Cop description not a sentence — must start with a verb and end with a period (e.g. `# Checks for ...`, not `# Check for ...`).",
+   "label": "judgment",
+   "evidence": [
+    "lib/rubocop/cop/internal_affairs/cop_description.rb:36-40 only flags 'This cop ...' and empty first comment lines",
+    "lib/rubocop/cop/bundler/gem_version.rb first line 'Enforce that Gem version specifications ...' (imperative 'Enforce', passes the cop)"
+   ],
+   "note": "Style rule only partially enforced; the Checks/Check distinction and trailing period are not checked and existing cops vary."
+  },
+  {
+   "id": "aae5a425ff59127a282b54569357c736e0d2c337",
+   "line": 282,
+   "text": "Missing `RESTRICT_ON_SEND` — always define this when using `on_send`.",
+   "label": "judgment",
+   "evidence": [
+    "lib/rubocop/cop/base.rb:52 RESTRICT_ON_SEND = Set[].freeze (empty default => on_send for every send)",
+    "docs/modules/ROOT/pages/development.adoc: 'When your cop uses `on_send`, define a `RESTRICT_ON_SEND` constant'",
+    "45 department cops define on_send without RESTRICT_ON_SEND, e.g. lib/rubocop/cop/lint/argument_mismatch.rb:49 (added 2026-08)"
+   ],
+   "note": "Documented convention but not enforced and not applicable to cops that inspect every send."
+  },
+  {
+   "id": "55a8dc767c5c69320013c7c9c1694a557a0d8b50",
+   "line": 283,
+   "text": "Missing `@!method` YARD tag — every `def_node_matcher` / `def_node_search` needs a `@!method` tag above it.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/internal_affairs/node_matcher_directive.rb:6-8 Checks that node matcher definitions are tagged with a YARD `@!method` directive",
+    "lib/rubocop/cop/internal_affairs/node_matcher_directive.rb:35 RESTRICT_ON_SEND = %i[def_node_matcher def_node_search]"
+   ],
+   "note": "Enforced by InternalAffairs/NodeMatcherDirective."
+  },
+  {
+   "id": "0313bb54075fab6d060f9704bc2eb05645b255d2",
+   "line": 285,
+   "text": "Forgetting changelog entry — CI will flag it.",
+   "label": "stale",
+   "evidence": [
+    "grep -rni changelog .github/ => only .github/PULL_REQUEST_TEMPLATE.md:15 (a checkbox); workflows rubocop.yml/linting.yml/spell_checking.yml/github_release.yml have no changelog step",
+    "spec/project_spec.rb:345 Dir[\"#{dir}/*.md\"].each — only validates entries that exist; a missing entry produces no failure"
+   ],
+   "note": "No CI job checks that a changelog entry was added, so a forgotten entry is not flagged."
+  },
+  {
+   "id": "cd1ae5574c977f0159c70843e586db3607695605",
+   "line": 286,
+   "text": "Manually creating changelog files — use the rake tasks instead to get the correct filename format.",
+   "label": "judgment",
+   "evidence": [
+    "CONTRIBUTING.md:85-86 Of course, you can also create the changelog entries files manually as well. Just make sure they are properly named.",
+    "spec/project_spec.rb:367-369 it 'starts with `new_`, `fix_`, or `change_`'"
+   ],
+   "note": "Preference for agents; CONTRIBUTING allows manual files if named properly, so this is guidance rather than a checkable fact."
+  },
+  {
+   "id": "43a18f22ae200bdc675e4d3d49e1826fd51ad5bd",
+   "line": 288,
+   "text": "Missing `extend AutoCorrector` — required if the cop provides a `corrector` block in `add_offense`.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/base.rb:461-468 def correct(range) ... yield corrector ... elsif !self.class.support_autocorrect? raise \"The Cop #{name} must `extend AutoCorrector` to be able to autocorrect\""
+   ],
+   "note": "Base raises without AutoCorrector when a corrector block is used."
+  },
+  {
+   "id": "a140903590b01d3255b5341649e24c6cced28f99",
+   "line": 290,
+   "text": "Not running full `bundle exec rake` — partial test runs miss lint and doc-syntax failures.",
+   "label": "true",
+   "evidence": [
+    "Rakefile:31 task default: %i[codespell documentation_syntax_check spec internal_investigation]",
+    "tasks/spec_runner.rake:297-300 task :spec only runs RSpec"
+   ],
+   "note": "Only the default task includes lint and doc-syntax checks."
+  },
+  {
+   "id": "13364ef135ddbaf6c63ac7196b9904eca2ac3c67",
+   "line": 292,
+   "text": "Hardcoding node types instead of using node pattern matchers — prefer `def_node_matcher` over manual `node.type == :send` checks.",
+   "label": "judgment",
+   "evidence": [
+    "lib/rubocop/cop/internal_affairs/node_type_predicate.rb:8-14 # bad node.type == :send  # good node.send_type?"
+   ],
+   "note": "Preference; tooling flags manual node.type comparisons but recommends type predicates rather than def_node_matcher."
+  },
+  {
+   "id": "87696274b77ab3192b9938f261e581ef822525e1",
+   "line": 294,
+   "text": "Not testing both `send` and `csend` — if you alias `on_csend`, write specs that cover the `&.` operator.",
+   "label": "judgment",
+   "evidence": [
+    "lib/rubocop/cop/generator.rb:76-78 By default, this is aliased to `on_csend` ... If kept, ensure your tests cover safe navigation as well!"
+   ],
+   "note": "Testing guideline echoed by the generator template; not enforced."
+  },
+  {
+   "id": "9b579abe18fdab7e0059d8d0283756f2d756cf9f",
+   "line": 296,
+   "text": "Spec stubs inheriting from `RuboCop::Cop::Cop`: inheriting from the deprecated class emits a warning, and CI runs specs with `STRICT_WARNINGS=1`, which turns it into a failure you won't see locally. Stub cops with `stub_cop_class` on `Base`, and read their offenses from `cop.send(:complete_investigation).offenses`; `Base#offenses` raises by design.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/cop.rb:25-28 def self.inherited ... warn 'Inheriting from `RuboCop::Cop::Cop` is deprecated. Use `RuboCop::Cop::Base` instead.'",
+    "spec/support/strict_warnings.rb:40-42 return unless ENV['STRICT_WARNINGS'] == '1'; raise WarningError",
+    ".github/workflows/rubocop.yml:42 STRICT_WARNINGS: 1",
+    "lib/rubocop/rspec/shared_contexts.rb:96 def stub_cop_class(name, inherit: RuboCop::Cop::Base, &block)",
+    "lib/rubocop/cop/base.rb:339-341 def offenses raise 'The offenses are not directly available ...'",
+    "spec/rubocop/cop/cop_spec.rb:226 cop.send(:complete_investigation).offenses"
+   ],
+   "note": "Every element (warning, STRICT_WARNINGS in CI, stub_cop_class, complete_investigation, Base#offenses raising) checks out."
+  },
+  {
+   "id": "15610a9e2b46f14c050582feac865f54fe37a7e9",
+   "line": 302,
+   "text": "Using `--only` to test whether a cop is enabled: `--only` forces the named cop on regardless of `Enabled`, `pending` or preview. To test enablement, run without it and count the cop's offenses in the output.",
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/registry.rb:422-423 def enabled_cop_name?(cop_name, config) return true if options[:only]&.include?(cop_name)",
+    "docs/modules/ROOT/pages/versioning.adoc:137 `--only` runs it by name, whether or not preview is on."
+   ],
+   "note": "--only bypasses Enabled/pending/preview checks."
+  },
+  {
+   "id": "e46dd47ba047b54947642587f308058571afe8ce",
+   "line": 305,
+   "text": "Committing regenerated cop docs: `rake update_cops_documentation` rewrites `docs/modules/ROOT/pages/cops_*.adoc` and picks up drift from every cop merged since the last release. Those files are regenerated at release time; don't include them in a PR.",
+   "label": "true",
+   "evidence": [
+    "tasks/cops_documentation.rake:12-15 task update_cops_documentation ... CopsDocumentationGenerator.new(departments: deps).call",
+    "lib/rubocop/cops_documentation_generator.rb:335 file_name = \"#{docs_path}/pages/#{department_to_basename(department)}.adoc\"; lib/rubocop/cop/documentation.rb:11 \"cops_#{department...}\"",
+    "tasks/cut_release.rake:104 Rake::Task['update_cops_documentation'].invoke",
+    "git log -3 -- docs/modules/ROOT/pages/cops_style.adoc => only 'Cut 1.91', 'Cut 1.90', 'Cut 1.89'"
+   ],
+   "note": "Docs are regenerated by the release task and only change in release commits."
+  },
+  {
+   "id": "2d9b2a854f6517c92d2414db63214ca6755e9679",
+   "line": 309,
+   "text": "Guessing Antora anchors: cross-page `xref` anchors in the manual are the heading lowercased with everything but letters removed (`#allowmultilinefinalelement`), not Asciidoctor's `_`-prefixed default. When in doubt, put an explicit `[#my-anchor]` above the heading.",
+   "label": "stale",
+   "evidence": [
+    "docs/modules/ROOT/pages/configuration/inheritance.adoc:80 xref:usage/caching.adoc#cache-path -> usage/caching.adoc:37 '== Cache Path' (no explicit anchor)",
+    "docs/modules/ROOT/pages/usage/cli_reference.adoc:163 xref:plugins.adoc#loading-plugin-extensions -> plugins.adoc:17 '=== Loading Plugin Extensions' (no explicit anchor)",
+    "docs/modules/ROOT/pages/compatibility.adoc:41 xref:configuration.adoc#setting-the-target-ruby-version -> configuration.adoc:112 '== Setting the target Ruby version' (no explicit anchor)",
+    "grep -rn ':idprefix:\\|:idseparator:' docs => none"
+   ],
+   "note": "The manual's own implicit cross-page anchors keep hyphens between words (Antora default), so 'everything but letters removed' only holds for single-word headings like AllowMultilineFinalElement."
+  }
+ ]
+}
