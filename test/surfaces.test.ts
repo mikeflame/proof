@@ -42,12 +42,18 @@ describe('one vocabulary (criterion 10)', () => {
       expect(readme, c.name).toContain(`\`proof ${c.name}\``);
     }
     for (const name of ['check', 'run', 'decide', 'revert']) expect(skill, name).toContain(`proof ${name}`);
-    for (const o of OPTIONS) {
-      expect(text, o.flag).toContain(o.flag);
-      const flag = o.flag.split(' ')[0] ?? '';
-      const takesValue = o.flag.includes('<');
-      const res = spawnSync(process.execPath, [BUNDLE, 'run', 'NOPE.md', flag, ...(takesValue ? ['1'] : []), '--no-fix', '--json'], { encoding: 'utf8', env: { ...process.env, PROOF_CLAUDE: '/nonexistent' } });
-      expect(res.stderr, o.flag).not.toContain('Unknown option');
+    // In a scratch folder: `--out 1` writes reports.
+    const scratch = mkdtempSync(join(tmpdir(), 'proof-options-'));
+    try {
+      for (const o of OPTIONS) {
+        expect(text, o.flag).toContain(o.flag);
+        const flag = o.flag.split(' ')[0] ?? '';
+        const takesValue = o.flag.includes('<');
+        const res = spawnSync(process.execPath, [BUNDLE, 'run', 'NOPE.md', flag, ...(takesValue ? ['1'] : []), '--no-fix', '--json'], { cwd: scratch, encoding: 'utf8', env: { ...process.env, PROOF_CLAUDE: '/nonexistent' } });
+        expect(res.stderr, o.flag).not.toContain('Unknown option');
+      }
+    } finally {
+      rmSync(scratch, { recursive: true, force: true });
     }
     expect(spawnSync(process.execPath, [BUNDLE, 'check', '--no-such-flag'], { encoding: 'utf8' }).status).toBe(2);
   });
