@@ -121,7 +121,7 @@
   {
    "id": "11f779cde751580886312b2eb4b93e09f9ac95a3",
    "line": 29,
-   "text": "Mechanical renames go in `packages/codemod/src/migrations/v1-to-v2/mappings/` and the codemod handles them — do not reproduce mapping tables in the guide; link to the mapping file instead.",
+   "text": "Mechanical renames go in `packages/codemod/src/migrations/v1-to-v2/mappings/` and the codemod handles them \u2014 do not reproduce mapping tables in the guide; link to the mapping file instead.",
    "label": "true",
    "evidence": [
     "ls packages/codemod/src/migrations/v1-to-v2/mappings => importMap.ts symbolMap.ts schemaToMethodMap.ts contextPropertyMap.ts ...",
@@ -206,7 +206,7 @@
   {
    "id": "7242dde6734c54671cc64a59a54a79126a9f09f6",
    "line": 47,
-   "text": "JSDoc `@example` tags should pull type-checked code from companion `.examples.ts` files (e.g., `client.ts` → `client.examples.ts`).",
+   "text": "JSDoc `@example` tags should pull type-checked code from companion `.examples.ts` files (e.g., `client.ts` \u2192 `client.examples.ts`).",
    "label": "true",
    "evidence": [
     "packages/client/src/client/client.ts:956-957 '@example Basic usage (stdio)' / ```ts source=\"./client.examples.ts#Client_connect_stdio\"",
@@ -225,7 +225,16 @@
     "packages/client/src/client/middleware.examples.ts:25 //#region applyMiddlewares_basicUsage",
     "packages/client/src/client/client.examples.ts:47 //#region Client_connect_stdio"
    ],
-   "note": "Fence/region syntax and naming pattern match the sync script; the illustrative name Client_connect_basicUsage doesn't exist (Client_connect_stdio does), but the pattern holds."
+   "note": "Fence/region syntax and naming pattern match the sync script; the illustrative name Client_connect_basicUsage doesn't exist (Client_connect_stdio does), but the pattern holds.",
+   "adjudicated": {
+    "label": "stale",
+    "by": "second reviewer (the maintainer's agent), 2026-10-01",
+    "evidence": [
+     "git grep -n Client_connect_basicUsage -- . ':!CLAUDE.md' => no output",
+     "packages/client/src/client/client.examples.ts:47 //#region Client_connect_stdio"
+    ],
+    "note": "The labeling rules count one wrong name as stale; the first label notes the example region does not exist but kept true."
+   }
   },
   {
    "id": "ab53ac6db365f1586d675ec265d83d365660c862",
@@ -275,7 +284,7 @@
   {
    "id": "6fac6d65887f0a219bd888f491056b0b18a8b924",
    "line": 70,
-   "text": "`@modelcontextprotocol/core-internal` (main entry, `packages/core-internal/src/index.ts`) — Internal barrel. Exports everything (including Zod schemas, Protocol class, stdio utils). Only consumed by sibling packages within the monorepo (`private: true`).",
+   "text": "`@modelcontextprotocol/core-internal` (main entry, `packages/core-internal/src/index.ts`) \u2014 Internal barrel. Exports everything (including Zod schemas, Protocol class, stdio utils). Only consumed by sibling packages within the monorepo (`private: true`).",
    "label": "true",
    "evidence": [
     "packages/core-internal/package.json private: true",
@@ -286,7 +295,7 @@
   {
    "id": "53e26e613f8ec96be700c214a05f19ec44a01994",
    "line": 71,
-   "text": "`@modelcontextprotocol/core-internal/public` (`packages/core-internal/src/exports/public/index.ts`) — Curated public API. Exports TypeScript types, error classes, constants, guards, and the `Protocol` base class (+ `mergeCapabilities`). Re-exported by client and server packages.",
+   "text": "`@modelcontextprotocol/core-internal/public` (`packages/core-internal/src/exports/public/index.ts`) \u2014 Curated public API. Exports TypeScript types, error classes, constants, guards, and the `Protocol` base class (+ `mergeCapabilities`). Re-exported by client and server packages.",
    "label": "true",
    "evidence": [
     "packages/core-internal/src/exports/public/index.ts:60 export { DEFAULT_REQUEST_TIMEOUT_MSEC, mergeCapabilities, Protocol }; also error classes, constants, type guards",
@@ -297,7 +306,7 @@
   {
    "id": "c65815840d439239cc38a3af7537337de117934c",
    "line": 72,
-   "text": "`@modelcontextprotocol/client` and `@modelcontextprotocol/server` (`packages/*/src/index.ts`) — Final public surface. Package-specific exports (named explicitly) plus re-exports from `core-internal/public`.",
+   "text": "`@modelcontextprotocol/client` and `@modelcontextprotocol/server` (`packages/*/src/index.ts`) \u2014 Final public surface. Package-specific exports (named explicitly) plus re-exports from `core-internal/public`.",
    "label": "true",
    "evidence": [
     "packages/client/src/index.ts:3-7 'Package-specific exports: listed explicitly below (named imports) ... Protocol-level types: re-exported from @modelcontextprotocol/core-internal/public'",
@@ -308,7 +317,7 @@
   {
    "id": "f3f1a54dd3455ff26f169d554aa77a5a79ac1481",
    "line": 73,
-   "text": "`@modelcontextprotocol/core` (`packages/core/src/index.ts`) — Public Zod-schema package and the canonical home of the schema source modules (`src/schemas.ts`, `src/auth.ts`, `src/constants.ts`). The root entry re-exports only the `*Schema` Zod constants (MCP spec + OAuth/OpenID) — the published home for raw runtime validation (`CallToolResultSchema.parse(...)`); runtime-neutral (`zod` is its only dependency). The `./internal` subpath re-exports the schema modules wholesale for the sibling packages: `core-internal` re-exports them at the old module paths, and the `client`/`server`/`server-legacy` bundles resolve `@modelcontextprotocol/core/internal` as a real external dependency instead of carrying their own schema copies (their public surfaces stay Zod-free).",
+   "text": "`@modelcontextprotocol/core` (`packages/core/src/index.ts`) \u2014 Public Zod-schema package and the canonical home of the schema source modules (`src/schemas.ts`, `src/auth.ts`, `src/constants.ts`). The root entry re-exports only the `*Schema` Zod constants (MCP spec + OAuth/OpenID) \u2014 the published home for raw runtime validation (`CallToolResultSchema.parse(...)`); runtime-neutral (`zod` is its only dependency). The `./internal` subpath re-exports the schema modules wholesale for the sibling packages: `core-internal` re-exports them at the old module paths, and the `client`/`server`/`server-legacy` bundles resolve `@modelcontextprotocol/core/internal` as a real external dependency instead of carrying their own schema copies (their public surfaces stay Zod-free).",
    "label": "true",
    "evidence": [
     "packages/core/src/index.ts:1-20 header: schema source modules live in this package; root entry re-exports ONLY the *Schema Zod values",
@@ -321,7 +330,7 @@
   {
    "id": "073d04a05cfaa946fcce32f6082ad923178b4b90",
    "line": 78,
-   "text": "Adding a symbol to a package `index.ts` makes it public API — do so intentionally.",
+   "text": "Adding a symbol to a package `index.ts` makes it public API \u2014 do so intentionally.",
    "label": "true",
    "evidence": [
     "packages/client/src/index.ts:7 '// Any new export added here becomes public API. Use named exports, not wildcards.'",
@@ -452,7 +461,7 @@
   {
    "id": "a626d30b49b9e182a129e06d1e819fe24b75620c",
    "line": 106,
-   "text": "The repo also ships “middleware” packages under `packages/middleware/` (e.g.",
+   "text": "The repo also ships \u201cmiddleware\u201d packages under `packages/middleware/` (e.g.",
    "label": "true",
    "evidence": [
     "ls packages/middleware => express fastify hono node README.md"
@@ -555,7 +564,7 @@
   {
    "id": "6e62b59dfd6bbf403a94282f31194e6da9dcadaa",
    "line": 133,
-   "text": "`examples/shared/` — `@mcp-examples/shared` package. Root export is args-only (`parseExampleArgs`, `check`, `siblingPath`); the demo OAuth provider and `InMemoryEventStore` live at the `@mcp-examples/shared/auth` subpath so non-auth stories don't eagerly evaluate better-auth/express/better-sqlite3. Stories import only this plumbing and inline the SDK transport setup themselves — see `examples/CONTRIBUTING.md`.",
+   "text": "`examples/shared/` \u2014 `@mcp-examples/shared` package. Root export is args-only (`parseExampleArgs`, `check`, `siblingPath`); the demo OAuth provider and `InMemoryEventStore` live at the `@mcp-examples/shared/auth` subpath so non-auth stories don't eagerly evaluate better-auth/express/better-sqlite3. Stories import only this plumbing and inline the SDK transport setup themselves \u2014 see `examples/CONTRIBUTING.md`.",
    "label": "true",
    "evidence": [
     "examples/shared/package.json name @mcp-examples/shared; exports '.': ./src/index.ts, './auth': ./src/indexAuth.ts",
@@ -568,7 +577,7 @@
   {
    "id": "4aeb4d5854ccc6c00ce468802181f4fa4155a91c",
    "line": 134,
-   "text": "`scripts/examples/` — runner (`run-examples.ts`)",
+   "text": "`scripts/examples/` \u2014 runner (`run-examples.ts`)",
    "label": "true",
    "evidence": [
     "ls scripts/examples => run-examples.ts",
@@ -579,7 +588,7 @@
   {
    "id": "ba9b75a6c1235859424d9babd8b4ab4dd866a892",
    "line": 135,
-   "text": "`examples/guides/` — per-page snippet companions for the `docs/` guide pages (one `<section>/<page>.examples.ts` per page); fences sync via `pnpm sync:snippets`, and the runnable ones are executed in CI by `pnpm docs:examples`",
+   "text": "`examples/guides/` \u2014 per-page snippet companions for the `docs/` guide pages (one `<section>/<page>.examples.ts` per page); fences sync via `pnpm sync:snippets`, and the runnable ones are executed in CI by `pnpm docs:examples`",
    "label": "true",
    "evidence": [
     "find examples/guides -name '*.examples.ts' => clients/connect.examples.ts, clients/oauth.examples.ts, testing.examples.ts ... (mirrors docs/clients, docs/servers ...)",
@@ -886,7 +895,7 @@
   {
    "id": "09669292163cda7eaef43f59a86a627c7270504e",
    "line": 221,
-   "text": "Client→Server: `Client.assertCapabilityForMethod()` checks `_serverCapabilities`",
+   "text": "Client\u2192Server: `Client.assertCapabilityForMethod()` checks `_serverCapabilities`",
    "label": "true",
    "evidence": [
     "packages/client/src/client/client.ts:1400-1405 assertCapabilityForMethod ... if (!this._serverCapabilities?.logging)"
@@ -896,7 +905,7 @@
   {
    "id": "4f7c184735110e4d11cc33c8949e4f9b6224cd7e",
    "line": 222,
-   "text": "Server→Client: `Server.assertCapabilityForMethod()` checks `_clientCapabilities`",
+   "text": "Server\u2192Client: `Server.assertCapabilityForMethod()` checks `_clientCapabilities`",
    "label": "true",
    "evidence": [
     "packages/server/src/server/server.ts:754-757 assertCapabilityForMethod ... if (!this._clientCapabilities?.sampling)"

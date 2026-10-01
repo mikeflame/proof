@@ -1,5 +1,5 @@
 {
- "proof": "ef52d8e37086",
+ "proof": "03eeed6bb0b8",
  "stage": "check",
  "seconds": 3,
  "exit": 1,
@@ -10,10 +10,10 @@
   "imports": [],
   "importedBy": [],
   "counts": {
-   "VERIFIED": 16,
+   "VERIFIED": 13,
    "STALE": 4,
-   "UNCONFIRMED": 4,
-   "UNVERIFIED_WITH_REASON": 87,
+   "UNCONFIRMED": 8,
+   "UNVERIFIED_WITH_REASON": 86,
    "DECIDED": 0,
    "OVERRIDDEN": 0,
    "NOT_CHECKED": 1,
@@ -21,11 +21,11 @@
    "FIX_REJECTED": 0
   },
   "evidenceLevels": {
-   "definition": 110,
+   "definition": 108,
    "declaration": 21,
-   "reference": 35,
-   "comment": 0,
-   "substring": 0,
+   "reference": 19,
+   "comment": 2,
+   "substring": 5,
    "none": 8
   },
   "git": {
@@ -37,9 +37,9 @@
    "behind": 0
   },
   "run": {
-   "started": "2026-10-01T12:30:17.069Z",
-   "finished": "2026-10-01T12:30:19.766Z",
-   "version": "0.1.0"
+   "started": "2026-10-01T13:19:10.176Z",
+   "finished": "2026-10-01T13:19:13.335Z",
+   "version": "0.2.0"
   },
   "decisions": [],
   "reopened": [],
@@ -1051,7 +1051,7 @@
       "kind": "unknown",
       "text": "@example",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -1060,7 +1060,8 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at examples/elicitation/client.ts:70"
+      "reason": "appears verbatim in code at examples/elicitation/client.ts:70; what the example illustrates is not checked",
+      "blocked": true
      },
      {
       "kind": "path",
@@ -1107,7 +1108,7 @@
      }
     ],
     "status": "UNVERIFIED_WITH_REASON",
-    "reason": "names verified; still to check: rule \"should\", description \"JSDoc tags pull type-checked code companion …\"",
+    "reason": "could not check `@example`: appears verbatim in code at examples/elicitation/client.ts:70; what the example illustrates is not checked",
     "settled": false
    },
    {
@@ -1706,7 +1707,7 @@
       "kind": "unknown",
       "text": "private: true",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -1715,7 +1716,8 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at test/integration/test/server/cloudflareWorkers.test.ts:283"
+      "reason": "appears verbatim in code at test/integration/test/server/cloudflareWorkers.test.ts:283; what the example illustrates is not checked",
+      "blocked": true
      },
      {
       "kind": "dependency",
@@ -1741,7 +1743,7 @@
      }
     ],
     "status": "UNVERIFIED_WITH_REASON",
-    "reason": "names verified; still to check: quantifier \"Only\", description \"main entry Internal barrel Exports everything …\"",
+    "reason": "could not check `private: true`: appears verbatim in code at test/integration/test/server/cloudflareWorkers.test.ts:283; what the example illustrates is not checked",
     "settled": false
    },
    {
@@ -2504,7 +2506,7 @@
       "kind": "unknown",
       "text": "node:child_process",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -2513,13 +2515,14 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at examples/guides/serving/stdio.examples.ts:79"
+      "reason": "appears verbatim in code at examples/guides/serving/stdio.examples.ts:79; what the example illustrates is not checked",
+      "blocked": true
      },
      {
       "kind": "unknown",
       "text": "node:net",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -2528,7 +2531,8 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at examples/cli-client/host/auth.ts:2"
+      "reason": "appears verbatim in code at examples/cli-client/host/auth.ts:2; what the example illustrates is not checked",
+      "blocked": true
      },
      {
       "kind": "symbol",
@@ -2585,7 +2589,7 @@
      }
     ],
     "status": "UNVERIFIED_WITH_REASON",
-    "reason": "names verified; still to check: rule \"must\", description \"package root entry stay runtime-neutral browser …\"",
+    "reason": "could not check `node:child_process`: appears verbatim in code at examples/guides/serving/stdio.examples.ts:79; what the example illustrates is not checked",
     "settled": false
    },
    {
@@ -2831,40 +2835,60 @@
       "kind": "symbol",
       "text": "McpServer.tool()",
       "expect": "present",
-      "status": "VERIFIED",
-      "level": "reference",
+      "status": "UNCONFIRMED",
+      "level": "substring",
       "evidence": [
        {
-        "ref": "examples/schema-validators/client.ts:23",
-        "excerpt": "const tool = list.tools.find(t => t.name === name);",
-        "level": "reference"
+        "ref": "examples/cli-client/host/host.ts:162",
+        "excerpt": "for (const tool of server.tools) {",
+        "level": "substring"
+       },
+       {
+        "ref": "examples/guides/get-started/firstClient.examples.ts:61",
+        "excerpt": "for (const tool of tools) {",
+        "level": "substring"
        }
       ],
-      "reason": "tool is defined at examples/schema-validators/client.ts:23; its owning type could not be read"
+      "reason": "McpServer.tool appears nowhere; tool exists elsewhere (examples/cli-client/host/host.ts:162), on something not shown to be McpServer"
      },
      {
-      "kind": "unknown",
-      "text": ".resource()",
+      "kind": "symbol",
+      "text": "McpServer.resource()",
       "expect": "present",
-      "status": "NOT_CHECKED",
-      "level": "none",
-      "evidence": [],
-      "reason": "not a path, command, name or version this tool can check",
-      "blocked": true
+      "status": "UNCONFIRMED",
+      "level": "substring",
+      "evidence": [
+       {
+        "ref": "examples/repl/client.ts:775",
+        "excerpt": "for (const resource of resourcesResult.resources) {",
+        "level": "substring"
+       },
+       {
+        "ref": "packages/client/src/client/auth.ts:1268",
+        "excerpt": "const resource: string | URL | undefined =",
+        "level": "substring"
+       }
+      ],
+      "reason": "McpServer.resource appears nowhere; resource exists elsewhere (examples/repl/client.ts:775), on something not shown to be McpServer"
      },
      {
-      "kind": "unknown",
-      "text": ".prompt()",
+      "kind": "symbol",
+      "text": "McpServer.prompt()",
       "expect": "present",
-      "status": "NOT_CHECKED",
-      "level": "none",
-      "evidence": [],
-      "reason": "not a path, command, name or version this tool can check",
-      "blocked": true
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "packages/server/src/server/mcp.ts:188",
+        "excerpt": "const prompt = this._registeredPrompts[promptName];",
+        "level": "definition"
+       }
+      ],
+      "reason": "prompt is defined on McpServer at packages/server/src/server/mcp.ts:188"
      }
     ],
-    "status": "UNVERIFIED_WITH_REASON",
-    "reason": "could not check `.resource()`: not a path, command, name or version this tool can check",
+    "status": "UNCONFIRMED",
+    "reason": "`McpServer.tool()`: McpServer.tool appears nowhere; tool exists elsewhere (examples/cli-client/host/host.ts:162), on something not shown to be McpServer",
     "settled": false
    },
    {
@@ -3678,7 +3702,7 @@
       "kind": "unknown",
       "text": "examples (build + e2e)",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -3687,7 +3711,8 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at .github/workflows/examples.yml:24"
+      "reason": "appears verbatim in code at .github/workflows/examples.yml:24; what the example illustrates is not checked",
+      "blocked": true
      }
     ],
     "status": "UNCONFIRMED",
@@ -4312,25 +4337,25 @@
       "kind": "symbol",
       "text": "Protocol.request()",
       "expect": "present",
-      "status": "VERIFIED",
-      "level": "reference",
+      "status": "UNCONFIRMED",
+      "level": "comment",
       "evidence": [
        {
-        "ref": "examples/cli-client/test/providers.test.ts:28",
-        "excerpt": "const request: GenerateRequest = {",
-        "level": "reference"
+        "ref": "packages/client/src/client/client.ts:1807",
+        "excerpt": "// the wire path (`Protocol.request()` wraps an already-aborted",
+        "level": "comment"
        },
        {
-        "ref": "examples/elicitation/server.ts:298",
-        "excerpt": "const request = await toWebRequest(req);",
-        "level": "reference"
+        "ref": "packages/client/test/client/listen.test.ts:390",
+        "excerpt": "// Same wrap as `Protocol.request()` / `_serveFromCache`: a non-SdkError",
+        "level": "comment"
        }
       ],
-      "reason": "request is defined at examples/cli-client/test/providers.test.ts:28; its owning type could not be read"
+      "reason": "Protocol.request appears only in comments (packages/client/src/client/client.ts:1807)"
      }
     ],
-    "status": "VERIFIED",
-    "reason": "every name in it checks out",
+    "status": "UNCONFIRMED",
+    "reason": "`Protocol.request()`: Protocol.request appears only in comments (packages/client/src/client/client.ts:1807)",
     "settled": false
    },
    {
@@ -4652,21 +4677,21 @@
       "kind": "symbol",
       "text": "Protocol.connect()",
       "expect": "present",
-      "status": "VERIFIED",
-      "level": "reference",
+      "status": "UNCONFIRMED",
+      "level": "comment",
       "evidence": [
        {
-        "ref": "examples/dual-era/client.ts:24",
-        "excerpt": "const connect = async (mode: 'legacy' | 'auto'): Promise<Client> => {",
-        "level": "reference"
+        "ref": "packages/client/src/client/versionNegotiation.ts:187",
+        "excerpt": "* open and restored on detach, so `Protocol.connect()` finds and chains them",
+        "level": "comment"
        },
        {
-        "ref": "examples/guides/clients/subscriptions.examples.ts:59",
-        "excerpt": "async function connect(client: Client, target: typeof handler): Promise<void> {",
-        "level": "reference"
+        "ref": "packages/client/src/client/versionNegotiation.ts:194",
+        "excerpt": "* `Protocol.connect()` like the others.)",
+        "level": "comment"
        }
       ],
-      "reason": "connect is defined at examples/dual-era/client.ts:24; its owning type could not be read"
+      "reason": "Protocol.connect appears only in comments (packages/client/src/client/versionNegotiation.ts:187)"
      },
      {
       "kind": "symbol",
@@ -4714,8 +4739,8 @@
       "reason": "definition at packages/client/src/client/client.ts:2161"
      }
     ],
-    "status": "VERIFIED",
-    "reason": "every name in it checks out",
+    "status": "UNCONFIRMED",
+    "reason": "`Protocol.connect()`: Protocol.connect appears only in comments (packages/client/src/client/versionNegotiation.ts:187)",
     "settled": false
    },
    {
@@ -4851,68 +4876,56 @@
      },
      {
       "kind": "symbol",
-      "text": "signal",
+      "text": "BaseContext.signal",
       "expect": "present",
-      "status": "VERIFIED",
-      "level": "definition",
+      "status": "UNCONFIRMED",
+      "level": "substring",
       "evidence": [
        {
         "ref": "packages/client/src/client/streamableHttp.ts:598",
         "excerpt": "const signal =",
-        "level": "definition"
+        "level": "substring"
        }
       ],
-      "reason": "definition at packages/client/src/client/streamableHttp.ts:598"
+      "reason": "BaseContext.signal appears nowhere; signal exists elsewhere (packages/client/src/client/streamableHttp.ts:598), on something not shown to be BaseContext"
      },
      {
       "kind": "symbol",
-      "text": "sessionId",
+      "text": "BaseContext.sessionId",
       "expect": "present",
       "status": "VERIFIED",
       "level": "definition",
       "evidence": [
        {
-        "ref": "examples/guides/serving/legacy-clients.examples.ts:79",
-        "excerpt": "const sessionId = req.query.sessionId;",
+        "ref": "packages/core-internal/src/shared/protocol.ts:338",
+        "excerpt": "sessionId?: string;",
         "level": "definition"
        }
       ],
-      "reason": "definition at examples/guides/serving/legacy-clients.examples.ts:79"
+      "reason": "sessionId is defined on BaseContext at packages/core-internal/src/shared/protocol.ts:338"
      },
      {
       "kind": "symbol",
-      "text": "sendNotification",
+      "text": "BaseContext.sendNotification",
       "expect": "present",
-      "status": "VERIFIED",
-      "level": "definition",
-      "evidence": [
-       {
-        "ref": "packages/core-internal/src/shared/protocol.ts:1047",
-        "excerpt": "const sendNotification = (notification: Notification, options?: NotificationOptions) =>",
-        "level": "definition"
-       }
-      ],
-      "reason": "definition at packages/core-internal/src/shared/protocol.ts:1047"
+      "status": "UNCONFIRMED",
+      "level": "substring",
+      "evidence": [],
+      "reason": "BaseContext.sendNotification: sendNotification is defined on Protocol, not on BaseContext"
      },
      {
       "kind": "symbol",
-      "text": "sendRequest",
+      "text": "BaseContext.sendRequest",
       "expect": "present",
-      "status": "VERIFIED",
-      "level": "definition",
-      "evidence": [
-       {
-        "ref": "packages/core-internal/src/shared/protocol.ts:1052",
-        "excerpt": "const sendRequest = <U extends StandardSchemaV1>(r: Request, resultSchema: U, options?: RequestOptions) =>",
-        "level": "definition"
-       }
-      ],
-      "reason": "definition at packages/core-internal/src/shared/protocol.ts:1052"
+      "status": "UNCONFIRMED",
+      "level": "substring",
+      "evidence": [],
+      "reason": "BaseContext.sendRequest: sendRequest is defined on Protocol, not on BaseContext"
      }
     ],
-    "status": "VERIFIED",
-    "reason": "every name in it checks out",
-    "settled": true
+    "status": "UNCONFIRMED",
+    "reason": "`BaseContext.signal`: BaseContext.signal appears nowhere; signal exists elsewhere (packages/client/src/client/streamableHttp.ts:598), on something not shown to be BaseContext",
+    "settled": false
    },
    {
     "id": "f6e1726e504a6e1e1eddd4878df8b5e5da93f4e2",
@@ -5126,7 +5139,7 @@
       "kind": "unknown",
       "text": "sessionId?",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -5135,11 +5148,12 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at examples/guides/advanced/custom-transports.examples.ts:116"
+      "reason": "appears verbatim in code at examples/guides/advanced/custom-transports.examples.ts:116; what the example illustrates is not checked",
+      "blocked": true
      }
     ],
     "status": "UNVERIFIED_WITH_REASON",
-    "reason": "names verified; still to check: description \"Transport session identifier\"",
+    "reason": "could not check `sessionId?`: appears verbatim in code at examples/guides/advanced/custom-transports.examples.ts:116; what the example illustrates is not checked",
     "settled": false
    },
    {
@@ -5281,7 +5295,7 @@
       "kind": "unknown",
       "text": "_meta?",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -5290,11 +5304,12 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at examples/guides/clients/calling.examples.ts:67"
+      "reason": "appears verbatim in code at examples/guides/clients/calling.examples.ts:67; what the example illustrates is not checked",
+      "blocked": true
      }
     ],
     "status": "UNVERIFIED_WITH_REASON",
-    "reason": "names verified; still to check: description \"Request metadata\"",
+    "reason": "could not check `_meta?`: appears verbatim in code at examples/guides/clients/calling.examples.ts:67; what the example illustrates is not checked",
     "settled": false
    },
    {
@@ -5446,7 +5461,7 @@
       "kind": "unknown",
       "text": "http?",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -5455,11 +5470,12 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at examples/guides/serving/authorization.examples.ts:71"
+      "reason": "appears verbatim in code at examples/guides/serving/authorization.examples.ts:71; what the example illustrates is not checked",
+      "blocked": true
      }
     ],
     "status": "UNVERIFIED_WITH_REASON",
-    "reason": "names verified; still to check: description \"HTTP transport info undefined stdio\"",
+    "reason": "could not check `http?`: appears verbatim in code at examples/guides/serving/authorization.examples.ts:71; what the example illustrates is not checked",
     "settled": false
    },
    {
@@ -5486,7 +5502,7 @@
       "kind": "unknown",
       "text": "authInfo?",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -5495,11 +5511,12 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at examples/guides/serving/authorization.examples.ts:98"
+      "reason": "appears verbatim in code at examples/guides/serving/authorization.examples.ts:98; what the example illustrates is not checked",
+      "blocked": true
      }
     ],
     "status": "UNVERIFIED_WITH_REASON",
-    "reason": "names verified; still to check: description \"Validated auth token info\"",
+    "reason": "could not check `authInfo?`: appears verbatim in code at examples/guides/serving/authorization.examples.ts:98; what the example illustrates is not checked",
     "settled": false
    },
    {
@@ -5711,7 +5728,7 @@
       "kind": "unknown",
       "text": "http?",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -5720,13 +5737,14 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at examples/guides/serving/authorization.examples.ts:71"
+      "reason": "appears verbatim in code at examples/guides/serving/authorization.examples.ts:71; what the example illustrates is not checked",
+      "blocked": true
      },
      {
       "kind": "unknown",
       "text": "req?",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -5735,13 +5753,14 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at packages/core-internal/src/shared/protocol.ts:499"
+      "reason": "appears verbatim in code at packages/core-internal/src/shared/protocol.ts:499; what the example illustrates is not checked",
+      "blocked": true
      },
      {
       "kind": "unknown",
       "text": "closeSSE?",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -5750,13 +5769,14 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at packages/core-internal/src/shared/protocol.ts:505"
+      "reason": "appears verbatim in code at packages/core-internal/src/shared/protocol.ts:505; what the example illustrates is not checked",
+      "blocked": true
      },
      {
       "kind": "unknown",
       "text": "closeStandaloneSSE?",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -5765,11 +5785,12 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at packages/core-internal/src/shared/protocol.ts:511"
+      "reason": "appears verbatim in code at packages/core-internal/src/shared/protocol.ts:511; what the example illustrates is not checked",
+      "blocked": true
      }
     ],
     "status": "UNVERIFIED_WITH_REASON",
-    "reason": "names verified; still to check: description \"adds HTTP request info\"",
+    "reason": "could not check `http?`: appears verbatim in code at examples/guides/serving/authorization.examples.ts:71; what the example illustrates is not checked",
     "settled": false
    },
    {

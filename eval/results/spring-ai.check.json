@@ -1,7 +1,7 @@
 {
- "proof": "ef52d8e37086",
+ "proof": "03eeed6bb0b8",
  "stage": "check",
- "seconds": 2,
+ "seconds": 3,
  "exit": 0,
  "report": {
   "file": "AGENTS.md",
@@ -23,7 +23,7 @@
   "evidenceLevels": {
    "definition": 3,
    "declaration": 0,
-   "reference": 7,
+   "reference": 4,
    "comment": 0,
    "substring": 0,
    "none": 3
@@ -37,9 +37,9 @@
    "behind": 0
   },
   "run": {
-   "started": "2026-10-01T12:30:20.020Z",
-   "finished": "2026-10-01T12:30:22.133Z",
-   "version": "0.1.0"
+   "started": "2026-10-01T13:26:32.726Z",
+   "finished": "2026-10-01T13:26:35.016Z",
+   "version": "0.2.0"
   },
   "decisions": [],
   "reopened": [],
@@ -159,7 +159,7 @@
       "kind": "unknown",
       "text": "17.0.19-librca",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -168,11 +168,12 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at .sdkmanrc:3"
+      "reason": "appears verbatim in code at .sdkmanrc:3; what the example illustrates is not checked",
+      "blocked": true
      }
     ],
     "status": "UNVERIFIED_WITH_REASON",
-    "reason": "names verified; still to check: count \"17 with\", description \"JDK support native CPU architecture\"",
+    "reason": "could not check `17.0.19-librca`: appears verbatim in code at .sdkmanrc:3; what the example illustrates is not checked",
     "settled": false
    },
    {
@@ -714,7 +715,7 @@
       "kind": "unknown",
       "text": "Copyright 2023-present the original author or authors.",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -723,11 +724,12 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at .mvn/extensions.xml:3"
+      "reason": "appears verbatim in code at .mvn/extensions.xml:3; what the example illustrates is not checked",
+      "blocked": true
      }
     ],
     "status": "UNVERIFIED_WITH_REASON",
-    "reason": "names verified; still to check: count \"2.0 license header\", quantifier \"Every\", description \"source file Apache license header copy …\"",
+    "reason": "could not check `Copyright 2023-present the original author or authors.`: appears verbatim in code at .mvn/extensions.xml:3; what the example illustrates is not checked",
     "settled": false
    },
    {
@@ -837,7 +839,7 @@
       "kind": "unknown",
       "text": ".adoc",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -846,7 +848,8 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at spring-ai-docs/src/main/antora/antora.yml:5"
+      "reason": "appears verbatim in code at spring-ai-docs/src/main/antora/antora.yml:5; what the example illustrates is not checked",
+      "blocked": true
      },
      {
       "kind": "unknown",
@@ -860,7 +863,7 @@
      }
     ],
     "status": "UNVERIFIED_WITH_REASON",
-    "reason": "could not check `.md`: not a path, command, name or version this tool can check",
+    "reason": "could not check `.adoc`: appears verbatim in code at spring-ai-docs/src/main/antora/antora.yml:5; what the example illustrates is not checked",
     "settled": false
    },
    {

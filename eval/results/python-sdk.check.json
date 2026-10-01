@@ -1,7 +1,7 @@
 {
- "proof": "ef52d8e37086",
+ "proof": "03eeed6bb0b8",
  "stage": "check",
- "seconds": 2,
+ "seconds": 3,
  "exit": 0,
  "report": {
   "file": "AGENTS.md",
@@ -10,10 +10,10 @@
   "imports": [],
   "importedBy": [],
   "counts": {
-   "VERIFIED": 2,
+   "VERIFIED": 0,
    "STALE": 0,
    "UNCONFIRMED": 6,
-   "UNVERIFIED_WITH_REASON": 45,
+   "UNVERIFIED_WITH_REASON": 47,
    "DECIDED": 0,
    "OVERRIDDEN": 0,
    "NOT_CHECKED": 9,
@@ -23,7 +23,7 @@
   "evidenceLevels": {
    "definition": 26,
    "declaration": 9,
-   "reference": 27,
+   "reference": 20,
    "comment": 0,
    "substring": 1,
    "none": 7
@@ -37,9 +37,9 @@
    "behind": 0
   },
   "run": {
-   "started": "2026-10-01T12:30:14.728Z",
-   "finished": "2026-10-01T12:30:16.927Z",
-   "version": "0.1.0"
+   "started": "2026-10-01T13:16:10.928Z",
+   "finished": "2026-10-01T13:16:13.321Z",
+   "version": "0.2.0"
   },
   "decisions": [],
   "reopened": [],
@@ -202,7 +202,7 @@
       "kind": "unknown",
       "text": "@deprecated",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -211,11 +211,12 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at src/mcp/client/client.py:521"
+      "reason": "appears verbatim in code at src/mcp/client/client.py:521; what the example illustrates is not checked",
+      "blocked": true
      }
     ],
     "status": "UNVERIFIED_WITH_REASON",
-    "reason": "names verified; still to check: rule \"should\", description \"released public API compatibility contract line …\"",
+    "reason": "could not check `@deprecated`: appears verbatim in code at src/mcp/client/client.py:521; what the example illustrates is not checked",
     "settled": false
    },
    {
@@ -1054,7 +1055,7 @@
       "kind": "unknown",
       "text": "encoding=",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -1063,7 +1064,8 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at docs_src/prompts/tutorial004.py:15"
+      "reason": "appears verbatim in code at docs_src/prompts/tutorial004.py:15; what the example illustrates is not checked",
+      "blocked": true
      },
      {
       "kind": "symbol",
@@ -2033,7 +2035,7 @@
       "kind": "unknown",
       "text": "fail_under = 100",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -2042,13 +2044,14 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at pyproject.toml:315"
+      "reason": "appears verbatim in code at pyproject.toml:315; what the example illustrates is not checked",
+      "blocked": true
      },
      {
       "kind": "unknown",
       "text": "branch = true",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -2057,11 +2060,12 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at pyproject.toml:302"
+      "reason": "appears verbatim in code at pyproject.toml:302; what the example illustrates is not checked",
+      "blocked": true
      }
     ],
-    "status": "VERIFIED",
-    "reason": "every name in it checks out",
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `fail_under = 100`: appears verbatim in code at pyproject.toml:315; what the example illustrates is not checked",
     "settled": false
    },
    {
@@ -2850,7 +2854,7 @@
       "kind": "unknown",
       "text": "async with",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -2859,7 +2863,8 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at .github/actions/conformance/client.py:156"
+      "reason": "appears verbatim in code at .github/actions/conformance/client.py:156; what the example illustrates is not checked",
+      "blocked": true
      },
      {
       "kind": "version",
@@ -3380,7 +3385,7 @@
       "kind": "unknown",
       "text": "except json.JSONDecodeError:",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -3389,11 +3394,12 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at .github/actions/conformance/client.py:576"
+      "reason": "appears verbatim in code at .github/actions/conformance/client.py:576; what the example illustrates is not checked",
+      "blocked": true
      }
     ],
-    "status": "VERIFIED",
-    "reason": "every name in it checks out",
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "could not check `except json.JSONDecodeError:`: appears verbatim in code at .github/actions/conformance/client.py:576; what the example illustrates is not checked",
     "settled": false
    },
    {
@@ -3454,7 +3460,7 @@
       "kind": "unknown",
       "text": "except Exception:",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -3463,11 +3469,12 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at .github/actions/conformance/client.py:367"
+      "reason": "appears verbatim in code at .github/actions/conformance/client.py:367; what the example illustrates is not checked",
+      "blocked": true
      }
     ],
     "status": "UNVERIFIED_WITH_REASON",
-    "reason": "names verified; still to check: rule \"FORBIDDEN\", description \"FORBIDDEN unless top-level handlers\"",
+    "reason": "could not check `except Exception:`: appears verbatim in code at .github/actions/conformance/client.py:367; what the example illustrates is not checked",
     "settled": false
    }
   ]

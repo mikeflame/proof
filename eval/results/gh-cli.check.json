@@ -1,5 +1,5 @@
 {
- "proof": "ef52d8e37086",
+ "proof": "03eeed6bb0b8",
  "stage": "check",
  "seconds": 1,
  "exit": 0,
@@ -23,7 +23,7 @@
   "evidenceLevels": {
    "definition": 26,
    "declaration": 0,
-   "reference": 10,
+   "reference": 7,
    "comment": 0,
    "substring": 0,
    "none": 2
@@ -37,9 +37,9 @@
    "behind": 0
   },
   "run": {
-   "started": "2026-10-01T12:30:25.047Z",
-   "finished": "2026-10-01T12:30:25.587Z",
-   "version": "0.1.0"
+   "started": "2026-10-01T13:35:05.161Z",
+   "finished": "2026-10-01T13:35:05.763Z",
+   "version": "0.2.0"
   },
   "decisions": [],
   "reopened": [],
@@ -202,7 +202,7 @@
       "kind": "unknown",
       "text": "help wanted",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -211,13 +211,14 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at pkg/cmd/discussion/edit/edit_test.go:68"
+      "reason": "appears verbatim in code at pkg/cmd/discussion/edit/edit_test.go:68; what the example illustrates is not checked",
+      "blocked": true
      },
      {
       "kind": "unknown",
       "text": "good first issue",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -226,11 +227,12 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at pkg/cmd/pr/shared/survey_test.go:37"
+      "reason": "appears verbatim in code at pkg/cmd/pr/shared/survey_test.go:37; what the example illustrates is not checked",
+      "blocked": true
      }
     ],
     "status": "UNVERIFIED_WITH_REASON",
-    "reason": "names verified; still to check: description \"Read actual existing issue verify currently …\"",
+    "reason": "could not check `help wanted`: appears verbatim in code at pkg/cmd/discussion/edit/edit_test.go:68; what the example illustrates is not checked",
     "settled": false
    },
    {
@@ -1599,7 +1601,7 @@
       "kind": "unknown",
       "text": "opts.BaseRepo = f.BaseRepo",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -1608,7 +1610,8 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at pkg/cmd/agent-task/create/create.go:65"
+      "reason": "appears verbatim in code at pkg/cmd/agent-task/create/create.go:65; what the example illustrates is not checked",
+      "blocked": true
      },
      {
       "kind": "symbol",
@@ -1657,7 +1660,7 @@
      }
     ],
     "status": "UNVERIFIED_WITH_REASON",
-    "reason": "could not check `-R`: a short flag; which command it belongs to is in the sentence",
+    "reason": "could not check `opts.BaseRepo = f.BaseRepo`: appears verbatim in code at pkg/cmd/agent-task/create/create.go:65; what the example illustrates is not checked",
     "settled": false
    },
    {

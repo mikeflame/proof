@@ -33,7 +33,11 @@ for (const r of corpus()) {
   const gold = load(join(here, 'labels', `${r.name}.json`));
   if (!gold) continue;
   for (const stageName of ['check', 'run']) {
-    const result = load(join(here, 'results', `${r.name}.${stageName}.json`));
+    // The run stage is scored on the full pipeline report (verify, then fix proposals) when there is one;
+    // its cost and time are both stages together.
+    const verifyOnly = load(join(here, 'results', `${r.name}.${stageName}.json`));
+    const full = stageName === 'run' ? load(join(here, 'results', `${r.name}.fixes.json`)) : null;
+    const result = full && verifyOnly ? { ...full, seconds: full.seconds + verifyOnly.seconds, report: { ...full.report, run: { ...full.report.run, budgetUsedUsd: (full.report.run.budgetUsedUsd ?? 0) + (verifyOnly.report.run.budgetUsedUsd ?? 0) } } } : (full ?? verifyOnly);
     if (!result) continue;
     const row = { name: r.name, split: r.split, ecosystem: r.ecosystem, stage: stageName, statements: result.report.statements.length, labeled: 0, tp: 0, fp: 0, fn: 0, verified: 0, verifiedTrue: 0, fixes: 0, fixesKept: 0, cost: result.report.run.budgetUsedUsd ?? 0, seconds: result.seconds, repos: 1, misses: [], falseAlarms: [], wrongVerified: [] };
     for (const st of result.report.statements) {

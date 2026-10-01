@@ -1,5 +1,5 @@
 {
- "proof": "ef52d8e37086",
+ "proof": "03eeed6bb0b8",
  "stage": "check",
  "seconds": 5,
  "exit": 0,
@@ -12,8 +12,8 @@
   "counts": {
    "VERIFIED": 1,
    "STALE": 0,
-   "UNCONFIRMED": 4,
-   "UNVERIFIED_WITH_REASON": 61,
+   "UNCONFIRMED": 5,
+   "UNVERIFIED_WITH_REASON": 60,
    "DECIDED": 0,
    "OVERRIDDEN": 0,
    "NOT_CHECKED": 1,
@@ -21,11 +21,11 @@
    "FIX_REJECTED": 0
   },
   "evidenceLevels": {
-   "definition": 256,
+   "definition": 253,
    "declaration": 57,
-   "reference": 31,
+   "reference": 26,
    "comment": 1,
-   "substring": 1,
+   "substring": 5,
    "none": 1
   },
   "git": {
@@ -37,9 +37,9 @@
    "behind": 2
   },
   "run": {
-   "started": "2026-10-01T12:30:09.510Z",
-   "finished": "2026-10-01T12:30:14.565Z",
-   "version": "0.1.0"
+   "started": "2026-10-01T13:06:18.358Z",
+   "finished": "2026-10-01T13:06:23.459Z",
+   "version": "0.2.0"
   },
   "decisions": [],
   "reopened": [],
@@ -4536,7 +4536,7 @@
       "kind": "unknown",
       "text": "reviewer_resumed: true",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -4545,7 +4545,8 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at internal/cli/axi_answer_follow_test.go:146"
+      "reason": "appears verbatim in code at internal/cli/axi_answer_follow_test.go:146; what the example illustrates is not checked",
+      "blocked": true
      },
      {
       "kind": "symbol",
@@ -6550,7 +6551,7 @@
       "kind": "unknown",
       "text": "question-",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -6559,7 +6560,8 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at internal/cli/axi_answer_follow_test.go:117"
+      "reason": "appears verbatim in code at internal/cli/axi_answer_follow_test.go:117; what the example illustrates is not checked",
+      "blocked": true
      },
      {
       "kind": "symbol",
@@ -6762,7 +6764,7 @@
      }
     ],
     "status": "UNVERIFIED_WITH_REASON",
-    "reason": "names verified; still to check: quantifier \"only\", rule \"never\", description \"review conversation meets upstream's append-only outstanding …\"",
+    "reason": "could not check `question-`: appears verbatim in code at internal/cli/axi_answer_follow_test.go:117; what the example illustrates is not checked",
     "settled": false
    },
    {
@@ -7075,7 +7077,7 @@
       "kind": "unknown",
       "text": "### Review conversation",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -7084,7 +7086,8 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at internal/e2e/review_conversation_test.go:516"
+      "reason": "appears verbatim in code at internal/e2e/review_conversation_test.go:516; what the example illustrates is not checked",
+      "blocked": true
      },
      {
       "kind": "symbol",
@@ -7547,7 +7550,7 @@
       "kind": "unknown",
       "text": "question-",
       "expect": "present",
-      "status": "VERIFIED",
+      "status": "NOT_CHECKED",
       "level": "reference",
       "evidence": [
        {
@@ -7556,7 +7559,8 @@
         "level": "reference"
        }
       ],
-      "reason": "appears verbatim in code at internal/cli/axi_answer_follow_test.go:117"
+      "reason": "appears verbatim in code at internal/cli/axi_answer_follow_test.go:117; what the example illustrates is not checked",
+      "blocked": true
      },
      {
       "kind": "symbol",
@@ -7585,68 +7589,56 @@
      },
      {
       "kind": "symbol",
-      "text": "driveRunWithReconciler",
+      "text": "HasProtectedPathRefusal.driveRunWithReconciler",
       "expect": "present",
-      "status": "VERIFIED",
-      "level": "definition",
+      "status": "UNCONFIRMED",
+      "level": "substring",
       "evidence": [
        {
         "ref": "internal/cli/axi_drive.go:919",
         "excerpt": "func driveRunWithReconciler(ctx context.Context, progress io.Writer, client *ipc.Client, reconciler *runReconciler, run…",
-        "level": "definition"
+        "level": "substring"
        }
       ],
-      "reason": "definition at internal/cli/axi_drive.go:919"
+      "reason": "HasProtectedPathRefusal.driveRunWithReconciler appears nowhere; driveRunWithReconciler exists elsewhere (internal/cli/axi_drive.go:919), on something not shown to be HasProtectedPathRefusal"
      },
      {
       "kind": "symbol",
-      "text": "maybeAutoApproveCmd",
+      "text": "HasProtectedPathRefusal.maybeAutoApproveCmd",
       "expect": "present",
-      "status": "VERIFIED",
-      "level": "definition",
-      "evidence": [
-       {
-        "ref": "internal/tui/commands.go:99",
-        "excerpt": "func (m Model) maybeAutoApproveCmd() tea.Cmd {",
-        "level": "definition"
-       }
-      ],
-      "reason": "definition at internal/tui/commands.go:99"
+      "status": "UNCONFIRMED",
+      "level": "substring",
+      "evidence": [],
+      "reason": "HasProtectedPathRefusal.maybeAutoApproveCmd: maybeAutoApproveCmd is defined on Model, not on HasProtectedPathRefusal"
      },
      {
       "kind": "symbol",
-      "text": "axi",
+      "text": "HasProtectedPathRefusal.axi",
       "expect": "present",
-      "status": "VERIFIED",
-      "level": "reference",
+      "status": "UNCONFIRMED",
+      "level": "substring",
       "evidence": [
        {
-        "ref": "internal/cli/axi.go:31",
-        "excerpt": "Use: \"axi\",",
-        "level": "reference"
+        "ref": ".no-mistakes.yaml:30",
+        "excerpt": "and the live axi output strings; docs/src/content/docs/guides/agents.md keeps",
+        "level": "substring"
        },
        {
-        "ref": "internal/cli/axi_abort_quiescence_test.go:152",
-        "excerpt": "out, err := executeCmd(\"axi\", \"abort\")",
-        "level": "reference"
+        "ref": "benchmarks/issue-1125/candidates.jsonl:18",
+        "excerpt": "{\"path\": \"internal/cli/axi.go\", \"coupling\": 0.041666666666666664, \"relevant\": false, \"reason\": \"CLI wiring holding Glob…",
+        "level": "substring"
        }
       ],
-      "reason": "reference at internal/cli/axi.go:31"
+      "reason": "HasProtectedPathRefusal.axi appears nowhere; axi exists elsewhere (.no-mistakes.yaml:30), on something not shown to be HasProtectedPathRefusal"
      },
      {
       "kind": "symbol",
-      "text": "respondCmd",
+      "text": "HasProtectedPathRefusal.respondCmd",
       "expect": "present",
-      "status": "VERIFIED",
-      "level": "definition",
-      "evidence": [
-       {
-        "ref": "internal/tui/commands.go:141",
-        "excerpt": "func (m Model) respondCmd(action types.ApprovalAction) tea.Cmd {",
-        "level": "definition"
-       }
-      ],
-      "reason": "definition at internal/tui/commands.go:141"
+      "status": "UNCONFIRMED",
+      "level": "substring",
+      "evidence": [],
+      "reason": "HasProtectedPathRefusal.respondCmd: respondCmd is defined on Model, not on HasProtectedPathRefusal"
      },
      {
       "kind": "symbol",
@@ -7709,8 +7701,8 @@
       "reason": "definition at internal/tui/yolo_test.go:132"
      }
     ],
-    "status": "UNVERIFIED_WITH_REASON",
-    "reason": "could not check `axi --yes`: not a path, command, name or version this tool can check",
+    "status": "UNCONFIRMED",
+    "reason": "`HasProtectedPathRefusal.driveRunWithReconciler`: HasProtectedPathRefusal.driveRunWithReconciler appears nowhere; driveRunWithReconciler exists elsewhere (internal/cli/axi_drive.go:919), on something not shown to be HasProtectedPathRefusal",
     "settled": false
    },
    {

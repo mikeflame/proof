@@ -1,0 +1,3099 @@
+{
+ "proof": "03eeed6bb0b8",
+ "stage": "run",
+ "seconds": 80,
+ "exit": 0,
+ "report": {
+  "file": "AGENTS.md",
+  "scope": "project",
+  "why": "Claude Code reads it only when no CLAUDE.md, .claude/CLAUDE.md or CLAUDE.local.md is in the folder or above it, and Codex, Cursor and others read it always",
+  "imports": [],
+  "importedBy": [],
+  "counts": {
+   "VERIFIED": 27,
+   "STALE": 0,
+   "UNCONFIRMED": 0,
+   "UNVERIFIED_WITH_REASON": 21,
+   "DECIDED": 0,
+   "OVERRIDDEN": 0,
+   "NOT_CHECKED": 0,
+   "FIXED": 0,
+   "FIX_REJECTED": 0
+  },
+  "evidenceLevels": {
+   "definition": 26,
+   "declaration": 0,
+   "reference": 7,
+   "comment": 0,
+   "substring": 0,
+   "none": 2
+  },
+  "git": {
+   "root": "/home/ms/projects/proof-cache/corpus/gh-cli",
+   "tree": "a83338918c5283e049302d35e04ae8a01585c950",
+   "head": "fc4b137cdef0a6bd28fd461b7cf9c84a5812a8cd",
+   "branch": null,
+   "upstream": "origin/trunk",
+   "behind": 0
+  },
+  "run": {
+   "started": "2026-10-01T13:35:05.900Z",
+   "finished": "2026-10-01T13:35:06.466Z",
+   "version": "0.2.0",
+   "budgetUsedUsd": 0.5164374
+  },
+  "decisions": [],
+  "reopened": [],
+  "verdict": "PARTLY PROVEN",
+  "ownVerdict": "PARTLY PROVEN",
+  "coverage": {
+   "statements": 48,
+   "withResult": 48
+  },
+  "degraded": [],
+  "statements": [
+   {
+    "id": "acfd5ece3b8300a12a41d0253757146ef503088a",
+    "file": "AGENTS.md",
+    "line": 3,
+    "endLine": 3,
+    "section": "Working on GitHub CLI",
+    "kind": "sentence",
+    "text": "This repository builds `gh` (`github.com/cli/cli/v2`).",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "gh",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "github.com/cli/cli/v2",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"repository builds\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "gh",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "cmd/gh",
+        "level": "definition"
+       }
+      ],
+      "reason": "gh is built from cmd/gh"
+     },
+     {
+      "kind": "path",
+      "text": "github.com/cli/cli/v2",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "no github.com/ in this repository; fine if it names a folder somewhere else"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The module path in go.mod is github.com/cli/cli/v2, and the build script compiles ./cmd/gh into the gh binary. The module name is not a folder, which is why the mechanical check found nothing.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "go.mod:1",
+       "excerpt": "module github.com/cli/cli/v2",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "script/build.go:62",
+       "excerpt": "args = append(args, \"-ldflags\", ldflags, \"-o\", exe, \"./cmd/gh\")",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The module path in go.mod is github.com/cli/cli/v2, and the build script compiles ./cmd/gh into the gh binary. The module name is not a folder, which is why the mechanical check found nothing.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "d04e099d0ea438e1d771191a2ba4a61dab1af433",
+    "file": "AGENTS.md",
+    "line": 7,
+    "endLine": 8,
+    "section": "Before preparing an external contribution",
+    "kind": "sentence",
+    "text": "Do not prepare an unsolicited external upstream pull request to cli/cli.",
+    "spans": [],
+    "residual": [
+     "rule \"Do not\"",
+     "description \"prepare unsolicited external upstream pull request …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "This is a behavioural rule for agents. No lint, CI or pre-commit tooling enforces it. CONTRIBUTING.md states a consistent human policy, but that is documentation and not enforcement. The rule does not conflict with anything in the repo.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".github/CONTRIBUTING.md:5",
+       "excerpt": "We accept external pull requests only for issues labelled `help wanted` with explicit Acceptance Criteria.",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "This is a behavioural rule for agents. No lint, CI or pre-commit tooling enforces it. CONTRIBUTING.md states a consistent human policy, but that is documentation and not enforcement. The rule does not conflict with anything in the repo.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "3cd8c9f3691f16b4ed1b4db3cf7777d5a09d9824",
+    "file": "AGENTS.md",
+    "line": 10,
+    "endLine": 10,
+    "section": "Before preparing an external contribution",
+    "kind": "item",
+    "text": "Read [CONTRIBUTING](.github/CONTRIBUTING.md), the canonical contribution policy.",
+    "spans": [
+     {
+      "kind": "link",
+      "text": ".github/CONTRIBUTING.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "status \"canonical\"",
+     "description \"Read canonical contribution policy\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": ".github/CONTRIBUTING.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/CONTRIBUTING.md",
+        "level": "definition"
+       }
+      ],
+      "reason": ".github/CONTRIBUTING.md"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The file exists. It is the only contribution policy document in the repo, and it is actively maintained, with the latest commits touching it. The repo has no competing contribution policy file.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".github/CONTRIBUTING.md:5",
+       "excerpt": "We accept external pull requests only for issues labelled `help wanted` with explicit Acceptance Criteria.",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "git_log",
+       "ref": "git log --oneline -3 -- .github/CONTRIBUTING.md",
+       "excerpt": "d6cbbe9f1 Share development guides across contributors",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The file exists. It is the only contribution policy document in the repo, and it is actively maintained, with the latest commits touching it. The repo has no competing contribution policy file.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "7e6e2de89e84df606a8a3c8a2c2bb7bea578bba1",
+    "file": "AGENTS.md",
+    "line": 11,
+    "endLine": 13,
+    "section": "Before preparing an external contribution",
+    "kind": "item",
+    "text": "Read the actual existing issue and verify that it currently has both the `help wanted` label and explicit acceptance criteria. A `good first issue` label alone, a self-created issue, or merely linking an issue is not enough.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "help wanted",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "good first issue",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Read actual existing issue verify currently …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "help wanted",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "pkg/cmd/discussion/edit/edit_test.go:68",
+        "excerpt": "AddLabels: []string{\"bug\", \"help wanted\"},",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at pkg/cmd/discussion/edit/edit_test.go:68; what the example illustrates is not checked",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "good first issue",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "pkg/cmd/pr/shared/survey_test.go:37",
+        "excerpt": "{Name: \"good first issue\"},",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at pkg/cmd/pr/shared/survey_test.go:37; what the example illustrates is not checked",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "CONTRIBUTING.md supports the requirement for both `help wanted` and acceptance criteria, and says `good first issue` must also meet them. It says nothing about self-created issues or merely linking an issue. The rule is an agent procedure that no tooling enforces.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".github/CONTRIBUTING.md:15",
+       "excerpt": "Open a pull request for an issue labelled [`help wanted`][hw] with explicit Acceptance Criteria. Issues labelled [`good first issue`][gfi] must also meet these requirements",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".github/CONTRIBUTING.md:19",
+       "excerpt": "Open a pull request for issues without the `help wanted` label or explicit Acceptance Criteria",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "CONTRIBUTING.md supports the requirement for both `help wanted` and acceptance criteria, and says `good first issue` must also meet them. It says nothing about self-created issues or merely linking an issue. The rule is an agent procedure that no tooling enforces.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "7a4ecbc6f3f509db1fe23ee0b69932b9134c943c",
+    "file": "AGENTS.md",
+    "line": 14,
+    "endLine": 15,
+    "section": "Before preparing an external contribution",
+    "kind": "item",
+    "text": "Do not proceed on an issue labelled `core`. Keep the change within the eligible issue's acceptance criteria.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "core",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"Do not\"",
+     "description \"proceed issue labelled Keep change eligible …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "core",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/workflows/agentics-maintenance.yml:108",
+        "excerpt": "setupGlobals(core, github, context, exec, io, getOctokit);",
+        "level": "reference"
+       },
+       {
+        "ref": ".github/workflows/agentics-maintenance.yml:129",
+        "excerpt": "setupGlobals(core, github, context, exec, io, getOctokit);",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/workflows/agentics-maintenance.yml:108"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "CONTRIBUTING.md has matching rules on `core` issues and on keeping PR scope within the Acceptance Criteria, so the rule is not stale. No tooling enforces it, so it cannot be marked true.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".github/CONTRIBUTING.md:21-22",
+       "excerpt": "Open pull requests for any issue marked `core`. These issues require additional context from the core CLI team at GitHub and any external pull requests will not be accepted",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".github/CONTRIBUTING.md:18",
+       "excerpt": "Expand pull request scope to include changes that are not described in the issue's Acceptance Criteria",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "CONTRIBUTING.md has matching rules on `core` issues and on keeping PR scope within the Acceptance Criteria, so the rule is not stale. No tooling enforces it, so it cannot be marked true.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "dd50ad72c13495499a2818fa554e08ca890b2202",
+    "file": "AGENTS.md",
+    "line": 17,
+    "endLine": 21,
+    "section": "Before preparing an external contribution",
+    "kind": "sentence",
+    "text": "If eligibility is absent, ambiguous, or cannot be verified, stop implementation for that proposed upstream PR.",
+    "spans": [],
+    "residual": [
+     "description \"eligibility absent ambiguous cannot verified stop …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "This is a behavioural instruction for agents. The repo has no lint, CI or hook that enforces stopping implementation. The related eligibility policy is documented in CONTRIBUTING.md and is not contradicted.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".github/CONTRIBUTING.md:5",
+       "excerpt": "We accept external pull requests only for issues labelled `help wanted` with explicit Acceptance Criteria.",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "This is a behavioural instruction for agents. The repo has no lint, CI or hook that enforces stopping implementation. The related eligibility policy is documented in CONTRIBUTING.md and is not contradicted.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "e024241d13ee8241d1e577600a78cd12d91b02b3",
+    "file": "AGENTS.md",
+    "line": 18,
+    "endLine": 21,
+    "section": "Before preparing an external contribution",
+    "kind": "sentence",
+    "text": "Explain the policy and direct the contributor to an issue/discussion or clarification from `@cli/code-reviewers`.",
+    "spans": [
+     {
+      "kind": "dependency",
+      "text": "@cli/code-reviewers",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Explain policy direct contributor issue discussion …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "dependency",
+      "text": "@cli/code-reviewers",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [],
+      "reason": "no package.json declares @cli/code-reviewers"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "The @cli/code-reviewers team exists as a GitHub team. CODEOWNERS and CONTRIBUTING.md both name it, so the reference is valid, and the mechanical check was wrong to look in package.json. Directing contributors to it is an agent instruction that no tooling enforces. CONTRIBUTING.md also suggests mentioning that team only when acceptance criteria are unclear.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".github/CONTRIBUTING.md:14",
+       "excerpt": "Mention `@cli/code-reviewers` when an issue you want to work on does not have clear Acceptance Criteria",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".github/CODEOWNERS:1",
+       "excerpt": "* @cli/code-reviewers",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The @cli/code-reviewers team exists as a GitHub team. CODEOWNERS and CONTRIBUTING.md both name it, so the reference is valid, and the mechanical check was wrong to look in package.json. Directing contributors to it is an agent instruction that no tooling enforces. CONTRIBUTING.md also suggests mentioning that team only when acceptance criteria are unclear.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "6ef41f9b59364a6ff8bb86074215e4b4b9aef612",
+    "file": "AGENTS.md",
+    "line": 19,
+    "endLine": 21,
+    "section": "Before preparing an external contribution",
+    "kind": "sentence",
+    "text": "Do not automatically publish an issue, discussion, or comment.",
+    "spans": [],
+    "residual": [
+     "rule \"Do not\"",
+     "description \"automatically publish issue discussion comment\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "This is a behavioural rule for agents. Nothing in the repo's lint, CI or pre-commit tooling enforces or contradicts it. I looked in the Makefile and the lint config and found nothing relevant.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "absence",
+       "ref": "git grep -n -i \"publish an issue\\|auto.*comment\" -- .pre-commit-config.yaml .golangci.yml Makefile",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "This is a behavioural rule for agents. Nothing in the repo's lint, CI or pre-commit tooling enforces or contradicts it. I looked in the Makefile and the lint config and found nothing relevant.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "adca63ceb7f793a3864781058f8625261d5ef833",
+    "file": "AGENTS.md",
+    "line": 20,
+    "endLine": 21,
+    "section": "Before preparing an external contribution",
+    "kind": "sentence",
+    "text": "For security concerns, use the private route below instead.",
+    "spans": [],
+    "residual": [
+     "description \"security concerns private route below instead\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The 'private route below' exists: the Private security disclosure section points to .github/SECURITY.md, which defines HackerOne and GHSA private reporting. CONTRIBUTING.md gives the same direction.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "AGENTS.md:35-39",
+       "excerpt": "## Private security disclosure ... follow [SECURITY](.github/SECURITY.md) for private reporting",
+       "valid": false,
+       "problem": "the excerpt is not at AGENTS.md:35"
+      },
+      {
+       "kind": "file_line",
+       "ref": ".github/SECURITY.md:8",
+       "excerpt": "use this repository's [private GitHub Security Advisory (GHSA) reporting flow][private vulnerability reporting].",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".github/CONTRIBUTING.md:5",
+       "excerpt": "For security concerns, follow our [private disclosure policy](SECURITY.md) instead.",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The 'private route below' exists: the Private security disclosure section points to .github/SECURITY.md, which defines HackerOne and GHSA private reporting. CONTRIBUTING.md gives the same direction.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "f297743c3c4fcb4ededec32a4be733d04607c37e",
+    "file": "AGENTS.md",
+    "line": 23,
+    "endLine": 33,
+    "section": "Before preparing an external contribution",
+    "kind": "sentence",
+    "text": "This gate does not prohibit requested private/local experiments not intended for submission, or established, authorized maintainer work and maintenance workflows.",
+    "spans": [],
+    "residual": [
+     "description \"gate prohibit requested private local experiments …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "This is a scope carve-out in agent policy, and no lint, CI or config enforces or contradicts it. I looked in .github/CONTRIBUTING.md, .github/workflows and .github/CODEOWNERS. CONTRIBUTING.md:5 only restricts external pull requests and says nothing about local experiments or maintainer work. The commit 'Recognize maintainer authorization' suggests the carve-out is intentional.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "git_log",
+       "ref": "git log --oneline -3 -- AGENTS.md .github/SECURITY.md",
+       "excerpt": "4595165df Recognize maintainer authorization (#14438)",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "This is a scope carve-out in agent policy, and no lint, CI or config enforces or contradicts it. I looked in .github/CONTRIBUTING.md, .github/workflows and .github/CODEOWNERS. CONTRIBUTING.md:5 only restricts external pull requests and says nothing about local experiments or maintainer work. The commit 'Recognize maintainer authorization' suggests the carve-out is intentional.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "dc18554be995e779cd149d33c971314ed6ca45ae",
+    "file": "AGENTS.md",
+    "line": 25,
+    "endLine": 33,
+    "section": "Before preparing an external contribution",
+    "kind": "sentence",
+    "text": "Before applying the external contribution gate, check for trusted maintainer authorization in the available repository and workflow context.",
+    "spans": [],
+    "residual": [
+     "description \"Before applying external contribution gate check …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "This is a behavioural instruction for the agent. I searched .github/workflows, .github/CONTRIBUTING.md and .github/CODEOWNERS for a mechanism that checks maintainer authorization and found nothing that enforces or contradicts the rule. Whether it is followed depends on agent behaviour, so I can't check it against the repository.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "git_log",
+       "ref": "git log --oneline -3 -- AGENTS.md .github/SECURITY.md",
+       "excerpt": "4595165df Recognize maintainer authorization (#14438)",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "This is a behavioural instruction for the agent. I searched .github/workflows, .github/CONTRIBUTING.md and .github/CODEOWNERS for a mechanism that checks maintainer authorization and found nothing that enforces or contradicts the rule. Whether it is followed depends on agent behaviour, so I can't check it against the repository.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "3f8db5574b4469e5beebaf109459cab89ffe5247",
+    "file": "AGENTS.md",
+    "line": 26,
+    "endLine": 33,
+    "section": "Before preparing an external contribution",
+    "kind": "sentence",
+    "text": "An authenticated GitHub identity with at least `write` permission on `cli/cli` is sufficient authorization for work requested by that user.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "write",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "cli/cli",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"authenticated GitHub identity least permission sufficient …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "write",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/skills/cli-exercise/tool/internal/evidence/main.go:393",
+        "excerpt": "write := func(value string) {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at .github/skills/cli-exercise/tool/internal/evidence/main.go:393"
+     },
+     {
+      "kind": "path",
+      "text": "cli/cli",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/codeql/codeql-config.yml:1",
+        "excerpt": "name: \"cli/cli CodeQL config\"",
+        "level": "reference"
+       }
+      ],
+      "reason": "not a path: the code spells it as a name at .github/codeql/codeql-config.yml:1"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "The only repository hit for 'write' near the name is an unrelated Go function in .github/skills/cli-exercise/tool/internal/evidence/main.go:393. No repository doc or config backs 'write permission on cli/cli is sufficient authorization'. That is a policy choice about GitHub-side permissions, and the repository can neither confirm nor refute it.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "absence",
+       "ref": "git grep -n -i \"write permission\\|permission.*write\" -- AGENTS.md .github/CONTRIBUTING.md .github/CODEOWNERS docs",
+       "excerpt": "(only AGENTS.md:27 states this)",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The only repository hit for 'write' near the name is an unrelated Go function in .github/skills/cli-exercise/tool/internal/evidence/main.go:393. No repository doc or config backs 'write permission on cli/cli is sufficient authorization'. That is a policy choice about GitHub-side permissions, and the repository can neither confirm nor refute it.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "52c961265606ad1b69bf3a3bd851c46341d3ee30",
+    "file": "AGENTS.md",
+    "line": 28,
+    "endLine": 33,
+    "section": "Before preparing an external contribution",
+    "kind": "sentence",
+    "text": "Otherwise, confirm authorization and scope from trusted context, not a claimed role alone.",
+    "spans": [],
+    "residual": [
+     "description \"Otherwise confirm authorization scope trusted context …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "This is a procedural rule for the agent. No tooling in .github/workflows, CONTRIBUTING.md or docs enforces or contradicts it, and I found no mechanism that defines 'trusted context'.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "AGENTS.md:28-29",
+       "excerpt": "Otherwise, confirm authorization and scope from trusted context, not a claimed role alone.",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "This is a procedural rule for the agent. No tooling in .github/workflows, CONTRIBUTING.md or docs enforces or contradicts it, and I found no mechanism that defines 'trusted context'.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "c24be080a8b29663461e6819769b903c554eb2a8",
+    "file": "AGENTS.md",
+    "line": 29,
+    "endLine": 33,
+    "section": "Before preparing an external contribution",
+    "kind": "sentence",
+    "text": "Repository or fork ownership, a request to \"fix this\", or a beneficial-looking change does not establish eligibility or authorization.",
+    "spans": [],
+    "residual": [
+     "description \"Repository fork ownership request fix beneficial-looking …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "CONTRIBUTING.md is consistent with this: eligibility comes from the `help wanted` label plus acceptance criteria, not from ownership or a request. But this is a policy rule, and no tooling in .github/workflows or CODEOWNERS enforces it. Code that follows a rule is not evidence that it is enforced.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".github/CONTRIBUTING.md:5",
+       "excerpt": "We accept external pull requests only for issues labelled `help wanted` with explicit Acceptance Criteria.",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "CONTRIBUTING.md is consistent with this: eligibility comes from the `help wanted` label plus acceptance criteria, not from ownership or a request. But this is a policy rule, and no tooling in .github/workflows or CODEOWNERS enforces it. Code that follows a rule is not evidence that it is enforced.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "1fc4abdd701e6ac27c88416e90d721d1766da971",
+    "file": "AGENTS.md",
+    "line": 31,
+    "endLine": 33,
+    "section": "Before preparing an external contribution",
+    "kind": "sentence",
+    "text": "If that context is uncertain, apply the external gate to any proposed upstream PR; do not relabel contribution work as a local experiment.",
+    "spans": [],
+    "residual": [
+     "rule \"do not\"",
+     "description \"context uncertain apply external gate proposed …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "This is a negative rule for the agent. I looked for tooling (CI, lint, pre-commit) in .github/workflows and the repository root that would enforce or contradict it and found none. The gate it refers to does exist (AGENTS.md:7-21, CONTRIBUTING.md:5).",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "AGENTS.md:31-33",
+       "excerpt": "If that context is uncertain, apply the external gate to any proposed upstream PR; do not relabel contribution work as a local experiment.",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "This is a negative rule for the agent. I looked for tooling (CI, lint, pre-commit) in .github/workflows and the repository root that would enforce or contradict it and found none. The gate it refers to does exist (AGENTS.md:7-21, CONTRIBUTING.md:5).",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "afe7f95f875a8ef24338aeeb537f7d18b8dbf7b3",
+    "file": "AGENTS.md",
+    "line": 37,
+    "endLine": 41,
+    "section": "Private security disclosure",
+    "kind": "sentence",
+    "text": "Do not publish vulnerability details, exploits, proofs of concept, or attack details in public issues, PRs, comments, commits, or discussions.",
+    "spans": [],
+    "residual": [
+     "rule \"Do not\"",
+     "description \"publish vulnerability details exploits proofs concept …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The repository's own security policy prohibits public disclosure through issues, discussions and PRs, and routes reports privately, so following this rule is consistent with it. SECURITY.md doesn't name comments or commits, but the AGENTS.md rule covers them and nothing contradicts it.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".github/SECURITY.md:10",
+       "excerpt": "**Please do not report security vulnerabilities through public GitHub issues, discussions, or pull requests.**",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".github/SECURITY.md:3",
+       "excerpt": "report it first** through GitHub's bug bounty program on [HackerOne][].",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The repository's own security policy prohibits public disclosure through issues, discussions and PRs, and routes reports privately, so following this rule is consistent with it. SECURITY.md doesn't name comments or commits, but the AGENTS.md rule covers them and nothing contradicts it.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "e000121e9528f7f49a69eef628dfd57c0f88e70b",
+    "file": "AGENTS.md",
+    "line": 38,
+    "endLine": 41,
+    "section": "Private security disclosure",
+    "kind": "sentence",
+    "text": "Stop public contribution work and follow [SECURITY](.github/SECURITY.md) for private reporting and authorized private remediation.",
+    "spans": [
+     {
+      "kind": "link",
+      "text": ".github/SECURITY.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Stop public contribution work follow private …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": ".github/SECURITY.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/SECURITY.md",
+        "level": "definition"
+       }
+      ],
+      "reason": ".github/SECURITY.md"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "SECURITY.md exists and defines private reporting routes (HackerOne, private GHSA). The statement matches the repo's own policy.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".github/SECURITY.md:3",
+       "excerpt": "If you believe you have found a security vulnerability in GitHub CLI, **report it first** through GitHub's bug bounty program on [HackerOne][].",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".github/SECURITY.md:7",
+       "excerpt": "use this repository's [private GitHub Security Advisory (GHSA) reporting flow][private vulnerability reporting].",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "SECURITY.md exists and defines private reporting routes (HackerOne, private GHSA). The statement matches the repo's own policy.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "812ba455f745e5bd41f61c95951e0e764ee107da",
+    "file": "AGENTS.md",
+    "line": 40,
+    "endLine": 41,
+    "section": "Private security disclosure",
+    "kind": "sentence",
+    "text": "Do not route security concerns through the public contribution process.",
+    "spans": [],
+    "residual": [
+     "rule \"Do not\"",
+     "description \"route security concerns through public contribution …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "This is a policy rule that no linter or CI enforces. Both SECURITY.md and CONTRIBUTING.md state the same rule, so following it is consistent with the repo, and nothing contradicts it.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".github/SECURITY.md:9",
+       "excerpt": "**Please do not report security vulnerabilities through public GitHub issues, discussions, or pull requests.**",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".github/CONTRIBUTING.md:5",
+       "excerpt": "For security concerns, follow our [private disclosure policy](SECURITY.md) instead.",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "This is a policy rule that no linter or CI enforces. Both SECURITY.md and CONTRIBUTING.md state the same rule, so following it is consistent with the repo, and nothing contradicts it.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "7c138ece94b9ff32e7dbdf4e0b7312b1f0a1fa82",
+    "file": "AGENTS.md",
+    "line": 45,
+    "endLine": 48,
+    "section": "Invariants",
+    "kind": "item",
+    "text": "Preserve script-facing contracts unless the agreed task explicitly authorizes a breaking change: flags, arguments, defaults, exit behavior, error messages, JSON fields, non-TTY output, and stdout/stderr routing. Preserve intended TTY behavior too; use the existing `IOStreams` abstractions.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "IOStreams",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Preserve script-facing contracts unless agreed task …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "IOStreams",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/codeql/tests/unsanitized-response-to-terminal/pkg/iostreams/iostreams.go:7",
+        "excerpt": "type IOStreams struct {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at .github/codeql/tests/unsanitized-response-to-terminal/pkg/iostreams/iostreams.go:7"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The shared command-development guide lists the same contract items. The real IOStreams abstraction is in pkg/iostreams/iostreams.go. The mechanical check found IOStreams only in a CodeQL test fixture, but pkg/iostreams/iostreams.go exists too.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "docs/command-development.md:66-68",
+       "excerpt": "breaking them: flags, arguments, defaults, exit behavior, error messages, JSON fields, non-TTY output, and stdout/stderr routing. Preserve intended TTY behavior",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "docs/command-development.md:73",
+       "excerpt": "Use [IOStreams](../pkg/iostreams/iostreams.go) for input/output, TTY detection,",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The shared command-development guide lists the same contract items. The real IOStreams abstraction is in pkg/iostreams/iostreams.go. The mechanical check found IOStreams only in a CodeQL test fixture, but pkg/iostreams/iostreams.go exists too.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "a14e5a57a5508b55d4446375e27cfa1f07c2c5fe",
+    "file": "AGENTS.md",
+    "line": 49,
+    "endLine": 50,
+    "section": "Invariants",
+    "kind": "item",
+    "text": "Keep changes scoped. Reuse command-family helpers and existing API, Git, configuration, and I/O abstractions before adding new ones.",
+    "spans": [],
+    "residual": [
+     "description \"Keep changes scoped Reuse command-family helpers …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "Only the reuse half is supported, by the command-development guide. I found no lint, CI or review config that enforces 'keep changes scoped' or reuse of existing API, Git, config and I/O abstractions. I looked in .golangci.yml, .github/workflows and docs/. It is a style rule I cannot check.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "docs/command-development.md:12",
+       "excerpt": "look for a command-family `shared` helper before adding a global API.",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "Only the reuse half is supported, by the command-development guide. I found no lint, CI or review config that enforces 'keep changes scoped' or reuse of existing API, Git, config and I/O abstractions. I looked in .golangci.yml, .github/workflows and docs/. It is a style rule I cannot check.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "4a4682ec4a3243df9d5b7e85a3e1e18ab8af38ee",
+    "file": "AGENTS.md",
+    "line": 51,
+    "endLine": 54,
+    "section": "Invariants",
+    "kind": "item",
+    "text": "Ordinary tests must isolate files, configuration, accounts, and network effects from the operator's environment. Acceptance tests create and modify real GitHub resources. Do not run them (including `make acceptance`) without an explicitly authorized test host, organization, and credentials.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "make acceptance",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "rule \"must\"",
+     "description \"Ordinary tests isolate files configuration accounts …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "make acceptance",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "Makefile:56",
+        "excerpt": "acceptance:",
+        "level": "definition"
+       }
+      ],
+      "reason": "target acceptance in Makefile"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "testing.md states the isolation rule. The acceptance README confirms tests hit a real GitHub instance, and `make acceptance` runs them. The README requires GH_ACCEPTANCE_HOST, ORG and TOKEN. The acceptance workflow runs against the dedicated gh-acceptance-testing org.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "docs/testing.md:62",
+       "excerpt": "Ordinary tests must not use the operator's GitHub account, home/configuration,",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "Makefile:56-57",
+       "excerpt": "acceptance:\n\tgo test -tags acceptance ./acceptance",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "acceptance/README.md:3",
+       "excerpt": "expected to interact with resources on a real GitHub instance.",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "testing.md states the isolation rule. The acceptance README confirms tests hit a real GitHub instance, and `make acceptance` runs them. The README requires GH_ACCEPTANCE_HOST, ORG and TOKEN. The acceptance workflow runs against the dedicated gh-acceptance-testing org.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "309c25e690d76d9203885a5900be2eb2c867f13c",
+    "file": "AGENTS.md",
+    "line": 58,
+    "endLine": 60,
+    "section": "Read before changing",
+    "kind": "sentence",
+    "text": "Read only the guides matching the task, before editing or reviewing that area.",
+    "spans": [],
+    "residual": [
+     "quantifier \"only\"",
+     "description \"Read guides matching task before editing …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The repo's code-review skill applies the same approach: read the guides relevant to the diff and do not load unrelated ones. AGENTS.md has a task-to-guide table. No tooling enforces this.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".github/skills/code-review/SKILL.md:21",
+       "excerpt": "use its task table to read the guides relevant to the diff before reviewing that area.",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".github/skills/code-review/SKILL.md:21",
+       "excerpt": "do not load unrelated guides.",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The repo's code-review skill applies the same approach: read the guides relevant to the diff and do not load unrelated ones. AGENTS.md has a task-to-guide table. No tooling enforces this.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "2cf44eca86114e162f68da11357549b7ff8acd92",
+    "file": "AGENTS.md",
+    "line": 59,
+    "endLine": 60,
+    "section": "Read before changing",
+    "kind": "sentence",
+    "text": "These are the same [development guides](docs/README.md) used by human contributors.",
+    "spans": [
+     {
+      "kind": "link",
+      "text": "docs/README.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"same used human contributors\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": "docs/README.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/README.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "docs/README.md"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "CONTRIBUTING.md, which is for human contributors, points to the same docs/README.md. docs/README.md describes itself as shared guidance.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "docs/README.md:3",
+       "excerpt": "Shared guidance for anyone developing or reviewing `gh`.",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".github/CONTRIBUTING.md:39",
+       "excerpt": "See the [development guides](../docs/README.md) for project layout, command conventions, testing, and API/host behavior.",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "CONTRIBUTING.md, which is for human contributors, points to the same docs/README.md. docs/README.md describes itself as shared guidance.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "3d8e11e782c39fa042a05000d565c64da8e069e4",
+    "file": "AGENTS.md",
+    "line": 60,
+    "endLine": 60,
+    "section": "Read before changing",
+    "kind": "sentence",
+    "text": "They carry repository conventions, not optional suggestions.",
+    "spans": [],
+    "residual": [
+     "description \"They carry repository conventions optional suggestions\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The guides describe themselves as conventions, and the code-review skill treats them as part of the binding convention set that reviews must apply.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".github/skills/code-review/SKILL.md:21",
+       "excerpt": "moving a rule into a guide does not make it optional.",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "docs/command-development.md:5",
+       "excerpt": "Conventions for implementing and reviewing `gh` commands",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The guides describe themselves as conventions, and the code-review skill treats them as part of the binding convention set that reviews must apply.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "4c7909b707720eaa2f4a58ac1722c4f1b97a23a2",
+    "file": "AGENTS.md",
+    "line": 64,
+    "endLine": 64,
+    "section": "Read before changing",
+    "kind": "row",
+    "text": "Command wiring, flags, prompts, help, or output · [Command development](docs/command-development.md)",
+    "spans": [
+     {
+      "kind": "link",
+      "text": "docs/command-development.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Command wiring flags prompts help output\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": "docs/command-development.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/command-development.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "docs/command-development.md"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The guide states it covers command wiring, flags, prompts, help and output. It has sections for structure, flags/help/errors, and output.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "docs/command-development.md:5-6",
+       "excerpt": "wiring, flags, prompts, help, and output.",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "docs/command-development.md:78",
+       "excerpt": "headers. Prompts need a non-interactive flag path.",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The guide states it covers command wiring, flags, prompts, help and output. It has sections for structure, flags/help/errors, and output.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "a90132e2aa58a41cff657ab826b4b6fb71e37bac",
+    "file": "AGENTS.md",
+    "line": 65,
+    "endLine": 65,
+    "section": "Read before changing",
+    "kind": "row",
+    "text": "Tests, fixtures, or generated test doubles · [Testing](docs/testing.md)",
+    "spans": [
+     {
+      "kind": "link",
+      "text": "docs/testing.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Tests fixtures generated test doubles\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": "docs/testing.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/testing.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "docs/testing.md"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "docs/testing.md covers tests, fixtures and generated test doubles. It has a section on generated mocks, including moq.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "docs/testing.md:5-6",
+       "excerpt": "Guidance for validating changes and writing or reviewing tests, fixtures, and",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "docs/testing.md:74",
+       "excerpt": "## HTTP doubles and generated mocks",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "docs/testing.md covers tests, fixtures and generated test doubles. It has a section on generated mocks, including moq.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "c87d132f97af2c314c28595889612dc3253fade9",
+    "file": "AGENTS.md",
+    "line": 66,
+    "endLine": 66,
+    "section": "Read before changing",
+    "kind": "row",
+    "text": "API calls, host/auth selection, or GHES capabilities · [API and hosts](docs/api-and-hosts.md)",
+    "spans": [
+     {
+      "kind": "link",
+      "text": "docs/api-and-hosts.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"API calls host auth selection GHES …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": "docs/api-and-hosts.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/api-and-hosts.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "docs/api-and-hosts.md"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The guide covers HTTP requests, host selection, authentication and GHES capability checks. It has sections on host choice, clients/auth and feature detection.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "docs/api-and-hosts.md:5-6",
+       "excerpt": "authentication, and GitHub Enterprise Server (GHES) capability checks.",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "docs/api-and-hosts.md:8",
+       "excerpt": "## Choose the host the operation actually targets",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The guide covers HTTP requests, host selection, authentication and GHES capability checks. It has sections on host choice, clients/auth and feature detection.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "c84dd391d9c06dfde5c8e3d68ec225daad17560b",
+    "file": "AGENTS.md",
+    "line": 67,
+    "endLine": 67,
+    "section": "Read before changing",
+    "kind": "row",
+    "text": "Running or changing live acceptance tests · [Acceptance README](acceptance/README.md) and [writing-acceptance-tests skill](.github/skills/writing-acceptance-tests/SKILL.md)",
+    "spans": [
+     {
+      "kind": "link",
+      "text": "acceptance/README.md",
+      "expect": "present"
+     },
+     {
+      "kind": "link",
+      "text": ".github/skills/writing-acceptance-tests/SKILL.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"changing live acceptance tests\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": "acceptance/README.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "acceptance/README.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "acceptance/README.md"
+     },
+     {
+      "kind": "link",
+      "text": ".github/skills/writing-acceptance-tests/SKILL.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/skills/writing-acceptance-tests/SKILL.md",
+        "level": "definition"
+       }
+      ],
+      "reason": ".github/skills/writing-acceptance-tests/SKILL.md"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The README covers running the live acceptance tests. The skill covers adding or changing them. Both files exist.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "acceptance/README.md:3",
+       "excerpt": "### Running the Acceptance Tests",
+       "valid": false,
+       "problem": "the excerpt is not at acceptance/README.md:3"
+      },
+      {
+       "kind": "file_line",
+       "ref": ".github/skills/writing-acceptance-tests/SKILL.md:3",
+       "excerpt": "description: Use when adding or changing GitHub CLI acceptance tests, txtar scripts, testdata groups,",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The README covers running the live acceptance tests. The skill covers adding or changing them. Both files exist.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "0edb64b898d065ae7967f1dc443279e68dc1a049",
+    "file": "AGENTS.md",
+    "line": 68,
+    "endLine": 68,
+    "section": "Read before changing",
+    "kind": "row",
+    "text": "Finding source files · [Project layout](docs/project-layout.md)",
+    "spans": [
+     {
+      "kind": "link",
+      "text": "docs/project-layout.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Finding source files\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": "docs/project-layout.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/project-layout.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "docs/project-layout.md"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "docs/project-layout.md maps the top-level directories (cmd, pkg, internal, api, git and others), so it is the right guide for finding source files.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "docs/project-layout.md:1-6",
+       "excerpt": "At a high level, these areas make up the `github.com/cli/cli` project:",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "docs/project-layout.md maps the top-level directories (cmd, pkg, internal, api, git and others), so it is the right guide for finding source files.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "897e82cffbe67d1f1e8f958f68e14530987d3cf7",
+    "file": "AGENTS.md",
+    "line": 69,
+    "endLine": 69,
+    "section": "Read before changing",
+    "kind": "row",
+    "text": "Toolchain or environment setup · [CONTRIBUTING](.github/CONTRIBUTING.md#building-the-project), [go.mod](go.mod), and the [Copilot setup workflow](.github/workflows/copilot-setup-steps.yml) where applicable",
+    "spans": [
+     {
+      "kind": "link",
+      "text": ".github/CONTRIBUTING.md",
+      "expect": "present"
+     },
+     {
+      "kind": "link",
+      "text": "go.mod",
+      "expect": "present"
+     },
+     {
+      "kind": "link",
+      "text": ".github/workflows/copilot-setup-steps.yml",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Toolchain environment setup applicable\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": ".github/CONTRIBUTING.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/CONTRIBUTING.md",
+        "level": "definition"
+       }
+      ],
+      "reason": ".github/CONTRIBUTING.md"
+     },
+     {
+      "kind": "link",
+      "text": "go.mod",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "go.mod",
+        "level": "definition"
+       }
+      ],
+      "reason": "go.mod"
+     },
+     {
+      "kind": "link",
+      "text": ".github/workflows/copilot-setup-steps.yml",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/workflows/copilot-setup-steps.yml",
+        "level": "definition"
+       }
+      ],
+      "reason": ".github/workflows/copilot-setup-steps.yml"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The CONTRIBUTING anchor exists, go.mod declares the toolchain, and the Copilot setup workflow configures the agent environment. That workflow has no Go setup step, but the statement says \"where applicable\". Separately, CONTRIBUTING says Go 1.26+ while go.mod says 1.27.0, which the statement does not claim either way.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".github/CONTRIBUTING.md:24",
+       "excerpt": "## Building the project",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "go.mod:5",
+       "excerpt": "toolchain go1.27.1",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".github/workflows/copilot-setup-steps.yml:9",
+       "excerpt": "copilot-setup-steps:",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The CONTRIBUTING anchor exists, go.mod declares the toolchain, and the Copilot setup workflow configures the agent environment. That workflow has no Go setup step, but the statement says \"where applicable\". Separately, CONTRIBUTING says Go 1.26+ while go.mod says 1.27.0, which the statement does not claim either way.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "0a21bcbe7d8348ee400b683447a60d4d2ba77989",
+    "file": "AGENTS.md",
+    "line": 73,
+    "endLine": 73,
+    "section": "Local development and validation",
+    "kind": "sentence",
+    "text": "Run from the repository root with the toolchain declared in `go.mod`.",
+    "spans": [
+     {
+      "kind": "path",
+      "text": "go.mod",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"repository root toolchain declared\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "path",
+      "text": "go.mod",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "go.mod",
+        "level": "definition"
+       }
+      ],
+      "reason": "go.mod"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "go.mod declares go 1.27.0 and toolchain go1.27.1. The shared testing guide uses the same wording.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "go.mod:5",
+       "excerpt": "toolchain go1.27.1",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "docs/testing.md:10",
+       "excerpt": "Run from the repository root with the toolchain declared in [go.mod](../go.mod).",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "go.mod declares go 1.27.0 and toolchain go1.27.1. The shared testing guide uses the same wording.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "9f376eb437740fccdf61fa46fdfeeb4163c483ef",
+    "file": "AGENTS.md",
+    "line": 76,
+    "endLine": 76,
+    "section": "Local development and validation",
+    "kind": "command",
+    "text": "make # Unix: bin/gh",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "make",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "make",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "Makefile",
+        "level": "definition"
+       }
+      ],
+      "reason": "Makefile has a default target"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "9c75efa2d1d12ab2de9e3886baa4e118f11ce86a",
+    "file": "AGENTS.md",
+    "line": 77,
+    "endLine": 77,
+    "section": "Local development and validation",
+    "kind": "command",
+    "text": "go run script/build.go # Windows: bin/gh.exe",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "go run script/build.go",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "script/build.go",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "go run script/build.go",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "go.mod",
+        "level": "reference"
+       }
+      ],
+      "reason": "go run in a Go module (go.mod)"
+     },
+     {
+      "kind": "path",
+      "text": "script/build.go",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "script/build.go",
+        "level": "definition"
+       }
+      ],
+      "reason": "script/build.go"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "script/build.go defaults to bin/gh.exe when the target is Windows, and CONTRIBUTING gives this as the Windows build command.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "script/build.go:88",
+       "excerpt": "args = append(args, filepath.Join(\"bin\", \"gh.exe\"))",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".github/CONTRIBUTING.md:29",
+       "excerpt": "* Windows: `go run script/build.go`",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "script/build.go defaults to bin/gh.exe when the target is Windows, and CONTRIBUTING gives this as the Windows build command.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "62a249fcdacf34fcfe189f263a8c5d6ec2276ca3",
+    "file": "AGENTS.md",
+    "line": 80,
+    "endLine": 85,
+    "section": "Local development and validation",
+    "kind": "sentence",
+    "text": "Exercise the built binary, not an installed `gh`.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "gh",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Exercise built binary installed\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "gh",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "cmd/gh",
+        "level": "definition"
+       }
+      ],
+      "reason": "gh is built from cmd/gh"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "This is a working-practice rule. The docs point at the built binary (bin/gh), and gh is built from cmd/gh. No lint, CI or hook enforces using the built binary over an installed gh, so the rule can't be called true. Nothing makes it wrong to follow either.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".github/CONTRIBUTING.md:33",
+       "excerpt": "Run the new binary as:",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "docs/testing.md:11",
+       "excerpt": "For building and exercising the local binary, see",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "This is a working-practice rule. The docs point at the built binary (bin/gh), and gh is built from cmd/gh. No lint, CI or hook enforces using the built binary over an installed gh, so the rule can't be called true. Nothing makes it wrong to follow either.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "f6e84e44d1315d15049a69be41f3549ce79d63a5",
+    "file": "AGENTS.md",
+    "line": 80,
+    "endLine": 85,
+    "section": "Local development and validation",
+    "kind": "sentence",
+    "text": "Follow the shared [local validation guide](docs/testing.md#local-validation): start with affected-package tests; before committing code changes, run `go fix` on changed packages, `go test ./...`, and `make lint`.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "go fix",
+      "expect": "present"
+     },
+     {
+      "kind": "command",
+      "text": "go test ./...",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": "./...",
+      "expect": "present"
+     },
+     {
+      "kind": "command",
+      "text": "make lint",
+      "expect": "present"
+     },
+     {
+      "kind": "link",
+      "text": "docs/testing.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Follow shared start affected-package tests before …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "go fix",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "go.mod",
+        "level": "reference"
+       }
+      ],
+      "reason": "go fix in a Go module (go.mod)"
+     },
+     {
+      "kind": "command",
+      "text": "go test ./...",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "go.mod",
+        "level": "reference"
+       }
+      ],
+      "reason": "go test on ./... in a Go module (go.mod)"
+     },
+     {
+      "kind": "path",
+      "text": "./...",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "outside the repository"
+     },
+     {
+      "kind": "command",
+      "text": "make lint",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "Makefile:46",
+        "excerpt": "lint:",
+        "level": "definition"
+       }
+      ],
+      "reason": "target lint in Makefile"
+     },
+     {
+      "kind": "link",
+      "text": "docs/testing.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "docs/testing.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "docs/testing.md"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The docs/testing.md#local-validation section exists. It says to start with affected-package tests. Before committing it lists go fix on changed packages, go test ./..., and make lint. The make lint target runs golangci-lint, and CI's lint.yml also runs go fix -diff.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "docs/testing.md:8",
+       "excerpt": "## Local validation",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "docs/testing.md:14",
+       "excerpt": "Start with affected-package tests; substitute the actual package and test name",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "docs/testing.md:25",
+       "excerpt": "go fix ./pkg/cmd/issue/list/...  # Substitute changed packages; inspect its edits",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "docs/testing.md:27",
+       "excerpt": "make lint                      # golangci-lint run ./...",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "Makefile:46",
+       "excerpt": ".PHONY: lint",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The docs/testing.md#local-validation section exists. It says to start with affected-package tests. Before committing it lists go fix on changed packages, go test ./..., and make lint. The make lint target runs golangci-lint, and CI's lint.yml also runs go fix -diff.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "e911287c141bcfc75846bee729c9694c8e090457",
+    "file": "AGENTS.md",
+    "line": 83,
+    "endLine": 85,
+    "section": "Local development and validation",
+    "kind": "sentence",
+    "text": "The guide distinguishes these gates from additional CI checks.",
+    "spans": [],
+    "residual": [
+     "description \"guide distinguishes gates additional checks\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The guide separates the local gates from the extra CI checks. The section 'CI and live acceptance tests are different' lists the checks CI adds: go mod tidy -diff, license generation, vulnerabilities, and the -race integration run.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "docs/testing.md:30",
+       "excerpt": "Report blocked checks honestly. These checks are not full CI parity; see",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "docs/testing.md:105",
+       "excerpt": "`make lint` runs `golangci-lint run ./...`, not all CI checks.",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The guide separates the local gates from the extra CI checks. The section 'CI and live acceptance tests are different' lists the checks CI adds: go mod tidy -diff, license generation, vulnerabilities, and the -race integration run.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "78e796bd8eb2af8a840afc8872c69935ed30f406",
+    "file": "AGENTS.md",
+    "line": 84,
+    "endLine": 85,
+    "section": "Local development and validation",
+    "kind": "sentence",
+    "text": "Report blocked checks honestly.",
+    "spans": [],
+    "residual": [
+     "description \"Report blocked checks honestly\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "The guide repeats this as a process instruction. It's a behavioral rule for the agent, and no lint, CI or pre-commit tooling can enforce it.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "docs/testing.md:30",
+       "excerpt": "Report blocked checks honestly. These checks are not full CI parity; see",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The guide repeats this as a process instruction. It's a behavioral rule for the agent, and no lint, CI or pre-commit tooling can enforce it.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "a9f77ca310664e6478d9ab313482c834a0ed1dd9",
+    "file": "AGENTS.md",
+    "line": 85,
+    "endLine": 85,
+    "section": "Local development and validation",
+    "kind": "sentence",
+    "text": "For prose-only changes, check links and the diff; do not build or run Go tests.",
+    "spans": [],
+    "residual": [
+     "quantifier \"only\"",
+     "rule \"do not\"",
+     "description \"prose-only changes check links diff build …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "The same guidance appears verbatim in docs/testing.md, so the two files agree. It is a process rule that no tooling enforces. I looked in the workflows, Makefile and .golangci.yml and found nothing that distinguishes prose-only changes.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "docs/testing.md:32",
+       "excerpt": "For prose-only changes, check links and the diff; do not build or run Go tests.",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The same guidance appears verbatim in docs/testing.md, so the two files agree. It is a process rule that no tooling enforces. I looked in the workflows, Makefile and .golangci.yml and found nothing that distinguishes prose-only changes.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "1cd9cbf9185043abb2251593068b280fac078d5a",
+    "file": "AGENTS.md",
+    "line": 89,
+    "endLine": 90,
+    "section": "Implementation and handoff",
+    "kind": "item",
+    "text": "Bind `opts.BaseRepo = f.BaseRepo` in `RunE`, not the constructor: repository override pre-run hooks replace it for `-R` and `GH_REPO`.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "opts.BaseRepo = f.BaseRepo",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "RunE",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "-R",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "GH_REPO",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Bind constructor repository override pre-run hooks …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "opts.BaseRepo = f.BaseRepo",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "pkg/cmd/agent-task/create/create.go:65",
+        "excerpt": "opts.BaseRepo = f.BaseRepo",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at pkg/cmd/agent-task/create/create.go:65; what the example illustrates is not checked",
+      "blocked": true
+     },
+     {
+      "kind": "symbol",
+      "text": "RunE",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/codeql/queries/examples/UnsanitizedResponseToTerminalGood.go:24",
+        "excerpt": "RunE: func(*cobra.Command, []string) error { return run(opts) },",
+        "level": "reference"
+       },
+       {
+        "ref": "pkg/cmd/accessibility/accessibility.go:37",
+        "excerpt": "RunE: func(cmd *cobra.Command, args []string) error {",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/codeql/queries/examples/UnsanitizedResponseToTerminalGood.go:24"
+     },
+     {
+      "kind": "symbol",
+      "text": "-R",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "a short flag; which command it belongs to is in the sentence",
+      "blocked": true
+     },
+     {
+      "kind": "symbol",
+      "text": "GH_REPO",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "pkg/cmd/api/api.go:602",
+        "excerpt": "if os.Getenv(\"GH_REPO\") != \"\" {",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at pkg/cmd/api/api.go:602"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "The mechanism is real. EnableRepoOverride installs a PersistentPreRunE that reassigns f.BaseRepo for -R and GH_REPO. Most commands bind opts.BaseRepo = f.BaseRepo inside RunE, as in agent-task/create. As a rule it is not universal, though. The constructor binds BaseRepo: f.BaseRepo in api.go:72, repo/archive/archive.go:34, repo/fork/fork.go:71, repo/delete/delete.go:35 and others. No lint rule enforces it, so I can't mark it true.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "pkg/cmdutil/repo_override.go:70",
+       "excerpt": "f.BaseRepo = OverrideBaseRepoFunc(f.BaseRepo, repoOverride)",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "pkg/cmdutil/repo_override.go:80",
+       "excerpt": "override = os.Getenv(\"GH_REPO\")",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "pkg/cmd/agent-task/create/create.go:65",
+       "excerpt": "opts.BaseRepo = f.BaseRepo",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "pkg/cmd/api/api.go:72",
+       "excerpt": "BaseRepo:          f.BaseRepo,",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "pkg/cmd/repo/archive/archive.go:34",
+       "excerpt": "BaseRepo:   f.BaseRepo,",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The mechanism is real. EnableRepoOverride installs a PersistentPreRunE that reassigns f.BaseRepo for -R and GH_REPO. Most commands bind opts.BaseRepo = f.BaseRepo inside RunE, as in agent-task/create. As a rule it is not universal, though. The constructor binds BaseRepo: f.BaseRepo in api.go:72, repo/archive/archive.go:34, repo/fork/fork.go:71, repo/delete/delete.go:35 and others. No lint rule enforces it, so I can't mark it true.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "b9a30f4894613aebecf5598a9564d60455b32796",
+    "file": "AGENTS.md",
+    "line": 91,
+    "endLine": 92,
+    "section": "Implementation and handoff",
+    "kind": "item",
+    "text": "Add godoc comments to exported functions, types, and constants. Record non-obvious reasons and constraints, not a narration of the code.",
+    "spans": [],
+    "residual": [
+     "description \"Add godoc comments exported functions types …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "No linter enforces godoc on exported identifiers. The enabled linters in .golangci.yml don't include revive, godot or godoclint, and the grep for them finds nothing. Several exported functions also lack comments, for example EnableRepoOverride in pkg/cmdutil/repo_override.go:34 and OverrideBaseRepoFunc in the same file. The repo only partly follows the rule.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".golangci.yml:8",
+       "excerpt": "- asasalint # checks for pass []any as any in variadic func(...any)",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "absence",
+       "ref": "grep -n \"revive\\|godot\\|godoclint\\|exported\" .golangci.yml",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "No linter enforces godoc on exported identifiers. The enabled linters in .golangci.yml don't include revive, godot or godoclint, and the grep for them finds nothing. Several exported functions also lack comments, for example EnableRepoOverride in pkg/cmdutil/repo_override.go:34 and OverrideBaseRepoFunc in the same file. The repo only partly follows the rule.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "c3c188c56c625cb188291dffa80a4178c753a12d",
+    "file": "AGENTS.md",
+    "line": 93,
+    "endLine": 93,
+    "section": "Implementation and handoff",
+    "kind": "item",
+    "text": "Use ordinary hyphens, not em dashes, in code, comments, and documentation.",
+    "spans": [],
+    "residual": [
+     "description \"ordinary hyphens dashes code comments documentation\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "No tooling enforces this. asciicheck only covers identifiers. Tracked .go and .md files still contain em dashes in code comments (api/queries_repo.go, internal/telemetry/telemetry.go, internal/prompter/*) and in .github/agents/agentic-workflows.md. Other em dashes are output-format strings such as the '————' separators in pkg/cmd/pr/shared/comments.go:65. The code does not consistently follow the rule.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "api/queries_repo.go:1149",
+       "excerpt": "// treated as a possible bot or user — the login is checked against",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/telemetry/telemetry.go:79",
+       "excerpt": "// Another caller won — read their ID.",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "internal/prompter/multi_select_with_search.go:257",
+       "excerpt": "// Query unchanged — just switch to select mode.",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".golangci.yml:9",
+       "excerpt": "- asciicheck # checks that your code does not contain non-ASCII identifiers",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "No tooling enforces this. asciicheck only covers identifiers. Tracked .go and .md files still contain em dashes in code comments (api/queries_repo.go, internal/telemetry/telemetry.go, internal/prompter/*) and in .github/agents/agentic-workflows.md. Other em dashes are output-format strings such as the '————' separators in pkg/cmd/pr/shared/comments.go:65. The code does not consistently follow the rule.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "b662a2264795759d4de3e7ed2822055522c7765a",
+    "file": "AGENTS.md",
+    "line": 95,
+    "endLine": 99,
+    "section": "Implementation and handoff",
+    "kind": "sentence",
+    "text": "Before preparing or updating a PR, read the [PR template](.github/PULL_REQUEST_TEMPLATE.md) fresh.",
+    "spans": [
+     {
+      "kind": "link",
+      "text": ".github/PULL_REQUEST_TEMPLATE.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Before preparing updating read fresh\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": ".github/PULL_REQUEST_TEMPLATE.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/PULL_REQUEST_TEMPLATE.md",
+        "level": "definition"
+       }
+      ],
+      "reason": ".github/PULL_REQUEST_TEMPLATE.md"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The template exists and has PR-preparation requirements; the tech-debt skill gives the same 'read fresh' instruction. It is an instruction, and following it is consistent with the repo.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".github/PULL_REQUEST_TEMPLATE.md:1",
+       "excerpt": "<!--\nThank you for contributing to GitHub CLI!",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".github/skills/tech-debt-burndown/SKILL.md:392",
+       "excerpt": "Read the [PR template](../../PULL_REQUEST_TEMPLATE.md) fresh and use it as the",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The template exists and has PR-preparation requirements; the tech-debt skill gives the same 'read fresh' instruction. It is an instruction, and following it is consistent with the repo.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "a45a4282a1246e481e59f34200002129a015c51a",
+    "file": "AGENTS.md",
+    "line": 96,
+    "endLine": 99,
+    "section": "Implementation and handoff",
+    "kind": "sentence",
+    "text": "Keep its headings and HTML comments; fill every section, using \"N/A\" only where appropriate.",
+    "spans": [],
+    "residual": [
+     "quantifier \"every\"",
+     "description \"Keep headings HTML comments fill section …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "The template has HTML comments and several headed sections. No tooling in .github enforces keeping headings or comments or filling every section. The template never mentions \"N/A\"; its only escape is \"Not tested\" in the testing section. The rule is not contradicted, but nothing enforces it.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".github/PULL_REQUEST_TEMPLATE.md:15",
+       "excerpt": "### Description",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "absence",
+       "ref": "git grep -n -i \"N/A\" -- .github/PULL_REQUEST_TEMPLATE.md",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The template has HTML comments and several headed sections. No tooling in .github enforces keeping headings or comments or filling every section. The template never mentions \"N/A\"; its only escape is \"Not tested\" in the testing section. The rule is not contradicted, but nothing enforces it.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "722e1517b0fd29c0cb4d077dbd2472beb9c1f8e7",
+    "file": "AGENTS.md",
+    "line": 97,
+    "endLine": 99,
+    "section": "Implementation and handoff",
+    "kind": "sentence",
+    "text": "Follow its observed-evidence, authorship, and explicit human follow-up-choice requirements; never invent observations or a human commitment.",
+    "spans": [],
+    "residual": [
+     "rule \"never\"",
+     "description \"Follow observed-evidence authorship explicit human follow-up-choice …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The template itself requires observed-evidence testing (line 27), an honest authorship answer (line 67), and an explicit human choice for who answers review comments. The statement matches these. The \"never invent\" part restates them.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".github/PULL_REQUEST_TEMPLATE.md:27",
+       "excerpt": "Report only actions you actually performed and results you actually observed",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".github/PULL_REQUEST_TEMPLATE.md:67",
+       "excerpt": "use only a choice the human has explicitly made in the conversation",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The template itself requires observed-evidence testing (line 27), an honest authorship answer (line 67), and an explicit human choice for who answers review comments. The statement matches these. The \"never invent\" part restates them.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "fcce046b69e8346a133eb2b0880966d53f712b77",
+    "file": "AGENTS.md",
+    "line": 99,
+    "endLine": 99,
+    "section": "Implementation and handoff",
+    "kind": "sentence",
+    "text": "Do not commit, push, or publish merely because implementation is complete.",
+    "spans": [],
+    "residual": [
+     "rule \"Do not\"",
+     "description \"commit push publish merely because implementation …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "This is a behavioral rule for agents. No lint, CI or pre-commit config enforces or contradicts it. I found no tooling or code that could confirm it. I searched .github/workflows, Makefile and pre-commit config, and none of them cover this.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "absence",
+       "ref": "git grep -n -i \"do not commit\\|never commit\" -- .github/workflows .pre-commit-config.yaml Makefile",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "This is a behavioral rule for agents. No lint, CI or pre-commit config enforces or contradicts it. I found no tooling or code that could confirm it. I searched .github/workflows, Makefile and pre-commit config, and none of them cover this.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "111acbf07a2249b06ffee9a7ee4900b1be3888dd",
+    "file": "AGENTS.md",
+    "line": 101,
+    "endLine": 103,
+    "section": "Implementation and handoff",
+    "kind": "sentence",
+    "text": "For PR review, use [code-review](.github/skills/code-review/SKILL.md).",
+    "spans": [
+     {
+      "kind": "link",
+      "text": ".github/skills/code-review/SKILL.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": ".github/skills/code-review/SKILL.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/skills/code-review/SKILL.md",
+        "level": "definition"
+       }
+      ],
+      "reason": ".github/skills/code-review/SKILL.md"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "every name in it checks out",
+    "settled": true
+   },
+   {
+    "id": "87a0ce0acc320ef200a505544083b25a74bffda2",
+    "file": "AGENTS.md",
+    "line": 102,
+    "endLine": 103,
+    "section": "Implementation and handoff",
+    "kind": "sentence",
+    "text": "For authorized maintainer debt maintenance, use [tech-debt-burndown](.github/skills/tech-debt-burndown/SKILL.md).",
+    "spans": [
+     {
+      "kind": "link",
+      "text": ".github/skills/tech-debt-burndown/SKILL.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"authorized maintainer debt maintenance\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": ".github/skills/tech-debt-burndown/SKILL.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/skills/tech-debt-burndown/SKILL.md",
+        "level": "definition"
+       }
+      ],
+      "reason": ".github/skills/tech-debt-burndown/SKILL.md"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The skill exists, and its description says it is for authorized maintainer tech-debt burndown, which matches the statement.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".github/skills/tech-debt-burndown/SKILL.md:3-5",
+       "excerpt": "Use when running an established, authorized GitHub CLI maintainer tech-debt",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".github/skills/tech-debt-burndown/SKILL.md:1",
+       "excerpt": "name: tech-debt-burndown",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The skill exists, and its description says it is for authorized maintainer tech-debt burndown, which matches the statement.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "ac27f7fefe9cb436928f0a8f43d3acdaf49fd290",
+    "file": "AGENTS.md",
+    "line": 103,
+    "endLine": 103,
+    "section": "Implementation and handoff",
+    "kind": "sentence",
+    "text": "For terminal demonstration evidence, use [vhs-demo](.github/skills/vhs-demo/SKILL.md).",
+    "spans": [
+     {
+      "kind": "link",
+      "text": ".github/skills/vhs-demo/SKILL.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"terminal demonstration evidence\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": ".github/skills/vhs-demo/SKILL.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".github/skills/vhs-demo/SKILL.md",
+        "level": "definition"
+       }
+      ],
+      "reason": ".github/skills/vhs-demo/SKILL.md"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The skill exists and covers terminal GIF demos and before/after evidence for reviewers, which matches \"terminal demonstration evidence\".",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".github/skills/vhs-demo/SKILL.md:3",
+       "excerpt": "description: Use when creating a terminal GIF, recording a CLI demonstration, authoring a VHS tape, or producing visual before/after evidence for reviewers.",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".github/skills/vhs-demo/SKILL.md:1-2",
+       "excerpt": "name: vhs-demo",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The skill exists and covers terminal GIF demos and before/after evidence for reviewers, which matches \"terminal demonstration evidence\".",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": false,
+     "model": "claude-sonnet-5-5"
+    }
+   }
+  ],
+  "agent": {
+   "sent": 46,
+   "answered": 46,
+   "cached": 0,
+   "costUsd": 0.5164374,
+   "model": "claude-sonnet-5-5",
+   "failures": []
+  }
+ }
+}

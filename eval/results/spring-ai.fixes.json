@@ -1,0 +1,1770 @@
+{
+ "proof": "03eeed6bb0b8",
+ "stage": "fixes",
+ "seconds": 36,
+ "exit": 1,
+ "report": {
+  "file": "AGENTS.md",
+  "scope": "project",
+  "why": "Claude Code reads it only when no CLAUDE.md, .claude/CLAUDE.md or CLAUDE.local.md is in the folder or above it, and Codex, Cursor and others read it always",
+  "imports": [],
+  "importedBy": [],
+  "counts": {
+   "VERIFIED": 10,
+   "STALE": 1,
+   "UNCONFIRMED": 0,
+   "UNVERIFIED_WITH_REASON": 10,
+   "DECIDED": 0,
+   "OVERRIDDEN": 0,
+   "NOT_CHECKED": 0,
+   "FIXED": 0,
+   "FIX_REJECTED": 0
+  },
+  "evidenceLevels": {
+   "definition": 3,
+   "declaration": 0,
+   "reference": 4,
+   "comment": 0,
+   "substring": 0,
+   "none": 3
+  },
+  "git": {
+   "root": "/home/ms/projects/proof-cache/corpus/spring-ai",
+   "tree": "ab87e9f3581db3d92c99c3fbd493afcac6883209",
+   "head": "46d05c2fdbab52f6ef04207abe19b12687a47453",
+   "branch": null,
+   "upstream": "origin/main",
+   "behind": 0
+  },
+  "run": {
+   "started": "2026-10-01T13:28:24.377Z",
+   "finished": "2026-10-01T13:28:26.637Z",
+   "version": "0.2.0",
+   "budgetUsedUsd": 0.09976619999999999
+  },
+  "decisions": [],
+  "reopened": [],
+  "verdict": "NOT PROVEN",
+  "ownVerdict": "NOT PROVEN",
+  "coverage": {
+   "statements": 21,
+   "withResult": 21
+  },
+  "degraded": [
+   {
+    "subject": "grammar Kotlin",
+    "reason": "no tree-sitter grammar for Kotlin (12 files): definitions there are matched by line patterns"
+   }
+  ],
+  "statements": [
+   {
+    "id": "6deacfe2022371c83e3b83dbc9f1d3d8fbdbf76c",
+    "file": "AGENTS.md",
+    "line": 3,
+    "endLine": 3,
+    "section": "Spring AI agent guidelines",
+    "kind": "sentence",
+    "text": "Concise extract of [CONTRIBUTING.md](CONTRIBUTING.md), which remains the reference for humans.",
+    "spans": [
+     {
+      "kind": "link",
+      "text": "CONTRIBUTING.md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Concise extract remains reference humans\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "link",
+      "text": "CONTRIBUTING.md",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "CONTRIBUTING.md",
+        "level": "definition"
+       }
+      ],
+      "reason": "CONTRIBUTING.md"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "CONTRIBUTING.md exists and contains the fuller versions of every Build item in AGENTS.md (build, formatting, JDK, integration tests, javadoc, antora, build-cache). AGENTS.md is the shorter condensed form.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:58",
+       "excerpt": "* Run the build and tests locally with `./mvnw clean package`",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "AGENTS.md:3",
+       "excerpt": "Concise extract of [CONTRIBUTING.md](CONTRIBUTING.md), which remains the reference for humans.",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "CONTRIBUTING.md exists and contains the fuller versions of every Build item in AGENTS.md (build, formatting, JDK, integration tests, javadoc, antora, build-cache). AGENTS.md is the shorter condensed form.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "83d579aecd9358282d3086742ec1aa34b05cd7a5",
+    "file": "AGENTS.md",
+    "line": 7,
+    "endLine": 7,
+    "section": "Build",
+    "kind": "item",
+    "text": "JDK 17 with `-XDaddTypeAnnotationsToSymbol` support (see `.sdkmanrc`, e.g. `17.0.19-librca`), native CPU architecture.",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "-XDaddTypeAnnotationsToSymbol",
+      "expect": "present"
+     },
+     {
+      "kind": "path",
+      "text": ".sdkmanrc",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "17.0.19-librca",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "count \"17 with\"",
+     "description \"JDK support native CPU architecture\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "-XDaddTypeAnnotationsToSymbol",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "pom.xml:480",
+        "excerpt": "<arg>-XDaddTypeAnnotationsToSymbol=true</arg>",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at pom.xml:480"
+     },
+     {
+      "kind": "path",
+      "text": ".sdkmanrc",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": ".sdkmanrc",
+        "level": "definition"
+       }
+      ],
+      "reason": ".sdkmanrc"
+     },
+     {
+      "kind": "unknown",
+      "text": "17.0.19-librca",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".sdkmanrc:3",
+        "excerpt": "java=17.0.19-librca",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at .sdkmanrc:3; what the example illustrates is not checked",
+      "blocked": true
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The JDK is 17 (java.version, .sdkmanrc 17.0.19-librca). The compiler arg -XDaddTypeAnnotationsToSymbol is passed in pom.xml. CONTRIBUTING.md requires a JDK matching the CPU architecture.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".sdkmanrc:3",
+       "excerpt": "java=17.0.19-librca",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "pom.xml:240",
+       "excerpt": "<java.version>17</java.version>",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "pom.xml:480",
+       "excerpt": "<arg>-XDaddTypeAnnotationsToSymbol=true</arg>",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:223",
+       "excerpt": "Make sure to use a JDK with the same architecture as your processor, not an emulated one",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The JDK is 17 (java.version, .sdkmanrc 17.0.19-librca). The compiler arg -XDaddTypeAnnotationsToSymbol is passed in pom.xml. CONTRIBUTING.md requires a JDK matching the CPU architecture.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "1898d3c7506fa86fa27bd48237ef6fe53848d012",
+    "file": "AGENTS.md",
+    "line": 8,
+    "endLine": 8,
+    "section": "Build",
+    "kind": "item",
+    "text": "Build and unit tests: `./mvnw clean package` (scope with `-am -pl <module>`).",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "./mvnw clean package",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "-am",
+      "expect": "present"
+     },
+     {
+      "kind": "symbol",
+      "text": "-pl",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Build unit tests scope\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "./mvnw clean package",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "pom.xml",
+        "level": "reference"
+       }
+      ],
+      "reason": "standard Maven phases on pom.xml"
+     },
+     {
+      "kind": "symbol",
+      "text": "-am",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/workflows/mcp-integration-tests.yml:45",
+        "excerpt": "./mvnw --batch-mode -ntp verify -Pintegration-tests -am -pl \"mcp/transport/mcp-spring-webflux,mcp/transport/mcp-spring-…",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/workflows/mcp-integration-tests.yml:45"
+     },
+     {
+      "kind": "symbol",
+      "text": "-pl",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".github/actions/do-autoconfigure-test/action.yml:35",
+        "excerpt": "-pl auto-configurations/common/spring-ai-autoconfigure-retry \\",
+        "level": "reference"
+       },
+       {
+        "ref": ".github/actions/do-autoconfigure-test/action.yml:43",
+        "excerpt": "-pl auto-configurations/models/chat/observation/spring-ai-autoconfigure-model-chat-observation \\",
+        "level": "reference"
+       }
+      ],
+      "reason": "reference at .github/actions/do-autoconfigure-test/action.yml:35"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The mvnw wrapper exists at the root, and CONTRIBUTING.md documents clean package for build and unit tests. -am and -pl are used in the repo's CI workflows to scope to a module. Note: the absence-kind ref `ls mvnw` is a presence check, so treat it as non-evidence.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:212",
+       "excerpt": "./mvnw clean package",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".github/actions/do-autoconfigure-test/action.yml:35",
+       "excerpt": "-pl",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "absence",
+       "ref": "ls mvnw",
+       "valid": false,
+       "problem": "the search prints 1 line(s), so the thing is not absent"
+      }
+     ],
+     "reason": "The mvnw wrapper exists at the root, and CONTRIBUTING.md documents clean package for build and unit tests. -am and -pl are used in the repo's CI workflows to scope to a module. Note: the absence-kind ref `ls mvnw` is a presence check, so treat it as non-evidence.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "cd4b38066431bd1c3449b84c15ef1b4185c8c109",
+    "file": "AGENTS.md",
+    "line": 9,
+    "endLine": 9,
+    "section": "Build",
+    "kind": "item",
+    "text": "Format sources: `./mvnw process-sources` (enforced by CI, does not fix import order).",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "./mvnw process-sources",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Format sources enforced fix import order\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "./mvnw process-sources",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [
+       {
+        "ref": "pom.xml",
+        "level": "reference"
+       }
+      ],
+      "reason": "process-sources is not a standard Maven phase; plugin goals are not read"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The format-apply profile binds spring-javaformat apply to the process-sources phase. The format-check profile is activated by env.CI=true and validates formatting. CONTRIBUTING.md states the import-order caveat. Detail omitted: the apply profile is active only when env.CI is unset.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "pom.xml:641",
+       "excerpt": "<id>format-apply</id>",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "pom.xml:597",
+       "excerpt": "<id>format-check</id>",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:115",
+       "excerpt": "Correct formatting is enforced by CI.",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:122",
+       "excerpt": "Note that this will not format the import order which is documented below.",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The format-apply profile binds spring-javaformat apply to the process-sources phase. The format-check profile is activated by env.CI=true and validates formatting. CONTRIBUTING.md states the import-order caveat. Detail omitted: the apply profile is active only when env.CI is unset.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "ed7bdf92b95ce6ac45a35b336c244a2a5adddb2d",
+    "file": "AGENTS.md",
+    "line": 10,
+    "endLine": 10,
+    "section": "Build",
+    "kind": "item",
+    "text": "Local builds reformat sources automatically: add `-Dspring-javaformat.skip=true` to disable it, or `-P'!format-apply,format-check'` to fail on violations without modifying files.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "-Dspring-javaformat.skip=true",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "-P'!format-apply,format-check'",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Local builds reformat sources automatically add …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "-Dspring-javaformat.skip=true",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "-P'!format-apply,format-check'",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "The profile ids format-apply and format-check exist. format-apply is active when !env.CI and format-check when env.CI=true, so `-P'!format-apply,format-check'` is consistent with the poms. The `spring-javaformat.skip` property is defined by the plugin, not by this repo. Searched pom.xml for a skip configuration and found none. Looked for the plugin jar in ~/.m2/repository/io/spring/javaformat and the directory does not exist. So I could not confirm the property from the repo or local artifacts. The only support is CONTRIBUTING.md:125-126, which makes the same claim.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "pom.xml:627",
+       "excerpt": "<id>format-apply</id>",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:125",
+       "excerpt": "To disable it, add `-Dspring-javaformat.skip=true` to the build command.",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The profile ids format-apply and format-check exist. format-apply is active when !env.CI and format-check when env.CI=true, so `-P'!format-apply,format-check'` is consistent with the poms. The `spring-javaformat.skip` property is defined by the plugin, not by this repo. Searched pom.xml for a skip configuration and found none. Looked for the plugin jar in ~/.m2/repository/io/spring/javaformat and the directory does not exist. So I could not confirm the property from the repo or local artifacts. The only support is CONTRIBUTING.md:125-126, which makes the same claim.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "4daf8019327b511d191e9a48f0d817db825a39f9",
+    "file": "AGENTS.md",
+    "line": 11,
+    "endLine": 11,
+    "section": "Build",
+    "kind": "item",
+    "text": "Integration tests for a module: `./mvnw -am -pl <module> -Pintegration-tests verify`.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "./mvnw -am -pl <module> -Pintegration-tests verify",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Integration tests module\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "./mvnw -am -pl <module> -Pintegration-tests verify",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "a template with placeholders, not a command to run"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "An integration-tests profile exists and runs failsafe integration-test and verify goals. CONTRIBUTING.md uses the same command shape.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "pom.xml:800",
+       "excerpt": "<id>integration-tests</id>",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "pom.xml:808",
+       "excerpt": "<artifactId>maven-failsafe-plugin</artifactId>",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:250",
+       "excerpt": "./mvnw -am -pl spring-ai-spring-boot-testcontainers -Pintegration-tests verify",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "An integration-tests profile exists and runs failsafe integration-test and verify goals. CONTRIBUTING.md uses the same command shape.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "b148a15a462f9e8cbd9f8287a26d08da8b5a8c3e",
+    "file": "AGENTS.md",
+    "line": 12,
+    "endLine": 12,
+    "section": "Build",
+    "kind": "item",
+    "text": "Single integration test: add `-Dfailsafe.failIfNoSpecifiedTests=false -Dit.test=<TestClassIT>`; tests needing a missing provider API key are skipped.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "-Dfailsafe.failIfNoSpecifiedTests=false -Dit.test=<TestClassIT>",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Single integration test add tests needing …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "-Dfailsafe.failIfNoSpecifiedTests=false -Dit.test=<TestClassIT>",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "Failsafe is configured in the integration-tests profile. CONTRIBUTING.md documents the same single-test flags, and provider ITs use @EnabledIfEnvironmentVariable on API keys, so they are skipped when the key is missing. Both IT classes grep'd (e.g. DeepSeekApiIT) follow this pattern. Detail omitted: the flags themselves come from the failsafe plugin, not this repo.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:256",
+       "excerpt": "-Pintegration-tests -Dfailsafe.failIfNoSpecifiedTests=false -Dfailsafe.rerunFailingTestsCount=2 -Dit.test=PgVectorStoreIT verify",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "models/spring-ai-deepseek/src/test/java/org/springframework/ai/deepseek/api/DeepSeekApiIT.java:38",
+       "excerpt": "@EnabledIfEnvironmentVariable(named = \"DEEPSEEK_API_KEY\", matches = \".+\")",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:245",
+       "excerpt": "If the API key isn't set for a specific model provider, the integration test is skipped.",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "Failsafe is configured in the integration-tests profile. CONTRIBUTING.md documents the same single-test flags, and provider ITs use @EnabledIfEnvironmentVariable on API keys, so they are skipped when the key is missing. Both IT classes grep'd (e.g. DeepSeekApiIT) follow this pattern. Detail omitted: the flags themselves come from the failsafe plugin, not this repo.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "d05521f550a560dae53fabe715048d574ae6b861",
+    "file": "AGENTS.md",
+    "line": 13,
+    "endLine": 13,
+    "section": "Build",
+    "kind": "item",
+    "text": "Javadoc check: `./mvnw javadoc:javadoc`. Reference docs: `./mvnw -pl spring-ai-docs antora`.",
+    "spans": [
+     {
+      "kind": "command",
+      "text": "./mvnw javadoc:javadoc",
+      "expect": "present"
+     },
+     {
+      "kind": "command",
+      "text": "./mvnw -pl spring-ai-docs antora",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Javadoc check Reference docs\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "command",
+      "text": "./mvnw javadoc:javadoc",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [
+       {
+        "ref": "pom.xml",
+        "level": "reference"
+       }
+      ],
+      "reason": "javadoc:javadoc is not a standard Maven phase; plugin goals are not read"
+     },
+     {
+      "kind": "command",
+      "text": "./mvnw -pl spring-ai-docs antora",
+      "expect": "present",
+      "status": "UNCONFIRMED",
+      "level": "none",
+      "evidence": [
+       {
+        "ref": "pom.xml",
+        "level": "reference"
+       }
+      ],
+      "reason": "spring-ai-docs, antora is not a standard Maven phase; plugin goals are not read"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "maven-javadoc-plugin is configured in the root pom, so javadoc:javadoc resolves. The spring-ai-docs module configures antora-maven-plugin, so the antora goal runs there. Both commands match CONTRIBUTING.md.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "pom.xml:574",
+       "excerpt": "<artifactId>maven-javadoc-plugin</artifactId>",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "spring-ai-docs/pom.xml:22",
+       "excerpt": "<artifactId>antora-maven-plugin</artifactId>",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:275",
+       "excerpt": "./mvnw -pl spring-ai-docs antora",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "maven-javadoc-plugin is configured in the root pom, so javadoc:javadoc resolves. The spring-ai-docs module configures antora-maven-plugin, so the antora goal runs there. Both commands match CONTRIBUTING.md.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "a193800ae668e7df4873a9b65aa523b9174d7db4",
+    "file": "AGENTS.md",
+    "line": 14,
+    "endLine": 14,
+    "section": "Build",
+    "kind": "item",
+    "text": "Maven build cache is enabled; if the build breaks for no clear reason, retry with `-Dmaven.build.cache.enabled=false`.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "-Dmaven.build.cache.enabled=false",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Maven build cache enabled build breaks …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "-Dmaven.build.cache.enabled=false",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The maven-build-cache-extension is registered in .mvn/extensions.xml, and .mvn/maven-build-cache-config.xml configures it. No config in the repo disables it. The `-Dmaven.build.cache.enabled=false` flag is the extension's own property and is not defined in the repo, so I did not verify it here.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".mvn/extensions.xml:26",
+       "excerpt": "<artifactId>maven-build-cache-extension</artifactId>",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "absence",
+       "ref": "git grep -n \"maven.build.cache.enabled\" -- .mvn pom.xml .github",
+       "excerpt": "",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The maven-build-cache-extension is registered in .mvn/extensions.xml, and .mvn/maven-build-cache-config.xml configures it. No config in the repo disables it. The `-Dmaven.build.cache.enabled=false` flag is the extension's own property and is not defined in the repo, so I did not verify it here.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "8cbaf22bc3997745be8331d1beb4ce92db12f034",
+    "file": "AGENTS.md",
+    "line": 18,
+    "endLine": 18,
+    "section": "Code style",
+    "kind": "item",
+    "text": "Follow Spring Framework code style; match surrounding code and do not reformat unrelated code.",
+    "spans": [],
+    "residual": [
+     "rule \"do not\"",
+     "description \"Follow Spring Framework code style match …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "The build applies spring-javaformat locally (format-apply profile, process-sources). CI runs the validate goal (format-check profile). The checkstyle config also uses spring-javaformat checks, so the Spring style is enforced. CONTRIBUTING.md:137 says the same about not reformatting code for its own sake. No tooling enforces that part; it rests on the format profiles and CONTRIBUTING.md.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "pom.xml:316",
+       "excerpt": "<spring-javaformat-checkstyle.version>0.0.47</spring-javaformat-checkstyle.version>",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "pom.xml:637",
+       "excerpt": "<artifactId>spring-javaformat-maven-plugin</artifactId>",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The build applies spring-javaformat locally (format-apply profile, process-sources). CI runs the validate goal (format-check profile). The checkstyle config also uses spring-javaformat checks, so the Spring style is enforced. CONTRIBUTING.md:137 says the same about not reformatting code for its own sake. No tooling enforces that part; it rests on the format profiles and CONTRIBUTING.md.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "b434c7c1d7802de04c833e23c59eb35fbfd5d232",
+    "file": "AGENTS.md",
+    "line": 19,
+    "endLine": 19,
+    "section": "Code style",
+    "kind": "item",
+    "text": "Tabs, LF, UTF-8, no trailing whitespace; wrap Javadoc at 90 and code at ~120 characters.",
+    "spans": [],
+    "residual": [
+     "count \"90 and code\"",
+     "description \"Tabs UTF- trailing whitespace wrap Javadoc …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "Tabs, LF, UTF-8 and no trailing whitespace are enforced by .editorconfig and the checkstyle regexp checks. The 90 and 120 wrap widths appear only in CONTRIBUTING.md. No repo config sets them: the repo's src/checkstyle/eclipse-google-style.xml has no line-length setting and nothing references it, and the wrapping comes from the spring-javaformat plugin internals. Its 0.0.47 jar is not in the repo, so I could not inspect it.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".editorconfig:7",
+       "excerpt": "charset = utf-8",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".editorconfig:10-12",
+       "excerpt": "indent_style = tab",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "src/checkstyle/checkstyle.xml:175",
+       "excerpt": "<property name=\"message\" value=\"Trailing whitespace\" />",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:136",
+       "excerpt": "* Wrap Javadoc at 90 characters",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "Tabs, LF, UTF-8 and no trailing whitespace are enforced by .editorconfig and the checkstyle regexp checks. The 90 and 120 wrap widths appear only in CONTRIBUTING.md. No repo config sets them: the repo's src/checkstyle/eclipse-google-style.xml has no line-length setting and nothing references it, and the wrapping comes from the spring-javaformat plugin internals. Its 0.0.47 jar is not in the repo, so I could not inspect it.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "3c1dda3fae1406354cbfba12e606fe41da2e645c",
+    "file": "AGENTS.md",
+    "line": 20,
+    "endLine": 20,
+    "section": "Code style",
+    "kind": "item",
+    "text": "Import order, groups separated by a blank line: `java.*`, then `javax.*` + `jakarta.*`, then others, then `org.springframework.*`, then static imports.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "java.*",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "javax.*",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "jakarta.*",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "org.springframework.*",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Import order groups separated blank line …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "java.*",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "javax.*",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "jakarta.*",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "org.springframework.*",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "STALE",
+    "reason": "Checkstyle ImportOrder (separated=true) defines the groups as java, javax, * (others), org.springframework. `jakarta.*` is not in the `javax` group; it falls into the others group. The only file importing `jakarta.*` places it in the others group, together with `org.jspecify` and `software.amazon`. Following the statement (javax and jakarta together with no blank line) would be flagged by checkstyle. CONTRIBUTING.md:145-146 repeats the same wording.",
+    "settled": false,
+    "agent": {
+     "verdict": "stale",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "src/checkstyle/checkstyle.xml:108",
+       "excerpt": "<property name=\"groups\" value=\"java,javax,*,org.springframework\"/>",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "src/checkstyle/checkstyle.xml:110",
+       "excerpt": "<property name=\"separated\" value=\"true\"/>",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-bedrock-knowledgebase/src/main/java/org/springframework/ai/vectorstore/bedrockknowledgebase/autoconfigure/BedrockKnowledgeBaseVectorStoreProperties.java:19-22",
+       "excerpt": "import jakarta.validation.constraints.DecimalMax; ... import org.jspecify.annotations.Nullable;",
+       "valid": false,
+       "problem": "the excerpt is not at auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-bedrock-knowledgebase/src/main/java/org/springframework/ai/vectorstore/bedrockknowledgebase/autoconfigure/BedrockKnowledgeBaseVectorStoreProperties.java:19"
+      }
+     ],
+     "reason": "Checkstyle ImportOrder (separated=true) defines the groups as java, javax, * (others), org.springframework. `jakarta.*` is not in the `javax` group; it falls into the others group. The only file importing `jakarta.*` places it in the others group, together with `org.jspecify` and `software.amazon`. Following the statement (javax and jakarta together with no blank line) would be flagged by checkstyle. CONTRIBUTING.md:145-146 repeats the same wording.",
+     "proposedText": "- Import order, groups separated by a blank line: `java.*`, then `javax.*`, then others (including `jakarta.*`), then `org.springframework.*`, then static imports.",
+     "action": "fix-with-evidence",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    },
+    "fix": {
+     "tier": "B",
+     "action": "replace",
+     "old": "`javax.*` + `jakarta.*`, then others",
+     "new": "`javax.*`, then others",
+     "reason": "The ImportOrder groups are java, javax, *, org.springframework. jakarta is not a separate group with javax, so it falls into the others group. Static imports are at the bottom (option=bottom), so the rest of the line still holds.",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "src/checkstyle/checkstyle.xml:108",
+       "excerpt": "<property name=\"groups\" value=\"java,javax,*,org.springframework\"/>",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "src/checkstyle/checkstyle.xml:111",
+       "excerpt": "<property name=\"option\" value=\"bottom\"/>",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "src/checkstyle/checkstyle.xml:110",
+       "excerpt": "<property name=\"separated\" value=\"true\"/>",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "outcome": "dry-run",
+     "reverify": "verified"
+    }
+   },
+   {
+    "id": "4acf17c355dbd011c86667fc19885b2dd7ef9062",
+    "file": "AGENTS.md",
+    "line": 21,
+    "endLine": 21,
+    "section": "Code style",
+    "kind": "item",
+    "text": "No wildcard imports. No static imports in production code except constants/enum constants and third-party DSL factory methods; use them in tests (e.g. `assertThat`).",
+    "spans": [
+     {
+      "kind": "symbol",
+      "text": "assertThat",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"wildcard imports static imports production code …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "symbol",
+      "text": "assertThat",
+      "expect": "present",
+      "status": "VERIFIED",
+      "level": "definition",
+      "evidence": [
+       {
+        "ref": "advisors/spring-ai-tool-search-advisor/src/test/java/org/springframework/ai/chat/client/advisor/toolsearch/AbstractToolSearchToolCallingAdvisorIT.java:135",
+        "excerpt": "assertThat(response).contains(\"30\", \"10\", \"15\");",
+        "level": "definition"
+       }
+      ],
+      "reason": "definition at advisors/spring-ai-tool-search-advisor/src/test/java/org/springframework/ai/chat/client/advisor/toolsearch/AbstractToolSearchToolCallingAdvisorIT.java:135"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "AvoidStarImport and AvoidStaticImport (with an allow-list of excludes) are enforced by checkstyle. There are exceptions. Wildcard imports exist only in the generated, suppressed antlr4 FiltersLexer and FiltersParser. Production code in about 8 files statically imports the first-party method `AiRuntimeHints.findJsonAnnotatedClassesInPackage`. That is neither a constant nor a third-party DSL factory, and checkstyle allow-lists `AiRuntimeHints.*`. Other production imports (Filter.ExpressionType AND/OR, Awaitility.await) fit the stated exceptions.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "src/checkstyle/checkstyle.xml:91",
+       "excerpt": "<module name=\"com.puppycrawl.tools.checkstyle.checks.imports.AvoidStarImportCheck\" />",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "src/checkstyle/checkstyle-suppressions.xml:8",
+       "excerpt": "<suppress files=\"vectorstore[\\\\/]filter[\\\\/]antlr4.*\" checks=\"[a-zA-Z0-9]*\"/>",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "spring-ai-vector-store/src/main/java/org/springframework/ai/vectorstore/filter/antlr4/FiltersLexer.java:28",
+       "excerpt": "import org.antlr.v4.runtime.*;",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "models/spring-ai-ollama/src/main/java/org/springframework/ai/ollama/aot/OllamaRuntimeHints.java:26",
+       "excerpt": "import static org.springframework.ai.aot.AiRuntimeHints.findJsonAnnotatedClassesInPackage;",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "AvoidStarImport and AvoidStaticImport (with an allow-list of excludes) are enforced by checkstyle. There are exceptions. Wildcard imports exist only in the generated, suppressed antlr4 FiltersLexer and FiltersParser. Production code in about 8 files statically imports the first-party method `AiRuntimeHints.findJsonAnnotatedClassesInPackage`. That is neither a constant nor a third-party DSL factory, and checkstyle allow-lists `AiRuntimeHints.*`. Other production imports (Filter.ExpressionType AND/OR, Awaitility.await) fit the stated exceptions.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "13c57a23124ad3d139ac9a4af6e8902d3a7ad559",
+    "file": "AGENTS.md",
+    "line": 22,
+    "endLine": 22,
+    "section": "Code style",
+    "kind": "item",
+    "text": "Every source file: Apache 2.0 license header (`Copyright 2023-present the original author or authors.`, copy from an existing file), package, imports, exactly one top-level class.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "Copyright 2023-present the original author or authors.",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "count \"2.0 license header\"",
+     "quantifier \"Every\"",
+     "description \"source file Apache license header copy …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "Copyright 2023-present the original author or authors.",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": ".mvn/extensions.xml:3",
+        "excerpt": "~ Copyright 2023-present the original author or authors.",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at .mvn/extensions.xml:3; what the example illustrates is not checked",
+      "blocked": true
+     }
+    ],
+    "status": "VERIFIED",
+    "reason": "Checkstyle's RegexpHeader check (checkstyle-header.txt) enforces the exact Apache 2.0 header with this copyright line, and OneTopLevelClass enforces one top-level class. Every tracked .java file contains the copyright line.",
+    "settled": true,
+    "agent": {
+     "verdict": "true",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "src/checkstyle/checkstyle-header.txt:2",
+       "excerpt": "^\\Q * Copyright 2023-present the original author or authors.\\E$",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "src/checkstyle/checkstyle.xml:22",
+       "excerpt": "<module name=\"com.puppycrawl.tools.checkstyle.checks.header.RegexpHeaderCheck\">",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "src/checkstyle/checkstyle.xml:55",
+       "excerpt": "<module name=\"com.puppycrawl.tools.checkstyle.checks.design.OneTopLevelClassCheck\" />",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "absence",
+       "ref": "git grep -L \"Copyright 2023-present the original author or authors\" -- '*.java'",
+       "excerpt": "",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "Checkstyle's RegexpHeader check (checkstyle-header.txt) enforces the exact Apache 2.0 header with this copyright line, and OneTopLevelClass enforces one top-level class. Every tracked .java file contains the copyright line.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "2d9ba2ac4cde201fb987a4d165d34648b847bfdd",
+    "file": "AGENTS.md",
+    "line": 23,
+    "endLine": 23,
+    "section": "Code style",
+    "kind": "item",
+    "text": "Add `@since` on new public types and methods (e.g. `@since 2.0.0`).",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "@since",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "@since 2.0.0",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Add new public types methods\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "@since",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "@since 2.0.0",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "CONTRIBUTING.md asks for @since on new public API, so it matches the documented convention. No tooling enforces it: the checkstyle Javadoc and AtclauseOrder checks are commented out in checkstyle.xml. 812 production files have no @since and 530 have one, so existing code does not consistently follow it. That count includes non-public types.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:196",
+       "excerpt": "Use `@since` tags for newly-added public API types and methods e.g.",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "count",
+       "ref": "git grep -L \"@since\" -- '*/src/main/*.java' | wc -l",
+       "excerpt": "812",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "count",
+       "ref": "git grep -c \"@since\" -- '*/src/main/*.java' | wc -l",
+       "excerpt": "530",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "CONTRIBUTING.md asks for @since on new public API, so it matches the documented convention. No tooling enforces it: the checkstyle Javadoc and AtclauseOrder checks are commented out in checkstyle.xml. 812 production files have no @since and 530 have one, so existing code does not consistently follow it. That count includes non-public types.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "5ddbe3e5e97608ffff72b3a571244be66f97b4da",
+    "file": "AGENTS.md",
+    "line": 24,
+    "endLine": 24,
+    "section": "Code style",
+    "kind": "item",
+    "text": "Add or update tests for any code change.",
+    "spans": [],
+    "residual": [
+     "description \"Add update tests code change\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "CONTRIBUTING.md states this as a convention. Tooling does not enforce it. I found no diff-cover or similar check in pom.xml or .github, and the only coverage tooling is a jacoco version property in pom.xml:309. I found no enforced coverage gate to show the rule is checked.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:57",
+       "excerpt": "* Add new tests that exercise the code you have added or modified",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "absence",
+       "ref": "git grep -n -i \"diff-cover\" -- pom.xml .github",
+       "excerpt": "",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "CONTRIBUTING.md states this as a convention. Tooling does not enforce it. I found no diff-cover or similar check in pom.xml or .github, and the only coverage tooling is a jacoco version property in pom.xml:309. I found no enforced coverage gate to show the rule is checked.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "40a02ed636673a999492877f2794339201dce476",
+    "file": "AGENTS.md",
+    "line": 25,
+    "endLine": 25,
+    "section": "Code style",
+    "kind": "item",
+    "text": "In `.adoc` and `.md` files, write one sentence per line.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": ".adoc",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": ".md",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"files write one sentence line\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": ".adoc",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "reference",
+      "evidence": [
+       {
+        "ref": "spring-ai-docs/src/main/antora/antora.yml:5",
+        "excerpt": "- modules/ROOT/nav.adoc",
+        "level": "reference"
+       }
+      ],
+      "reason": "appears verbatim in code at spring-ai-docs/src/main/antora/antora.yml:5; what the example illustrates is not checked",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": ".md",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "CONTRIBUTING.md has the same rule, but no lint, formatter or CI check enforces it. The existing docs often break it. chatclient.adoc:13, :100, :262 and :396 each put several sentences on one line, and 128 .adoc files are tracked. The rule is not wrong to follow, but the repo does not consistently follow it.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:139",
+       "excerpt": "* For plain text documents like `.adoc` or `.md`, one sentence per line",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": "spring-ai-docs/src/main/antora/modules/ROOT/pages/api/chatclient.adoc:100",
+       "excerpt": "To resolve this, you can mark one of your `ChatClient` beans as `@Primary`. You may also need to mark one of your `ChatModel` beans as `@Primary` if you are defining them manually, ...",
+       "valid": false,
+       "problem": "the excerpt is not at spring-ai-docs/src/main/antora/modules/ROOT/pages/api/chatclient.adoc:100"
+      }
+     ],
+     "reason": "CONTRIBUTING.md has the same rule, but no lint, formatter or CI check enforces it. The existing docs often break it. chatclient.adoc:13, :100, :262 and :396 each put several sentences on one line, and 128 .adoc files are tracked. The rule is not wrong to follow, but the repo does not consistently follow it.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "9495926a05924a063bf45d1e832a4a51c299b013",
+    "file": "AGENTS.md",
+    "line": 29,
+    "endLine": 29,
+    "section": "Commits and pull requests",
+    "kind": "item",
+    "text": "Title: imperative, capitalized verb, ideally under 50 characters, no `fix:`/`docs:` prefixes and no issue/PR number.",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "fix:",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "docs:",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Title imperative capitalized verb ideally characters …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "fix:",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "docs:",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "CONTRIBUTING.md documents the same convention, and the latest commits mostly follow it (for example 'Upgrade Tika to 4.0.0 in spring-ai-tika-document-reader'). No hook or CI check enforces the title format. The history has many exceptions: `fix:` and `docs:` prefixes, trailing (#NNN) numbers, and titles over 50 characters. A rule that is only sometimes followed is not true by that evidence, and it is not made wrong either.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:63-64",
+       "excerpt": "A commit message should include a short title (if possible less than 50 characters) starting with an uppercase verb.",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "command_output",
+       "ref": "git log -300 --no-merges --format=%s --grep='^fix:' --grep='^docs:'",
+       "excerpt": "fix: #6963 replaced potentially sensible number from the test",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "command_output",
+       "ref": "git log -300 --no-merges --format=%s --grep='^fix:' --grep='^docs:'",
+       "excerpt": "fix: bring parent span into ThreadLocals to maintain Observation and span hierarchy parity (#6249)",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "CONTRIBUTING.md documents the same convention, and the latest commits mostly follow it (for example 'Upgrade Tika to 4.0.0 in spring-ai-tika-document-reader'). No hook or CI check enforces the title format. The history has many exceptions: `fix:` and `docs:` prefixes, trailing (#NNN) numbers, and titles over 50 characters. A rule that is only sometimes followed is not true by that evidence, and it is not made wrong either.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "0adff4ef1fa0d8c7b73fa42fd49a58a94c3e18d0",
+    "file": "AGENTS.md",
+    "line": 30,
+    "endLine": 30,
+    "section": "Commits and pull requests",
+    "kind": "item",
+    "text": "Body wrapped at ~72 characters, followed by `Fixes #123`/`Closes #123` (or `See #123`), then a `Signed-off-by: Name <email>` trailer (DCO, use `git commit -s`).",
+    "spans": [
+     {
+      "kind": "unknown",
+      "text": "Fixes #123",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "Closes #123",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "See #123",
+      "expect": "present"
+     },
+     {
+      "kind": "unknown",
+      "text": "Signed-off-by: Name <email>",
+      "expect": "present"
+     },
+     {
+      "kind": "command",
+      "text": "git commit -s",
+      "expect": "present"
+     }
+    ],
+    "residual": [
+     "description \"Body wrapped characters followed trailer DCO\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "unknown",
+      "text": "Fixes #123",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "Closes #123",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "See #123",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "unknown",
+      "text": "Signed-off-by: Name <email>",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "not a path, command, name or version this tool can check",
+      "blocked": true
+     },
+     {
+      "kind": "command",
+      "text": "git commit -s",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "external tool `git`"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "The DCO sign-off is a real project requirement: CONTRIBUTING.md:77 and the PR template ask for it, and .github/dco.yml configures the DCO bot. That bot skips members (`members: false`). In the last 300 non-merge commits, 128 have no Signed-off-by trailer. The body wrapping and `Fixes`/`Closes`/`See` references are documented in CONTRIBUTING.md and not enforced. Several recent commits have no issue reference, for example 'Normalize dates in SimpleVectorStore filters'. So the convention holds for contributors but not for the whole history.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": ".github/PULL_REQUEST_TEMPLATE.md:4",
+       "excerpt": "* Add a Signed-off-by line to each commit (`git commit -s`) per the [DCO]",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".github/dco.yml:1-2",
+       "excerpt": "require:\n  members: false",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "command_output",
+       "ref": "git log -300 --no-merges --format=%H | while read h; do git show -s --format=%B $h | grep -q '^Signed-off-by' || echo x; done | wc -l",
+       "excerpt": "128",
+       "valid": false,
+       "problem": "not re-run: uses redirection, substitution or chaining"
+      }
+     ],
+     "reason": "The DCO sign-off is a real project requirement: CONTRIBUTING.md:77 and the PR template ask for it, and .github/dco.yml configures the DCO bot. That bot skips members (`members: false`). In the last 300 non-merge commits, 128 have no Signed-off-by trailer. The body wrapping and `Fixes`/`Closes`/`See` references are documented in CONTRIBUTING.md and not enforced. Several recent commits have no issue reference, for example 'Normalize dates in SimpleVectorStore filters'. So the convention holds for contributors but not for the whole history.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "6692c533b3cb0ea91cf781415891ec3867d92fc7",
+    "file": "AGENTS.md",
+    "line": 31,
+    "endLine": 31,
+    "section": "Commits and pull requests",
+    "kind": "item",
+    "text": "Enclose annotations in backticks in commit messages to avoid mentioning GitHub users.",
+    "spans": [],
+    "residual": [
+     "rule \"avoid\"",
+     "description \"Enclose annotations backticks commit messages avoid …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "CONTRIBUTING.md states the same rule. I found no commit-msg hook or CI check for it. I did not check the commit history for violations. With no enforcement and no history check, the rule cannot be called true.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:95",
+       "excerpt": "Annotations should be enclosed in backticks to avoid mentioning potential related GitHub users.",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "CONTRIBUTING.md states the same rule. I found no commit-msg hook or CI check for it. I did not check the commit history for violations. With no enforcement and no history check, the rule cannot be called true.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   },
+   {
+    "id": "6a641df795223f0715c6ba786204e6d22464e130",
+    "file": "AGENTS.md",
+    "line": 32,
+    "endLine": 32,
+    "section": "Commits and pull requests",
+    "kind": "item",
+    "text": "PR titles feed the changelog: short, descriptive, types or file names in backticks; reference related issues in the description, not the title.",
+    "spans": [],
+    "residual": [
+     "description \"titles feed changelog short descriptive types …\""
+    ],
+    "negated": false,
+    "results": [
+     {
+      "kind": "prose",
+      "text": "(statement)",
+      "expect": "present",
+      "status": "NOT_CHECKED",
+      "level": "none",
+      "evidence": [],
+      "reason": "nothing mechanical to check; the verifier reads it"
+     }
+    ],
+    "status": "UNVERIFIED_WITH_REASON",
+    "reason": "The release workflow builds the changelog with spring-io/github-changelog-generator (.github/actions/create-github-release/action.yml:29). The advice about backticks and short titles comes from CONTRIBUTING.md:38, which says the issue title feeds the changelog, not the PR title. The generator config doesn't show whether it reads PR titles or issue titles. Nothing enforces 'reference related issues in the description, not the title', and the history has PR titles with (#NNN) in them. The statement may be imprecise about issue versus PR titles.",
+    "settled": false,
+    "agent": {
+     "verdict": "unverified_with_reason",
+     "evidence": [
+      {
+       "kind": "file_line",
+       "ref": "CONTRIBUTING.md:38",
+       "excerpt": "The issue title is used to generate the changelog so please use a short and descriptive text with types or filenames enclosed in backticks.",
+       "valid": true,
+       "problem": ""
+      },
+      {
+       "kind": "file_line",
+       "ref": ".github/actions/create-github-release/changelog-generator-oss.yml:1-3",
+       "excerpt": "changelog:\n  issues:\n    generate_links: true",
+       "valid": true,
+       "problem": ""
+      }
+     ],
+     "reason": "The release workflow builds the changelog with spring-io/github-changelog-generator (.github/actions/create-github-release/action.yml:29). The advice about backticks and short titles comes from CONTRIBUTING.md:38, which says the issue title feeds the changelog, not the PR title. The generator config doesn't show whether it reads PR titles or issue titles. Nothing enforces 'reference related issues in the description, not the title', and the history has PR titles with (#NNN) in them. The statement may be imprecise about issue versus PR titles.",
+     "proposedText": null,
+     "action": "no-op",
+     "rejected": null,
+     "cached": true,
+     "model": "claude-sonnet-5-5"
+    }
+   }
+  ],
+  "agent": {
+   "sent": 21,
+   "answered": 21,
+   "cached": 21,
+   "costUsd": 0,
+   "model": "claude-sonnet-5-5",
+   "failures": []
+  },
+  "diff": "--- a/AGENTS.md\n+++ b/AGENTS.md\n@@ -17,7 +17,7 @@ Concise extract of [CONTRIBUTING.md](CONTRIBUTING.md), which remains the referen\n \n - Follow Spring Framework code style; match surrounding code and do not reformat unrelated code.\n - Tabs, LF, UTF-8, no trailing whitespace; wrap Javadoc at 90 and code at ~120 characters.\n-- Import order, groups separated by a blank line: `java.*`, then `javax.*` + `jakarta.*`, then others, then `org.springframework.*`, then static imports.\n+- Import order, groups separated by a blank line: `java.*`, then `javax.*`, then others, then `org.springframework.*`, then static imports.\n - No wildcard imports. No static imports in production code except constants/enum constants and third-party DSL factory methods; use them in tests (e.g. `assertThat`).\n - Every source file: Apache 2.0 license header (`Copyright 2023-present the original author or authors.`, copy from an existing file), package, imports, exactly one top-level class.\n - Add `@since` on new public types and methods (e.g. `@since 2.0.0`).\n",
+  "fixes": [
+   {
+    "statement_id": "3c1dda3fae1406354cbfba12e606fe41da2e645c",
+    "line": 20,
+    "tier": "B",
+    "action": "replace",
+    "old": "`javax.*` + `jakarta.*`, then others",
+    "new": "`javax.*`, then others",
+    "outcome": "dry-run",
+    "reverify": "verified",
+    "refused": null
+   }
+  ]
+ }
+}
