@@ -208,3 +208,13 @@ describe('policy, applied by proof', () => {
     expect(vetEdit(repo, source, st, raw, 'project', { ...opts, config: { ...DEFAULT_CONFIG, autofix: { A: true, B: false, C: true } } })?.refused).toContain('switched off');
   });
 });
+
+describe('deletion guard', () => {
+  it('never deletes a statement that itself says the thing is empty', () => {
+    f = makeRepo({ 'CLAUDE.md': '# App\n\n- Experiments go in `src/experimental/`. Currently empty.\n- Sources in `src/`.\n', 'src/a.ts': 'export {};\n' });
+    const before = doc();
+    const { report } = proof({ fixes: [{ match: 'Experiments', action: 'delete', reason: 'gone', evidence: [{ kind: 'absence', ref: 'git ls-files src/experimental' }] }] }, 'run', 'CLAUDE.md', '--json');
+    expect(doc()).toBe(before);
+    expect(report?.fixes?.[0]?.refused).toContain('says the thing is empty');
+  });
+});

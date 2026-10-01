@@ -19263,7 +19263,7 @@ var KNOWN_TOOLS = /* @__PURE__ */ new Set([
   "ps"
 ]);
 var FILE_RUNNERS = /* @__PURE__ */ new Set(["bash", "sh", "zsh", "fish", "source", "node", "deno", "tsx", "ts-node", "python", "python3", "ruby", "php", "bun"]);
-var FILE_EXT = /\.(adoc|asciidoc|rst|org|tex|ipynb|tmpl|tpl|j2|jinja2?|hbs|ejs|njk|erb|liquid|mustache|template|dist|snap|ts|tsx|mts|cts|js|jsx|mjs|cjs|json|jsonc|json5|md|mdx|mdc|ya?ml|sh|bash|zsh|toml|ini|cfg|conf|sql|env|example|sample|mjml|css|scss|sass|less|lock|txt|py|pyi|go|mod|sum|rs|rb|php|java|kt|kts|gradle|cs|csproj|sln|fs|swift|c|h|cc|cpp|hpp|html|vue|svelte|astro|xml|proto|graphql|gql|tf|tfvars|hcl|dockerfile|ps1|bat|cmd|wasm|pem|crt|key|csv|tsv|png|svg|jpg|jpeg|gif|webp|ico|pdf|zip|gz|tgz)$/i;
+var FILE_EXT = /\.(targets|props|slnx|nuspec|ruleset|resx|razor|cshtml|xaml|fsproj|vbproj|proj|nupkg|adoc|asciidoc|rst|org|tex|ipynb|tmpl|tpl|j2|jinja2?|hbs|ejs|njk|erb|liquid|mustache|template|dist|snap|ts|tsx|mts|cts|js|jsx|mjs|cjs|json|jsonc|json5|md|mdx|mdc|ya?ml|sh|bash|zsh|toml|ini|cfg|conf|sql|env|example|sample|mjml|css|scss|sass|less|lock|txt|py|pyi|go|mod|sum|rs|rb|php|java|kt|kts|gradle|cs|csproj|sln|fs|swift|c|h|cc|cpp|hpp|html|vue|svelte|astro|xml|proto|graphql|gql|tf|tfvars|hcl|dockerfile|ps1|bat|cmd|wasm|pem|crt|key|csv|tsv|png|svg|jpg|jpeg|gif|webp|ico|pdf|zip|gz|tgz)$/i;
 var BARE_EXTENSION = /^\.[a-z0-9]{1,6}$/i;
 var IDENT = /^[A-Za-z_$][\w$]*$/;
 function isPathLike(t) {
@@ -19775,6 +19775,7 @@ function vetEdit(repo, source, st, raw, scope, opts) {
   else if (old === next) edit.refused = "the edit changes nothing";
   else if (action === "replace" && lineCount(next) > lineCount(old)) edit.refused = "the edit adds lines; proof never adds content (gap proposals need --gaps)";
   else if (action === "delete" && isRule(st)) edit.refused = "a rule is rewritten to match the tooling, never deleted";
+  else if (action === "delete" && /\b(currently empty|(is|are) empty|none yet|not yet|no .{1,30} yet|nothing (here|yet)|placeholder)\b/i.test(st.text)) edit.refused = "the statement itself says the thing is empty or absent; absence does not contradict it";
   else if (action === "delete" && !evidence.some((e) => e.valid && e.kind === "absence") && !st.results.some((r) => r.status === "STALE" && /not found|does not exist|said to be gone/.test(r.reason))) edit.refused = "a deletion needs evidence that the thing is absent";
   else if (!evidence.some((e) => e.valid)) edit.refused = evidence.length ? `no citation checks out (${evidence.map((e) => `${e.ref}: ${e.problem}`).join("; ").slice(0, 240)})` : "an edit without evidence";
   return edit;
@@ -19938,7 +19939,7 @@ function globToRegExp(glob) {
   return new RegExp(`^${re}$`);
 }
 function expandAlternatives(p) {
-  const withStars = p.replace(/<[^>/]+>/g, "*");
+  const withStars = p.replace(/<[^>/]+>/g, "*").replace(/\{[A-Za-z_][\w-]*\}/g, "*");
   const alt = withStars.match(/\{([^{}]+)\}/);
   if (!alt) return [withStars];
   return (alt[1] ?? "").split(/[|,]/).flatMap((choice) => expandAlternatives(withStars.replace(alt[0], choice.trim())));
@@ -20045,6 +20046,7 @@ async function checkSymbol(ctx, span) {
   if (SHORT_FLAG.test(text4)) return blocked(span, "a short flag; which command it belongs to is in the sentence");
   if (KEBAB.test(text4) || HOST.test(text4) || text4.includes("<") || text4.startsWith("refs/")) return checkLiteral(ctx, span, text4);
   const q = qualifiedName(text4);
+  if (q && q.scope.includes("/") && (ctx.repo.files.includes(text4) || ctx.repo.dirs.has(text4))) return verified(span, "definition", [{ ref: text4, level: "definition" }], `${text4} is a file of this repository`);
   if (q && (q.scope.includes("/") || scopeDirs(ctx, q.scope).length)) {
     const dirs = scopeDirs(ctx, q.scope);
     if (dirs.length) {
@@ -20739,6 +20741,10 @@ async function checkCommand(ctx, span) {
     default:
       break;
   }
+  if (/^\/[a-z][\w-]*$/.test(bin)) {
+    const handler = stringInCode(ctx, bin.slice(1), [".github"]) ?? stringInCode(ctx, bin, [".github"]);
+    return handler ? verified(span, "reference", [handler], `a bot command handled at ${handler.ref}`) : notChecked(span, `a command for a bot (${bin}), not a program in this repository`);
+  }
   if (/^\.{0,2}\//.test(bin) || /^[\w.-]+\/[\w./-]+$/.test(bin)) {
     const file = bin.replace(/^\.\//, "");
     if (/^\.\/(gradlew|mvnw)$/.test(bin)) return fileArg(ctx, span, file, dirs);
@@ -20995,6 +21001,7 @@ function absent(span, found) {
   return found?.length ? stale(span, `said to be gone, but still exists: ${shown(found)}`, found.slice(0, 3).map((f) => ({ ref: f || ".", level: "definition" }))) : verified(span, "definition", [{ ref: `no ${span.text} in the repository`, level: "definition" }], "absent, as the statement says");
 }
 var PLACEHOLDER_PATH = /(^|\/)path\/to\/|(^|[/_.-])(foo|bar|baz|qux|xxx|yyy)([/_.-]|$)|(^|\/)(your|my|some)[-_]/i;
+var PLACEHOLDER_SEGMENT = /(^|[/._-])(ProjectName|PackageName|ComponentName|ModuleName|ClassName|TestName|FeatureName|ServiceName|AppName|Namespace|MyProject|YourProject|MyApp|YourApp|Project|Example|Sample)(?=[/._-]|$)/;
 function exportOf(ctx, segments) {
   const [name, ...rest] = segments;
   if (!name || !rest.length) return null;
@@ -21039,12 +21046,12 @@ function checkPath(ctx, span) {
     if (named) return verified(span, "reference", [named], `not a file in the repository; the code names it at ${named.ref}`);
     return unconfirmed(span, `no file named ${first} in the repository`);
   }
-  if (PLACEHOLDER_PATH.test(t)) return notChecked(span, "an example path, not a file the statement claims exists");
+  if (PLACEHOLDER_PATH.test(t) || PLACEHOLDER_SEGMENT.test(t)) return notChecked(span, "an example path, not a file the statement claims exists");
   const pkg = ctx.repo.packages.find((p) => first in p.deps);
   if (pkg) return verified(span, "declaration", [{ ref: `${pkg.file} ${first}`, level: "declaration" }], `an import path into ${first}, which ${pkg.file} declares`);
   const exported = exportOf(ctx, segments);
   if (exported) return verified(span, "declaration", [{ ref: exported, level: "declaration" }], `an export of a workspace package: ${exported}`);
-  if (/<[^>]+>/.test(t)) return unconfirmed(span, `no file matches the pattern ${t} yet`);
+  if (/<[^>]+>|\{[A-Za-z_][\w-]*\}/.test(t)) return unconfirmed(span, `no file matches the pattern ${t} yet`);
   const bare = !t.endsWith("/") && !posix7.extname(segments[segments.length - 1] ?? "");
   if (bare) {
     const named = stringInCode(ctx, t);
@@ -21228,8 +21235,47 @@ function rubySources(ctx) {
 function phpSources(ctx) {
   const out = [];
   for (const f of ctx.repo.find(/(^|\/)composer\.json$/)) {
-    const spec = ctx.repo.structured(f)?.require?.php;
+    const data = ctx.repo.structured(f);
+    const spec = data?.require?.php;
     if (spec && lowerBound(spec)) out.push({ where: `${f} require.php "${spec}"`, version: lowerBound(spec) ?? [], floor: true });
+    const platform2 = data?.config?.platform?.php;
+    if (platform2 && lowerBound(platform2)) out.push({ where: `${f} config.platform.php "${platform2}"`, version: lowerBound(platform2) ?? [], floor: false });
+  }
+  return out;
+}
+function dotnetSources(ctx) {
+  const out = [];
+  for (const f of ctx.repo.find(/(^|\/)global\.json$/)) {
+    const v = ctx.repo.structured(f, { quiet: true })?.sdk?.version;
+    const m = v?.match(/^(\d+)\.(\d+)/);
+    if (m) out.push({ where: `${f} sdk.version "${v}"`, version: [Number(m[1]), Number(m[2])], floor: false });
+  }
+  const frameworks = /* @__PURE__ */ new Map();
+  for (const f of ctx.repo.find(/\.(csproj|fsproj|vbproj|props|targets)$/).slice(0, 400)) {
+    for (const m of (ctx.repo.read(f) ?? "").matchAll(/<TargetFrameworks?>([^<]+)<\/TargetFrameworks?>/g)) {
+      for (const tfm of (m[1] ?? "").split(";")) {
+        const v = tfm.trim().match(/^net(\d+)\.(\d+)/);
+        if (v && !frameworks.has(`${v[1]}.${v[2]}`)) frameworks.set(`${v[1]}.${v[2]}`, f);
+      }
+    }
+  }
+  for (const [v, f] of frameworks) out.push({ where: `${f} TargetFramework net${v}`, version: v.split(".").map(Number), floor: false });
+  return out;
+}
+function javaSources(ctx) {
+  const out = [];
+  const sdkman = ctx.repo.read(".sdkmanrc")?.match(/^java=(\d+)/m);
+  if (sdkman?.[1]) out.push({ where: `.sdkmanrc java=${sdkman[1]}`, version: [Number(sdkman[1])], floor: false });
+  const jv = ctx.repo.read(".java-version")?.trim().match(/^(\d+)/);
+  if (jv?.[1]) out.push({ where: `.java-version ${jv[1]}`, version: [Number(jv[1])], floor: false });
+  for (const f of ctx.repo.find(/(^|\/)pom\.xml$/).slice(0, 50)) {
+    const m = (ctx.repo.read(f) ?? "").match(/<(maven\.compiler\.release|java\.version|maven\.compiler\.source|release)>(\d+)</);
+    if (m?.[2]) out.push({ where: `${f} <${m[1]}>${m[2]}`, version: [Number(m[2])], floor: true });
+  }
+  for (const f of ctx.repo.find(/(^|\/)build\.gradle(\.kts)?$/).slice(0, 50)) {
+    const m = (ctx.repo.read(f) ?? "").match(/JavaLanguageVersion\.of\((\d+)\)|jvmToolchain\((\d+)\)|sourceCompatibility\s*=\s*(?:JavaVersion\.VERSION_)?['"]?(\d+)/);
+    const v = m?.[1] ?? m?.[2] ?? m?.[3];
+    if (v) out.push({ where: `${f} Java ${v}`, version: [Number(v)], floor: true });
   }
   return out;
 }
@@ -21264,7 +21310,7 @@ function checkVersion(ctx, span) {
   const claim = (m[3] ?? "").split(".").map(Number);
   const atLeast = Boolean(m[2] && m[2] !== "~") || m[4] === "+";
   const depth = claim.length;
-  const sources = tech === "node" ? nodeSources(ctx) : tech === "python" ? pythonSources(ctx) : tech === "go" ? goSources(ctx) : tech === "rust" ? rustSources(ctx) : tech === "ruby" ? rubySources(ctx) : tech === "php" ? phpSources(ctx) : tech === "postgresql" ? composeImages(ctx, /^(postgres|postgis|postgresql|pgvector|timescaledb[\w-]*)$/) : tech === "redis" ? composeImages(ctx, /^(redis|valkey|redis-stack[\w-]*)$/) : tech === "mysql" ? composeImages(ctx, /^(mysql|mariadb)$/) : tech === "mongodb" ? composeImages(ctx, /^(mongo|mongodb)$/) : tech === "elasticsearch" ? composeImages(ctx, /^(elasticsearch)$/) : tech === "kafka" ? composeImages(ctx, /^(kafka|cp-kafka)$/) : tech === "pnpm" || tech === "yarn" || tech === "npm" ? packageManagerSources(ctx, tech) : packageSources(ctx, tech);
+  const sources = tech === "node" ? nodeSources(ctx) : tech === "python" ? pythonSources(ctx) : tech === "go" ? goSources(ctx) : tech === "rust" ? rustSources(ctx) : tech === "ruby" ? rubySources(ctx) : tech === "php" ? phpSources(ctx) : tech === ".net" ? dotnetSources(ctx) : tech === "java" ? javaSources(ctx) : tech === "postgresql" ? composeImages(ctx, /^(postgres|postgis|postgresql|pgvector|timescaledb[\w-]*)$/) : tech === "redis" ? composeImages(ctx, /^(redis|valkey|redis-stack[\w-]*)$/) : tech === "mysql" ? composeImages(ctx, /^(mysql|mariadb)$/) : tech === "mongodb" ? composeImages(ctx, /^(mongo|mongodb)$/) : tech === "elasticsearch" ? composeImages(ctx, /^(elasticsearch)$/) : tech === "kafka" ? composeImages(ctx, /^(kafka|cp-kafka)$/) : tech === "pnpm" || tech === "yarn" || tech === "npm" ? packageManagerSources(ctx, tech) : packageSources(ctx, tech);
   if (sources === null) return blocked(span, `no rule reads ${m[1]} versions yet`);
   if (!sources.length) return unconfirmed(span, `nothing in the repository pins a ${m[1]} version`);
   const evidence = sources.slice(0, 4).map((s) => ({ ref: s.where, level: "declaration" }));

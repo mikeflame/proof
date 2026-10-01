@@ -119,3 +119,18 @@ describe('Containers and CI', () => {
     expect(spanOf(r, 'docker compose up vanished').status).toBe('STALE');
   });
 });
+
+describe('versions beyond the first matrix', () => {
+  it('.NET from global.json and target frameworks, Java from the build, PHP from composer', async () => {
+    const r = await checkFiles({
+      'CLAUDE.md': '# Doc\n\n- Built on .NET 9.0.\n- Java 21 is required.\n- PHP 8.3 or newer.\n',
+      'global.json': JSON.stringify({ sdk: { version: '10.0.100' } }),
+      'src/App/App.csproj': '<Project><PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup></Project>\n',
+      'pom.xml': '<project><properties><maven.compiler.release>21</maven.compiler.release></properties></project>\n',
+      'composer.json': JSON.stringify({ name: 'acme/x', require: { php: '>=8.3' } }),
+    });
+    expect(spanOf(r, '.NET 9.0').status).toBe('STALE');
+    expect(spanOf(r, 'Java 21').status).toBe('VERIFIED');
+    expect(spanOf(r, 'PHP 8.3').status).toBe('VERIFIED');
+  });
+});

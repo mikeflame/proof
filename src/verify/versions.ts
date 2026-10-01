@@ -161,8 +161,51 @@ function rubySources(ctx: CheckContext): Source[] {
 function phpSources(ctx: CheckContext): Source[] {
   const out: Source[] = [];
   for (const f of ctx.repo.find(/(^|\/)composer\.json$/)) {
-    const spec = (ctx.repo.structured(f) as { require?: Record<string, string> } | null)?.require?.php;
+    const data = ctx.repo.structured(f) as { require?: Record<string, string>; config?: { platform?: { php?: string } } } | null;
+    const spec = data?.require?.php;
     if (spec && lowerBound(spec)) out.push({ where: `${f} require.php "${spec}"`, version: lowerBound(spec) ?? [], floor: true });
+    const platform = data?.config?.platform?.php;
+    if (platform && lowerBound(platform)) out.push({ where: `${f} config.platform.php "${platform}"`, version: lowerBound(platform) ?? [], floor: false });
+  }
+  return out;
+}
+
+/** .NET: the SDK `global.json` pins, and the target frameworks (`net11.0`) projects build for. */
+function dotnetSources(ctx: CheckContext): Source[] {
+  const out: Source[] = [];
+  for (const f of ctx.repo.find(/(^|\/)global\.json$/)) {
+    const v = (ctx.repo.structured(f, { quiet: true }) as { sdk?: { version?: string } } | null)?.sdk?.version;
+    const m = v?.match(/^(\d+)\.(\d+)/);
+    if (m) out.push({ where: `${f} sdk.version "${v}"`, version: [Number(m[1]), Number(m[2])], floor: false });
+  }
+  const frameworks = new Map<string, string>();
+  for (const f of ctx.repo.find(/\.(csproj|fsproj|vbproj|props|targets)$/).slice(0, 400)) {
+    for (const m of (ctx.repo.read(f) ?? '').matchAll(/<TargetFrameworks?>([^<]+)<\/TargetFrameworks?>/g)) {
+      for (const tfm of (m[1] ?? '').split(';')) {
+        const v = tfm.trim().match(/^net(\d+)\.(\d+)/);
+        if (v && !frameworks.has(`${v[1]}.${v[2]}`)) frameworks.set(`${v[1]}.${v[2]}`, f);
+      }
+    }
+  }
+  for (const [v, f] of frameworks) out.push({ where: `${f} TargetFramework net${v}`, version: v.split('.').map(Number), floor: false });
+  return out;
+}
+
+/** Java: `.sdkmanrc`, `.java-version`, Maven `release`/`java.version`, Gradle toolchains. */
+function javaSources(ctx: CheckContext): Source[] {
+  const out: Source[] = [];
+  const sdkman = ctx.repo.read('.sdkmanrc')?.match(/^java=(\d+)/m);
+  if (sdkman?.[1]) out.push({ where: `.sdkmanrc java=${sdkman[1]}`, version: [Number(sdkman[1])], floor: false });
+  const jv = ctx.repo.read('.java-version')?.trim().match(/^(\d+)/);
+  if (jv?.[1]) out.push({ where: `.java-version ${jv[1]}`, version: [Number(jv[1])], floor: false });
+  for (const f of ctx.repo.find(/(^|\/)pom\.xml$/).slice(0, 50)) {
+    const m = (ctx.repo.read(f) ?? '').match(/<(maven\.compiler\.release|java\.version|maven\.compiler\.source|release)>(\d+)</);
+    if (m?.[2]) out.push({ where: `${f} <${m[1]}>${m[2]}`, version: [Number(m[2])], floor: true });
+  }
+  for (const f of ctx.repo.find(/(^|\/)build\.gradle(\.kts)?$/).slice(0, 50)) {
+    const m = (ctx.repo.read(f) ?? '').match(/JavaLanguageVersion\.of\((\d+)\)|jvmToolchain\((\d+)\)|sourceCompatibility\s*=\s*(?:JavaVersion\.VERSION_)?['"]?(\d+)/);
+    const v = m?.[1] ?? m?.[2] ?? m?.[3];
+    if (v) out.push({ where: `${f} Java ${v}`, version: [Number(v)], floor: true });
   }
   return out;
 }
@@ -210,6 +253,8 @@ export function checkVersion(ctx: CheckContext, span: Span): SpanResult {
     : tech === 'rust' ? rustSources(ctx)
     : tech === 'ruby' ? rubySources(ctx)
     : tech === 'php' ? phpSources(ctx)
+    : tech === '.net' ? dotnetSources(ctx)
+    : tech === 'java' ? javaSources(ctx)
     : tech === 'postgresql' ? composeImages(ctx, /^(postgres|postgis|postgresql|pgvector|timescaledb[\w-]*)$/)
     : tech === 'redis' ? composeImages(ctx, /^(redis|valkey|redis-stack[\w-]*)$/)
     : tech === 'mysql' ? composeImages(ctx, /^(mysql|mariadb)$/)

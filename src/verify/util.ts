@@ -76,7 +76,8 @@ export function globToRegExp(glob: string): RegExp {
  * Square brackets are left alone here: callers try them literally first (`pages/[slug].tsx`).
  */
 export function expandAlternatives(p: string): string[] {
-  const withStars = p.replace(/<[^>/]+>/g, '*');
+  // `<name>` and `{name}` are placeholders; `{a,b}` and `{a|b}` are alternatives.
+  const withStars = p.replace(/<[^>/]+>/g, '*').replace(/\{[A-Za-z_][\w-]*\}/g, '*');
   const alt = withStars.match(/\{([^{}]+)\}/);
   if (!alt) return [withStars];
   return (alt[1] ?? '').split(/[|,]/).flatMap((choice) => expandAlternatives(withStars.replace(alt[0], choice.trim())));
