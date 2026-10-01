@@ -41,6 +41,7 @@ try {
     target: 'node22',
     legalComments: 'none',
     outfile: join(tmp, 'proof.mjs'),
+    define: { __PROOF_VERSION__: JSON.stringify(pkg.version) },
     // The bundle is ESM; libraries that call require() need a real one.
     banner: { js: "#!/usr/bin/env node\nimport { createRequire as __proofRequire } from 'node:module'; const require = __proofRequire(import.meta.url);" },
   });

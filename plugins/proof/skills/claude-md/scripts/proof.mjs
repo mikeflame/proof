@@ -21377,54 +21377,8 @@ async function checkStatement(ctx, st) {
   return aggregate(st, results);
 }
 
-// package.json
-var package_default = {
-  name: "proof-claude-md",
-  version: "0.1.0",
-  private: true,
-  description: "Prove your CLAUDE.md is still true: every statement checked against the repo, with evidence.",
-  type: "module",
-  license: "MIT",
-  engines: {
-    node: ">=22"
-  },
-  scripts: {
-    build: "node scripts/build.mjs",
-    typecheck: "tsc --noEmit",
-    test: "npm run build && vitest run",
-    validate: "claude plugin validate . && claude plugin validate ./plugins/proof",
-    "build:check": "node scripts/build.mjs --check",
-    changelog: "node scripts/changelog.mjs",
-    release: "node scripts/release.mjs"
-  },
-  devDependencies: {
-    "@types/mdast": "^4.0.4",
-    "@types/node": "^26.6.3",
-    "@vscode/tree-sitter-wasm": "^0.3.1",
-    esbuild: "^0.28.2",
-    "mdast-util-from-markdown": "^2.0.3",
-    "mdast-util-frontmatter": "^2.0.1",
-    "mdast-util-gfm": "^3.1.0",
-    "micromark-extension-frontmatter": "^2.0.0",
-    "micromark-extension-gfm": "^3.0.0",
-    "smol-toml": "^1.9.0",
-    typescript: "^7.0.2",
-    vitest: "^5.0.3",
-    yaml: "^2.9.1"
-  },
-  bin: {
-    proof: "plugins/proof/skills/claude-md/scripts/proof.mjs"
-  },
-  files: [
-    "plugins/",
-    ".claude-plugin/",
-    "README.md",
-    "LICENSE"
-  ]
-};
-
 // src/version.ts
-var VERSION = package_default.version;
+var VERSION = true ? "0.1.0" : JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")).version;
 
 // src/pipeline.ts
 var MAX_IMPORT_HOPS = 4;

@@ -101,6 +101,7 @@ What the checks read mechanically in each ecosystem, each cell proven by a fixtu
 `test/matrix.test.ts`. The verifier agent covers the rest, and the corpus column counts the pinned
 public repositories of the evaluation below.
 
+<!-- proof:ignore-start reason="names the kinds of files proof reads in other repositories, not files of this one" -->
 <!-- generated:matrix -->
 | Ecosystem | Scripts and tasks | Versions | Definitions | Corpus repos |
 | --- | --- | --- | --- | --- |
@@ -113,6 +114,7 @@ public repositories of the evaluation below.
 | Shell | functions and `case` labels in any script, justfile recipes, Taskfile tasks | — | tree-sitter Bash | — |
 | Containers and CI | compose services, workflow job names | compose and Dockerfile image tags | YAML parse; Dockerfile stages agent only | — |
 <!-- /generated:matrix -->
+<!-- proof:ignore-end -->
 
 ## Reading the report
 
