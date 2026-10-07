@@ -1,6 +1,6 @@
 {
  "note": "proof check (mechanical stage only) re-run after the held-out run, with the fixes for its false alarms. The held-out split was seen by then, so these are not held-out numbers. The frozen held-out results stay in results/ and metrics.json.",
- "proof": "d61c3ec",
+ "proof": "1ccc4aa",
  "measured": "2026-10-01",
  "groups": {
   "check/tune": {
