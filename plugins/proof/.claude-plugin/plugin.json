@@ -1,6 +1,6 @@
 {
   "name": "proof",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Prove your CLAUDE.md is still true: every statement checked against the repository, with file:line evidence.",
   "author": {
     "name": "Mykhailo Savonik"
