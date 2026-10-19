@@ -2,7 +2,7 @@
 
 Generated from conventional commits by `npm run changelog`.
 
-## Unreleased
+## v0.4.0
 
 ### Fixes
 
