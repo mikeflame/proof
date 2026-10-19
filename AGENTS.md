@@ -4,7 +4,7 @@
 - `npm run gate` must pass before every commit: drift, types, tests, and no stale line in AGENTS.md or README.md. `npm run validate` must pass after any manifest change.
 - Commit what `npm run build` regenerates with every change to `src/`: users run the bundle, not the sources. `npm run build:check` fails on anything stale.
 - `SKILL.md` and the README tables are generated: edit `src/skill/SKILL.md.tmpl` and `src/vocabulary.ts`, never the outputs.
-- `docs/rework-spec.md` is the working spec. Its numbered acceptance criteria are tests in `test/acceptance.test.ts`; the agent stage is tested with `test/fixtures/fake-claude.mjs`, never the real CLI.
+- `docs/spec.md` is the design spec. Its numbered acceptance criteria are tests in `test/acceptance.test.ts`; the agent stage is tested with `test/fixtures/fake-claude.mjs`, never the real CLI.
 - Every rule in `src/verify/` has a test with a fixture that would fail without it. False alarms
   lose trust faster than misses, so an uncertain check reports unconfirmed, never stale.
 - A check that cannot run reports not checked with the reason and keeps its statement open. Never turn an error into "not found".

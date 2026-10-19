@@ -221,7 +221,8 @@ third-party notices, the skill (from `src/skill/SKILL.md.tmpl`) with a copy of `
 in this README and the plugin manifest version.
 CI runs `npm run build:check` and fails when any committed copy is out of date. `package.json`
 holds the only version; `npm run release -- <version>` sets it, rebuilds, writes `CHANGELOG.md`
-from the conventional commits, and tags. `docs/rework-spec.md` is the working spec.
+from the conventional commits, and tags. `docs/spec.md` is the design spec, with its acceptance
+criteria and where each one stands.
 
 ## License
 

@@ -1,9 +1,9 @@
-# proof rework: from checker to verification pipeline
+# proof: design and acceptance criteria
 
 Status: implemented through phase 7, 2026-10-01; section 13 gives the standing of each criterion. Owner: Mykhailo Savonik.
 Reference implementation studied: [kunchenguid/no-mistakes](https://github.com/kunchenguid/no-mistakes) at `f4b85ae` (release 1.85.3).
 
-This document replaces the first review of the repo. It is the working spec for the next version of `/proof:claude-md`. Every section ends in acceptance criteria that fail against the current code, so a session can pick one up and know when it is done.
+Written as the plan for the rework that turned the first checker into a verification pipeline, this is now the design reference for `/proof:claude-md`. Every section ends in acceptance criteria, which were written to fail against the code of the time; section 13 says where each one stands and which test proves it.
 
 ---
 
