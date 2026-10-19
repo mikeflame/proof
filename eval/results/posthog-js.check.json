@@ -29,7 +29,7 @@
    "none": 3
   },
   "git": {
-   "root": "/home/ms/projects/proof-cache/corpus/posthog-js",
+   "root": "<corpus>/posthog-js",
    "tree": "19a1ae0611cf934cbd400a57a57ce82b5256b4a0",
    "head": "c7bf8ca76b5aaad2a4badd1d1476dc499ca0009a",
    "branch": null,

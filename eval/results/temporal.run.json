@@ -29,7 +29,7 @@
    "none": 9
   },
   "git": {
-   "root": "/home/ms/projects/proof-cache/corpus/temporal",
+   "root": "<corpus>/temporal",
    "tree": "db751bc563da5e568694e4daa2df705ec4f5a321",
    "head": "fc4372605ce23f333b7e1a43eef303ff002c2ef1",
    "branch": null,

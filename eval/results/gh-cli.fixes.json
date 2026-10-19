@@ -29,7 +29,7 @@
    "none": 2
   },
   "git": {
-   "root": "/home/ms/projects/proof-cache/corpus/gh-cli",
+   "root": "<corpus>/gh-cli",
    "tree": "a83338918c5283e049302d35e04ae8a01585c950",
    "head": "fc4b137cdef0a6bd28fd461b7cf9c84a5812a8cd",
    "branch": null,

@@ -29,7 +29,7 @@
    "none": 1
   },
   "git": {
-   "root": "/home/ms/projects/proof-cache/corpus/ruff",
+   "root": "<corpus>/ruff",
    "tree": "1fd689cfa960a530bb3ee2b41b66078e997c6956",
    "head": "ccba26cc3af909b7f19060f48f53daeab5070f9d",
    "branch": null,

@@ -29,7 +29,7 @@
    "none": 8
   },
   "git": {
-   "root": "/home/ms/projects/proof-cache/corpus/typescript-sdk",
+   "root": "<corpus>/typescript-sdk",
    "tree": "9a06db8bfd360a41ae2a1ccd581d720792744ddb",
    "head": "433eb413dc305ebeb93b8ebcde0095a8fc0d5fa0",
    "branch": null,

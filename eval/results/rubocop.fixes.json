@@ -29,7 +29,7 @@
    "none": 0
   },
   "git": {
-   "root": "/home/ms/projects/proof-cache/corpus/rubocop",
+   "root": "<corpus>/rubocop",
    "tree": "7ce90be4bdf2c8b41d1be077bb8b04029f54fcd1",
    "head": "8cdbb3bffe672b47aed6b8da7443060373458629",
    "branch": null,

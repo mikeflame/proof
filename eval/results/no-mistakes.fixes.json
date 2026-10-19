@@ -29,7 +29,7 @@
    "none": 1
   },
   "git": {
-   "root": "/home/ms/projects/proof-cache/corpus/no-mistakes",
+   "root": "<corpus>/no-mistakes",
    "tree": "a6400d8c751a2cb21eabc8d32060556e4d253528",
    "head": "f4b85ae161cef8f14e289cc90aebae044ed570b9",
    "branch": null,

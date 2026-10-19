@@ -29,7 +29,7 @@
    "none": 3
   },
   "git": {
-   "root": "/home/ms/projects/proof-cache/corpus/spring-ai",
+   "root": "<corpus>/spring-ai",
    "tree": "ab87e9f3581db3d92c99c3fbd493afcac6883209",
    "head": "46d05c2fdbab52f6ef04207abe19b12687a47453",
    "branch": null,

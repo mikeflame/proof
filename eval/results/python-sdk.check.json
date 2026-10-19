@@ -29,7 +29,7 @@
    "none": 7
   },
   "git": {
-   "root": "/home/ms/projects/proof-cache/corpus/python-sdk",
+   "root": "<corpus>/python-sdk",
    "tree": "2dd724c630e33c044b503288db0877592b370987",
    "head": "d639cf7f97f77388fa7da60c0f9b04f8837b77fd",
    "branch": null,

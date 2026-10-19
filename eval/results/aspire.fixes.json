@@ -29,7 +29,7 @@
    "none": 15
   },
   "git": {
-   "root": "/home/ms/projects/proof-cache/corpus/aspire",
+   "root": "<corpus>/aspire",
    "tree": "6b1677f8efbd436b40b8b004dc484fad52d90bd4",
    "head": "d70876569e27b318bb2d7035dc1f63d439b13166",
    "branch": null,

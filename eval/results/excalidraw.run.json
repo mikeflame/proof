@@ -29,7 +29,7 @@
    "none": 1
   },
   "git": {
-   "root": "/home/ms/projects/proof-cache/corpus/excalidraw",
+   "root": "<corpus>/excalidraw",
    "tree": "70a1ead59dab6f2325982e44403b591ac2f314f4",
    "head": "1919728724a1b71af73cb7e6d2d1a418a1415b1c",
    "branch": null,

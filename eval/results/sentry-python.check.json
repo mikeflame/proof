@@ -29,7 +29,7 @@
    "none": 0
   },
   "git": {
-   "root": "/home/ms/projects/proof-cache/corpus/sentry-python",
+   "root": "<corpus>/sentry-python",
    "tree": "03dda66090139c098ff47d0f48280037fb692fdb",
    "head": "014769c4ba1db2810e0a1a5c59659b4689b80d32",
    "branch": null,
