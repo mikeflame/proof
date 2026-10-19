@@ -127,6 +127,8 @@ function noticesFile() {
   ].join('\n');
 }
 emit(join(out, 'THIRD_PARTY_NOTICES.md'), noticesFile());
+// proof's own license travels with the skill: the plugin and `proof install` copy only the skill folder.
+emit(join(skill, 'LICENSE'), readFileSync(join(root, 'LICENSE')));
 
 // SKILL.md from its template and the shared vocabulary.
 const template = readFileSync(join(root, 'src/skill/SKILL.md.tmpl'), 'utf8');
@@ -186,4 +188,4 @@ if (check && drift.length) {
   console.error(`out of date (run npm run build and commit):\n  ${drift.join('\n  ')}`);
   process.exit(1);
 }
-console.log(check ? 'everything generated is up to date' : `built proof ${pkg.version}: bundle, ${wanted.size} grammar files, third-party notices, SKILL.md, README tables, plugin manifest`);
+console.log(check ? 'everything generated is up to date' : `built proof ${pkg.version}: bundle, ${wanted.size} grammar files, third-party notices, LICENSE, SKILL.md, README tables, plugin manifest`);
