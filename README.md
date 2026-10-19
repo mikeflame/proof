@@ -75,6 +75,37 @@ layout Codex, OpenCode and Pi read), and leaves both alone when they are already
 your repository. It needs Node 22+ and git; the parsers and grammars ship next to it.
 `proof.mjs run` adds the verifier and needs the `claude` CLI (or `PROOF_CLAUDE` set to its path).
 
+## What it can touch
+
+`proof check` runs no agent and writes nothing. `proof run` hands what the checks leave open to
+`claude -p` calls, and runs each of them locked down:
+
+- Read-only tools: Read, Grep, Glob, and Bash limited to read-only commands such as `git log`,
+  `git grep`, `ls`, `find`, `grep` and `cat`. Edit, Write, NotebookEdit, WebFetch and WebSearch are
+  disallowed, no MCP server is loaded, and no session is saved.
+- Only your user-level Claude Code settings load. The repository's own Claude Code settings, hooks and
+  instruction files do not, so the file being checked never instructs the agent that checks it.
+- No agent writes a file. The fixer returns its edits as data; proof applies them under its policy to
+  the instruction file alone and records them in the sidecar next to it. With `--commit` it commits
+  those two files and nothing else.
+- A command an agent cites as evidence is re-run only when it is on proof's read-only list, with no
+  redirection, substitution or chaining.
+
+Verdicts are cached outside the repository, under `$XDG_CACHE_HOME` or `~/.cache/`. A repository's
+content can still try to mislead the verifier. proof keeps a verdict only when its citations check out
+and re-verifies every fix with a fresh agent, but on a repository you do not trust, read the diff
+before you keep it.
+
+## What it costs
+
+`proof check` is free: it calls no model. `proof run` calls `claude -p` under your own Claude Code
+login, so on a Claude subscription the calls count against its usage limits, and with an API key they
+are billed to it. `--budget-usd` caps the whole run, $10 by default, in the cost `claude` reports for
+each call. A stage the budget does not reach is skipped, its statements stay open, and the report says
+so. The verifier and the fixer use `claude-sonnet-5-5` at high effort unless you pass `--model` or
+`--effort`. Verdicts are cached, so a re-run pays only for what changed: on denoland/deno a full run
+cost $2.37 and the re-run after its fixes $0.15.
+
 ## What it checks
 
 <!-- proof:ignore-start reason="the left column shows the kinds of claims proof reads, not facts about this repository" -->
