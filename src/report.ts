@@ -3,8 +3,9 @@ import type { FileReport } from './pipeline.ts';
 import { STATUSES } from './vocabulary.ts';
 
 const MARK: Record<string, string> = { VERIFIED: '✓', STALE: '✗', UNCONFIRMED: '?', NOT_CHECKED: '·' };
+const oneLine = (raw: string) => raw.replace(/\s+/g, ' ').trim();
 const clip = (raw: string, n = 160) => {
-  const t = raw.replace(/\s+/g, ' ').trim();
+  const t = oneLine(raw);
   return t.length > n ? `${t.slice(0, n - 1)}…` : t;
 };
 
@@ -23,9 +24,9 @@ function spanLine(r: SpanResult): string {
 function agentLines(s: CheckedStatement): string[] {
   const a = s.agent;
   if (!a) return [];
-  const head = `  - verifier${a.cached ? ' (cached)' : ''}: ${a.verdict.replace(/_/g, ' ')}${a.rejected ? ` — refused: ${a.rejected}` : a.reason ? ` — ${clip(a.reason, 220)}` : ''}`;
+  const head = `  - verifier${a.cached ? ' (cached)' : ''}: ${a.verdict.replace(/_/g, ' ')}${a.rejected ? ` — refused: ${a.rejected}` : a.reason ? ` — ${oneLine(a.reason)}` : ''}`;
   const evidence = a.evidence.slice(0, 3).map((e) => `    - ${e.valid ? '✓' : '✗'} ${e.kind} \`${clip(e.ref, 100)}\`${e.excerpt ? ` "${clip(e.excerpt, 90)}"` : ''}${e.valid ? '' : ` — ${e.problem}`}`);
-  const proposal = a.proposedText && s.status === 'STALE' ? [`  - proposed: ${clip(a.proposedText, 300)}`] : [];
+  const proposal = a.proposedText && s.status === 'STALE' ? [`  - proposed: ${oneLine(a.proposedText)}`] : [];
   return [head, ...evidence, ...proposal];
 }
 
@@ -34,10 +35,10 @@ function fixLines(s: CheckedStatement): string[] {
   if (!f) return [];
   const id = s.id.slice(0, 10);
   if (f.outcome === 'applied') return [`  - fixed (tier ${f.tier}, id ${id})${s.status === 'FIXED' ? '' : '; what it changed is proven, the rest is still open'}: was "${clip(f.was ?? f.old, 200)}"`, ...f.evidence.filter((e) => e.valid).slice(0, 2).map((e) => `    - ✓ ${e.kind} \`${clip(e.ref, 100)}\`${e.excerpt ? ` "${clip(e.excerpt, 90)}"` : ''}`)];
-  const proposal = f.action === 'delete' ? 'delete the statement' : `"${clip(f.old, 120)}" → "${clip(f.new, 160)}"`;
-  if (f.outcome === 'rejected') return [`  - fix rejected and reverted (tier ${f.tier}): ${proposal}`, `    - re-verifier: ${clip(f.reverify, 220)}`];
+  const proposal = f.action === 'delete' ? 'delete the statement' : `"${clip(f.old, 120)}" → "${oneLine(f.new)}"`;
+  if (f.outcome === 'rejected') return [`  - fix rejected and reverted (tier ${f.tier}): ${proposal}`, `    - re-verifier: ${oneLine(f.reverify)}`];
   if (f.outcome === 'refused') return [`  - fix not applied: ${f.reverify}`, `    - proposed: ${proposal}`];
-  return [`  - would fix (tier ${f.tier}): ${proposal}`, `    - re-verifier: ${clip(f.reverify, 220)}`];
+  return [`  - would fix (tier ${f.tier}): ${proposal}`, `    - re-verifier: ${oneLine(f.reverify)}`];
 }
 
 function item(s: CheckedStatement, withSpans: boolean): string[] {

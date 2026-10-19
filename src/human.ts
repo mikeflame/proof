@@ -3,6 +3,7 @@ import { spawnSync } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
 import { isAbsolute, join } from 'node:path';
 import { checkEvidence } from './agent/evidence.ts';
+import { DEFAULT_VERIFY } from './agent/verify.ts';
 import { appendDecisions, type DecisionRecord, loadDecisions } from './decisions.ts';
 import type { CheckedStatement } from './model.ts';
 import type { Run } from './pipeline.ts';
@@ -28,10 +29,12 @@ const OPEN = new Set(['UNCONFIRMED', 'UNVERIFIED_WITH_REASON']);
 
 /** The open statements of a file, one line each, for a person to decide. */
 export async function listOpen(run: Run, file: string): Promise<string> {
-  const [report] = await run.checkTargets([{ file, why: 'named on the command line', scope: 'project' }]);
+  const checked = await run.checkTargets([{ file, why: 'named on the command line', scope: 'project' }]);
+  // The verifier's verdicts from the last `proof run`, read from its cache: listing never calls it.
+  const [report] = checked.length ? await run.verify(checked, { ...DEFAULT_VERIFY, cacheOnly: true }) : [];
   const open = (report?.statements ?? []).filter((s) => OPEN.has(s.status));
   if (!open.length) return `${file}: no open statements to decide.\n`;
-  return `${open.map((s) => `L${s.line}  ${s.id.slice(0, 10)}  ${s.text.slice(0, 120)}\n    ${s.agent?.reason ?? s.reason}`).join('\n')}\n\nDecide one: proof decide ${file} L<line> --rule --reason "…"  or  --fact --evidence <path:line> --reason "…"\n`;
+  return `${open.map((s) => `L${s.line}  ${s.id.slice(0, 10)}  ${s.text.slice(0, 120)}\n    ${s.agent?.reason ? `verifier: ${s.agent.reason}` : s.reason}`).join('\n')}\n\nDecide one: proof decide ${file} L<line> --rule --reason "…"  or  --fact --evidence <path:line> --reason "…"\n`;
 }
 
 /**

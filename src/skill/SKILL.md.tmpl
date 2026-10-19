@@ -65,7 +65,10 @@ or inside a longer string never verifies anything.
 
 For each open statement, show the user the statement, the reason and the
 evidence, verbatim, and ask whether it is a rule to keep or a fact, and why.
-Record the answer:
+The report prints every reason in full, and `proof decide <file>` lists the open
+statements again with the verifier's reasons from the last run. Long statements
+are shortened in both: quote them from the file at their line. Record the
+answer:
 
 ```bash
 proof decide CLAUDE.md                                        # list open items

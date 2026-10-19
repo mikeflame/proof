@@ -200,6 +200,18 @@ describe('decisions', () => {
     expect(third?.reopened.map((d) => d.text)).toEqual(['Keep components small and focused.']);
   });
 
+  it('prints the verifier’s reason in full, and lists it again for a decision without calling the verifier', () => {
+    f = makeRepo(OPEN);
+    const why = 'No lint rule, formatter setting or CI step limits component size, and nothing in the repository names a limit; the components range from one line in src/a.ts upward, so the rule can be neither proven nor contradicted from the code.';
+    expect(why.length).toBeGreaterThan(220);
+    const first = proof({ answers: [{ match: 'Keep components small', verdict: 'unverified_with_reason', reason: why, action: 'needs-decision' }] }, 'run', 'CLAUDE.md', '--no-fix');
+    expect(first.stdout).toContain(why);
+    const n = calls().length;
+    const list = proof({}, 'decide', 'CLAUDE.md');
+    expect(list.stdout).toContain(`verifier: ${why}`);
+    expect(calls().length).toBe(n);
+  });
+
   it('refuses a fact without evidence and a stale statement', () => {
     f = makeRepo(OPEN);
     expect(proof({}, 'decide', 'CLAUDE.md', 'L5', '--fact', '--reason', 'I know it').stderr).toContain('never decide a fact without evidence');

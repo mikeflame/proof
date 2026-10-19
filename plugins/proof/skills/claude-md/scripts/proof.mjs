@@ -8247,7 +8247,7 @@ function saveCache(root, cache2) {
 }
 async function verifyFiles(repo, files2, instructionFiles, opts) {
   const coverage = /* @__PURE__ */ new Map();
-  const version = claudeVersion();
+  const version = opts.cacheOnly ? null : claudeVersion();
   const codeTree = codeTreeOf(repo, instructionFiles);
   const cache2 = opts.cache ? loadCache(repo.root) : {};
   let spent = 0;
@@ -8268,6 +8268,7 @@ async function verifyFiles(repo, files2, instructionFiles, opts) {
         cov.cached += 1;
       } else fresh.push({ st, index: index2, cacheKey });
     }
+    if (opts.cacheOnly) continue;
     if (fresh.length && !version) {
       cov.failures.push("the claude CLI does not run: install Claude Code, or set PROOF_CLAUDE to its path");
       continue;
@@ -21797,12 +21798,13 @@ function pick2(statements, which) {
 }
 var OPEN = /* @__PURE__ */ new Set(["UNCONFIRMED", "UNVERIFIED_WITH_REASON"]);
 async function listOpen(run2, file) {
-  const [report] = await run2.checkTargets([{ file, why: "named on the command line", scope: "project" }]);
+  const checked = await run2.checkTargets([{ file, why: "named on the command line", scope: "project" }]);
+  const [report] = checked.length ? await run2.verify(checked, { ...DEFAULT_VERIFY, cacheOnly: true }) : [];
   const open = (report?.statements ?? []).filter((s) => OPEN.has(s.status));
   if (!open.length) return `${file}: no open statements to decide.
 `;
   return `${open.map((s) => `L${s.line}  ${s.id.slice(0, 10)}  ${s.text.slice(0, 120)}
-    ${s.agent?.reason ?? s.reason}`).join("\n")}
+    ${s.agent?.reason ? `verifier: ${s.agent.reason}` : s.reason}`).join("\n")}
 
 Decide one: proof decide ${file} L<line> --rule --reason "\u2026"  or  --fact --evidence <path:line> --reason "\u2026"
 `;
@@ -21967,8 +21969,9 @@ function renderHelp(version) {
 
 // src/report.ts
 var MARK = { VERIFIED: "\u2713", STALE: "\u2717", UNCONFIRMED: "?", NOT_CHECKED: "\xB7" };
+var oneLine = (raw) => raw.replace(/\s+/g, " ").trim();
 var clip2 = (raw, n = 160) => {
-  const t = raw.replace(/\s+/g, " ").trim();
+  const t = oneLine(raw);
   return t.length > n ? `${t.slice(0, n - 1)}\u2026` : t;
 };
 var SECTIONS = STATUSES.map((s) => ({ status: s.status, title: s.title, hint: s.meaning, expand: s.expand }));
@@ -21983,9 +21986,9 @@ function spanLine(r) {
 function agentLines(s) {
   const a2 = s.agent;
   if (!a2) return [];
-  const head = `  - verifier${a2.cached ? " (cached)" : ""}: ${a2.verdict.replace(/_/g, " ")}${a2.rejected ? ` \u2014 refused: ${a2.rejected}` : a2.reason ? ` \u2014 ${clip2(a2.reason, 220)}` : ""}`;
+  const head = `  - verifier${a2.cached ? " (cached)" : ""}: ${a2.verdict.replace(/_/g, " ")}${a2.rejected ? ` \u2014 refused: ${a2.rejected}` : a2.reason ? ` \u2014 ${oneLine(a2.reason)}` : ""}`;
   const evidence = a2.evidence.slice(0, 3).map((e) => `    - ${e.valid ? "\u2713" : "\u2717"} ${e.kind} \`${clip2(e.ref, 100)}\`${e.excerpt ? ` "${clip2(e.excerpt, 90)}"` : ""}${e.valid ? "" : ` \u2014 ${e.problem}`}`);
-  const proposal = a2.proposedText && s.status === "STALE" ? [`  - proposed: ${clip2(a2.proposedText, 300)}`] : [];
+  const proposal = a2.proposedText && s.status === "STALE" ? [`  - proposed: ${oneLine(a2.proposedText)}`] : [];
   return [head, ...evidence, ...proposal];
 }
 function fixLines(s) {
@@ -21993,10 +21996,10 @@ function fixLines(s) {
   if (!f) return [];
   const id = s.id.slice(0, 10);
   if (f.outcome === "applied") return [`  - fixed (tier ${f.tier}, id ${id})${s.status === "FIXED" ? "" : "; what it changed is proven, the rest is still open"}: was "${clip2(f.was ?? f.old, 200)}"`, ...f.evidence.filter((e) => e.valid).slice(0, 2).map((e) => `    - \u2713 ${e.kind} \`${clip2(e.ref, 100)}\`${e.excerpt ? ` "${clip2(e.excerpt, 90)}"` : ""}`)];
-  const proposal = f.action === "delete" ? "delete the statement" : `"${clip2(f.old, 120)}" \u2192 "${clip2(f.new, 160)}"`;
-  if (f.outcome === "rejected") return [`  - fix rejected and reverted (tier ${f.tier}): ${proposal}`, `    - re-verifier: ${clip2(f.reverify, 220)}`];
+  const proposal = f.action === "delete" ? "delete the statement" : `"${clip2(f.old, 120)}" \u2192 "${oneLine(f.new)}"`;
+  if (f.outcome === "rejected") return [`  - fix rejected and reverted (tier ${f.tier}): ${proposal}`, `    - re-verifier: ${oneLine(f.reverify)}`];
   if (f.outcome === "refused") return [`  - fix not applied: ${f.reverify}`, `    - proposed: ${proposal}`];
-  return [`  - would fix (tier ${f.tier}): ${proposal}`, `    - re-verifier: ${clip2(f.reverify, 220)}`];
+  return [`  - would fix (tier ${f.tier}): ${proposal}`, `    - re-verifier: ${oneLine(f.reverify)}`];
 }
 function item(s, withSpans) {
   const lines = [`- **L${s.line}** ${clip2(s.text)}${s.section ? ` _(${s.section})_` : ""}`];

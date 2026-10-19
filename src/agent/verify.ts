@@ -24,6 +24,8 @@ export interface VerifyOptions {
   jobs: number;
   cache: boolean;
   timeoutMs: number;
+  /** Apply cached verdicts only and never call the verifier: listing open statements must not spend. */
+  cacheOnly?: boolean;
 }
 
 export const DEFAULT_VERIFY: VerifyOptions = { model: 'claude-sonnet-5-5', effort: 'high', budgetUsd: 10, perStatementUsd: 0.25, batchSize: 8, jobs: 2, cache: true, timeoutMs: 15 * 60_000 };
@@ -184,7 +186,7 @@ export interface FileToVerify {
  */
 export async function verifyFiles(repo: RepoContext, files: FileToVerify[], instructionFiles: string[], opts: VerifyOptions): Promise<Map<string, AgentCoverage>> {
   const coverage = new Map<string, AgentCoverage>();
-  const version = claudeVersion();
+  const version = opts.cacheOnly ? null : claudeVersion();
   const codeTree = codeTreeOf(repo, instructionFiles);
   const cache = opts.cache ? loadCache(repo.root) : {};
   let spent = 0;
@@ -207,6 +209,7 @@ export async function verifyFiles(repo: RepoContext, files: FileToVerify[], inst
         cov.cached += 1;
       } else fresh.push({ st, index, cacheKey });
     }
+    if (opts.cacheOnly) continue;
     if (fresh.length && !version) {
       cov.failures.push('the claude CLI does not run: install Claude Code, or set PROOF_CLAUDE to its path');
       continue;
