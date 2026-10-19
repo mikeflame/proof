@@ -24,8 +24,10 @@ run `scripts/proof.mjs` from the folder this file is in.
 ## 1. Preconditions
 
 Node 22+ and git. `proof run` also needs the `claude` CLI (or `PROOF_CLAUDE`
-set to its path). Without it, run `proof check` and do the verification
-yourself (section 6).
+set to its path). Do not check for them first: run proof, and it names what is
+missing. An older Node gets a message saying so, a missing git shows on the
+`degraded:` line, and a run without the `claude` CLI ends `UNTESTED` with that
+reason. Then run `proof check` and do the verification yourself (section 6).
 
 Read the report header first. A `degraded:` line names a check that could not
 run fully (a manifest that does not parse, a failed lookup); the statements it
