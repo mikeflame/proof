@@ -4,6 +4,14 @@ Generated from conventional commits by `npm run changelog`.
 
 ## Unreleased
 
+### Fixes
+
+- verifier and fixer reasons are kept whole, not cut at 600 characters (f65c1cf)
+- an older Node gets a message naming the version proof needs, not a SyntaxError (0cdcf8b)
+- --budget-usd is the run's total: fixing and re-verifying draw on what is left (0b9e290)
+- reasons a person must read print in full, and proof decide lists the verifier's reasons (3f99f37)
+- an empty PROOF_CLAUDE means unset, not a binary path (it crashed with ERR_INVALID_ARG_VALUE) (43239c4)
+
 ### Documentation
 
 - contributing guide, security policy, issue forms and a pull request template (b1aa9f1)
@@ -11,13 +19,6 @@ Generated from conventional commits by `npm run changelog`.
 - the spec is docs/spec.md, introduced as the design reference rather than a rework plan (7edc91e)
 - the skill no longer has the agent check Node, git and claude first; proof names what is missing (acb2458)
 - the README no longer calls the repository private; the skill carries proof's own LICENSE (82ed836)
-
-### Fixes
-
-- an older Node gets a message naming the version proof needs, not a SyntaxError (0cdcf8b)
-- --budget-usd is the run's total: fixing and re-verifying draw on what is left (0b9e290)
-- reasons a person must read print in full, and proof decide lists the verifier's reasons (3f99f37)
-- an empty PROOF_CLAUDE means unset, not a binary path (it crashed with ERR_INVALID_ARG_VALUE) (43239c4)
 
 ### Other
 
