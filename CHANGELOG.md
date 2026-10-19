@@ -2,6 +2,28 @@
 
 Generated from conventional commits by `npm run changelog`.
 
+## Unreleased
+
+### Documentation
+
+- contributing guide, security policy, issue forms and a pull request template (b1aa9f1)
+- README says what proof run can touch and what it costs (f226d09)
+- the spec is docs/spec.md, introduced as the design reference rather than a rework plan (7edc91e)
+- the skill no longer has the agent check Node, git and claude first; proof names what is missing (acb2458)
+- the README no longer calls the repository private; the skill carries proof's own LICENSE (82ed836)
+
+### Fixes
+
+- an older Node gets a message naming the version proof needs, not a SyntaxError (0cdcf8b)
+- --budget-usd is the run's total: fixing and re-verifying draw on what is left (0b9e290)
+- reasons a person must read print in full, and proof decide lists the verifier's reasons (3f99f37)
+- an empty PROOF_CLAUDE means unset, not a binary path (it crashed with ERR_INVALID_ARG_VALUE) (43239c4)
+
+### Other
+
+- every label relabeled blind by a second agent; the 128 disagreements adjudicated (128b3f1)
+- committed results name the corpus folder as <corpus>, never this machine's path (6e62bfe)
+
 ## v0.3.0
 
 ### Documentation
