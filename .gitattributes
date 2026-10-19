@@ -1,2 +1,3 @@
 plugins/proof/skills/claude-md/scripts/proof.mjs linguist-generated=true
+plugins/proof/skills/claude-md/scripts/proof-bundle.mjs linguist-generated=true
 plugins/proof/skills/claude-md/scripts/grammars/** linguist-generated=true binary

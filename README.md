@@ -225,6 +225,6 @@ from the conventional commits, and tags. `docs/rework-spec.md` is the working sp
 
 ## License
 
-MIT, in `LICENSE`; every install of the skill carries a copy of it. The libraries bundled into
-`proof.mjs` and the tree-sitter grammars shipped beside it keep their own licenses, all listed in
+MIT, in `LICENSE`; every install of the skill carries a copy of it. The libraries bundled with proof
+and the tree-sitter grammars shipped beside them keep their own licenses, all listed in
 `plugins/proof/skills/claude-md/scripts/THIRD_PARTY_NOTICES.md`.

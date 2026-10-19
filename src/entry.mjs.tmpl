@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+// proof's entry point, written next to the bundle by `npm run build`. It uses only syntax old Node
+// versions parse, so they get this message instead of a SyntaxError from the bundle.
+var version = process.versions.node;
+if (Number(version.split('.')[0]) < __NODE_FLOOR__) {
+  console.error('proof needs Node __NODE_FLOOR__ or newer; this is Node ' + version + '. Install a current Node from https://nodejs.org and run it again.');
+  process.exitCode = 2;
+} else {
+  import('./proof-bundle.mjs');
+}
