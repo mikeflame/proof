@@ -28,6 +28,9 @@ export interface VerifyOptions {
   cacheOnly?: boolean;
 }
 
+/** Below this a call is not started: the budget counts as spent. */
+export const MIN_CALL_USD = 0.05;
+
 export const DEFAULT_VERIFY: VerifyOptions = { model: 'claude-sonnet-5-5', effort: 'high', budgetUsd: 10, perStatementUsd: 0.25, batchSize: 8, jobs: 2, cache: true, timeoutMs: 15 * 60_000 };
 
 export interface AgentCoverage {
@@ -234,7 +237,7 @@ export async function verifyFiles(repo: RepoContext, files: FileToVerify[], inst
 
   const runJob = async (job: Job, retry = false): Promise<void> => {
     const ceiling = Math.min(opts.budgetUsd - spent - reserved, job.batch.length * opts.perStatementUsd);
-    if (ceiling < 0.05) {
+    if (ceiling < MIN_CALL_USD) {
       job.cov.failures.push(`budget of $${opts.budgetUsd.toFixed(2)} spent before L${job.batch[0]?.st.line}–L${job.batch[job.batch.length - 1]?.st.line} were verified`);
       return;
     }
@@ -245,7 +248,7 @@ export async function verifyFiles(repo: RepoContext, files: FileToVerify[], inst
     // One retry for output that did not parse; a budget or timeout failure is final.
     if (!result.ok && (result.subtype === 'parse' || result.subtype === 'error_max_structured_output_retries')) {
       const again = Math.min(opts.budgetUsd - spent - reserved, ceiling);
-      if (again >= 0.05) {
+      if (again >= MIN_CALL_USD) {
         result = await call(prompt, again);
         spent += result.costUsd;
         job.cov.costUsd += result.costUsd;

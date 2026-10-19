@@ -5,7 +5,7 @@ import { parseArgs } from 'node:util';
 import { type Discovered, discover } from './discover.ts';
 import { EXIT_CODE } from './model.ts';
 import { proposeGaps } from './agent/gaps.ts';
-import { DEFAULT_VERIFY, type VerifyOptions } from './agent/verify.ts';
+import { DEFAULT_VERIFY, MIN_CALL_USD, type VerifyOptions } from './agent/verify.ts';
 import { annotateFixes, type FileFix, type FileReport, Run } from './pipeline.ts';
 import { loadConfig } from './config.ts';
 import { sidecarPath } from './decisions.ts';
@@ -84,14 +84,20 @@ async function pipeline(mode: 'check' | 'run', argv: string[]): Promise<number> 
     // One bounded round by default; a later round sees every rejected attempt and the re-verifier's verdict on it.
     for (let round = 1; round <= rounds && !values['no-fix'] && reports.some((r) => r.counts.STALE); round++) {
       const stale = reports.reduce((n, r) => n + r.counts.STALE, 0);
+      // Every stage draws on what the run has left: --budget-usd is the run's total.
+      const left = opts.budgetUsd - spent;
+      if (left < MIN_CALL_USD) {
+        for (const r of reports.filter((x) => x.counts.STALE)) r.degraded.push({ subject: 'fix', reason: `the budget of $${opts.budgetUsd.toFixed(2)} was spent before fixing: raise --budget-usd` });
+        break;
+      }
       if (!values.json) console.error(`fixing ${stale} stale statement(s)${rounds > 1 ? ` (round ${round} of ${rounds})` : ''}${dryRun ? ' (dry run: nothing is written)' : ''}`);
-      const fixes = await current.fix(reports, { model: opts.model, effort: opts.effort, budgetUsd: Math.min(Math.max(0.1, opts.budgetUsd - spent), Math.max(1, stale * opts.perStatementUsd * 2)), timeoutMs: opts.timeoutMs, user: Boolean(values.user), config, dryRun, verify: opts });
+      const fixes = await current.fix(reports, { model: opts.model, effort: opts.effort, budgetUsd: Math.min(left, Math.max(1, stale * opts.perStatementUsd * 2)), timeoutMs: opts.timeoutMs, user: Boolean(values.user), config, dryRun, verify: { ...opts, budgetUsd: left } });
       spent += [...fixes.values()].reduce((n, x) => n + x.costUsd, 0);
       const changed = [...fixes.values()].some((f) => f.after !== f.before || f.accepted.length || f.rejected.length);
       if (changed && !dryRun) {
         // The files changed: check them again; the verdict cache answers every statement that did not.
         current = new Run(process.cwd());
-        reports = await current.verify(await current.checkTargets(targets, { user: Boolean(values.user) }), opts);
+        reports = await current.verify(await current.checkTargets(targets, { user: Boolean(values.user) }), { ...opts, budgetUsd: Math.max(0, opts.budgetUsd - spent) });
         spent += reports.reduce((n, r) => n + (r.agent?.costUsd ?? 0), 0);
         if (values.commit) commitFixes(current.repo.root, [...fixes.entries()].filter(([, f]) => f.after !== f.before || f.rejected.length).map(([file]) => file), fixes);
       }
@@ -102,10 +108,15 @@ async function pipeline(mode: 'check' | 'run', argv: string[]): Promise<number> 
       if (dryRun || !fixes.size || ![...fixes.values()].some((f) => f.rejected.length)) break;
     }
     if (merged.size) annotateFixes(reports, merged, dryRun);
+    for (const [file, f] of merged) if (f.failure) reports.find((r) => r.file === file)?.degraded.push({ subject: 'fix', reason: f.failure });
     if (values.gaps) {
       // Proposals only: nothing here writes to any file (spec 5.4).
       for (const r of reports.filter((x) => x.scope !== 'managed' && x.statements.length)) {
-        const g = await proposeGaps(current.repo, r.file, current.repo.read(r.file) ?? '', { model: opts.model, effort: opts.effort, budgetUsd: Math.min(1, Math.max(0.1, opts.budgetUsd - spent)), timeoutMs: opts.timeoutMs });
+        if (opts.budgetUsd - spent < MIN_CALL_USD) {
+          r.degraded.push({ subject: 'gaps', reason: `the budget of $${opts.budgetUsd.toFixed(2)} was spent before gap proposals: raise --budget-usd` });
+          continue;
+        }
+        const g = await proposeGaps(current.repo, r.file, current.repo.read(r.file) ?? '', { model: opts.model, effort: opts.effort, budgetUsd: Math.min(1, opts.budgetUsd - spent), timeoutMs: opts.timeoutMs });
         spent += g.costUsd;
         r.gaps = g.proposals;
         if (g.failure) r.degraded.push({ subject: 'gaps', reason: `gap proposals failed: ${g.failure}` });

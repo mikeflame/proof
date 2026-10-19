@@ -25,7 +25,7 @@ afterEach(() => {
   rmSync(work, { recursive: true, force: true });
 });
 
-type Plan = { answers?: Record<string, unknown>[]; fixes?: Record<string, unknown>[]; gaps?: Record<string, unknown>[] };
+type Plan = { answers?: Record<string, unknown>[]; fixes?: Record<string, unknown>[]; gaps?: Record<string, unknown>[]; cost?: number };
 
 function proof(plan: Plan, ...args: string[]) {
   writeFileSync(join(work, 'plan.json'), JSON.stringify(plan));
@@ -174,6 +174,33 @@ describe('fixes', () => {
     expect(sidecar().map((r) => r.kind)).toEqual(['fixed', 'fix-rejected']);
     proof({ fixes: [] }, 'run', 'CLAUDE.md');
     expect(calls().filter((c) => c.prompt.startsWith('You correct stale statements')).at(-1)?.prompt).toContain('"rejected_edit":"Node 24+"');
+  });
+});
+
+describe('budget', () => {
+  const fixerCalls = () => calls().filter((c) => c.prompt.startsWith('You correct stale statements')).length;
+  const verifierCalls = () => calls().filter((c) => !c.prompt.startsWith('You correct stale statements')).length;
+
+  it('does not fix once the verifier has spent the run budget', () => {
+    f = makeRepo(FILES);
+    const before = doc();
+    const r = proof({ fixes: [NODE_FIX], cost: 0.5 }, 'run', 'CLAUDE.md', '--json', '--budget-usd', '0.5').report;
+    expect(verifierCalls()).toBe(1);
+    expect(fixerCalls()).toBe(0);
+    expect(r?.counts.STALE).toBe(1);
+    expect(r?.degraded.map((d) => d.reason).join(' ')).toContain('spent before fixing');
+    expect(doc()).toBe(before);
+  });
+
+  it('applies no fix the budget left unverified, and does not record it as rejected', () => {
+    f = makeRepo(FILES);
+    const before = doc();
+    const r = proof({ fixes: [NODE_FIX], cost: 0.5 }, 'run', 'CLAUDE.md', '--json', '--budget-usd', '1').report;
+    expect(fixerCalls()).toBe(1);
+    expect(verifierCalls()).toBe(1);
+    expect(r?.degraded.map((d) => d.reason).join(' ')).toContain('were re-verified, so none was applied');
+    expect(doc()).toBe(before);
+    expect(sidecar().filter((x) => x.kind === 'fix-rejected')).toEqual([]);
   });
 });
 

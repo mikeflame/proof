@@ -8149,6 +8149,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { homedir as homedir2 } from "node:os";
 import { join as join3 } from "node:path";
 var PROMPT_VERSION = "4";
+var MIN_CALL_USD = 0.05;
 var DEFAULT_VERIFY = { model: "claude-sonnet-5-5", effort: "high", budgetUsd: 10, perStatementUsd: 0.25, batchSize: 8, jobs: 2, cache: true, timeoutMs: 15 * 6e4 };
 function needsAgent(st) {
   if (st.kind === "marker" || st.override?.reason) return false;
@@ -8289,7 +8290,7 @@ async function verifyFiles(repo, files2, instructionFiles, opts) {
   };
   const runJob = async (job, retry = false) => {
     const ceiling = Math.min(opts.budgetUsd - spent - reserved, job.batch.length * opts.perStatementUsd);
-    if (ceiling < 0.05) {
+    if (ceiling < MIN_CALL_USD) {
       job.cov.failures.push(`budget of $${opts.budgetUsd.toFixed(2)} spent before L${job.batch[0]?.st.line}\u2013L${job.batch[job.batch.length - 1]?.st.line} were verified`);
       return;
     }
@@ -8299,7 +8300,7 @@ async function verifyFiles(repo, files2, instructionFiles, opts) {
     job.cov.costUsd += result.costUsd;
     if (!result.ok && (result.subtype === "parse" || result.subtype === "error_max_structured_output_retries")) {
       const again = Math.min(opts.budgetUsd - spent - reserved, ceiling);
-      if (again >= 0.05) {
+      if (again >= MIN_CALL_USD) {
         result = await call(prompt, again);
         spent += result.costUsd;
         job.cov.costUsd += result.costUsd;
@@ -21619,11 +21620,17 @@ var Run = class {
    */
   async fix(reports, opts) {
     const out = /* @__PURE__ */ new Map();
+    let left = opts.verify.budgetUsd;
     for (const r of reports) {
       const stale2 = r.statements.filter((s) => s.status === "STALE");
       if (!stale2.length) continue;
       const source = this.repo.read(r.file) ?? "";
-      const proposed = await proposeFixes(this.repo, r.file, r.scope, stale2, r.decisions, opts);
+      if (left < MIN_CALL_USD) {
+        out.set(r.file, { proposed: [], accepted: [], rejected: [], failure: `the budget was spent before ${r.file} was fixed: raise --budget-usd`, costUsd: 0, before: source, after: source, reverified: /* @__PURE__ */ new Map() });
+        continue;
+      }
+      const proposed = await proposeFixes(this.repo, r.file, r.scope, stale2, r.decisions, { ...opts, budgetUsd: Math.min(opts.budgetUsd, left) });
+      left -= proposed.costUsd;
       const outcome = { proposed: proposed.edits, accepted: [], rejected: [], failure: proposed.failure, costUsd: proposed.costUsd, before: source, after: source, reverified: /* @__PURE__ */ new Map() };
       out.set(r.file, outcome);
       const vetted = proposed.edits.filter((e) => !e.refused);
@@ -21637,9 +21644,19 @@ var Run = class {
       }
       const toVerify = [...trial.values()].flat();
       if (toVerify.length) {
+        const unverified = `the budget was spent before the fixes for ${r.file} were re-verified, so none was applied: raise --budget-usd`;
+        if (left < MIN_CALL_USD) {
+          outcome.failure = unverified;
+          continue;
+        }
         const note = `These statements are proposed corrections that are not written yet: ${r.file} on disk still has the old text. Judge each statement exactly as given here against the repository; do not judge the file on disk.`;
-        const cov = await verifyFiles(this.repo, [{ file: r.file, why: r.why, statements: toVerify, note }], reports.map((x) => x.file), { ...opts.verify, budgetUsd: Math.min(opts.verify.budgetUsd, toVerify.length * opts.verify.perStatementUsd + 0.5) });
-        outcome.costUsd += cov.get(r.file)?.costUsd ?? 0;
+        const cov = (await verifyFiles(this.repo, [{ file: r.file, why: r.why, statements: toVerify, note }], reports.map((x) => x.file), { ...opts.verify, budgetUsd: Math.min(left, toVerify.length * opts.verify.perStatementUsd + 0.5) })).get(r.file);
+        outcome.costUsd += cov?.costUsd ?? 0;
+        left -= cov?.costUsd ?? 0;
+        if (cov?.failures.some((x) => x.startsWith("budget"))) {
+          outcome.failure = unverified;
+          continue;
+        }
       }
       for (const e of vetted) {
         const produced = (trial.get(e) ?? []).map((s) => toVerify.find((t) => t.id === s.id && t.line === s.line) ?? s);
@@ -22155,13 +22172,18 @@ async function pipeline(mode, argv) {
     const merged = /* @__PURE__ */ new Map();
     for (let round = 1; round <= rounds && !values["no-fix"] && reports.some((r) => r.counts.STALE); round++) {
       const stale2 = reports.reduce((n, r) => n + r.counts.STALE, 0);
+      const left = opts.budgetUsd - spent;
+      if (left < MIN_CALL_USD) {
+        for (const r of reports.filter((x) => x.counts.STALE)) r.degraded.push({ subject: "fix", reason: `the budget of $${opts.budgetUsd.toFixed(2)} was spent before fixing: raise --budget-usd` });
+        break;
+      }
       if (!values.json) console.error(`fixing ${stale2} stale statement(s)${rounds > 1 ? ` (round ${round} of ${rounds})` : ""}${dryRun ? " (dry run: nothing is written)" : ""}`);
-      const fixes = await current.fix(reports, { model: opts.model, effort: opts.effort, budgetUsd: Math.min(Math.max(0.1, opts.budgetUsd - spent), Math.max(1, stale2 * opts.perStatementUsd * 2)), timeoutMs: opts.timeoutMs, user: Boolean(values.user), config, dryRun, verify: opts });
+      const fixes = await current.fix(reports, { model: opts.model, effort: opts.effort, budgetUsd: Math.min(left, Math.max(1, stale2 * opts.perStatementUsd * 2)), timeoutMs: opts.timeoutMs, user: Boolean(values.user), config, dryRun, verify: { ...opts, budgetUsd: left } });
       spent += [...fixes.values()].reduce((n, x) => n + x.costUsd, 0);
       const changed = [...fixes.values()].some((f) => f.after !== f.before || f.accepted.length || f.rejected.length);
       if (changed && !dryRun) {
         current = new Run(process.cwd());
-        reports = await current.verify(await current.checkTargets(targets, { user: Boolean(values.user) }), opts);
+        reports = await current.verify(await current.checkTargets(targets, { user: Boolean(values.user) }), { ...opts, budgetUsd: Math.max(0, opts.budgetUsd - spent) });
         spent += reports.reduce((n, r) => n + (r.agent?.costUsd ?? 0), 0);
         if (values.commit) commitFixes(current.repo.root, [...fixes.entries()].filter(([, f]) => f.after !== f.before || f.rejected.length).map(([file]) => file), fixes);
       }
@@ -22172,9 +22194,14 @@ async function pipeline(mode, argv) {
       if (dryRun || !fixes.size || ![...fixes.values()].some((f) => f.rejected.length)) break;
     }
     if (merged.size) annotateFixes(reports, merged, dryRun);
+    for (const [file, f] of merged) if (f.failure) reports.find((r) => r.file === file)?.degraded.push({ subject: "fix", reason: f.failure });
     if (values.gaps) {
       for (const r of reports.filter((x) => x.scope !== "managed" && x.statements.length)) {
-        const g = await proposeGaps(current.repo, r.file, current.repo.read(r.file) ?? "", { model: opts.model, effort: opts.effort, budgetUsd: Math.min(1, Math.max(0.1, opts.budgetUsd - spent)), timeoutMs: opts.timeoutMs });
+        if (opts.budgetUsd - spent < MIN_CALL_USD) {
+          r.degraded.push({ subject: "gaps", reason: `the budget of $${opts.budgetUsd.toFixed(2)} was spent before gap proposals: raise --budget-usd` });
+          continue;
+        }
+        const g = await proposeGaps(current.repo, r.file, current.repo.read(r.file) ?? "", { model: opts.model, effort: opts.effort, budgetUsd: Math.min(1, opts.budgetUsd - spent), timeoutMs: opts.timeoutMs });
         spent += g.costUsd;
         r.gaps = g.proposals;
         if (g.failure) r.degraded.push({ subject: "gaps", reason: `gap proposals failed: ${g.failure}` });

@@ -10,7 +10,7 @@ import { appendDecisions, type DecisionRecord, loadDecisions, replayDecisions, s
 import { parseDocument } from './parse/markdown.ts';
 import { applyEdits, type FixOptions, type ProposedEdit, proposeFixes, unifiedDiff } from './agent/fix.ts';
 import type { GapProposal } from './agent/gaps.ts';
-import { type AgentCoverage, type VerifyOptions, verifyFiles } from './agent/verify.ts';
+import { type AgentCoverage, MIN_CALL_USD, type VerifyOptions, verifyFiles } from './agent/verify.ts';
 import { checkStatement } from './verify/index.ts';
 import { pathBaseOf } from './verify/util.ts';
 import { VERSION } from './version.ts';
@@ -252,11 +252,18 @@ export class Run {
    */
   async fix(reports: FileReport[], opts: FixOptions & { dryRun: boolean; verify: VerifyOptions }): Promise<Map<string, FileFix>> {
     const out = new Map<string, FileFix>();
+    // What the run has left (opts.verify.budgetUsd): every fixer call and re-verification here draws on it.
+    let left = opts.verify.budgetUsd;
     for (const r of reports) {
       const stale = r.statements.filter((s) => s.status === 'STALE');
       if (!stale.length) continue;
       const source = this.repo.read(r.file) ?? '';
-      const proposed = await proposeFixes(this.repo, r.file, r.scope, stale, r.decisions, opts);
+      if (left < MIN_CALL_USD) {
+        out.set(r.file, { proposed: [], accepted: [], rejected: [], failure: `the budget was spent before ${r.file} was fixed: raise --budget-usd`, costUsd: 0, before: source, after: source, reverified: new Map() });
+        continue;
+      }
+      const proposed = await proposeFixes(this.repo, r.file, r.scope, stale, r.decisions, { ...opts, budgetUsd: Math.min(opts.budgetUsd, left) });
+      left -= proposed.costUsd;
       const outcome: FileFix = { proposed: proposed.edits, accepted: [], rejected: [], failure: proposed.failure, costUsd: proposed.costUsd, before: source, after: source, reverified: new Map() };
       out.set(r.file, outcome);
       const vetted = proposed.edits.filter((e) => !e.refused);
@@ -271,9 +278,21 @@ export class Run {
       }
       const toVerify = [...trial.values()].flat();
       if (toVerify.length) {
+        // A fix the budget left unverified is not applied and not recorded as rejected: a rejection is
+        // never proposed again, and running out of budget says nothing about the fix.
+        const unverified = `the budget was spent before the fixes for ${r.file} were re-verified, so none was applied: raise --budget-usd`;
+        if (left < MIN_CALL_USD) {
+          outcome.failure = unverified;
+          continue;
+        }
         const note = `These statements are proposed corrections that are not written yet: ${r.file} on disk still has the old text. Judge each statement exactly as given here against the repository; do not judge the file on disk.`;
-        const cov = await verifyFiles(this.repo, [{ file: r.file, why: r.why, statements: toVerify, note }], reports.map((x) => x.file), { ...opts.verify, budgetUsd: Math.min(opts.verify.budgetUsd, toVerify.length * opts.verify.perStatementUsd + 0.5) });
-        outcome.costUsd += cov.get(r.file)?.costUsd ?? 0;
+        const cov = (await verifyFiles(this.repo, [{ file: r.file, why: r.why, statements: toVerify, note }], reports.map((x) => x.file), { ...opts.verify, budgetUsd: Math.min(left, toVerify.length * opts.verify.perStatementUsd + 0.5) })).get(r.file);
+        outcome.costUsd += cov?.costUsd ?? 0;
+        left -= cov?.costUsd ?? 0;
+        if (cov?.failures.some((x) => x.startsWith('budget'))) {
+          outcome.failure = unverified;
+          continue;
+        }
       }
       for (const e of vetted) {
         const produced = (trial.get(e) ?? []).map((s) => toVerify.find((t) => t.id === s.id && t.line === s.line) ?? s);
