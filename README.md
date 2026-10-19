@@ -218,12 +218,14 @@ npm run typecheck
 npm run validate    # claude plugin validate for the marketplace and the plugin
 ```
 
-Everything users get is generated from `src/` by `npm run build`: the bundle and its grammars, the
-skill (from `src/skill/SKILL.md.tmpl`), the tables in this README and the plugin manifest version.
+Everything users get is generated from `src/` by `npm run build`: the bundle and its grammars, their
+third-party notices, the skill (from `src/skill/SKILL.md.tmpl`), the tables in this README and the
+plugin manifest version.
 CI runs `npm run build:check` and fails when any committed copy is out of date. `package.json`
 holds the only version; `npm run release -- <version>` sets it, rebuilds, writes `CHANGELOG.md`
 from the conventional commits, and tags. `docs/rework-spec.md` is the working spec.
 
 ## License
 
-MIT
+MIT. The libraries bundled into `proof.mjs` and the tree-sitter grammars shipped beside it keep their
+own licenses, all listed in `plugins/proof/skills/claude-md/scripts/THIRD_PARTY_NOTICES.md`.
