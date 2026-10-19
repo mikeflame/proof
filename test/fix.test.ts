@@ -229,8 +229,15 @@ describe('decisions', () => {
 
   it('prints the verifier’s reason in full, and lists it again for a decision without calling the verifier', () => {
     f = makeRepo(OPEN);
-    const why = 'No lint rule, formatter setting or CI step limits component size, and nothing in the repository names a limit; the components range from one line in src/a.ts upward, so the rule can be neither proven nor contradicted from the code.';
-    expect(why.length).toBeGreaterThan(220);
+    const why = [
+      'No lint rule, formatter setting or CI step limits component size, and nothing in the repository names a limit.',
+      'The only source file is src/a.ts, a single empty export, so there is no component to measure against the rule.',
+      'The rule reads as a team convention about how components should be written, not as a description of the code.',
+      'Neither the package manifest nor any configuration file mentions component size, line counts or a style guide.',
+      'A maintainer should say whether it is a convention to keep or a statement to reword, for example by naming a limit.',
+      'Until then it can be neither proven nor contradicted from the code.',
+    ].join(' ');
+    expect(why.length).toBeGreaterThan(600);
     const first = proof({ answers: [{ match: 'Keep components small', verdict: 'unverified_with_reason', reason: why, action: 'needs-decision' }] }, 'run', 'CLAUDE.md', '--no-fix');
     expect(first.stdout).toContain(why);
     const n = calls().length;

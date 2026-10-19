@@ -8195,7 +8195,7 @@ function judge(repo, raw, model, cached = false) {
     const c = checkEvidence(repo, e);
     return { kind: c.kind, ref: c.ref, excerpt: c.excerpt, valid: c.valid, problem: c.problem };
   });
-  const reason = typeof raw.reason === "string" ? raw.reason.slice(0, 600) : "";
+  const reason = typeof raw.reason === "string" ? raw.reason : "";
   const proposedText = typeof raw.proposed_text === "string" && raw.proposed_text.trim() ? raw.proposed_text.trim() : null;
   let rejected = null;
   if (verdict !== "unverified_with_reason" && !evidence.some((e) => e.valid)) {
@@ -19780,7 +19780,7 @@ function vetEdit(repo, source, st, raw, scope, opts) {
     const c = checkEvidence(repo, e);
     return { kind: c.kind, ref: c.ref, excerpt: c.excerpt, valid: c.valid, problem: c.problem };
   });
-  const edit = { statementId: st.id, line: st.line, endLine: st.endLine, tier, action, old, new: next, evidence, reason: typeof raw.reason === "string" ? raw.reason.slice(0, 600) : "", was: st.text, refused: null };
+  const edit = { statementId: st.id, line: st.line, endLine: st.endLine, tier, action, old, new: next, evidence, reason: typeof raw.reason === "string" ? raw.reason : "", was: st.text, refused: null };
   const lines = sourceOf(source, st);
   const count = old ? lines.split(old).length - 1 : 0;
   if (scope === "managed") edit.refused = "a managed policy file: proof reports it and never edits it";

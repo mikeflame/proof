@@ -110,7 +110,8 @@ export function judge(repo: RepoContext, raw: RawResult, model: string, cached =
     const c = checkEvidence(repo, e);
     return { kind: c.kind, ref: c.ref, excerpt: c.excerpt, valid: c.valid, problem: c.problem };
   });
-  const reason = typeof raw.reason === 'string' ? raw.reason.slice(0, 600) : '';
+  // Kept whole: the skill relays it verbatim, and a reason cut mid-sentence misleads.
+  const reason = typeof raw.reason === 'string' ? raw.reason : '';
   const proposedText = typeof raw.proposed_text === 'string' && raw.proposed_text.trim() ? raw.proposed_text.trim() : null;
   let rejected: string | null = null;
   if (verdict !== 'unverified_with_reason' && !evidence.some((e) => e.valid)) {
