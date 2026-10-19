@@ -482,7 +482,12 @@
     "internal/daemon/manager.go:139-141 prepareRecoveredRun: 'run.AwaitingAgentSince == nil ... \"run is not a parked running run\"'",
     "internal/daemon/daemon.go:428-442 only plans from recoverableParkedRuns are preserved; every other active run goes to d.RecoverStaleRunsExcept(\"daemon crashed during execution\", preserved), which fails it"
    ],
-   "note": "The field is not observability-only: whether a parked gate is resumed after a daemon restart or the run is failed depends on awaiting_agent_since being non-nil."
+   "note": "The field is not observability-only: whether a parked gate is resumed after a daemon restart or the run is failed depends on awaiting_agent_since being non-nil.",
+   "confirmed": {
+    "label": "stale",
+    "by": "the maintainer, 2026-10-19",
+    "note": "a blind second labeler said true (no gate-resolution dependency found); kept stale: the contradiction cited above stands"
+   }
   },
   {
    "id": "2c997e7671ce079cc1eac4cbf7132abd5274321d",
@@ -580,7 +585,15 @@
    "evidence": [
     ".agents/skills/testing-conventions/SKILL.md exists (mentions fakecli)"
    ],
-   "note": "The testing-conventions skill exists to own the remaining conventions."
+   "note": "The testing-conventions skill exists to own the remaining conventions.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     ".agents/skills/testing-conventions/SKILL.md exists (description: tests, e2e harness, fake CLIs, isolation, sharding)"
+    ],
+    "note": "documentation-ownership convention; the named skill exists"
+   }
   },
   {
    "id": "90c54315ad736487a67429bbaa95ee55ce247f92",
@@ -606,7 +619,12 @@
     "internal/pipeline/decisions.go:66 and internal/pipeline/executor.go:2191 read Config.Review.Conversation directly; review_questions.go:23-25 limits reviewConversationEnabled to 'the one owner of that question inside this package'",
     "Supported parts: config.go:2628 'effective.Review = trusted.Review'; review_questions.go:27,45,75 reviewConversationEnabled/Dir/ReadDir; executor.go:2230 ReviewConversationAnswerDir; all named tests exist (review_conversation_test.go:738,843,893,390 'conversation off')"
    ],
-   "note": "A trusted-config fetch failure during recovery does not resolve review.conversation to off: recovery aborts, so the parked run is failed and its question cannot be answered. reviewConversationEnabled is also not the only reader of the setting."
+   "note": "A trusted-config fetch failure during recovery does not resolve review.conversation to off: recovery aborts, so the parked run is failed and its question cannot be answered. reviewConversationEnabled is also not the only reader of the setting.",
+   "confirmed": {
+    "label": "stale",
+    "by": "the maintainer, 2026-10-19",
+    "note": "a blind second labeler said true (owners and tests located; ask/read split read in code); kept stale: the contradiction cited above stands"
+   }
   },
   {
    "id": "d6b21720a8183d38c5c623e2d030219920861aaf",
@@ -638,11 +656,16 @@
     "label": "stale",
     "by": "second reviewer (the maintainer's agent), 2026-10-01",
     "evidence": [
-     "internal/pipeline/steps/review_questions.go:404-409 boundReviewQuestionText cuts runes[:limit] and appends \"\u2026 (truncated \u2026)\"",
+     "internal/pipeline/steps/review_questions.go:404-409 boundReviewQuestionText cuts runes[:limit] and appends \"… (truncated …)\"",
      "internal/pipeline/steps/review_questions.go:395 maxReviewQuestionDescription = 2000",
      "internal/pipeline/steps/review_questions.go:486-504 the Options line is written after the question text, then the whole description is bounded"
     ],
     "note": "\"a long question's options line always survives in its row\" is false: a question over 2000 runes loses the options line before AXI renders it."
+   },
+   "confirmed": {
+    "label": "stale",
+    "by": "the maintainer, 2026-10-19",
+    "note": "a blind second labeler said true (deletion claim is historical/attribution; HEAD state consistent); kept stale: the contradiction cited above stands"
    }
   },
   {

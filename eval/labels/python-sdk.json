@@ -13,7 +13,16 @@
     "CONTRIBUTING.md:7-8 '> [!IMPORTANT] ... Pull requests from outside the maintainer team are only reviewed when a maintainer has assigned you the linked issue'",
     "CONTRIBUTING.md:33 '### AI-Assisted Contributions'"
    ],
-   "note": "CONTRIBUTING.md exists at the repo root and carries the PR/issue policy and the AI-assisted contribution rules the instruction points to."
+   "note": "CONTRIBUTING.md exists at the repo root and carries the PR/issue policy and the AI-assisted contribution rules the instruction points to.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "CONTRIBUTING.md exists (ls at repo root)",
+     "CONTRIBUTING.md:8 \"Pull requests from outside the maintainer team are only reviewed when a maintainer has assigned you the linked issue\""
+    ],
+    "note": "Workflow instruction (\"read X before\"); the referenced file exists but the instruction itself is not provable."
+   }
   },
   {
    "id": "029cccffb860334b1865fa36e9f32cef315fa47c",
@@ -49,7 +58,16 @@
     "VERSIONING.md:7 'a breaking change to the public API lands only in a new **major**'",
     "VERSIONING.md:15-18 'Held for the next major: removing or renaming a public name, changing a signature ... or documented behavior'"
    ],
-   "note": "v2 is tagged and released, and VERSIONING.md makes the 2.x public API a compatibility promise; the maintainer-decision part is policy consistent with it."
+   "note": "v2 is tagged and released, and VERSIONING.md makes the 2.x public API a compatibility promise; the maintainer-decision part is policy consistent with it.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "`git tag -l` includes v2.0.0, v2.0.1, v2.1.0, v2.1.1, v2.2.0 (v2 is released)",
+     "VERSIONING.md exists at repo root"
+    ],
+    "note": "First clause (v2 released) is proven by tags; the rest is an API-stability policy and a maintainer-decision rule, not provable from code."
+   }
   },
   {
    "id": "a7fa2858d450f8d9b6dbe915a71d0f9968cad837",
@@ -61,7 +79,16 @@
     "git diff v2.0.0 d639cf7 -- docs/migration.md | grep -E '^[+-]#' => (no output: no section added since v2.0.0)",
     "git log --oneline v2.0.0..d639cf7 -- docs/migration.md => 6 commits (c6762e8, d060b36, 0921d94, ...) that only edit existing sections"
    ],
-   "note": "migration.md is the v1->v2 guide and history since v2.0.0 shows only corrections to existing entries, no new sections."
+   "note": "migration.md is the v1->v2 guide and history since v2.0.0 shows only corrections to existing entries, no new sections.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "docs/migration.md:1 \"# Migration Guide: v1 to v2\"",
+     "mkdocs.yml:72 \"- Migration Guide: migration.md\""
+    ],
+    "note": "The file exists and is the v1->v2 guide; \"closed to new entries\" is an editorial policy."
+   }
   },
   {
    "id": "1c229dea5de533f3202741c5d6686367d3fa169f",
@@ -73,7 +100,18 @@
     "VERSIONING.md:38 '**1.x** (`v1.x`) — critical bug fixes and security fixes.'",
     "RELEASE.md:87 'Land the `[v1.x]`-prefixed backport PRs'"
    ],
-   "note": "The v1.x branch exists, backports carry the [v1.x] prefix, and VERSIONING.md restricts it to critical and security fixes."
+   "note": "The v1.x branch exists, backports carry the [v1.x] prefix, and VERSIONING.md restricts it to critical and security fixes.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "`git branch -a` shows remotes/origin/v1.x; .github/workflows/main.yml:5 branches: [\"main\", \"v1.x\"]",
+     "RELEASE.md:29 \"Maintenance (previous major) | `v1.x` | `v1.X.Y`\"; RELEASE.md:87 \"Land the `[v1.x]`-prefixed backport PRs\"",
+     "`git log --all --oneline --grep='\\[v1.x\\]'` e.g. 52e64dd \"[v1.x] Remove AI attribution rule from CLAUDE.md (#3603)\"",
+     "CONTRIBUTING.md:107 \"The `v1.x` branch is the previous major's maintenance line and receives only security and critical bug fixes.\""
+    ],
+    "note": "Branch, prefix convention and docs all match; the \"only critical bug fixes and security fixes land there\" clause is a policy about future merges."
+   }
   },
   {
    "id": "5631219d08076f0222d37941f7efcfca61d812ea",
@@ -97,7 +135,15 @@
     ".pre-commit-config.yaml:33 'entry: uv run --frozen ruff'",
     "grep -rnE 'pip install|uv pip|python -m pip' .github scripts .pre-commit-config.yaml CONTRIBUTING.md => (no matches)"
    ],
-   "note": "All dev tooling (CI, pre-commit, scripts, CONTRIBUTING setup) uses uv and none uses pip."
+   "note": "All dev tooling (CI, pre-commit, scripts, CONTRIBUTING setup) uses uv and none uses pip.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "pyproject.toml:34-36 [tool.uv] required-version = \">=0.9.5\"; uv.lock present; CI uses uv (.github/workflows/shared.yml:20-27)"
+    ],
+    "note": "Tooling preference/rule; uv is clearly the project tool but \"NEVER pip\" is a convention."
+   }
   },
   {
    "id": "f75434ee83e433d66e8d85d997cc65e631aa7b00",
@@ -110,7 +156,17 @@
     "examples/servers/simple-tool/pyproject.toml:17 'dependencies = [\"anyio>=4.5\", \"click>=8.2.0\", \"httpx2>=2.5.0\", \"mcp\"]' (static, uv add works)",
     "RELEASE.md:8-10 'The root `mcp` project's runtime dependencies are dynamic and live under `[tool.hatch.metadata.hooks.uv-dynamic-versioning].dependencies`.'"
    ],
-   "note": "Root dependencies are dynamic under the named hatch hook table with an exact mcp-types pin, while example packages declare static dependencies."
+   "note": "Root dependencies are dynamic under the named hatch hook table with an exact mcp-types pin, while example packages declare static dependencies.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "pyproject.toml:3 dynamic = [\"version\", \"dependencies\"]",
+     "pyproject.toml:127-128 [tool.hatch.metadata.hooks.uv-dynamic-versioning] dependencies = [ ... :135 \"mcp-types=={{ version }}\"",
+     "RELEASE.md:8-11 same manual-edit-then-`uv lock` procedure"
+    ],
+    "note": "Section path, dynamic deps and the exact mcp-types pin are all proven; the rest is a how-to (uv add / edit by hand / uv lock) and a claim about uv behaviour, so judgment."
+   }
   },
   {
    "id": "8077ec84c60e22fbf4af06ff476db3d5c2c98821",
@@ -122,7 +178,17 @@
     "scripts/test:5-12 'uv run --frozen coverage erase' ... 'UV_FROZEN=1 uv run --frozen strict-no-cover'",
     ".github/workflows/shared.yml:90-93 'uv run --frozen --no-sync coverage run -m pytest -n auto'"
    ],
-   "note": "Every tool invocation in pre-commit, scripts/test and CI passes --frozen."
+   "note": "Every tool invocation in pre-commit, scripts/test and CI passes --frozen.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "scripts/test:5-12 every command is `uv run --frozen ...`",
+     ".github/workflows/shared.yml:90-97 `uv run --frozen --no-sync ...`",
+     ".pre-commit-config.yaml:33,40,47 `uv run --frozen ...`"
+    ],
+    "note": "Instruction plus a claim about uv's lockfile behaviour (external tool); the repo consistently uses --frozen but cannot prove the rule."
+   }
   },
   {
    "id": "52b5934965bb5a5b1716211d2a76f9475f5454df",
@@ -143,7 +209,16 @@
    "evidence": [
     "RELEASE.md:11-12 'Regenerate the lock with `uv lock` (or `uv lock --upgrade-package <package>` to move just that package's locked version).'"
    ],
-   "note": "RELEASE.md documents the same uv lock --upgrade-package upgrade mechanic."
+   "note": "RELEASE.md documents the same uv lock --upgrade-package upgrade mechanic.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "RELEASE.md:11 \"Regenerate the lock with `uv lock` (or `uv lock --upgrade-package <package>` ...)\"",
+     "pyproject.toml:36 required-version = \">=0.9.5\" (uv is the declared tool)"
+    ],
+    "note": "Bare uv command with a placeholder; the flag belongs to uv (external), not defined in the repo. Consistent with RELEASE.md."
+   }
   },
   {
    "id": "d597f0f29177c6c9fc4984583b1c411192f2e6ee",
@@ -154,7 +229,15 @@
     "git grep -n 'uv pip' => AGENTS.md:40 and examples/mcpserver/memory.py:5 ('# uv pip install ... ' user-facing comment in a demo), no tooling usage",
     "git grep -n '@latest' -- ':!uv.lock' => AGENTS.md:40 only"
    ],
-   "note": "No CI workflow, script or pre-commit hook uses uv pip install or @latest; the only hit is a user-facing install comment in one example."
+   "note": "No CI workflow, script or pre-commit hook uses uv pip install or @latest; the only hit is a user-facing install comment in one example.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "`git grep -n \"uv pip install\"` -> only AGENTS.md:40 (no usage in scripts/CI)"
+    ],
+    "note": "Prohibition/convention."
+   }
   },
   {
    "id": "3e1efdcaa4aaaec2c90859dc269941c27f0b4523",
@@ -164,7 +247,15 @@
    "evidence": [
     "DEPENDENCY_POLICY.md 'A floor is raised only when the SDK starts relying on functionality or a fix that first appeared in that version — not because the dependency published a security advisory ... nor does the SDK add code to work around a dependency's vulnerability ... ([background](https://github.com/Kludex/uvicorn/discussions/2643), [python-sdk#1552](...issues/1552))'"
    ],
-   "note": "DEPENDENCY_POLICY.md states the same floor policy and cites the same two references."
+   "note": "DEPENDENCY_POLICY.md states the same floor policy and cites the same two references.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "DEPENDENCY_POLICY.md:11 \"A floor is raised only when the SDK starts relying on functionality or a fix that first appeared in that version — not because the dependency published a security advisory ... nor does the SDK add code to work around a dependency's vulnerability ... (Kludex/uvicorn/discussions/2643, python-sdk#1552)\""
+    ],
+    "note": "Dependency policy; documented identically in DEPENDENCY_POLICY.md but still a policy referencing external issues."
+   }
   },
   {
    "id": "2ea60af1ff1637d1d9281c29e13763081da058ed",
@@ -204,7 +295,15 @@
     "src/mcp/__init__.py:74 '__all__ = ['",
     "VERSIONING.md:11 'The promise covers every name exported by `mcp` and `mcp_types` (their `__all__`)'"
    ],
-   "note": "src/mcp/__init__.py defines __all__, and VERSIONING.md makes it the public API surface."
+   "note": "src/mcp/__init__.py defines __all__, and VERSIONING.md makes it the public API surface.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "src/mcp/__init__.py:74 `__all__ = [` (file is 145 lines)"
+    ],
+    "note": "File and `__all__` exist; \"adding a symbol is a deliberate API decision\" is a policy."
+   }
   },
   {
    "id": "afcee45534c5df004d55483e343ba05e09910746",
@@ -227,7 +326,17 @@
     "scripts/test:7 'PYTHONWARNDEFAULTENCODING=1 uv run --frozen coverage run -m pytest -n auto \"$@\"'",
     "pyproject.toml:270-271 'filterwarnings = [ \"error\",'"
    ],
-   "note": "CI and scripts/test both set PYTHONWARNDEFAULTENCODING=1 and pytest's error filter makes a missing encoding= fatal."
+   "note": "CI and scripts/test both set PYTHONWARNDEFAULTENCODING=1 and pytest's error filter makes a missing encoding= fatal.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "scripts/test:7 `PYTHONWARNDEFAULTENCODING=1 uv run --frozen coverage run -m pytest -n auto \"$@\"`",
+     ".github/workflows/shared.yml:86-88 env PYTHONWARNDEFAULTENCODING: \"1\" on the pytest step",
+     "pyproject.toml:270-271 filterwarnings = [\"error\", ...]; :284-286 scoped EncodingWarning ignore for pytest_examples"
+    ],
+    "note": "The CI/scripts/test env-var and the error filter are proven; the \"always pass encoding=\" rule is a convention."
+   }
   },
   {
    "id": "2bb50565bd7db640f551168b8bff1d2128dde4f2",
@@ -238,7 +347,15 @@
     ".claude/skills/test-quality/SKILL.md:1-3 'name: test-quality ... covers naming, abstraction level, assertions, determinism'",
     "grep '^#' SKILL.md => '## Naming & shape', '## Level of abstraction', '## Assertions', '## Determinism'"
    ],
-   "note": "The referenced skill file exists and has the named sections."
+   "note": "The referenced skill file exists and has the named sections.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     ".claude/skills/test-quality/SKILL.md exists; headings :11 \"## Naming & shape\", :30 \"## Level of abstraction\", :51 \"## Assertions\", :63 \"## Determinism\""
+    ],
+    "note": "File exists and covers the four named topics; \"conform to\" is a workflow instruction."
+   }
   },
   {
    "id": "c1cb82ca97a5a2f6d68f4293f774db58467f09ad",
@@ -261,7 +378,15 @@
     "git grep -c 'pytest.mark.asyncio' -- tests => (no matches); files using pytest.mark.anyio => 200",
     ".claude/skills/test-quality/SKILL.md:84 'Async tests use anyio, not asyncio.'"
    ],
-   "note": "The suite runs on the anyio plugin, and no test uses pytest-asyncio markers."
+   "note": "The suite runs on the anyio plugin, and no test uses pytest-asyncio markers.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "pyproject.toml:267 addopts `-p anyio`; :68 trio dev dep; .claude/skills/test-quality/SKILL.md:84 \"Async tests use anyio, not asyncio.\""
+    ],
+    "note": "Testing convention."
+   }
   },
   {
    "id": "7ab142648d170b29ff908bb9b8cdd1587f45723b",
@@ -272,7 +397,16 @@
     "git grep -lE '^class Test' -- tests => 12 legacy files (e.g. tests/client/test_auth.py, tests/server/mcpserver/test_server.py), 49 classes",
     "git log --since=2026-05-01 -p -G'^class Test' -- tests | grep '^+class Test' => (no added Test classes)"
    ],
-   "note": "Legacy Test* classes exist as stated, and no new ones have been added in recent history."
+   "note": "Legacy Test* classes exist as stated, and no new ones have been added in recent history.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "`grep -rn -E \"^class Test\" tests | wc -l` -> 49 (e.g. tests/client/test_auth.py, tests/server/mcpserver/test_tool_manager.py)",
+     ".claude/skills/test-quality/SKILL.md:15 \"no `Test` classes (legacy files have them — don't copy)\""
+    ],
+    "note": "Legacy Test* classes do exist (49); the rule itself is a convention."
+   }
   },
   {
    "id": "105f9bbc02461d31495bfabf6d5ab3f6abd75dc2",
@@ -293,7 +427,15 @@
     "tests/client/test_client.py:135 'async with Client(simple_server) as client:'",
     "tests/client/test_client.py:152 'async with Client(app) as client:'"
    ],
-   "note": "tests/client/test_client.py exists and uses the in-memory Client(server) pattern."
+   "note": "tests/client/test_client.py exists and uses the in-memory Client(server) pattern.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "tests/client/test_client.py:212 `async with Client(server) as client:` (also :135,:152,:180)"
+    ],
+    "note": "Referenced file and pattern exist; \"usually the cleanest approach ... use judgment\" is guidance."
+   }
   },
   {
    "id": "fc7f30a4741a1e1efd391220eb228fee96b43069",
@@ -304,7 +446,16 @@
     "ls src/mcp/client/stdio.py tests/client/test_stdio.py => both exist",
     "mirror check over src/mcp modules => 56/101 have tests/<same dir>/test_<module>.py"
    ],
-   "note": "The named example mirrors exactly and the tests tree follows the src layout for most tested modules."
+   "note": "The named example mirrors exactly and the tests tree follows the src layout for most tested modules.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "src/mcp/client/stdio.py and tests/client/test_stdio.py both exist",
+     "Mirroring is not universal: src/mcp/client/sse.py has no tests/client/test_sse.py (tests live at tests/shared/test_sse.py); src/mcp/shared/memory.py has no tests/shared/test_memory.py"
+    ],
+    "note": "Example pair exists; \"add tests to the existing file\" is an instruction and the mirror rule is a convention with exceptions."
+   }
   },
   {
    "id": "bed49cb76ee8849690da19d335370e175aad7e72",
@@ -325,7 +476,15 @@
     "git grep -c 'anyio.Event()' -- tests => 244 total",
     ".claude/skills/test-quality/SKILL.md:67 'Coordinate with `anyio.Event` so the wait ends exactly when the condition holds'"
    ],
-   "note": "The Event-based coordination pattern is used widely across the tests."
+   "note": "The Event-based coordination pattern is used widely across the tests.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     ".claude/skills/test-quality/SKILL.md:67 \"Coordinate with `anyio.Event`\""
+    ],
+    "note": "Testing convention."
+   }
   },
   {
    "id": "c7269650cead82c39e554487603376b4a49c2bfd",
@@ -336,7 +495,13 @@
     "git grep -nE 'await [a-z_]*\\.receive\\(\\)' -- tests => 96 hits",
     "git grep -n -B3 'receive_nowait' -- tests | grep sleep => (no sleep+receive_nowait pairs)"
    ],
-   "note": "Tests await stream.receive(), and no sleep followed by receive_nowait pattern exists."
+   "note": "Tests await stream.receive(), and no sleep followed by receive_nowait pattern exists.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [],
+    "note": "Testing convention."
+   }
   },
   {
    "id": "5b5104f3db8fa76d5a24804c8546c4ac2bc89847",
@@ -347,7 +512,15 @@
     ".claude/skills/test-quality/SKILL.md:68-69 'Sole exception: tests *of* time-based features, with a comment.'",
     "tests/server/test_streamable_http_modern.py:510-515 '_SSE_PING_INTERVAL ... await anyio.sleep(2.5)' (time-based ping test)"
    ],
-   "note": "The skill grants the same exception and existing time-based tests use it."
+   "note": "The skill grants the same exception and existing time-based tests use it.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     ".claude/skills/test-quality/SKILL.md:68-69 \"Sole exception: tests *of* time-based features\""
+    ],
+    "note": "Testing convention."
+   }
   },
   {
    "id": "8e4f6ffb7d00c58a7891c876f6b43e8eaf724aff",
@@ -358,7 +531,15 @@
     "git grep -c 'fail_after(5)' -- tests => 566 total",
     ".claude/skills/test-quality/SKILL.md:70 'Bound every indefinite wait with `anyio.fail_after(5)`. **5 is the standard**'"
    ],
-   "note": "fail_after(5) is the dominant bound for indefinite waits in tests."
+   "note": "fail_after(5) is the dominant bound for indefinite waits in tests.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     ".claude/skills/test-quality/SKILL.md:70 \"Bound every indefinite wait with `anyio.fail_after(5)`. **5 is the standard**\""
+    ],
+    "note": "Testing convention."
+   }
   },
   {
    "id": "4e1a3da842d0ddb052d3dd15d683c9c49c2e72f2",
@@ -369,7 +550,16 @@
     "pyproject.toml:270-271 'filterwarnings = [ \"error\",'",
     "pyproject.toml:272-286 scoped 'ignore:...' entries each with an explanatory comment (e.g. '# pywin32 internal deprecation warning')"
    ],
-   "note": "pytest config is filterwarnings=error with commented, scoped ignore entries."
+   "note": "pytest config is filterwarnings=error with commented, scoped ignore entries.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "pyproject.toml:270-271 filterwarnings = [ \"error\",",
+     "pyproject.toml:272-286 scoped `ignore:...` entries, each preceded by a comment (pywin32, SEP-2577, progress, ping, pytest_examples EncodingWarning)"
+    ],
+    "note": "Config fact proven and the existing ignore entries match the described practice; \"don't silence warnings from your own code\" is a rule."
+   }
   },
   {
    "id": "5e6f2bdfeb489aef58f540ae7934718bf9bf4647",
@@ -380,7 +570,16 @@
     ".github/workflows/conformance.yml:59-65 'Run server conformance (all suite, 2026-07-28 wire) ... --spec-version 2026-07-28'",
     ".github/workflows/conformance.yml:116-124 'Run client conformance (all suite, 2026-07-28 wire)'"
    ],
-   "note": "conformance.yml exists and runs the conformance suite against the 2026-07-28 spec revision in CI."
+   "note": "conformance.yml exists and runs the conformance suite against the 2026-07-28 spec revision in CI.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     ".github/workflows/conformance.yml exists; :59-65 and :116-124 run `--spec-version 2026-07-28` legs against the SDK",
+     "src/mcp-types/mcp_types/_v2026_07_28 exists (ls); .github/workflows/shared.yml:49 imports mcp_types._v2026_07_28"
+    ],
+    "note": "Workflow and spec version are real; the requirement to have a conformance test and to \"stop and tell the user\" is a process instruction about an external repo."
+   }
   },
   {
    "id": "943a050385b22cb27b181ebb27dd9c36f02e1b34",
@@ -468,7 +667,16 @@
     "pyproject.toml:305 'source = [\"src\", \"src/mcp-types/mcp_types\", \"tests\"]'",
     "pyproject.toml:315 'fail_under = 100'"
    ],
-   "note": "Coverage measures tests/ too, so partial runs cannot reach the 100% gate; strict-no-cover's partial-run behaviour is consistent with its purpose but not locally verifiable."
+   "note": "Coverage measures tests/ too, so partial runs cannot reach the 100% gate; strict-no-cover's partial-run behaviour is consistent with its purpose but not locally verifiable.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "pyproject.toml:305 source = [\"src\", \"src/mcp-types/mcp_types\", \"tests\"] (coverage tracks tests/)",
+     "pyproject.toml:254 strict-no-cover = { git = \"https://github.com/pydantic/strict-no-cover\" } — tool source is not in the checkout"
+    ],
+    "note": "\"coverage tracks tests/\" is proven; the no-false-positives claim is about an external tool's behaviour, which the checkout cannot prove."
+   }
   },
   {
    "id": "cfaacf6a6ff9046cb29474e74448407d562be1cd",
@@ -489,7 +697,15 @@
     "git grep -c 'assert isinstance(' -- tests => 901 total vs 'type: ignore' in tests => 29",
     ".claude/skills/test-quality/SKILL.md:101-102 'In tests, narrow types with `assert isinstance`'"
    ],
-   "note": "Tests overwhelmingly narrow types with assert isinstance rather than type: ignore."
+   "note": "Tests overwhelmingly narrow types with assert isinstance rather than type: ignore.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     ".claude/skills/test-quality/SKILL.md:101-102 \"In tests, narrow types with `assert isinstance`\""
+    ],
+    "note": "Convention."
+   }
   },
   {
    "id": "7ccd40a3c50d33e1fb34eb9f2c80b1efca8b1ad0",
@@ -517,7 +733,16 @@
    "evidence": [
     ".github/workflows/shared.yml:95-97 'name: Check for unnecessary no cover pragmas / if: runner.os != 'Windows' / run: uv run --frozen --no-sync strict-no-cover'"
    ],
-   "note": "CI runs strict-no-cover on non-Windows runners only."
+   "note": "CI runs strict-no-cover on non-Windows runners only.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     ".github/workflows/shared.yml:95-97 step \"Check for unnecessary no cover pragmas\" with `if: runner.os != 'Windows'` running `uv run --frozen --no-sync strict-no-cover`",
+     "pyproject.toml:254 strict-no-cover is a git dependency (source not in checkout)"
+    ],
+    "note": "The Windows skip is proven in CI; \"fails if it IS executed\" is external-tool behaviour and \"remove the pragma\" is an instruction."
+   }
   },
   {
    "id": "34e9f36ce755a8e7d70d1af14809142720003ad5",
@@ -528,7 +753,16 @@
     "pyproject.toml:320-321 'exclude_also = [ \"pragma: lax no cover\",'",
     "src/mcp/server/stdio.py:32 'import fcntl  # pragma: lax no cover - POSIX-only line, uncovered on Windows runners'"
    ],
-   "note": "lax no cover is a custom coverage exclusion used for platform-dependent lines."
+   "note": "lax no cover is a custom coverage exclusion used for platform-dependent lines.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "pyproject.toml:320-321 exclude_also = [\"pragma: lax no cover\", ...] (excluded from coverage)",
+     "`grep -rn \"lax no cover\" src | wc -l` -> 28 usages, e.g. src/mcp/client/sse.py:121"
+    ],
+    "note": "Exclusion from coverage is proven by config; \"not checked by strict-no-cover\" depends on the external tool and \"use for ...\" is guidance."
+   }
   },
   {
    "id": "9515f6f7d44ed681882c5830fc603a019329bc01",
@@ -539,7 +773,16 @@
     "tests/transports/stdio/test_lifecycle.py:125-126 '# Coverage mis-traces nested `async with` exit arcs on Python 3.11+.' / 'async with stdio_client(params):  # pragma: no branch'",
     "git grep -c 'pragma: no branch' -- src tests => 227"
    ],
-   "note": "Repo uses no branch on nested async with for exactly the stated coverage.py exit-arc quirk."
+   "note": "Repo uses no branch on nested async with for exactly the stated coverage.py exit-arc quirk.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "`grep -rn \"pragma: no branch\" src | wc -l` -> 55, e.g. src/mcp/client/_memory.py:107",
+     "tests/transports/stdio/test_lifecycle.py:125 \"# Coverage mis-traces nested `async with` exit arcs on Python 3.11+.\"; tests/interaction/README.md:274 same"
+    ],
+    "note": "Claim about coverage.py behaviour (external); repo comments corroborate but cannot prove it."
+   }
   },
   {
    "id": "e1cccc5effafb5df52c4a2c762f0e0a2473b38ef",
@@ -628,7 +871,13 @@
    "evidence": [
     "git grep -nE 'logger\\.exception\\(' -- src | grep -E '\\{(e|exc|err|error|ex)\\b|, (e|exc|err)\\)' => (no matches across 57 logger.exception calls)"
    ],
-   "note": "None of the logger.exception calls in src embed the caught exception in the message."
+   "note": "None of the logger.exception calls in src embed the caught exception in the message.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [],
+    "note": "Logging convention."
+   }
   },
   {
    "id": "a3d4b64c2c0f4640559a5c449338f41442c9e689",

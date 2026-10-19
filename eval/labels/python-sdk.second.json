@@ -1,0 +1,591 @@
+{
+ "repo": "modelcontextprotocol/python-sdk",
+ "sha": "d639cf7f97f77388fa7da60c0f9b04f8837b77fd",
+ "file": "AGENTS.md",
+ "labeler": "blind second labeler (agent), 2026-10-19, under the protocol in eval/LABELING.md; never saw the first labels or a proof report",
+ "labels": [
+  {
+   "id": "9057351159c8b277359aa72b4e8fec8422c9e52f",
+   "line": 5,
+   "label": "judgment",
+   "evidence": [
+    "CONTRIBUTING.md exists (ls at repo root)",
+    "CONTRIBUTING.md:8 \"Pull requests from outside the maintainer team are only reviewed when a maintainer has assigned you the linked issue\""
+   ],
+   "note": "Workflow instruction (\"read X before\"); the referenced file exists but the instruction itself is not provable."
+  },
+  {
+   "id": "029cccffb860334b1865fa36e9f32cef315fa47c",
+   "line": 7,
+   "label": "true",
+   "evidence": [
+    ".github/workflows/require-linked-issue.yml:4-7 \"a PR from someone without triage rights stays open only if it links an open issue here that is assigned to them (or labeled `help wanted`); otherwise it is labeled `missing-issue-link`, gets one comment, and is closed\"",
+    ".github/scripts/pr_intake_gate.js:110 pass when author is an assignee; :129-133 otherwise FAIL -> github.rest.pulls.update({state: \"closed\"})",
+    ".github/scripts/pr_intake_gate.js:148 comment text \"This PR has been closed automatically.\""
+   ],
+   "note": "Automation exists in code and does close PRs lacking a linked issue assigned to the author. Exceptions not mentioned in the statement: `help wanted` issues waive assignment, triage+ authors and PRs numbered < 3200 are exempt."
+  },
+  {
+   "id": "752057ee83c2f13b39473901abde3d6039d31bc1",
+   "line": 12,
+   "label": "true",
+   "evidence": [
+    "RELEASE.md:26-28 table row \"Current stable | `main` | `v2.X.Y`\"",
+    "RELEASE.md:41 \"## Stable release from `main` (`v2.X.Y`)\"",
+    "`git branch -a` lists main / origin/main; `git tag -l | sort -V | tail` shows v2.0.0 ... v2.2.0"
+   ],
+   "note": "Branch, release doc and v2 tags all confirm main is the stable v2 line released per RELEASE.md."
+  },
+  {
+   "id": "a54adfeafe495d934273b9afd58ddfbd324dd880",
+   "line": 14,
+   "label": "judgment",
+   "evidence": [
+    "`git tag -l` includes v2.0.0, v2.0.1, v2.1.0, v2.1.1, v2.2.0 (v2 is released)",
+    "VERSIONING.md exists at repo root"
+   ],
+   "note": "First clause (v2 released) is proven by tags; the rest is an API-stability policy and a maintainer-decision rule, not provable from code."
+  },
+  {
+   "id": "a7fa2858d450f8d9b6dbe915a71d0f9968cad837",
+   "line": 19,
+   "label": "judgment",
+   "evidence": [
+    "docs/migration.md:1 \"# Migration Guide: v1 to v2\"",
+    "mkdocs.yml:72 \"- Migration Guide: migration.md\""
+   ],
+   "note": "The file exists and is the v1->v2 guide; \"closed to new entries\" is an editorial policy."
+  },
+  {
+   "id": "1c229dea5de533f3202741c5d6686367d3fa169f",
+   "line": 21,
+   "label": "judgment",
+   "evidence": [
+    "`git branch -a` shows remotes/origin/v1.x; .github/workflows/main.yml:5 branches: [\"main\", \"v1.x\"]",
+    "RELEASE.md:29 \"Maintenance (previous major) | `v1.x` | `v1.X.Y`\"; RELEASE.md:87 \"Land the `[v1.x]`-prefixed backport PRs\"",
+    "`git log --all --oneline --grep='\\[v1.x\\]'` e.g. 52e64dd \"[v1.x] Remove AI attribution rule from CLAUDE.md (#3603)\"",
+    "CONTRIBUTING.md:107 \"The `v1.x` branch is the previous major's maintenance line and receives only security and critical bug fixes.\""
+   ],
+   "note": "Branch, prefix convention and docs all match; the \"only critical bug fixes and security fixes land there\" clause is a policy about future merges."
+  },
+  {
+   "id": "5631219d08076f0222d37941f7efcfca61d812ea",
+   "line": 24,
+   "label": "true",
+   "evidence": [
+    "README.md:20 links \"What's new in v2\" and the migration guide; README.md:35 `uv add \"mcp[cli]\"` with no v1 pin",
+    "`git show origin/v1.x:README.md` line 17: \"**This documents v1.x, the maintenance line of the MCP Python SDK.** v2 is the current stable release\""
+   ],
+   "note": "README on main documents v2; the v1.x branch README explicitly says it documents v1.x."
+  },
+  {
+   "id": "3fb6979ee6b0327d0a4b4a2d43868cf63910a098",
+   "line": 28,
+   "label": "judgment",
+   "evidence": [
+    "pyproject.toml:34-36 [tool.uv] required-version = \">=0.9.5\"; uv.lock present; CI uses uv (.github/workflows/shared.yml:20-27)"
+   ],
+   "note": "Tooling preference/rule; uv is clearly the project tool but \"NEVER pip\" is a convention."
+  },
+  {
+   "id": "f75434ee83e433d66e8d85d997cc65e631aa7b00",
+   "line": 29,
+   "label": "judgment",
+   "evidence": [
+    "pyproject.toml:3 dynamic = [\"version\", \"dependencies\"]",
+    "pyproject.toml:127-128 [tool.hatch.metadata.hooks.uv-dynamic-versioning] dependencies = [ ... :135 \"mcp-types=={{ version }}\"",
+    "RELEASE.md:8-11 same manual-edit-then-`uv lock` procedure"
+   ],
+   "note": "Section path, dynamic deps and the exact mcp-types pin are all proven; the rest is a how-to (uv add / edit by hand / uv lock) and a claim about uv behaviour, so judgment."
+  },
+  {
+   "id": "8077ec84c60e22fbf4af06ff476db3d5c2c98821",
+   "line": 35,
+   "label": "judgment",
+   "evidence": [
+    "scripts/test:5-12 every command is `uv run --frozen ...`",
+    ".github/workflows/shared.yml:90-97 `uv run --frozen --no-sync ...`",
+    ".pre-commit-config.yaml:33,40,47 `uv run --frozen ...`"
+   ],
+   "note": "Instruction plus a claim about uv's lockfile behaviour (external tool); the repo consistently uses --frozen but cannot prove the rule."
+  },
+  {
+   "id": "52b5934965bb5a5b1716211d2a76f9475f5454df",
+   "line": 37,
+   "label": "true",
+   "evidence": [
+    ".github/workflows/shared.yml:58 python-version: [\"3.10\", \"3.11\", \"3.12\", \"3.13\", \"3.14\"]",
+    "pyproject.toml:6 requires-python = \">=3.10\"; :21-25 classifiers 3.10-3.14",
+    "pyproject.toml:66 \"pytest>=8.4.0\" in [dependency-groups].dev"
+   ],
+   "note": "CI range 3.10-3.14 proven; pytest is a dev dependency; 3.10 is a supported interpreter. `--python` is a uv flag (external) consistent with CI usage (shared.yml:27,78)."
+  },
+  {
+   "id": "0f2a2a5d8af2fcbcf43ff24a5cab1a2bf2737022",
+   "line": 39,
+   "label": "judgment",
+   "evidence": [
+    "RELEASE.md:11 \"Regenerate the lock with `uv lock` (or `uv lock --upgrade-package <package>` ...)\"",
+    "pyproject.toml:36 required-version = \">=0.9.5\" (uv is the declared tool)"
+   ],
+   "note": "Bare uv command with a placeholder; the flag belongs to uv (external), not defined in the repo. Consistent with RELEASE.md."
+  },
+  {
+   "id": "d597f0f29177c6c9fc4984583b1c411192f2e6ee",
+   "line": 40,
+   "label": "judgment",
+   "evidence": [
+    "`git grep -n \"uv pip install\"` -> only AGENTS.md:40 (no usage in scripts/CI)"
+   ],
+   "note": "Prohibition/convention."
+  },
+  {
+   "id": "3e1efdcaa4aaaec2c90859dc269941c27f0b4523",
+   "line": 41,
+   "label": "judgment",
+   "evidence": [
+    "DEPENDENCY_POLICY.md:11 \"A floor is raised only when the SDK starts relying on functionality or a fix that first appeared in that version — not because the dependency published a security advisory ... nor does the SDK add code to work around a dependency's vulnerability ... (Kludex/uvicorn/discussions/2643, python-sdk#1552)\""
+   ],
+   "note": "Dependency policy; documented identically in DEPENDENCY_POLICY.md but still a policy referencing external issues."
+  },
+  {
+   "id": "2ea60af1ff1637d1d9281c29e13763081da058ed",
+   "line": 48,
+   "label": "judgment",
+   "evidence": [],
+   "note": "Style convention."
+  },
+  {
+   "id": "ff9aa7fe1e45eb6f33470d4113bf837708dcd7f6",
+   "line": 50,
+   "label": "judgment",
+   "evidence": [
+    "pyproject.toml:160 [tool.pyright] typeCheckingMode = \"strict\""
+   ],
+   "note": "Coding convention; strict pyright supports it but does not prove \"all code\"."
+  },
+  {
+   "id": "3531015005786bbd4eb7b12502e69dd89fb85899",
+   "line": 51,
+   "label": "judgment",
+   "evidence": [
+    "pyproject.toml:211 ruff rule \"D212\" selected"
+   ],
+   "note": "Documentation convention."
+  },
+  {
+   "id": "f051d92de31f28f3c8cd3e3df848ba058808eb59",
+   "line": 54,
+   "label": "judgment",
+   "evidence": [
+    "src/mcp/__init__.py:74 `__all__ = [` (file is 145 lines)"
+   ],
+   "note": "File and `__all__` exist; \"adding a symbol is a deliberate API decision\" is a policy."
+  },
+  {
+   "id": "afcee45534c5df004d55483e343ba05e09910746",
+   "line": 56,
+   "label": "judgment",
+   "evidence": [],
+   "note": "Import-style convention."
+  },
+  {
+   "id": "4b3a2776cbe3d55888cfe04bf89ff42f9c500d71",
+   "line": 60,
+   "label": "judgment",
+   "evidence": [
+    "scripts/test:7 `PYTHONWARNDEFAULTENCODING=1 uv run --frozen coverage run -m pytest -n auto \"$@\"`",
+    ".github/workflows/shared.yml:86-88 env PYTHONWARNDEFAULTENCODING: \"1\" on the pytest step",
+    "pyproject.toml:270-271 filterwarnings = [\"error\", ...]; :284-286 scoped EncodingWarning ignore for pytest_examples"
+   ],
+   "note": "The CI/scripts/test env-var and the error filter are proven; the \"always pass encoding=\" rule is a convention."
+  },
+  {
+   "id": "2bb50565bd7db640f551168b8bff1d2128dde4f2",
+   "line": 68,
+   "label": "judgment",
+   "evidence": [
+    ".claude/skills/test-quality/SKILL.md exists; headings :11 \"## Naming & shape\", :30 \"## Level of abstraction\", :51 \"## Assertions\", :63 \"## Determinism\""
+   ],
+   "note": "File exists and covers the four named topics; \"conform to\" is a workflow instruction."
+  },
+  {
+   "id": "c1cb82ca97a5a2f6d68f4293f774db58467f09ad",
+   "line": 70,
+   "label": "true",
+   "evidence": [
+    "pyproject.toml:66 \"pytest>=8.4.0\" in [dependency-groups].dev (default group, :35)",
+    "pyproject.toml:256 [tool.pytest.ini_options]",
+    ".github/workflows/shared.yml:91 `uv run --frozen --no-sync coverage run -m pytest -n auto`; .claude/skills/test-quality/SKILL.md:140 `uv run --frozen pytest <file> -q`"
+   ],
+   "note": "pytest is the configured, installed test framework and is run via uv run --frozen in repo tooling."
+  },
+  {
+   "id": "99236e6acdbd74927fc5a7391b5395cfe0214ed8",
+   "line": 71,
+   "label": "judgment",
+   "evidence": [
+    "pyproject.toml:267 addopts `-p anyio`; :68 trio dev dep; .claude/skills/test-quality/SKILL.md:84 \"Async tests use anyio, not asyncio.\""
+   ],
+   "note": "Testing convention."
+  },
+  {
+   "id": "7ab142648d170b29ff908bb9b8cdd1587f45723b",
+   "line": 72,
+   "label": "judgment",
+   "evidence": [
+    "`grep -rn -E \"^class Test\" tests | wc -l` -> 49 (e.g. tests/client/test_auth.py, tests/server/mcpserver/test_tool_manager.py)",
+    ".claude/skills/test-quality/SKILL.md:15 \"no `Test` classes (legacy files have them — don't copy)\""
+   ],
+   "note": "Legacy Test* classes do exist (49); the rule itself is a convention."
+  },
+  {
+   "id": "105f9bbc02461d31495bfabf6d5ab3f6abd75dc2",
+   "line": 75,
+   "label": "judgment",
+   "evidence": [],
+   "note": "Testing preference."
+  },
+  {
+   "id": "203b618068513a717adcc00ba722490f15f72feb",
+   "line": 77,
+   "label": "judgment",
+   "evidence": [
+    "tests/client/test_client.py:212 `async with Client(server) as client:` (also :135,:152,:180)"
+   ],
+   "note": "Referenced file and pattern exist; \"usually the cleanest approach ... use judgment\" is guidance."
+  },
+  {
+   "id": "fc7f30a4741a1e1efd391220eb228fee96b43069",
+   "line": 81,
+   "label": "judgment",
+   "evidence": [
+    "src/mcp/client/stdio.py and tests/client/test_stdio.py both exist",
+    "Mirroring is not universal: src/mcp/client/sse.py has no tests/client/test_sse.py (tests live at tests/shared/test_sse.py); src/mcp/shared/memory.py has no tests/shared/test_memory.py"
+   ],
+   "note": "Example pair exists; \"add tests to the existing file\" is an instruction and the mirror rule is a convention with exceptions."
+  },
+  {
+   "id": "bed49cb76ee8849690da19d335370e175aad7e72",
+   "line": 83,
+   "label": "judgment",
+   "evidence": [
+    ".claude/skills/test-quality/SKILL.md:65 \"No sleeps, ever.\""
+   ],
+   "note": "Testing convention."
+  },
+  {
+   "id": "dd5177e70475ef05e72993218a313768d1e0d7d3",
+   "line": 84,
+   "label": "judgment",
+   "evidence": [
+    ".claude/skills/test-quality/SKILL.md:67 \"Coordinate with `anyio.Event`\""
+   ],
+   "note": "Testing convention."
+  },
+  {
+   "id": "c7269650cead82c39e554487603376b4a49c2bfd",
+   "line": 85,
+   "label": "judgment",
+   "evidence": [],
+   "note": "Testing convention."
+  },
+  {
+   "id": "5b5104f3db8fa76d5a24804c8546c4ac2bc89847",
+   "line": 86,
+   "label": "judgment",
+   "evidence": [
+    ".claude/skills/test-quality/SKILL.md:68-69 \"Sole exception: tests *of* time-based features\""
+   ],
+   "note": "Testing convention."
+  },
+  {
+   "id": "8e4f6ffb7d00c58a7891c876f6b43e8eaf724aff",
+   "line": 87,
+   "label": "judgment",
+   "evidence": [
+    ".claude/skills/test-quality/SKILL.md:70 \"Bound every indefinite wait with `anyio.fail_after(5)`. **5 is the standard**\""
+   ],
+   "note": "Testing convention."
+  },
+  {
+   "id": "4e1a3da842d0ddb052d3dd15d683c9c49c2e72f2",
+   "line": 88,
+   "label": "judgment",
+   "evidence": [
+    "pyproject.toml:270-271 filterwarnings = [ \"error\",",
+    "pyproject.toml:272-286 scoped `ignore:...` entries, each preceded by a comment (pywin32, SEP-2577, progress, ping, pytest_examples EncodingWarning)"
+   ],
+   "note": "Config fact proven and the existing ignore entries match the described practice; \"don't silence warnings from your own code\" is a rule."
+  },
+  {
+   "id": "5e6f2bdfeb489aef58f540ae7934718bf9bf4647",
+   "line": 92,
+   "label": "judgment",
+   "evidence": [
+    ".github/workflows/conformance.yml exists; :59-65 and :116-124 run `--spec-version 2026-07-28` legs against the SDK",
+    "src/mcp-types/mcp_types/_v2026_07_28 exists (ls); .github/workflows/shared.yml:49 imports mcp_types._v2026_07_28"
+   ],
+   "note": "Workflow and spec version are real; the requirement to have a conformance test and to \"stop and tell the user\" is a process instruction about an external repo."
+  },
+  {
+   "id": "943a050385b22cb27b181ebb27dd9c36f02e1b34",
+   "line": 100,
+   "label": "true",
+   "evidence": [
+    "pyproject.toml:314-315 [tool.coverage.report] fail_under = 100",
+    "pyproject.toml:301-302 [tool.coverage.run] branch = true",
+    ".github/workflows/shared.yml:90-93 every matrix cell runs `coverage run -m pytest` then `coverage report` (which enforces fail_under)"
+   ],
+   "note": "Both config values exist exactly as quoted and CI runs coverage report on every cell."
+  },
+  {
+   "id": "1cf593adba25f7ccdd80f25e4e12129be389d4b9",
+   "line": 102,
+   "label": "true",
+   "evidence": [
+    "scripts/test:5-12: coverage erase / `coverage run -m pytest -n auto` / combine / report / `UV_FROZEN=1 uv run --frozen strict-no-cover`, with no --python (default interpreter)",
+    ".github/workflows/shared.yml:57-64 matrix python-version 3.10-3.14, dep-resolution lowest-direct|locked, os ubuntu-latest|windows-latest",
+    "pyproject.toml:320-321 `pragma: lax no cover` exists for platform/version-specific coverage"
+   ],
+   "note": "Script contents and the 5x2x2 CI matrix match exactly. \"~23s\" is a timing estimate (not checkable); the matrix-quirks remark is corroborated by the lax-no-cover pragma but not strictly provable."
+  },
+  {
+   "id": "aa8a1a0e27a9533f721d1ef4b3a2075d29e5b526",
+   "line": 109,
+   "label": "true",
+   "evidence": [
+    "scripts/test:5 `uv run --frozen coverage erase`",
+    "pyproject.toml:75 \"coverage[toml]>=7.10.7,<=7.13\" in dev group; uv.lock:347-348 coverage 7.13.0"
+   ],
+   "note": "Identical to the first line of scripts/test; coverage is an installed dev dependency."
+  },
+  {
+   "id": "b8e7429202120069270da327c5ad638d33d242d2",
+   "line": 110,
+   "label": "true",
+   "evidence": [
+    "scripts/test:7 `... uv run --frozen coverage run -m pytest -n auto \"$@\"`; .github/workflows/shared.yml:91 `uv run --frozen --no-sync coverage run -m pytest -n auto`",
+    "pyproject.toml:75 coverage, :66 pytest in dev group"
+   ],
+   "note": "Same command form as scripts/test and CI; `tests/path/test_foo.py` is a placeholder."
+  },
+  {
+   "id": "3a60a067356ac167504f7b9956d117a4d6816ca8",
+   "line": 111,
+   "label": "true",
+   "evidence": [
+    "scripts/test:8 `uv run --frozen coverage combine`; .github/workflows/shared.yml:92",
+    "pyproject.toml:304 concurrency = [\"multiprocessing\", \"thread\"] (why combine is needed)"
+   ],
+   "note": "Identical to scripts/test."
+  },
+  {
+   "id": "62203a97d97ecbbb5f32dc6c1985b13995fb233f",
+   "line": 112,
+   "label": "true",
+   "evidence": [
+    "scripts/test:9 `uv run --frozen coverage report`",
+    "pyproject.toml:314-319 [tool.coverage.report] (fail_under = 100 is what --fail-under=0 overrides)"
+   ],
+   "note": "Same command as scripts/test plus two standard coverage.py report options; `src/mcp/path/foo.py` is a placeholder."
+  },
+  {
+   "id": "d6c562b4f5cb00dd84111f728d1d0166d9e2e037",
+   "line": 114,
+   "label": "true",
+   "evidence": [
+    "scripts/test:10-12 \"# strict-no-cover spawns `uv run coverage json` internally without --frozen; UV_FROZEN=1 propagates ...\" then `UV_FROZEN=1 uv run --frozen strict-no-cover`",
+    "pyproject.toml:77 \"strict-no-cover\" in dev group; :254 git source; uv.lock:2678-2680 strict-no-cover 0.1.1"
+   ],
+   "note": "Character-for-character the last line of scripts/test; the tool is a locked dev dependency."
+  },
+  {
+   "id": "1ed88d040820c851ee76def3d858dcd906c6a4d8",
+   "line": 117,
+   "label": "judgment",
+   "evidence": [
+    "pyproject.toml:305 source = [\"src\", \"src/mcp-types/mcp_types\", \"tests\"] (coverage tracks tests/)",
+    "pyproject.toml:254 strict-no-cover = { git = \"https://github.com/pydantic/strict-no-cover\" } — tool source is not in the checkout"
+   ],
+   "note": "\"coverage tracks tests/\" is proven; the no-false-positives claim is about an external tool's behaviour, which the checkout cannot prove."
+  },
+  {
+   "id": "cfaacf6a6ff9046cb29474e74448407d562be1cd",
+   "line": 122,
+   "label": "judgment",
+   "evidence": [
+    ".claude/skills/test-quality/SKILL.md:99 \"No new `# pragma`, `# type: ignore`, `# noqa` by default\""
+   ],
+   "note": "Convention."
+  },
+  {
+   "id": "3f1b3abb6b598cc36f711d16c63fee44fc49461c",
+   "line": 123,
+   "label": "judgment",
+   "evidence": [
+    ".claude/skills/test-quality/SKILL.md:101-102 \"In tests, narrow types with `assert isinstance`\""
+   ],
+   "note": "Convention."
+  },
+  {
+   "id": "7ccd40a3c50d33e1fb34eb9f2c80b1efca8b1ad0",
+   "line": 124,
+   "label": "judgment",
+   "evidence": [],
+   "note": "Convention/guidance."
+  },
+  {
+   "id": "1a00adc57e412f23fdb4f72da023e900ca57918c",
+   "line": 128,
+   "label": "true",
+   "evidence": [
+    "`git branch -a` lists remotes/origin/HEAD -> origin/main and remotes/origin/main",
+    ".github/workflows/main.yml:5 push branches [\"main\", \"v1.x\"]; conformance.yml:5 branches: [main]"
+   ],
+   "note": "Plain git/grep audit command; its only repo-specific target, origin/main, exists and is the default branch."
+  },
+  {
+   "id": "db3c9994ef236721ef45df3f66aed12c05adb5f2",
+   "line": 133,
+   "label": "judgment",
+   "evidence": [
+    ".github/workflows/shared.yml:95-97 step \"Check for unnecessary no cover pragmas\" with `if: runner.os != 'Windows'` running `uv run --frozen --no-sync strict-no-cover`",
+    "pyproject.toml:254 strict-no-cover is a git dependency (source not in checkout)"
+   ],
+   "note": "The Windows skip is proven in CI; \"fails if it IS executed\" is external-tool behaviour and \"remove the pragma\" is an instruction."
+  },
+  {
+   "id": "34e9f36ce755a8e7d70d1af14809142720003ad5",
+   "line": 136,
+   "label": "judgment",
+   "evidence": [
+    "pyproject.toml:320-321 exclude_also = [\"pragma: lax no cover\", ...] (excluded from coverage)",
+    "`grep -rn \"lax no cover\" src | wc -l` -> 28 usages, e.g. src/mcp/client/sse.py:121"
+   ],
+   "note": "Exclusion from coverage is proven by config; \"not checked by strict-no-cover\" depends on the external tool and \"use for ...\" is guidance."
+  },
+  {
+   "id": "9515f6f7d44ed681882c5830fc603a019329bc01",
+   "line": 139,
+   "label": "judgment",
+   "evidence": [
+    "`grep -rn \"pragma: no branch\" src | wc -l` -> 55, e.g. src/mcp/client/_memory.py:107",
+    "tests/transports/stdio/test_lifecycle.py:125 \"# Coverage mis-traces nested `async with` exit arcs on Python 3.11+.\"; tests/interaction/README.md:274 same"
+   ],
+   "note": "Claim about coverage.py behaviour (external); repo comments corroborate but cannot prove it."
+  },
+  {
+   "id": "e1cccc5effafb5df52c4a2c762f0e0a2473b38ef",
+   "line": 144,
+   "label": "judgment",
+   "evidence": [
+    "docs/ exists with get-started/, servers/, handlers/, run/, client/, advanced/"
+   ],
+   "note": "Process instruction."
+  },
+  {
+   "id": "936ee26e34be06cd28aa172fc72577f9828faca8",
+   "line": 145,
+   "label": "true",
+   "evidence": [
+    "mkdocs.yml:18 \"- Get started:\", :24 \"- Servers:\", :34 \"- Inside your handler:\", :45 \"- Running your server:\", :52 \"- Clients:\", :63 \"- Advanced:\" — the six nav sections with child pages",
+    "`ls -d docs/*/` -> advanced/ client/ get-started/ handlers/ js/ run/ servers/ (directory names differ: handlers vs \"Inside your handler\", run vs \"Running your server\", client vs \"Clients\")"
+   ],
+   "note": "All six section titles exist exactly, and the on-disk directory names differ from them as stated."
+  },
+  {
+   "id": "6b6924dc73ab2b65e79d7ec328170cae1546e241",
+   "line": 147,
+   "label": "judgment",
+   "evidence": [
+    "mkdocs.yml:15-73 nav"
+   ],
+   "note": "Process instruction."
+  },
+  {
+   "id": "ddbe111c759479f5ee26f3a11901c685540e594b",
+   "line": 152,
+   "label": "true",
+   "evidence": [
+    "pyproject.toml:67 \"ruff>=0.8.5\" in dev group; uv.lock:2591-2592 ruff 0.12.12",
+    ".pre-commit-config.yaml:31-34 hook ruff-format: entry `uv run --frozen ruff`, args [format]"
+   ],
+   "note": "ruff is an installed dev dependency and the same command is the repo's formatter hook."
+  },
+  {
+   "id": "fe453b946790016164f83e016da57705cce971fe",
+   "line": 153,
+   "label": "true",
+   "evidence": [
+    "pyproject.toml:67 ruff dev dep; :203-245 [tool.ruff] config",
+    ".pre-commit-config.yaml:38-41 hook ruff: entry `uv run --frozen ruff`, args [\"check\", \"--fix\", \"--exit-non-zero-on-fix\"]"
+   ],
+   "note": "Same lint command as the pre-commit hook (hook adds --exit-non-zero-on-fix)."
+  },
+  {
+   "id": "6280cae8cc9cba8a5cd67f35a8f4a707c151c6a8",
+   "line": 154,
+   "label": "true",
+   "evidence": [
+    "pyproject.toml:65 \"pyright>=1.1.400\" in dev group; :159-201 [tool.pyright]; uv.lock:2184-2185 pyright 1.1.405",
+    ".pre-commit-config.yaml:45-47 hook pyright: entry `uv run --frozen pyright`"
+   ],
+   "note": "pyright is an installed dev dependency and the command matches the pre-commit hook."
+  },
+  {
+   "id": "2228eb2c35a559edcd8e880e49cc0f04fbf82807",
+   "line": 155,
+   "label": "true",
+   "evidence": [
+    ".pre-commit-config.yaml:31 ruff-format, :38 ruff (check --fix), :45 pyright",
+    ".pre-commit-config.yaml:15-27 markdownlint; :51-56 uv-lock-check `uv lock --check`; :57-62 readme-snippets `scripts/update_readme_snippets.py --check`"
+   ],
+   "note": "Every listed hook is present (file also has end-of-file-fixer and prettier, which the statement does not exclude)."
+  },
+  {
+   "id": "2196bc97a7ef1e1fc93760dc259db8a299a03ea4",
+   "line": 160,
+   "label": "judgment",
+   "evidence": [],
+   "note": "Logging convention."
+  },
+  {
+   "id": "a273bf1e9eca8738471d88937f353d77db2586ff",
+   "line": 161,
+   "label": "judgment",
+   "evidence": [],
+   "note": "Logging convention."
+  },
+  {
+   "id": "a3d4b64c2c0f4640559a5c449338f41442c9e689",
+   "line": 163,
+   "label": "judgment",
+   "evidence": [],
+   "note": "Exception-handling convention (note PermissionError is already a subclass of OSError, but that is style, not a repo fact)."
+  },
+  {
+   "id": "949c626515ffb0bbbd23b13b3f81edffa4cf6479",
+   "line": 164,
+   "label": "judgment",
+   "evidence": [],
+   "note": "Exception-handling convention."
+  },
+  {
+   "id": "9e069f0bdcfec44382d6f1936d19604a6b71e955",
+   "line": 165,
+   "label": "judgment",
+   "evidence": [],
+   "note": "Exception-handling convention."
+  },
+  {
+   "id": "e6165261b5556098ea823205864411f08c827380",
+   "line": 166,
+   "label": "judgment",
+   "evidence": [
+    "`grep -rn \"except Exception\" src | head` shows uses e.g. src/mcp/client/sse.py:124 (marked lax no cover)"
+   ],
+   "note": "Prohibition with a loophole (\"top-level handlers\"); a convention."
+  }
+ ]
+}

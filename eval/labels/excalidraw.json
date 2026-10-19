@@ -1,181 +1,198 @@
 {
-  "repo": "excalidraw/excalidraw",
-  "sha": "1919728724a1b71af73cb7e6d2d1a418a1415b1c",
-  "file": "CLAUDE.md",
-  "labeler": "agent (independent of proof's output)",
-  "labels": [
-    {
-      "id": "a3853051226741d2e61802907e81447242334758",
-      "line": 7,
-      "text": "`packages/excalidraw/` - Main React component library published to npm as `@excalidraw/excalidraw`",
-      "label": "true",
-      "evidence": [
-        "packages/excalidraw/package.json:2 \"name\": \"@excalidraw/excalidraw\"",
-        "packages/excalidraw/package.json:38-41 \"publishConfig\": { \"access\": \"public\" }, \"description\": \"Excalidraw as a React component\"",
-        "package.json scripts: \"release\": \"node scripts/release.js\""
-      ],
-      "note": "The folder exists, its package is named @excalidraw/excalidraw, and it is set up for public npm publishing as a React component."
-    },
-    {
-      "id": "9559b7b756c347a093560df6687404856640f41d",
-      "line": 8,
-      "text": "`excalidraw-app/` - Full-featured web application (excalidraw.com) that uses the library",
-      "label": "true",
-      "evidence": [
-        "excalidraw-app/index.html:28 <meta property=\"og:url\" content=\"https://excalidraw.com\" />",
-        "excalidraw-app/App.tsx:10 } from \"@excalidraw/excalidraw\";",
-        "excalidraw-app/package.json:46 \"build:app\": \"... vite build\""
-      ],
-      "note": "excalidraw-app is the excalidraw.com web app and imports @excalidraw/excalidraw."
-    },
-    {
-      "id": "c472d7fc253a9a66046b0b37eecb4df190a38b16",
-      "line": 9,
-      "text": "`packages/` - Core packages: `@excalidraw/common`, `@excalidraw/element`, `@excalidraw/math`, `@excalidraw/utils`",
-      "label": "true",
-      "evidence": [
-        "packages/common/package.json:2 \"name\": \"@excalidraw/common\"",
-        "packages/element/package.json:2 \"name\": \"@excalidraw/element\"",
-        "packages/math/package.json:2 \"name\": \"@excalidraw/math\"",
-        "packages/utils/package.json:2 \"name\": \"@excalidraw/utils\"",
-        "ls packages => common element eslintrc.base.json excalidraw fractional-indexing laser-pointer math tsconfig.base.json utils"
-      ],
-      "note": "All four named packages exist under packages/; the list leaves out @excalidraw/fractional-indexing and @excalidraw/laser-pointer, both added after CLAUDE.md (git: 3004c642 2026-05-04, cd514d72 2026-06-24), but it names nothing wrong."
-    },
-    {
-      "id": "316e5e57e6476a0e41a824fce507b033b272b213",
-      "line": 10,
-      "text": "`examples/` - Integration examples (NextJS, browser script)",
-      "label": "true",
-      "evidence": [
-        "ls examples => with-nextjs with-script-in-browser",
-        "examples/with-nextjs/package.json:9 \"dev\": \"yarn build:workspace && next dev -p 3005\"",
-        "package.json scripts: \"start:example\": \"yarn build:packages && yarn --cwd ./examples/with-script-in-browser start\""
-      ],
-      "note": "examples/ holds exactly a Next.js example and a script-in-browser example."
-    },
-    {
-      "id": "1df61612a109c8737cc5043c8c53853d57c1e1a9",
-      "line": 14,
-      "text": "Package Development: Work in `packages/*` for editor features",
-      "label": "true",
-      "evidence": [
-        "ls packages/excalidraw => actions components data eraser fonts history.ts lasso ... (editor features)",
-        "package.json:6-10 \"workspaces\": [\"excalidraw-app\", \"packages/*\", \"examples/*\"]"
-      ],
-      "note": "The code follows this split: editor features (actions, components, element logic) live in packages/*."
-    },
-    {
-      "id": "54ef68f901ce0ada9684aeb547920c26f08e3b5e",
-      "line": 15,
-      "text": "App Development: Work in `excalidraw-app/` for app-specific features",
-      "label": "true",
-      "evidence": [
-        "ls excalidraw-app => collab share data (firebase.ts, LocalData.ts, tabSync.ts) sentry.ts ExcalidrawPlusIframeExport.tsx"
-      ],
-      "note": "App-only features such as collaboration, sharing, Firebase storage and Sentry live in excalidraw-app/, as the guidance describes."
-    },
-    {
-      "id": "03bbec241e332ce8f9ac1c68a864dce8fdc99ce9",
-      "line": 16,
-      "text": "Testing: Always run `yarn test:update` before committing",
-      "label": "judgment",
-      "evidence": [
-        "package.json scripts: \"test:update\": \"yarn test:app --update --watch=false\" (command exists)",
-        ".husky/pre-commit => \"# yarn lint-staged\" (commented out; no test run before commit)",
-        ".lintstagedrc.js runs only eslint --fix and prettier --write, not tests"
-      ],
-      "note": "The command exists, but nothing enforces running it before a commit (the pre-commit hook is commented out), so this is a team-practice rule."
-    },
-    {
-      "id": "d3ebc020bd78911464a3599716b82d7dbe27f9a5",
-      "line": 17,
-      "text": "Type Safety: Use `yarn test:typecheck` to verify TypeScript",
-      "label": "true",
-      "evidence": [
-        "package.json scripts: \"test:typecheck\": \"tsc\"",
-        ".github/workflows/lint.yml:22 yarn test:typecheck"
-      ],
-      "note": "The script runs tsc, and CI uses this exact command to verify TypeScript."
-    },
-    {
-      "id": "8544dadc97626692991558149b1c933bc50aa747",
-      "line": 22,
-      "text": "yarn test:typecheck # TypeScript type checking",
-      "label": "true",
-      "evidence": [
-        "package.json scripts: \"test:typecheck\": \"tsc\"",
-        "tsconfig.json:18 \"noEmit\": true"
-      ],
-      "note": "The root script runs tsc with noEmit, which only type-checks."
-    },
-    {
-      "id": "f8d190f392d332a45c77adee671118b039fcde23",
-      "line": 23,
-      "text": "yarn test:update # Run all tests (with snapshot updates)",
-      "label": "true",
-      "evidence": [
-        "package.json scripts: \"test:update\": \"yarn test:app --update --watch=false\", \"test:app\": \"vitest\"",
-        "vitest.config.mts:76-99 test config sets no include filter (default picks up all *.test.* files)"
-      ],
-      "note": "It runs the whole vitest suite once with --update, which rewrites snapshots."
-    },
-    {
-      "id": "47f8120c1871703389fed5df4c65d6f76ed85010",
-      "line": 24,
-      "text": "yarn fix # Auto-fix formatting and linting issues",
-      "label": "true",
-      "evidence": [
-        "package.json scripts: \"fix\": \"yarn fix:other && yarn fix:code\", \"fix:other\": \"yarn prettier --write\", \"fix:code\": \"yarn test:code --fix\" (eslint)"
-      ],
-      "note": "yarn fix runs prettier --write and then eslint --fix."
-    },
-    {
-      "id": "1d3080df88464d24bcf41d877d61d1fb82d728fd",
-      "line": 31,
-      "text": "Uses Yarn workspaces for monorepo management",
-      "label": "true",
-      "evidence": [
-        "package.json:4 \"packageManager\": \"yarn@1.22.22\"",
-        "package.json:5-9 \"workspaces\": [\"excalidraw-app\", \"packages/*\", \"examples/*\"]"
-      ],
-      "note": "The root package.json declares Yarn workspaces and pins Yarn as the package manager."
-    },
-    {
-      "id": "f6b33a8c22d562d07070bc4a0f194a2004b5aa89",
-      "line": 32,
-      "text": "Internal packages use path aliases (see `vitest.config.mts`)",
-      "label": "true",
-      "evidence": [
-        "vitest.config.mts:7-10 alias: [{ find: /^@excalidraw\\/common$/, replacement: path.resolve(__dirname, \"./packages/common/src/index.ts\") }, ...",
-        "tsconfig.json:21-35 \"paths\": { \"@excalidraw/common\": [\"./packages/common/src/index.ts\"], ... }"
-      ],
-      "note": "vitest.config.mts exists and maps every @excalidraw/* package to its source via aliases (mirrored in tsconfig paths)."
-    },
-    {
-      "id": "139bc67eaa0aa9736ab2de58486baa5788aebb90",
-      "line": 33,
-      "text": "Build system uses esbuild for packages, Vite for the app",
-      "label": "true",
-      "evidence": [
-        "scripts/buildPackage.js:5 const { build } = require(\"esbuild\");",
-        "scripts/buildBase.js:3 const { build } = require(\"esbuild\");",
-        "packages/common/package.json:57 \"build:esm\": \"rimraf dist && node ../../scripts/buildBase.js && yarn gen:types\"",
-        "excalidraw-app/package.json:46 \"build:app\": \"... vite build\""
-      ],
-      "note": "Package builds call esbuild-based scripts, and the app builds with vite build."
-    },
-    {
-      "id": "61aa5b7de37514445f9ce2ed10615a748cf38b3d",
-      "line": 34,
-      "text": "TypeScript throughout with strict configuration",
-      "label": "true",
-      "evidence": [
-        "tsconfig.json:11 \"strict\": true (include: [\"packages\", \"excalidraw-app\"])",
-        "packages/tsconfig.base.json:4 \"strict\": true",
-        "git ls-files packages excalidraw-app | grep -E '\\.(js|jsx)$' | grep -v test => only excalidraw-app/bug-issue-template.js"
-      ],
-      "note": "Both the root and package tsconfigs set strict: true, and the source is TypeScript apart from one small JS template file."
-    }
-  ]
+ "repo": "excalidraw/excalidraw",
+ "sha": "1919728724a1b71af73cb7e6d2d1a418a1415b1c",
+ "file": "CLAUDE.md",
+ "labeler": "agent (independent of proof's output)",
+ "labels": [
+  {
+   "id": "a3853051226741d2e61802907e81447242334758",
+   "line": 7,
+   "text": "`packages/excalidraw/` - Main React component library published to npm as `@excalidraw/excalidraw`",
+   "label": "true",
+   "evidence": [
+    "packages/excalidraw/package.json:2 \"name\": \"@excalidraw/excalidraw\"",
+    "packages/excalidraw/package.json:38-41 \"publishConfig\": { \"access\": \"public\" }, \"description\": \"Excalidraw as a React component\"",
+    "package.json scripts: \"release\": \"node scripts/release.js\""
+   ],
+   "note": "The folder exists, its package is named @excalidraw/excalidraw, and it is set up for public npm publishing as a React component."
+  },
+  {
+   "id": "9559b7b756c347a093560df6687404856640f41d",
+   "line": 8,
+   "text": "`excalidraw-app/` - Full-featured web application (excalidraw.com) that uses the library",
+   "label": "true",
+   "evidence": [
+    "excalidraw-app/index.html:28 <meta property=\"og:url\" content=\"https://excalidraw.com\" />",
+    "excalidraw-app/App.tsx:10 } from \"@excalidraw/excalidraw\";",
+    "excalidraw-app/package.json:46 \"build:app\": \"... vite build\""
+   ],
+   "note": "excalidraw-app is the excalidraw.com web app and imports @excalidraw/excalidraw."
+  },
+  {
+   "id": "c472d7fc253a9a66046b0b37eecb4df190a38b16",
+   "line": 9,
+   "text": "`packages/` - Core packages: `@excalidraw/common`, `@excalidraw/element`, `@excalidraw/math`, `@excalidraw/utils`",
+   "label": "true",
+   "evidence": [
+    "packages/common/package.json:2 \"name\": \"@excalidraw/common\"",
+    "packages/element/package.json:2 \"name\": \"@excalidraw/element\"",
+    "packages/math/package.json:2 \"name\": \"@excalidraw/math\"",
+    "packages/utils/package.json:2 \"name\": \"@excalidraw/utils\"",
+    "ls packages => common element eslintrc.base.json excalidraw fractional-indexing laser-pointer math tsconfig.base.json utils"
+   ],
+   "note": "All four named packages exist under packages/; the list leaves out @excalidraw/fractional-indexing and @excalidraw/laser-pointer, both added after CLAUDE.md (git: 3004c642 2026-05-04, cd514d72 2026-06-24), but it names nothing wrong."
+  },
+  {
+   "id": "316e5e57e6476a0e41a824fce507b033b272b213",
+   "line": 10,
+   "text": "`examples/` - Integration examples (NextJS, browser script)",
+   "label": "true",
+   "evidence": [
+    "ls examples => with-nextjs with-script-in-browser",
+    "examples/with-nextjs/package.json:9 \"dev\": \"yarn build:workspace && next dev -p 3005\"",
+    "package.json scripts: \"start:example\": \"yarn build:packages && yarn --cwd ./examples/with-script-in-browser start\""
+   ],
+   "note": "examples/ holds exactly a Next.js example and a script-in-browser example."
+  },
+  {
+   "id": "1df61612a109c8737cc5043c8c53853d57c1e1a9",
+   "line": 14,
+   "text": "Package Development: Work in `packages/*` for editor features",
+   "label": "true",
+   "evidence": [
+    "ls packages/excalidraw => actions components data eraser fonts history.ts lasso ... (editor features)",
+    "package.json:6-10 \"workspaces\": [\"excalidraw-app\", \"packages/*\", \"examples/*\"]"
+   ],
+   "note": "The code follows this split: editor features (actions, components, element logic) live in packages/*.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "`ls packages` -> common element excalidraw fractional-indexing laser-pointer math utils (path exists)",
+     "package.json:5-9 workspaces include `packages/*`"
+    ],
+    "note": "Workflow instruction ('work in X for editor features'); the path exists but where to do a kind of work is a convention the repo cannot prove."
+   }
+  },
+  {
+   "id": "54ef68f901ce0ada9684aeb547920c26f08e3b5e",
+   "line": 15,
+   "text": "App Development: Work in `excalidraw-app/` for app-specific features",
+   "label": "true",
+   "evidence": [
+    "ls excalidraw-app => collab share data (firebase.ts, LocalData.ts, tabSync.ts) sentry.ts ExcalidrawPlusIframeExport.tsx"
+   ],
+   "note": "App-only features such as collaboration, sharing, Firebase storage and Sentry live in excalidraw-app/, as the guidance describes.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "`ls excalidraw-app` -> App.tsx, index.html, vite.config.mts, package.json (path exists)"
+    ],
+    "note": "Workflow instruction ('work in X for app-specific features'); path exists, but the convention itself is not checkable."
+   }
+  },
+  {
+   "id": "03bbec241e332ce8f9ac1c68a864dce8fdc99ce9",
+   "line": 16,
+   "text": "Testing: Always run `yarn test:update` before committing",
+   "label": "judgment",
+   "evidence": [
+    "package.json scripts: \"test:update\": \"yarn test:app --update --watch=false\" (command exists)",
+    ".husky/pre-commit => \"# yarn lint-staged\" (commented out; no test run before commit)",
+    ".lintstagedrc.js runs only eslint --fix and prettier --write, not tests"
+   ],
+   "note": "The command exists, but nothing enforces running it before a commit (the pre-commit hook is commented out), so this is a team-practice rule."
+  },
+  {
+   "id": "d3ebc020bd78911464a3599716b82d7dbe27f9a5",
+   "line": 17,
+   "text": "Type Safety: Use `yarn test:typecheck` to verify TypeScript",
+   "label": "true",
+   "evidence": [
+    "package.json scripts: \"test:typecheck\": \"tsc\"",
+    ".github/workflows/lint.yml:22 yarn test:typecheck"
+   ],
+   "note": "The script runs tsc, and CI uses this exact command to verify TypeScript."
+  },
+  {
+   "id": "8544dadc97626692991558149b1c933bc50aa747",
+   "line": 22,
+   "text": "yarn test:typecheck # TypeScript type checking",
+   "label": "true",
+   "evidence": [
+    "package.json scripts: \"test:typecheck\": \"tsc\"",
+    "tsconfig.json:18 \"noEmit\": true"
+   ],
+   "note": "The root script runs tsc with noEmit, which only type-checks."
+  },
+  {
+   "id": "f8d190f392d332a45c77adee671118b039fcde23",
+   "line": 23,
+   "text": "yarn test:update # Run all tests (with snapshot updates)",
+   "label": "true",
+   "evidence": [
+    "package.json scripts: \"test:update\": \"yarn test:app --update --watch=false\", \"test:app\": \"vitest\"",
+    "vitest.config.mts:76-99 test config sets no include filter (default picks up all *.test.* files)"
+   ],
+   "note": "It runs the whole vitest suite once with --update, which rewrites snapshots."
+  },
+  {
+   "id": "47f8120c1871703389fed5df4c65d6f76ed85010",
+   "line": 24,
+   "text": "yarn fix # Auto-fix formatting and linting issues",
+   "label": "true",
+   "evidence": [
+    "package.json scripts: \"fix\": \"yarn fix:other && yarn fix:code\", \"fix:other\": \"yarn prettier --write\", \"fix:code\": \"yarn test:code --fix\" (eslint)"
+   ],
+   "note": "yarn fix runs prettier --write and then eslint --fix."
+  },
+  {
+   "id": "1d3080df88464d24bcf41d877d61d1fb82d728fd",
+   "line": 31,
+   "text": "Uses Yarn workspaces for monorepo management",
+   "label": "true",
+   "evidence": [
+    "package.json:4 \"packageManager\": \"yarn@1.22.22\"",
+    "package.json:5-9 \"workspaces\": [\"excalidraw-app\", \"packages/*\", \"examples/*\"]"
+   ],
+   "note": "The root package.json declares Yarn workspaces and pins Yarn as the package manager."
+  },
+  {
+   "id": "f6b33a8c22d562d07070bc4a0f194a2004b5aa89",
+   "line": 32,
+   "text": "Internal packages use path aliases (see `vitest.config.mts`)",
+   "label": "true",
+   "evidence": [
+    "vitest.config.mts:7-10 alias: [{ find: /^@excalidraw\\/common$/, replacement: path.resolve(__dirname, \"./packages/common/src/index.ts\") }, ...",
+    "tsconfig.json:21-35 \"paths\": { \"@excalidraw/common\": [\"./packages/common/src/index.ts\"], ... }"
+   ],
+   "note": "vitest.config.mts exists and maps every @excalidraw/* package to its source via aliases (mirrored in tsconfig paths)."
+  },
+  {
+   "id": "139bc67eaa0aa9736ab2de58486baa5788aebb90",
+   "line": 33,
+   "text": "Build system uses esbuild for packages, Vite for the app",
+   "label": "true",
+   "evidence": [
+    "scripts/buildPackage.js:5 const { build } = require(\"esbuild\");",
+    "scripts/buildBase.js:3 const { build } = require(\"esbuild\");",
+    "packages/common/package.json:57 \"build:esm\": \"rimraf dist && node ../../scripts/buildBase.js && yarn gen:types\"",
+    "excalidraw-app/package.json:46 \"build:app\": \"... vite build\""
+   ],
+   "note": "Package builds call esbuild-based scripts, and the app builds with vite build."
+  },
+  {
+   "id": "61aa5b7de37514445f9ce2ed10615a748cf38b3d",
+   "line": 34,
+   "text": "TypeScript throughout with strict configuration",
+   "label": "true",
+   "evidence": [
+    "tsconfig.json:11 \"strict\": true (include: [\"packages\", \"excalidraw-app\"])",
+    "packages/tsconfig.base.json:4 \"strict\": true",
+    "git ls-files packages excalidraw-app | grep -E '\\.(js|jsx)$' | grep -v test => only excalidraw-app/bug-issue-template.js"
+   ],
+   "note": "Both the root and package tsconfigs set strict: true, and the source is TypeScript apart from one small JS template file."
+  }
+ ]
 }

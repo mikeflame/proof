@@ -1,0 +1,730 @@
+{
+ "repo": "kunchenguid/no-mistakes",
+ "sha": "f4b85ae161cef8f14e289cc90aebae044ed570b9",
+ "file": "AGENTS.md",
+ "labeler": "blind second labeler (agent), 2026-10-19, under the protocol in eval/LABELING.md; never saw the first labels or a proof report",
+ "labels": [
+  {
+   "id": "bfa622cf248a5b70e047e86da233569d620ff30e",
+   "line": 3,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:3 is a statement of audience/purpose; nothing in the repo can prove or contradict it"
+   ],
+   "note": "purpose/audience statement"
+  },
+  {
+   "id": "3c8177638936f9bd21147362d0ae710f2f25bba7",
+   "line": 5,
+   "label": "true",
+   "evidence": [
+    "go.mod:1 `module github.com/kunchenguid/no-mistakes`",
+    "cmd/no-mistakes/main.go:1 `package main` importing internal/cli",
+    "internal/cli/*.go `package cli` (cobra commands, e.g. internal/cli/root.go:84 cmd.Flags())"
+   ],
+   "note": "Go module, CLI binary named no-mistakes"
+  },
+  {
+   "id": "5ac53ad2bee6ec3ce333d1a5f658b3958f49ced4",
+   "line": 6,
+   "label": "true",
+   "evidence": [
+    "ls cmd -> no-mistakes (main.go package main)",
+    "ls internal -> cli daemon pipeline agent tui git ipc config db paths types all present; `grep ^package` gives package cli/daemon/pipeline/agent/tui/git/ipc/config/db/paths/types",
+    "ls -d internal/pipeline/*/ -> fakecli/ steps/"
+   ],
+   "note": "entrypoint and every listed package dir exist with matching package names"
+  },
+  {
+   "id": "f1c530c42cfe7f982f633c1b57b25543e5929210",
+   "line": 7,
+   "label": "true",
+   "evidence": [
+    "Makefile:16 .PHONY: build dist install test e2e e2e-record lint fmt clean docs ... skill skill-check",
+    "Makefile:21-22 build, :51-52 test, :24-43 dist (release archives), :65-66 e2e",
+    "note: .github/workflows/release.yml:72 runs its own `go build` loop rather than `make dist`"
+   ],
+   "note": "Makefile defines build/test/dist/e2e/lint targets; pointer statement"
+  },
+  {
+   "id": "70769d4c641c395e67e8bf05065e4ec6fee1d49e",
+   "line": 11,
+   "label": "true",
+   "evidence": [
+    "Makefile:91-92 `fmt:` -> `gofmt -w .`"
+   ],
+   "note": "gofmt -w . is the Makefile fmt target"
+  },
+  {
+   "id": "37bd5be408693fb5053b039cdd8d65fe6012d19c",
+   "line": 12,
+   "label": "true",
+   "evidence": [
+    "Makefile:88-89 `lint: skill-check` then `go vet ./...`",
+    "Makefile:85-86 `skill-check: go run ./cmd/genskill --check` (drift check)"
+   ],
+   "note": "lint = skill drift check + go vet"
+  },
+  {
+   "id": "665c83927b053135fa35063daf014d5d993e7713",
+   "line": 13,
+   "label": "true",
+   "evidence": [
+    "Makefile:51-52 `test: go test -race ./...`",
+    "`git grep -l -E '^//go:build .*\\be2e\\b'` -> 42 files, all under internal/e2e/",
+    "scripts/e2e.sh tail: `set -- -tags=e2e ... ./internal/e2e/... ./internal/pipeline/steps/...`"
+   ],
+   "note": "e2e files carry //go:build e2e, so go test ./... excludes them"
+  },
+  {
+   "id": "e9d156f5ccc3f1b636e07d8e6606734182f367e4",
+   "line": 14,
+   "label": "true",
+   "evidence": [
+    "Makefile:65-66 `e2e: @bash scripts/e2e.sh`",
+    "internal/e2e/harness.go, internal/e2e/fixtures/ exist; Makefile:72-76 e2e-record writes internal/e2e/fixtures/*"
+   ],
+   "note": "make e2e target exists; harness and recorded fixtures exist (rest is advice)"
+  },
+  {
+   "id": "2f669e75b4b5b7bb154c2ec9c56facc6a2b7b12c",
+   "line": 15,
+   "label": "true",
+   "evidence": [
+    "cmd/no-mistakes/main.go exists (package main)",
+    "Makefile:22 `go build ... -o bin/no-mistakes ./cmd/no-mistakes`"
+   ],
+   "note": "valid build command for the entrypoint"
+  },
+  {
+   "id": "6aec09a1b5ba6a5dfad5f3480d70a0677a525480",
+   "line": 19,
+   "label": "true",
+   "evidence": [
+    "test -f docs/src/content/docs/{reference/repo-config.md,reference/global-config.md,reference/pipeline-steps.md,reference/environment.md,concepts/gate-model.md,concepts/daemon.md} -> all OK",
+    "environment.md:253-257 telemetry section; global-config.md:990 `test.evidence.attach_media` table row; repo-config.md:202 `### pr.base_branch`"
+   ],
+   "note": "all six docs pages exist and carry the described content"
+  },
+  {
+   "id": "48aeee94c439518ee82224cd6997ef2135876dc2",
+   "line": 20,
+   "label": "true",
+   "evidence": [
+    "ls .agents/skills -> 15 dirs, each has SKILL.md",
+    "ls -la .claude -> `skills -> ../.agents/skills` (symlink)"
+   ],
+   "note": "skills dir and symlink exist; \"read before changing\" is advice"
+  },
+  {
+   "id": "d0305efc9bca77e1f709a1d2be98a6789daf76e4",
+   "line": 21,
+   "label": "true",
+   "evidence": [
+    "internal/scm/gitlab/gitlab.go:36,139-144 (--hostname), :37-39 (glab mr update has no -y)",
+    "internal/scm/gitea/gitea.go:55-58 (--login), :108 giteaPRListItem / :247 giteaPRView",
+    "internal/scm/github/attachments.go:217,323 comments",
+    "ls internal/agent/opencode*.go -> opencode.go opencode_failure.go opencode_http.go opencode_stream.go opencode_types.go (+tests)"
+   ],
+   "note": "all four owner files exist and carry the described comments"
+  },
+  {
+   "id": "998abc4d437751c671503f1e4473854f697ad817",
+   "line": 22,
+   "label": "true",
+   "evidence": [
+    "cmd/genskill/main.go:1-4,31 renders internal/skill -> skills/no-mistakes/SKILL.md; imports internal/skill; internal/skill/skill.go exists",
+    "skills/no-mistakes/SKILL.md exists; Makefile:80-86 skill / skill-check",
+    "release-please-config.json (release-type go) + CHANGELOG.md:3 release-please format"
+   ],
+   "note": "generated skill and release-please changelog"
+  },
+  {
+   "id": "46574086bc11b11cec7d29f71dbd8f14da63d332",
+   "line": 26,
+   "label": "true",
+   "evidence": [
+    "internal/daemon/manager.go:1229-1252 fetchTrustedDefaultBranchSHA fetches live default branch into a private ref and resolves a SHA",
+    "manager.go:725-752 loadTrustedRepoConfig reads .no-mistakes.yaml at trustedSHA, nil -> fail closed; :766-790 assertGateTrustedConfigReadable errors when unreadable",
+    "internal/config/config.go:294-300 AllowRepoCommands trusted-only, `Default false`",
+    "docs/reference/repo-config.md:12,158 pr.base_branch is the one opt-in exception",
+    "internal/pipeline/steps/review.go:196-199,262-267 matchPathInstructions(changed, ...) uses complete set; reviewable = ignore-filtered subset only decides emptiness",
+    ".agents/skills/repository-routing-security/SKILL.md exists"
+   ],
+   "note": "every clause located in code/docs"
+  },
+  {
+   "id": "120d21a0b5cc6621531c0926bd9e3aabf749e5b5",
+   "line": 27,
+   "label": "true",
+   "evidence": [
+    "internal/daemon/manager.go:355-362 `if cfg.DisableProjectSettings { EnsureGateNeutralized(ag) }`",
+    "internal/agent/agent.go:204-216 EnsureGateNeutralized refuses unless NeutralizesGateInstructions",
+    "internal/agent/grok.go:49-56 grokAgent.NeutralizesGateInstructions returns false (refused)",
+    "internal/agent/ompgate.go:99-103 neutralizesOMPGate requires rawCommand == \"\" (acp_registry_overrides entry fails closed)"
+   ],
+   "note": "fail-closed gate verified for Grok and omp override"
+  },
+  {
+   "id": "2862decdf6d39509319444af6285f9a511b23639",
+   "line": 28,
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/steps/pr.go:113 and ci_fix.go:818 `host.FindPR(ctx, branch, \"\")` (base empty -> by branch alone); github.go:239-243 adds --base only when non-empty",
+    "internal/scm/host.go:400-406 PRBaseBranchReader used by CI after config changes; pr.go:224-228 live forge base wins",
+    "docs/reference/repo-config.md:202,216,218 owner section states both rules"
+   ],
+   "note": "lookup by branch only; live base authoritative"
+  },
+  {
+   "id": "75056c6fd93881748d01a7d273c92185ecfccc27",
+   "line": 29,
+   "label": "true",
+   "evidence": [
+    "internal/types/types.go:135-141 IsCustomGateAnchor: StepRebase, StepReview, StepTest, StepDocument, StepLint",
+    "internal/cli/daemon_cmd.go:221-234 parseSkipSteps -> validStep; :466-473 validStep accepts only types.AllSteps() (core), :478-481 comment: skip must never accept a gate name",
+    "internal/daemon/manager.go:276-292 pinnedRunGates: unusable pin fails closed; :1597-1603 gates pinned at creation",
+    "internal/config/config.go:336-340 gates additive only"
+   ],
+   "note": "anchors, --skip refusal, pinned gate list verified"
+  },
+  {
+   "id": "5c41768e4886f6e8988d2aad32fd621d9a7dede4",
+   "line": 30,
+   "label": "true",
+   "evidence": [
+    "internal/db/run.go:94 `PiProfile is immutable launch selection`",
+    "internal/daemon/manager.go:1254-1269 validatePiProfileAgentsBeforeCancel: must fail before cancelActiveRuns stops a healthy validation; :1227 refused pin cannot perturb in-flight validation"
+   ],
+   "note": "immutable per-run pin validated before supersede"
+  },
+  {
+   "id": "915378302a11b307637fba97e64ef8ef12cd39e0",
+   "line": 31,
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/steps/common.go:195-199 pass/fail with live=false rejected; untested without reason rejected",
+    "test.go:448-478 verdictFindings: untested scenarios never produce a finding (never park)",
+    "test.go:130-186 evidence turn runs after baseline whether it passed, failed, or is absent",
+    "test.go:413-422 testAnalyzerCorrectionPrompt: correction-only, no tools/reruns/external ops"
+   ],
+   "note": "all four Test invariants located"
+  },
+  {
+   "id": "a27ed491ee64dc5cb3a10d5ebf89972e6e14b511",
+   "line": 32,
+   "label": "true",
+   "evidence": [
+    "test.go:481-497 inconclusive and no-surface -> warning + ActionAskUser (park)",
+    "common.go:126-131 fail scenario with verdict != no-go rejected; :137-141 no-surface with live/pass/fail rejected",
+    "prsummary.go:233-249 attestedLiveValidation returns nil (field omitted) when TestedHeadSHA != headSHA",
+    ".agents/skills/pipeline-review-and-agents/SKILL.md exists"
+   ],
+   "note": "verdict rules and attestation omission verified"
+  },
+  {
+   "id": "9b647e9460cefaeccccb0553e5af66131dc038df",
+   "line": 33,
+   "label": "true",
+   "evidence": [
+    "test.go:476-480 no-go -> Severity error, Action ActionAutoFix",
+    ".agents/skills/pipeline-review-and-agents/SKILL.md exists"
+   ],
+   "note": "no-go is an auto-fixable error finding"
+  },
+  {
+   "id": "dd0248b710bfc43de27baa0b0eb7ef273ee56554",
+   "line": 34,
+   "label": "true",
+   "evidence": [
+    "review.go:417-420,458-478 schema-rejected review rerun up to reviewAnalyzerMaxAttempts; every other failure returns at once",
+    "review.go:503-510 clean round requires reviewedPathsCoverReviewable",
+    "internal/pipeline/findings.go:512-542 resolveVerifiedFindingsJSON: only positive coverage or operator action clears; file-less compat carve-out",
+    "findings.go:398 retainFindingIDsByIdentity defined",
+    "executor.go:970-974 loop bounded only by auto_fix.review and the gate; config.go:3056 AutoFix.Review"
+   ],
+   "note": "\"fix-mode turns never retried\" inferred from the analyzer loop comment, not a separate read"
+  },
+  {
+   "id": "e67bf5253859a4f54411ff6293863bdf02b91e92",
+   "line": 35,
+   "label": "true",
+   "evidence": [
+    "review.go:419-420 \"Findings come only from the attempt that validates\"",
+    "internal/agent/claude.go:151-152 any non-success subtype -> plain error (not structuredOutputRejection) so review.go:470 returns at once (no second retry layer); the identifier itself appears only in docs/skill, it is Claude Code's own subtype",
+    "executor.go:626-636 resumed fix round re-merges the outstanding set (fails closed); executor_test.go:195 TestExecutor_RevalidationClearsReviewCarry"
+   ],
+   "note": "crash-resumed fail-closed shown via resume path carrying the merged set"
+  },
+  {
+   "id": "cc0352918f346451c14e9814c24ac85f8705b75d",
+   "line": 36,
+   "label": "true",
+   "evidence": [
+    "internal/cli/axi_drive.go:110 returns \"passed-with-override\"",
+    "test.go:840-849 configuredTestCommandOverrideReason only for FindingCategoryTestCommand",
+    ".github/actions/require-no-mistakes/verify.py:349-372 refuses unless allow_test_command_override / test.allow_approve_over_failure",
+    "ci_fix.go:838,856 and prsummary.go:279 allow_test_command_override always from current policy, never copied"
+   ],
+   "note": "override surfaces and verify.py rule located"
+  },
+  {
+   "id": "a6aae4895e14854fd153f71d6ee9a99d4cb71a22",
+   "line": 37,
+   "label": "true",
+   "evidence": [
+    "executor.go:842-846,1243 autoFixLimit -> config.AutoFixLimit (config.go:3059 AutoFix.CI)",
+    "ci_findings.go:212,235,263 reviewBotFindings -> ActionAskUser",
+    "ci_fix.go:140 sctx.MarkRunning()",
+    "ci_findings.go:68-71 + scm/host.go:228-234 empty app slug never matches a bot",
+    "db/step.go:48 ci_fix_attempts no longer read; git grep shows only schema/comment"
+   ],
+   "note": "all CI-step invariants located"
+  },
+  {
+   "id": "bffbca5fe99276585ad50449c5cc9b18d8f123cb",
+   "line": 38,
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/steps/ci.go:53 lastFixedChecks \"so a poll that still shows them is not re-escalated\"; :677 monitor keeps waiting",
+    ".agents/skills/ci-monitor/SKILL.md exists"
+   ],
+   "note": "post-repair still-red wait located"
+  },
+  {
+   "id": "a809f2bc9eb0bfb2853199ebdb2106c3e79f400b",
+   "line": 39,
+   "label": "true",
+   "evidence": [
+    "internal/types/findings.go:608-633 Finding.UnmarshalJSON copies each field from findingWire explicitly; findingWire at :266-280"
+   ],
+   "note": "explicit field copy verified"
+  },
+  {
+   "id": "e0c2491afc699b26ba70efa1c155a9cba6240ee1",
+   "line": 40,
+   "label": "true",
+   "evidence": [
+    "rebase.go:555-575 mergeWithAgent: preMergeHead + targetSHA via rev-parse before merge; :638-661 restorePreMergeHead on failed proof",
+    "rebase.go:547-554 distinct additive resolver prompt; :588-592 \"Resolve ADDITIVELY\"",
+    "config.go:2997-3005 validateRebaseRaw fails closed on unrecognized strategy",
+    "push.go:173-182 fastForward -> plain push, no force",
+    ".agents/skills/branch-sync-and-push-safety/SKILL.md exists"
+   ],
+   "note": "merge-mode invariants verified"
+  },
+  {
+   "id": "a2d9fc2c0f232d70831ed9707daaf9c7817a59c6",
+   "line": 41,
+   "label": "true",
+   "evidence": [
+    "push.go:165-170 attestHeadBeforePush before push, error aborts; single-publisher comment",
+    "docs/concepts/gate-model.md:107-120 issue #1233 refs/no-mistakes/recover/<run> preservation credit, not containment; :138 Accepted Decision 41-A; :120 archive-before-delete contract"
+   ],
+   "note": "both exceptions documented where claimed"
+  },
+  {
+   "id": "17fc06af296b36e0c9b79609936fde1a4f6b00dd",
+   "line": 42,
+   "label": "true",
+   "evidence": [
+    "push.go:305-321 ApplyStaleBranchReconciliation then RestoreReconciledBranch when settlement fails (create-only preserves intervening ref)",
+    "common_fix.go:539-548 updateNonSharedBranchRef skips when worktree shares gate refs (settled once via gate mirror)",
+    "gate-model.md:172-174"
+   ],
+   "note": "archive/restore and single settlement verified"
+  },
+  {
+   "id": "1be6ec95d53171b0db3957710c0aeb797026895f",
+   "line": 43,
+   "label": "true",
+   "evidence": [
+    "opencode_failure.go:97-115 classifyOpencodeTransient: toolActivity -> never retried; :136-137 both retry and prompt-only fallback gated on proof no tool ran",
+    "opencode_types.go:189-202 retryable() trusts Data.IsRetryable; opencode_failure.go:92-96 opencode-reported failures never reach substring matching",
+    "opencode_types.go:83 errors serialized as {name, data}",
+    "opencode.go:365-388 info.error branch after tool-choice conflict checks"
+   ],
+   "note": "all OpenCode clauses verified"
+  },
+  {
+   "id": "251ddd6459c7f67276dd387baf31595f11809d03",
+   "line": 44,
+   "label": "true",
+   "evidence": [
+    "gitlab.go:142-144 auth status --hostname; :315-320 UpdatePR args mr update without -y (comment :37-39)",
+    "gitea.go: all 9 `tea` invocations carry --login (:97,120,157,200,228,259,301,345,527)",
+    "gitea.go:108 giteaPRListItem vs :247 giteaPRView; :228 api --method PATCH; :168,612 CreatePR re-lists; :387-394 runsByIDDesc highest ID; :74-78 MergeableState false"
+   ],
+   "note": "every provider-CLI clause verified"
+  },
+  {
+   "id": "dc249139e0c46cfb7b8d5c6ca236a875a29a1f59",
+   "line": 45,
+   "label": "true",
+   "evidence": [
+    "evidence_attach.go:126-128,131-133,160-168 every error/empty URL -> \"keeping today's rendering\", continue",
+    "attachments.go:217,323 fail-closed comments",
+    "docs/reference/global-config.md:990 test.evidence.attach_media"
+   ],
+   "note": "fail-closed attachment path verified"
+  },
+  {
+   "id": "dec32e430968226b29986131fa4fce996ff20f3b",
+   "line": 46,
+   "label": "true",
+   "evidence": [
+    "branchsync/sync.go:654-657 anything unverifiable refuses; :807 blockedPlan \"no files or refs were changed\"",
+    "sync.go:652-653 plain --recover refuses the archive source; only --recover --keep-local can use it; :798-800 a bound archive never authorizes taking the archived head (keep-local keeps the local head)",
+    "internal/cli/sync.go:54-55 --keep-local requires --recover"
+   ],
+   "note": "read \"never selects an archive\" as never adopting the archived head"
+  },
+  {
+   "id": "2edc6e931927399645c4c372e3963ad2fef75825",
+   "line": 47,
+   "label": "true",
+   "evidence": [
+    ".github/actions/require-no-mistakes/verify.py:27-45 live_pr_facts vs replayed event payload; :402-421 fails the gate closed when the live lookup was needed and failed"
+   ],
+   "note": "live lookup + fail closed verified"
+  },
+  {
+   "id": "276e327f48ce10dd864a58a60b1a543f884d3be2",
+   "line": 48,
+   "label": "true",
+   "evidence": [
+    "axi_query.go:37,208 --run on status/logs; :330-365 resolveRun: current branch only, \"deliberately does NOT fall back\" to other branches",
+    "axi_drive.go:1267-1273 respond flags: no --run"
+   ],
+   "note": "branch-scoped resolution; --run only on observation commands"
+  },
+  {
+   "id": "6349c72455e99019d6113e576e14e49eccb3e58d",
+   "line": 49,
+   "label": "true",
+   "evidence": [
+    "internal/agent/memory_files.go:3-23 MemoryFilesRule scope (own-initiated edits; review and prompted fixes allowed); :25 MemoryFilesConflictRule",
+    "rebase.go:465,608 conflict resolvers append MemoryFilesConflictRule",
+    "document.go:33 edit only to correct factually wrong content",
+    ".agents/skills/documentation-guidance/SKILL.md exists"
+   ],
+   "note": "rules and users verified"
+  },
+  {
+   "id": "c6c3ed11960087f2b14ca45e36e8abede018bf36",
+   "line": 50,
+   "label": "true",
+   "evidence": [
+    "document.go:104-114 combinedLint only when Commands.Lint == \"\"; no stash -> lint falls back to own pass",
+    "lint.go:72-81 lint step takes stash else runs itself",
+    "document.go:298-311 splitHousekeepingFindings: uncategorized -> documentation (stricter gate)"
+   ],
+   "note": "combined pass rules verified"
+  },
+  {
+   "id": "82af96d9bd6e1206684c6f40a046080ec480ae55",
+   "line": 51,
+   "label": "true",
+   "evidence": [
+    "db/run.go:922-924 \"pollable observability signal only; it does not change gate resolution\"",
+    "git grep: no gate-resolution reader; manager.go:140 reads it only to pick parked runs for recovery planning"
+   ],
+   "note": "no gate-resolution dependency found"
+  },
+  {
+   "id": "2c997e7671ce079cc1eac4cbf7132abd5274321d",
+   "line": 52,
+   "label": "true",
+   "evidence": [
+    "db/step.go:171,193-194 ParkStepForApproval stamps awaiting_agent_since in the gate transaction",
+    "executor.go:1318-1334 CompleteRunAwaitingAgent when the wait ends; run.go:1014 cleared on stale-run recovery",
+    ".agents/skills/pipeline-review-and-agents/SKILL.md exists"
+   ],
+   "note": "set on park, cleared on resume"
+  },
+  {
+   "id": "8895778d6438eb3ceb661e34545f4feac8ec9705",
+   "line": 53,
+   "label": "true",
+   "evidence": [
+    "daemon.go:44-48,130 startup probe applyShellEnvToProcess with shell retry window",
+    "shellenv.go:33-40 DefaultShellRetryWindow only while the login shell binary is missing",
+    "shell_command_unix.go:161-174 detachFromTerminal uses Setsid; setpgid fails for a session leader; :53-54 ConfigureShellCommand = Setpgid",
+    ".agents/skills/daemon-runtime/SKILL.md exists"
+   ],
+   "note": "probe/session rules verified"
+  },
+  {
+   "id": "fd855d923a3397a30bf584b1d24884462afc2fbf",
+   "line": 54,
+   "label": "true",
+   "evidence": [
+    "docs/reference/environment.md:257 read-only surfaces emit no telemetry; axi_query.go:42,220-221; status.go/runs.go contain no telemetry calls",
+    "internal/db/agent_invocation_test.go:131 TestAgentInvocations_PrivacySafeShape",
+    "agent_invocation.go:35-36,143 not-reported metrics stored as SQL NULL, never fabricated"
+   ],
+   "note": "telemetry invariants verified"
+  },
+  {
+   "id": "ad1dba43e1fb3e389909161462fd9af038961ec4",
+   "line": 55,
+   "label": "true",
+   "evidence": [
+    "internal/update/channels.go:14,19 channels.json from https://github.com/<repo>/releases/download/...; no api.github.com in internal/update",
+    ".github/workflows/release.yml:328 finalize; :357-365 publish-channels needs finalize",
+    ".agents/skills/release-signing/SKILL.md exists"
+   ],
+   "note": "update source and workflow ordering verified"
+  },
+  {
+   "id": "e88be8c34a93caab89db1e6b0c8e081ee115582a",
+   "line": 56,
+   "label": "true",
+   "evidence": [
+    "internal/config/config.go:242-250 Jev retiredJev `yaml:\"jev\"`; :971-990 parse-only tombstone, \"Do not repurpose the jev key\""
+   ],
+   "note": "tombstone verified"
+  },
+  {
+   "id": "b4169fa9bea1929882ccc5aa3f309c4c6d92a453",
+   "line": 60,
+   "label": "true",
+   "evidence": [
+    "internal/pipeline/fakecli doc:1-4 placed on PATH as gh/glab/git, non-race, instead of re-execing the race-instrumented test binary",
+    "stepstest/helpers.go:300-331 builds fakecli once in TestMain",
+    "internal/testgit/testgit.go:25 func RealGit()"
+   ],
+   "note": "helper and RealGit verified"
+  },
+  {
+   "id": "0ea6cd3c0e245b70c0ff24f14f8af83b9cd3dd6f",
+   "line": 61,
+   "label": "true",
+   "evidence": [
+    "ls internal/pipeline/steps/citest -> ci_*_test.go, helpers_test.go, main_test.go; no //go:build tags",
+    "e2e-tagged files exist only under internal/e2e/"
+   ],
+   "note": "citest is an untagged package"
+  },
+  {
+   "id": "2ca79ccf57b0b8ae3432e13cb58ec5760c0bf4cd",
+   "line": 62,
+   "label": "judgment",
+   "evidence": [
+    ".agents/skills/testing-conventions/SKILL.md exists (description: tests, e2e harness, fake CLIs, isolation, sharding)"
+   ],
+   "note": "documentation-ownership convention; the named skill exists"
+  },
+  {
+   "id": "90c54315ad736487a67429bbaa95ee55ce247f92",
+   "line": 64,
+   "label": "true",
+   "evidence": [
+    "ls internal/reviewqa (reviewqa.go); internal/pipeline/steps/review_questions.go exists (ResumeApprovalGate at :598)"
+   ],
+   "note": "heading paths exist"
+  },
+  {
+   "id": "09f193db03cb85e896ab0fafd9ad9152020ec74c",
+   "line": 66,
+   "label": "true",
+   "evidence": [
+    "config.go:339-349 Review block trusted-only; review_questions.go:27-28 reviewConversationEnabled; :45-47 reviewConversationDir returns \"\"; :75-84 reviewConversationReadDir",
+    "executor.go:2190 ReviewConversationEnabled, :2230 ReviewConversationAnswerDir",
+    "all named regression tests found by git grep (census of lines 64-80)"
+   ],
+   "note": "owners and tests located; ask/read split read in code"
+  },
+  {
+   "id": "d6b21720a8183d38c5c623e2d030219920861aaf",
+   "line": 67,
+   "label": "true",
+   "evidence": [
+    "reviewqa.go:235 DirName=\"review\", :240 Dir(); evidence/publish.go:53-58 ExcludeDirs, :108,314-335 collectFiles SkipDir",
+    "reviewqa.go:462 AppendAnswer is the only writer (no Append*Question); appendAgentQuestionLine defined in tests",
+    "docs/concepts/review-conversation.md and reference/pipeline-steps.md exist"
+   ],
+   "note": "publication exclusion and writer surface verified"
+  },
+  {
+   "id": "de109996c37aec9ee520f2ad13a1f0d2803dcb2d",
+   "line": 68,
+   "label": "true",
+   "evidence": [
+    "axi_render.go:28 \"Finding descriptions are deliberately never bounded\"",
+    "axi.go:218, axi_render.go:559 help keys on pipeline.HasUnansweredReviewQuestion",
+    "git grep waiting_on at HEAD: none (only AGENTS.md); tests TestReviewQuestionGate_LeadsWithAnswering etc. exist"
+   ],
+   "note": "deletion claim is historical/attribution; HEAD state consistent"
+  },
+  {
+   "id": "eba8f306948c904505e88aaf71be1accf48e505b",
+   "line": 69,
+   "label": "true",
+   "evidence": [
+    "review_questions.go:500-506 ID reviewQuestionFindingID(e.ID), Action ActionAskUser, Category FindingCategoryReviewQuestion",
+    "config.go:231 review_agent_timeout; executor.go:1318-1334 reuses the approval park"
+   ],
+   "note": "ask-user warning per question verified"
+  },
+  {
+   "id": "af9da2c54a1ec7d4d9befe5b3549fc76d514c366",
+   "line": 70,
+   "label": "true",
+   "evidence": [
+    "review_questions.go:598-623 ResumeApprovalGate returns types.ActionAnswer only when conversation readable, gate carries review-question findings, nothing open",
+    "ApprovalGateResumer/ApprovalGateReconciler defined (git grep); config.go:226 gate_reconcile_interval",
+    "named regression tests exist"
+   ],
+   "note": "resumer guards read in code"
+  },
+  {
+   "id": "81d51457b30060eb4f8c6c4d46055f394cce7cbb",
+   "line": 71,
+   "label": "true",
+   "evidence": [
+    "axi_drive.go:1300-1308 respond accepts only approve/fix/skip, else \"unknown action\"; axi_answer.go:77-79 flags question/answer/by, no --run",
+    "ipc MethodAnswerReview -> manager.go:1956 HandleAnswerReviewQuestion; axi_answer.go:153,191 keyed on ClosedLast || Resumed; followAnsweredReview defined",
+    "executor.go:1092-1099 answering tested before fixing; FinalizingAnswers/SkipFixExecution defined",
+    "named regression tests exist"
+   ],
+   "note": "CLI refusal, trigger order, follow keying verified"
+  },
+  {
+   "id": "3a8f4cc9e04b67c9a56af29b04d3e7b2ab0419b1",
+   "line": 72,
+   "label": "true",
+   "evidence": [
+    "findings.go:778-788 dropReviewQuestionFindingsJSON keyed on FindingCategoryReviewQuestion (and the unreadable ID)",
+    "executor.go:977-990 answer round earns no pendingVerificationIDs; :1058,1465 CarriedFindings on both paths",
+    "findings.go:827 dropWithdrawnFindingsJSON; types/findings.go:311 withdrawn_findings",
+    "named regression tests exist"
+   ],
+   "note": "carve-outs verified"
+  },
+  {
+   "id": "54cf3f8f99c19c758c2304af22402613cd077a0d",
+   "line": 73,
+   "label": "true",
+   "evidence": [
+    "review.go:421-425 SessionRoleReviewer only when convDir != \"\" && !sctx.Fixing; :78 Sessions.Forget(SessionRoleReviewer) before fix round",
+    "executor.go:338 NewRunSessions per run; config.go:234 session_reuse",
+    "review.go:411-416 finalize prompt is the whole prompt plus answers"
+   ],
+   "note": "session scoping verified"
+  },
+  {
+   "id": "ca58193519cdcec01bb9a3184013e74d1b8306b3",
+   "line": 74,
+   "label": "true",
+   "evidence": [
+    "db/schema.go:203-208 review_questions(repo_id, branch, question_id, run_id, ask_ordinal, ...)",
+    "db/review_questions.go:60 RecordReviewAnswer, :109 GetBranchReviewAnswers",
+    "prsummary_conversation.go:57 \"### Review conversation\"; reviewqa.go:451-458 settlingAnswer matches AskOrdinal",
+    "named regression tests exist"
+   ],
+   "note": "store key and settle rule verified"
+  },
+  {
+   "id": "a903f73719ccad14c98f7aa3280b4cd3b503a0d1",
+   "line": 75,
+   "label": "true",
+   "evidence": [
+    "HasUnansweredReviewQuestion callers: axi_drive.go:956 inside driveRunWithReconciler, tui/commands.go:118 in maybeAutoApproveCmd; not in respondCmd/RespondWithOverrides (executor.go:167)",
+    "protected_paths.go defines HasUnansweredReviewQuestion/HasProtectedPathRefusal",
+    "named regression tests exist"
+   ],
+   "note": "two resolver paths verified"
+  },
+  {
+   "id": "5933ecea2a0ab63320a508d69a56601c6a1f7f1e",
+   "line": 76,
+   "label": "true",
+   "evidence": [
+    "review_questions.go:405 []rune bounding; consts maxReviewQuestionFindings/Description/PromptEntries/PromptChars defined",
+    "review_questions.go:509-514 omission marker carries the category but no question-<id> ID",
+    "reviewqa maxLines/maxLineBytes defined; named tests exist"
+   ],
+   "note": "bounds and marker verified"
+  },
+  {
+   "id": "606706141dedc96af4f55283d5b579841d6cd240",
+   "line": 77,
+   "label": "true",
+   "evidence": [
+    "review_questions.go:435-470 unreadable marker ID ReviewQuestionsUnreadableFindingID, category deliberately not review-question",
+    "protected_paths.go:77 HasUnreadableReviewQuestionHistory used by axi_drive.go:966 and tui/commands.go:126",
+    "reviewqa.go:509 readLines returns (kept, dropped, incomplete bool); findings.go:788 drop by ID",
+    "named tests exist"
+   ],
+   "note": "unreadable-history handling verified"
+  },
+  {
+   "id": "1911d041acb0c54f63d14e221ed60ae23f61ca54",
+   "line": 78,
+   "label": "true",
+   "evidence": [
+    "manager.go:1956 HandleAnswerReviewQuestion; :1985-2010 comments: snapshot what was OPEN before the append; orphan/duplicate answers recorded without touching the gate",
+    "named regression tests exist"
+   ],
+   "note": "snapshot-then-append verified"
+  },
+  {
+   "id": "bfbee7228afbfc7db738050555d2cb6dd7c0e6fc",
+   "line": 79,
+   "label": "true",
+   "evidence": [
+    "db/previous_review.go:43 GetPreviousRunReviewRounds; decisions.go:58-75 BindPreviousRunReviewRounds, skipped only when the uncertified channel already carries the run",
+    "review.go fixRoundProvenanceClause returns \"\" unless Fixing or UncertifiedToSHA set",
+    "UncertifiedSourceRunID defined; TestSupersededRoundsDoNotClaimTheCommitsAreTheAuthors exists"
+   ],
+   "note": "provenance clause and skip rule verified"
+  },
+  {
+   "id": "60863c6ae800d2e6d1bd82174edb6cd23a40c151",
+   "line": 80,
+   "label": "true",
+   "evidence": [
+    "executor.go:970-974 loop bounded only by auto_fix.review and the gate, no separate round cap",
+    "review.go:388-395 pathInstructions, agent.MemoryFilesRule, then reviewQuestionProtocolSection LAST; TestReviewStep_ConversationOffIsTodaysReview exists"
+   ],
+   "note": "\"captain's ruling 2026-09-15\" is attribution, not checkable"
+  },
+  {
+   "id": "a030b133bf2a0dbf74680506f550b54bbfdc97a1",
+   "line": 85,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:85 maintenance instruction"
+   ],
+   "note": "workflow instruction"
+  },
+  {
+   "id": "339c6b51f4c1a53cc1c629558072c1a6842ab6e1",
+   "line": 86,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:86 maintenance instruction"
+   ],
+   "note": "workflow instruction"
+  },
+  {
+   "id": "87de210b91968d629e0f75d065a0f05fc5f6b553",
+   "line": 87,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:87 maintenance instruction"
+   ],
+   "note": "workflow instruction"
+  },
+  {
+   "id": "e98a0736d5d51a39cc495db7b2ce7f9304aa9681",
+   "line": 88,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:88 maintenance instruction"
+   ],
+   "note": "workflow instruction"
+  }
+ ]
+}

@@ -1,0 +1,479 @@
+{
+ "repo": "cli/cli",
+ "sha": "fc4b137cdef0a6bd28fd461b7cf9c84a5812a8cd",
+ "file": "AGENTS.md",
+ "labeler": "blind second labeler (agent), 2026-10-19, under the protocol in eval/LABELING.md; never saw the first labels or a proof report",
+ "labels": [
+  {
+   "id": "acfd5ece3b8300a12a41d0253757146ef503088a",
+   "line": 3,
+   "label": "true",
+   "evidence": [
+    "go.mod:1 `module github.com/cli/cli/v2`",
+    "Makefile:15-17 first target `bin/gh$(EXE)` delegates to script/build",
+    "script/build.go:41-65 task \"bin/gh\" runs `go build ... -o <exe> ./cmd/gh`; cmd/gh/main.go exists"
+   ],
+   "note": "Module path and the gh binary (cmd/gh -> bin/gh) both verified."
+  },
+  {
+   "id": "d04e099d0ea438e1d771191a2ba4a61dab1af433",
+   "line": 7,
+   "label": "judgment",
+   "evidence": [
+    ".github/CONTRIBUTING.md:5 \"We accept external pull requests only for issues labelled `help wanted` with explicit Acceptance Criteria\"",
+    ".github/CONTRIBUTING.md:19 \"Open a pull request for issues without the `help wanted` label or explicit Acceptance Criteria\" under Please do NOT"
+   ],
+   "note": "Workflow directive; consistent with CONTRIBUTING but compliance is agent behavior, not a repo fact."
+  },
+  {
+   "id": "3cd8c9f3691f16b4ed1b4db3cf7777d5a09d9824",
+   "line": 10,
+   "label": "true",
+   "evidence": [
+    ".github/CONTRIBUTING.md exists (ls)",
+    ".github/CONTRIBUTING.md:5,19-22 state the external-PR acceptance policy",
+    "docs/README.md:6-7 \"Before starting an external contribution, read CONTRIBUTING for eligibility and scope\""
+   ],
+   "note": "Cross-reference: path exists and the file is the contribution policy that docs/README.md also points to as the eligibility source."
+  },
+  {
+   "id": "7e6e2de89e84df606a8a3c8a2c2bb7bea578bba1",
+   "line": 11,
+   "label": "judgment",
+   "evidence": [
+    ".github/CONTRIBUTING.md:15 \"Open a pull request for an issue labelled `help wanted` with explicit Acceptance Criteria. Issues labelled `good first issue` must also meet these requirements\"",
+    ".github/CONTRIBUTING.md:81-82 label links for help wanted / good first issue"
+   ],
+   "note": "Instruction to verify external issue state; label names match CONTRIBUTING but the directive itself is not a repo fact."
+  },
+  {
+   "id": "7a4ecbc6f3f509db1fe23ee0b69932b9134c943c",
+   "line": 14,
+   "label": "judgment",
+   "evidence": [
+    ".github/CONTRIBUTING.md:21-22 \"Open pull requests for any issue marked `core` ... any external pull requests will not be accepted\" under Please do NOT",
+    ".github/CONTRIBUTING.md:20 \"Expand pull request scope to include changes that are not described in the issue's Acceptance Criteria\" under Please do NOT"
+   ],
+   "note": "Workflow directive mirroring CONTRIBUTING; `core` label name exists only inside the convention."
+  },
+  {
+   "id": "dd50ad72c13495499a2818fa554e08ca890b2202",
+   "line": 17,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:17-18 directive; no repository artifact can prove or contradict a stop condition"
+   ],
+   "note": "Pure workflow instruction."
+  },
+  {
+   "id": "e024241d13ee8241d1e577600a78cd12d91b02b3",
+   "line": 18,
+   "label": "judgment",
+   "evidence": [
+    ".github/CODEOWNERS:1 `* @cli/code-reviewers`",
+    ".github/CONTRIBUTING.md:14 \"Mention `@cli/code-reviewers` when an issue you want to work on does not have clear Acceptance Criteria\""
+   ],
+   "note": "Directive; the team handle is real (CODEOWNERS) but \"explain and direct\" is agent behavior."
+  },
+  {
+   "id": "6ef41f9b59364a6ff8bb86074215e4b4b9aef612",
+   "line": 19,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:19-20 directive with no checkable repository counterpart"
+   ],
+   "note": "Pure workflow instruction."
+  },
+  {
+   "id": "adca63ceb7f793a3864781058f8625261d5ef833",
+   "line": 20,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:35-41 \"## Private security disclosure\" section exists below, pointing to .github/SECURITY.md (file exists)",
+    ".github/CONTRIBUTING.md:5 \"For security concerns, follow our private disclosure policy (SECURITY.md) instead\""
+   ],
+   "note": "Directive; the referenced \"route below\" exists in the same file, but the instruction is behavioral."
+  },
+  {
+   "id": "f297743c3c4fcb4ededec32a4be733d04607c37e",
+   "line": 23,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:23-24 scope statement of the gate; .github/skills/tech-debt-burndown/SKILL.md:3-5 describes \"established, authorized GitHub CLI maintainer\" work"
+   ],
+   "note": "Policy scoping statement; not provable from code."
+  },
+  {
+   "id": "dc18554be995e779cd149d33c971314ed6ca45ae",
+   "line": 25,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:25-26 directive about checking authorization context; no repository artifact defines this check"
+   ],
+   "note": "Workflow instruction."
+  },
+  {
+   "id": "3f8db5574b4469e5beebaf109459cab89ffe5247",
+   "line": 26,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:26-28; permission levels on cli/cli are GitHub-side state, not in the checkout"
+   ],
+   "note": "Claim about an external system (GitHub repository permissions) and a policy threshold."
+  },
+  {
+   "id": "52c961265606ad1b69bf3a3bd851c46341d3ee30",
+   "line": 28,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:28-29 directive"
+   ],
+   "note": "Workflow instruction."
+  },
+  {
+   "id": "c24be080a8b29663461e6819769b903c554eb2a8",
+   "line": 29,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:29-31 policy statement; .github/PULL_REQUEST_TEMPLATE.md:67 similarly says not to infer choices from repository ownership"
+   ],
+   "note": "Policy statement about what counts as authorization; not a repo fact."
+  },
+  {
+   "id": "1fc4abdd701e6ac27c88416e90d721d1766da971",
+   "line": 31,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:31-33 directive"
+   ],
+   "note": "Workflow instruction."
+  },
+  {
+   "id": "afe7f95f875a8ef24338aeeb537f7d18b8dbf7b3",
+   "line": 37,
+   "label": "judgment",
+   "evidence": [
+    ".github/SECURITY.md:10 \"Please do not report security vulnerabilities through public GitHub issues, discussions, or pull requests.\""
+   ],
+   "note": "Directive mirroring SECURITY.md; behavioral, not a repository fact."
+  },
+  {
+   "id": "e000121e9528f7f49a69eef628dfd57c0f88e70b",
+   "line": 38,
+   "label": "judgment",
+   "evidence": [
+    ".github/SECURITY.md exists (ls); SECURITY.md:3,8 describe private reporting via HackerOne and the private GHSA flow",
+    "SECURITY.md contains no text about \"authorized private remediation\" (read whole file, 17 lines) - not covered, not contradicted"
+   ],
+   "note": "Directive (\"stop public contribution work\"); the SECURITY.md pointer is valid, remediation guidance is not in that file but nothing contradicts it."
+  },
+  {
+   "id": "812ba455f745e5bd41f61c95951e0e764ee107da",
+   "line": 40,
+   "label": "judgment",
+   "evidence": [
+    ".github/CONTRIBUTING.md:5 \"For security concerns, follow our private disclosure policy (SECURITY.md) instead.\""
+   ],
+   "note": "Directive; consistent with CONTRIBUTING, behavioral."
+  },
+  {
+   "id": "7c138ece94b9ff32e7dbdf4e0b7312b1f0a1fa82",
+   "line": 45,
+   "label": "judgment",
+   "evidence": [
+    "pkg/iostreams/iostreams.go:52 `type IOStreams struct` (the named abstraction exists)",
+    "docs/command-development.md:64 \"## Output and scriptability\" covers the same contract areas"
+   ],
+   "note": "Invariant/convention; IOStreams exists but a name inside a convention does not make the convention a repo fact."
+  },
+  {
+   "id": "a14e5a57a5508b55d4446375e27cfa1f07c2c5fe",
+   "line": 49,
+   "label": "judgment",
+   "evidence": [
+    "docs/command-development.md:10-12 \"look for a command-family `shared` helper before adding a global API\""
+   ],
+   "note": "Scoping/reuse preference."
+  },
+  {
+   "id": "4a4682ec4a3243df9d5b7e85a3e1e18ab8af38ee",
+   "line": 51,
+   "label": "true",
+   "evidence": [
+    "docs/testing.md:62-63 \"Ordinary tests must not use the operator's GitHub account, home/configuration, keyring, repositories, or live network.\"",
+    "acceptance/README.md:3 \"blackbox* tests that are expected to interact with resources on a real GitHub instance\"; docs/README.md:25 \"Acceptance tests create and modify real GitHub resources.\"",
+    "Makefile:55-57 `.PHONY: acceptance` / `acceptance:` / `go test -tags acceptance ./acceptance`",
+    "acceptance/README.md:11-21 required env vars GH_ACCEPTANCE_HOST, GH_ACCEPTANCE_ORG, GH_ACCEPTANCE_TOKEN (host, organization, credentials)"
+   ],
+   "note": "Every checkable part proven: `make acceptance` target exists, acceptance tests hit real GitHub, and the three required inputs are host/org/token; the \"must\"/\"do not\" framing restates docs/testing.md:62-63,114-117."
+  },
+  {
+   "id": "309c25e690d76d9203885a5900be2eb2c867f13c",
+   "line": 58,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:58 reading-order instruction; docs/README.md:11 \"Find the guide for your task\" table has the same task-to-guide structure"
+   ],
+   "note": "Workflow instruction."
+  },
+  {
+   "id": "2cf44eca86114e162f68da11357549b7ff8acd92",
+   "line": 59,
+   "label": "true",
+   "evidence": [
+    "docs/README.md exists; docs/README.md:1-3 \"# Developing GitHub CLI / Shared guidance for anyone developing or reviewing `gh`\"",
+    ".github/CONTRIBUTING.md:39 (human contributor doc) \"See the development guides (../docs/README.md) for project layout, command conventions, testing, and API/host behavior.\""
+   ],
+   "note": "Link resolves and the human-facing CONTRIBUTING points contributors at the same docs/README.md index; \"shared\" is the index's own self-description."
+  },
+  {
+   "id": "3d8e11e782c39fa042a05000d565c64da8e069e4",
+   "line": 60,
+   "label": "judgment",
+   "evidence": [
+    "docs/command-development.md:5 \"Conventions for implementing and reviewing `gh` commands\"; docs/api-and-hosts.md:5 \"Conventions for changing and reviewing HTTP requests...\""
+   ],
+   "note": "Normative characterization (\"not optional suggestions\"); guides self-describe as conventions but bindingness is not a checkable fact."
+  },
+  {
+   "id": "4c7909b707720eaa2f4a58ac1722c4f1b97a23a2",
+   "line": 64,
+   "label": "true",
+   "evidence": [
+    "docs/command-development.md exists; :5-6 \"Conventions for implementing and reviewing `gh` commands, including command wiring, flags, prompts, help, and output.\"",
+    "headings :8 Structure and lifecycle, :39 Flags, help, and errors, :64 Output and scriptability"
+   ],
+   "note": "Path exists and the guide covers exactly the listed topics."
+  },
+  {
+   "id": "a90132e2aa58a41cff657ab826b4b6fb71e37bac",
+   "line": 65,
+   "label": "true",
+   "evidence": [
+    "docs/testing.md exists; headings :34 Choose the behavioral seam, :60 Isolate effects and observe streams, :74 HTTP doubles and generated mocks"
+   ],
+   "note": "Path exists; guide covers tests, fixtures/doubles and generated mocks."
+  },
+  {
+   "id": "c87d132f97af2c314c28595889612dc3253fade9",
+   "line": 66,
+   "label": "true",
+   "evidence": [
+    "docs/api-and-hosts.md exists; :5-6 \"Conventions for changing and reviewing HTTP requests, host selection, authentication, and GitHub Enterprise Server (GHES) capability checks.\""
+   ],
+   "note": "Path exists and the guide covers API calls, host/auth selection and GHES capabilities."
+  },
+  {
+   "id": "c84dd391d9c06dfde5c8e3d68ec225daad17560b",
+   "line": 67,
+   "label": "true",
+   "evidence": [
+    "acceptance/README.md exists; :1 \"## Acceptance Tests\", :7 \"### Running the Acceptance Tests\"",
+    ".github/skills/writing-acceptance-tests/SKILL.md exists; frontmatter name: writing-acceptance-tests, description \"Use when adding or changing GitHub CLI acceptance tests, txtar scripts, testdata groups, repository fixtures, or acceptance harness behavior.\""
+   ],
+   "note": "Both paths exist and match the row's topic (running / changing acceptance tests)."
+  },
+  {
+   "id": "0edb64b898d065ae7967f1dc443279e68dc1a049",
+   "line": 68,
+   "label": "true",
+   "evidence": [
+    "docs/project-layout.md exists; :1-8 \"# GitHub CLI project layout\" listing cmd/, pkg/, docs/, script/, internal/"
+   ],
+   "note": "Path exists and the guide is about locating source areas."
+  },
+  {
+   "id": "897e82cffbe67d1f1e8f958f68e14530987d3cf7",
+   "line": 69,
+   "label": "true",
+   "evidence": [
+    ".github/CONTRIBUTING.md:24 \"## Building the project\" (anchor #building-the-project resolves); :26-31 prerequisites and build commands",
+    "go.mod:3,5 `go 1.27.0` / `toolchain go1.27.1`",
+    ".github/workflows/copilot-setup-steps.yml exists; :1-3 \"Copilot Setup Steps ... configures the environment for GitHub Copilot Agent\""
+   ],
+   "note": "All three links resolve, anchor heading exists, each target is about toolchain/environment setup. (Side observation, not claimed by this statement: CONTRIBUTING.md:27 says \"Go 1.26+\" while go.mod requires 1.27.0.)"
+  },
+  {
+   "id": "0a21bcbe7d8348ee400b683447a60d4d2ba77989",
+   "line": 73,
+   "label": "judgment",
+   "evidence": [
+    "go.mod:3,5 `go 1.27.0` / `toolchain go1.27.1` (a toolchain is declared)",
+    "docs/testing.md:10 same sentence \"Run from the repository root with the toolchain declared in go.mod.\""
+   ],
+   "note": "Procedural instruction; go.mod does declare a toolchain, but \"run from the repository root\" is a workflow rule."
+  },
+  {
+   "id": "9f376eb437740fccdf61fa46fdfeeb4163c483ef",
+   "line": 76,
+   "label": "true",
+   "evidence": [
+    "Makefile:8-11 `EXE =` unless `go env GOOS` is windows",
+    "Makefile:15-17 first (default) target `bin/gh$(EXE): script/build$(EXE)` -> `@script/build$(EXE) $@`",
+    "script/build.go:41-65 task \"bin/gh\" builds ./cmd/gh to the given output path",
+    ".github/CONTRIBUTING.md:30,34 \"Unix-like systems: `make`\" / run as `bin/gh`"
+   ],
+   "note": "Bare `make` hits the first non-dot target bin/gh$(EXE), which is bin/gh on Unix."
+  },
+  {
+   "id": "9c75efa2d1d12ab2de9e3886baa4e118f11ce86a",
+   "line": 77,
+   "label": "true",
+   "evidence": [
+    "script/build.go:89-95 with no task args: `if isWindowsTarget() { args = append(args, filepath.Join(\"bin\", \"gh.exe\")) } else { ... \"bin/gh\" }`",
+    "script/build.go:118-126 isWindowsTarget checks GOOS env or runtime.GOOS == \"windows\"",
+    "script/build.go:243-245 normalizeTask trims \".exe\" and ToSlash so \"bin\\gh.exe\" maps to task \"bin/gh\"",
+    ".github/CONTRIBUTING.md:31 \"Windows: `go run script/build.go`\""
+   ],
+   "note": "Default task on Windows is bin/gh.exe; code read."
+  },
+  {
+   "id": "62a249fcdacf34fcfe189f263a8c5d6ec2276ca3",
+   "line": 80,
+   "label": "judgment",
+   "evidence": [
+    ".github/CONTRIBUTING.md:33-35 \"Run the new binary as: Unix-like systems: `bin/gh`; Windows: `bin\\gh`\""
+   ],
+   "note": "Workflow preference (which binary to exercise); supported by CONTRIBUTING but not a checkable repo fact."
+  },
+  {
+   "id": "f6e84e44d1315d15049a69be41f3549ce79d63a5",
+   "line": 80,
+   "label": "true",
+   "evidence": [
+    "docs/testing.md:8 \"## Local validation\" (anchor #local-validation resolves)",
+    "docs/testing.md:14-20 \"Start with affected-package tests\" with `go test ./pkg/cmd/issue/list/...` examples",
+    "docs/testing.md:22-28 \"Before committing code changes, run the existing quality gates:\" `go fix ./pkg/cmd/issue/list/...  # Substitute changed packages`, `go test ./...`, `make lint  # golangci-lint run ./...`",
+    "Makefile:45-47 `.PHONY: lint` / `lint:` / `golangci-lint run ./...`"
+   ],
+   "note": "Faithful summary of the guide section; anchor resolves and the `make lint` target is defined."
+  },
+  {
+   "id": "e911287c141bcfc75846bee729c9694c8e090457",
+   "line": 83,
+   "label": "true",
+   "evidence": [
+    "docs/testing.md:30-31 \"These checks are not full CI parity; see CI and live acceptance tests (#ci-and-live-acceptance-tests-are-different) below.\"",
+    "docs/testing.md:103-111 \"## CI and live acceptance tests are different\" - \"`make lint` runs `golangci-lint run ./...`, not all CI checks. Lint CI also checks `go mod tidy -diff`, `go fix -diff ./...`, license generation, and vulnerabilities. Go CI runs `go test -race -tags=integration ./...` ...\""
+   ],
+   "note": "The guide explicitly separates local gates from additional CI checks."
+  },
+  {
+   "id": "78e796bd8eb2af8a840afc8872c69935ed30f406",
+   "line": 84,
+   "label": "judgment",
+   "evidence": [
+    "docs/testing.md:30 \"Report blocked checks honestly.\""
+   ],
+   "note": "Behavioral directive (verbatim in the guide)."
+  },
+  {
+   "id": "a9f77ca310664e6478d9ab313482c834a0ed1dd9",
+   "line": 85,
+   "label": "judgment",
+   "evidence": [
+    "docs/testing.md:32 \"For prose-only changes, check links and the diff; do not build or run Go tests.\""
+   ],
+   "note": "Workflow instruction (verbatim in the guide); no checkable target."
+  },
+  {
+   "id": "1cd9cbf9185043abb2251593068b280fac078d5a",
+   "line": 89,
+   "label": "true",
+   "evidence": [
+    "pkg/cmdutil/repo_override.go:36-37 EnableRepoOverride adds `cmd.PersistentFlags().StringP(\"repo\", \"R\", \"\", ...)`",
+    "pkg/cmdutil/repo_override.go:65-72 installs `cmd.PersistentPreRunE` that does `f.BaseRepo = OverrideBaseRepoFunc(f.BaseRepo, repoOverride)`",
+    "pkg/cmdutil/repo_override.go:75-85 OverrideBaseRepoFunc falls back to `os.Getenv(\"GH_REPO\")` and returns ghrepo.FromFullName(override)",
+    "pkg/cmd/issue/issue.go:44 and pkg/cmd/pr/pr.go:48 `cmdutil.EnableRepoOverride(cmd, f)` (31 call sites)",
+    "pkg/cmd/issue/list/list.go:86-88 inside RunE: `// support -R, --repo override` / `opts.BaseRepo = f.BaseRepo` (70 occurrences of this binding repo-wide)",
+    "docs/command-development.md:29-33 \"bind `opts.BaseRepo = f.BaseRepo` inside `RunE`. EnableRepoOverride replaces `f.BaseRepo` in a pre-run hook; capturing the earlier function can ignore `-R` and `GH_REPO`.\""
+   ],
+   "note": "Mechanism read in code: a persistent pre-run hook reassigns f.BaseRepo for -R / GH_REPO, so a constructor-time capture would miss it; the codebase follows the RunE binding."
+  },
+  {
+   "id": "b9a30f4894613aebecf5598a9564d60455b32796",
+   "line": 91,
+   "label": "judgment",
+   "evidence": [
+    ".golangci.yml exists; grep for revive/godot/exported rules returned nothing (no lint enforcement of godoc found)"
+   ],
+   "note": "Documentation convention, not enforced or contradicted by the repo."
+  },
+  {
+   "id": "c3c188c56c625cb188291dffa80a4178c753a12d",
+   "line": 93,
+   "label": "judgment",
+   "evidence": [
+    "`git grep -i \"em dash|em-dash|emdash\"` excluding AGENTS.md: no hits (no check or lint enforces it)"
+   ],
+   "note": "Style convention; nothing in the repo proves or contradicts it."
+  },
+  {
+   "id": "b662a2264795759d4de3e7ed2822055522c7765a",
+   "line": 95,
+   "label": "true",
+   "evidence": [
+    ".github/PULL_REQUEST_TEMPLATE.md exists (ls); :1-11 opening HTML comment \"Thank you for contributing to GitHub CLI!\"",
+    "docs/README.md:23 \"Prepare a pull request | PR template (../.github/PULL_REQUEST_TEMPLATE.md)\""
+   ],
+   "note": "Cross-reference resolves to the repository PR template; \"fresh\" is a timing nuance that nothing contradicts."
+  },
+  {
+   "id": "a45a4282a1246e481e59f34200002129a015c51a",
+   "line": 96,
+   "label": "judgment",
+   "evidence": [
+    ".github/PULL_REQUEST_TEMPLATE.md:15,24,50,56,64 headings \"### Description\", \"### How did you test this change?\", \"### Key points\", \"### Notes for reviewers\", \"### Authorship and follow-up\"; HTML comments at :1-11,13,17-22,26-48,52-54,58-62,66-70",
+    "`grep -n \"N/A\" .github/PULL_REQUEST_TEMPLATE.md` -> no match; template :34 instead says \"write `Not tested` and explain why\""
+   ],
+   "note": "How-to-fill instruction; headings and HTML comments exist, but the \"N/A\" convention is not from the template (which uses \"Not tested\"); not contradicted."
+  },
+  {
+   "id": "722e1517b0fd29c0cb4d077dbd2472beb9c1f8e7",
+   "line": 97,
+   "label": "true",
+   "evidence": [
+    ".github/PULL_REQUEST_TEMPLATE.md:27-29 \"Report only actions you actually performed and results you actually observed ... Do not present planned, hypothetical, inferred, or merely expected scenarios as testing.\" (observed-evidence requirement)",
+    ".github/PULL_REQUEST_TEMPLATE.md:72-76 \"Who wrote this:\" with three authorship checkboxes",
+    ".github/PULL_REQUEST_TEMPLATE.md:67 \"For 'Who answers review comments,' use only a choice the human has explicitly made in the conversation. If no choice has already been established, pause and ask the human ... Do not infer the choice\"; :78-82 three follow-up options incl. \"Nobody has explicitly committed to replying.\""
+   ],
+   "note": "All three named template requirements exist with the described content; \"never invent\" restates template lines 27-29 and 67."
+  },
+  {
+   "id": "fcce046b69e8346a133eb2b0880966d53f712b77",
+   "line": 99,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:99 directive; no repository artifact bears on it"
+   ],
+   "note": "Workflow instruction."
+  },
+  {
+   "id": "111acbf07a2249b06ffee9a7ee4900b1be3888dd",
+   "line": 101,
+   "label": "true",
+   "evidence": [
+    ".github/skills/code-review/SKILL.md exists; frontmatter :2-3 `name: code-review` / `description: Use when reviewing GitHub CLI (gh) pull requests.`; :6 \"# CLI Code Reviewer\""
+   ],
+   "note": "Path exists and the skill's stated purpose is PR review."
+  },
+  {
+   "id": "87a0ce0acc320ef200a505544083b25a74bffda2",
+   "line": 102,
+   "label": "true",
+   "evidence": [
+    ".github/skills/tech-debt-burndown/SKILL.md exists; frontmatter :2-5 `name: tech-debt-burndown` / description \"Use when running an established, authorized GitHub CLI maintainer tech-debt burndown, whether scheduled or manually invoked.\"; :8 \"# Tech Debt Burndown\""
+   ],
+   "note": "Path exists and the skill's stated purpose is authorized maintainer tech-debt work."
+  },
+  {
+   "id": "ac27f7fefe9cb436928f0a8f43d3acdaf49fd290",
+   "line": 103,
+   "label": "true",
+   "evidence": [
+    ".github/skills/vhs-demo/SKILL.md exists; frontmatter :2-3 `name: vhs-demo` / description \"Use when creating a terminal GIF, recording a CLI demonstration, authoring a VHS tape, or producing visual before/after evidence for reviewers.\"; :7-10 \"# VHS Demo ... The GIF is evidence of one observed flow\""
+   ],
+   "note": "Path exists and the skill's stated purpose is terminal demonstration evidence."
+  }
+ ]
+}

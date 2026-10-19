@@ -116,18 +116,35 @@
     "docs/migration/support-2026-07-28.md exists",
     "REVIEW.md:53 'Breaking changes documented in docs/migration/upgrade-to-v2.md (or docs/migration/support-2026-07-28.md if 2026-only)'"
    ],
-   "note": "Both guide files exist and are organized by subsystem; REVIEW.md repeats the rule."
+   "note": "Both guide files exist and are organized by subsystem; REVIEW.md repeats the rule.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "ls docs/migration → index.md support-2026-07-28.md upgrade-to-v2.md (both named files exist)"
+    ],
+    "note": "Workflow instruction ('add to…'); the named paths exist but the instruction itself is a convention."
+   }
   },
   {
    "id": "11f779cde751580886312b2eb4b93e09f9ac95a3",
    "line": 29,
-   "text": "Mechanical renames go in `packages/codemod/src/migrations/v1-to-v2/mappings/` and the codemod handles them \u2014 do not reproduce mapping tables in the guide; link to the mapping file instead.",
+   "text": "Mechanical renames go in `packages/codemod/src/migrations/v1-to-v2/mappings/` and the codemod handles them — do not reproduce mapping tables in the guide; link to the mapping file instead.",
    "label": "true",
    "evidence": [
     "ls packages/codemod/src/migrations/v1-to-v2/mappings => importMap.ts symbolMap.ts schemaToMethodMap.ts contextPropertyMap.ts ...",
     "docs/migration/upgrade-to-v2.md:69-72 table cells link to mappings/importMap.ts, mappings/symbolMap.ts etc. instead of listing renames"
    ],
-   "note": "Mappings dir exists and the guide links to mapping files rather than reproducing them."
+   "note": "Mappings dir exists and the guide links to mapping files rather than reproducing them.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "ls packages/codemod/src/migrations/v1-to-v2/mappings/ → authSchemaNames.ts contextPropertyMap.ts importMap.ts schemaRouting.ts schemaToMethodMap.ts specSchemaNames.ts symbolMap.ts",
+     "packages/codemod/src/migrations/v1-to-v2/transforms/importPaths.ts:10-13 imports from '../mappings/…' (codemod does consume the mappings)"
+    ],
+    "note": "Instruction about where renames go and not to duplicate tables; the directory exists and transforms import it, but the 'go in / do not reproduce / link instead' parts are conventions."
+   }
   },
   {
    "id": "fdc476bc0adc6794b8e164a95052c0d95d8855bf",
@@ -147,7 +164,16 @@
     "package.json: \"type\": \"module\"",
     "grep of non-example top-level functions in client/server/core-internal shared without a return type annotation => 0 (195 annotated)"
    ],
-   "note": "Strict mode and ESM are configured; non-example source functions carry explicit return types."
+   "note": "Strict mode and ESM are configured; non-example source functions carry explicit return types.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "common/tsconfig/tsconfig.json:19 \"strict\": true; :5 \"module\": \"ESNext\"; package.json:10 \"type\": \"module\"",
+     "common/eslint-config/eslint.config.mjs — no @typescript-eslint/explicit-function-return-type or explicit-module-boundary-types rule"
+    ],
+    "note": "Strict + ESM proven; 'explicit return types' is a style preference with no enforcing config, so the statement as a whole is a convention."
+   }
   },
   {
    "id": "19efa426dd1f44fd46a65f12e4b712e9153eefda",
@@ -159,7 +185,15 @@
     "packages/server/src/server/mcp.ts:68 export class McpServer",
     "packages/client/src/client/middleware.ts:369 export const applyMiddlewares"
    ],
-   "note": "Code follows PascalCase classes/types and camelCase functions."
+   "note": "Code follows PascalCase classes/types and camelCase functions.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "common/eslint-config/eslint.config.mjs — no @typescript-eslint/naming-convention rule"
+    ],
+    "note": "Naming convention, unenforced."
+   }
   },
   {
    "id": "a3343b1bb53e2ee10d8634446951f5bdfd8f07d1",
@@ -206,7 +240,7 @@
   {
    "id": "7242dde6734c54671cc64a59a54a79126a9f09f6",
    "line": 47,
-   "text": "JSDoc `@example` tags should pull type-checked code from companion `.examples.ts` files (e.g., `client.ts` \u2192 `client.examples.ts`).",
+   "text": "JSDoc `@example` tags should pull type-checked code from companion `.examples.ts` files (e.g., `client.ts` → `client.examples.ts`).",
    "label": "true",
    "evidence": [
     "packages/client/src/client/client.ts:956-957 '@example Basic usage (stdio)' / ```ts source=\"./client.examples.ts#Client_connect_stdio\"",
@@ -284,7 +318,7 @@
   {
    "id": "6fac6d65887f0a219bd888f491056b0b18a8b924",
    "line": 70,
-   "text": "`@modelcontextprotocol/core-internal` (main entry, `packages/core-internal/src/index.ts`) \u2014 Internal barrel. Exports everything (including Zod schemas, Protocol class, stdio utils). Only consumed by sibling packages within the monorepo (`private: true`).",
+   "text": "`@modelcontextprotocol/core-internal` (main entry, `packages/core-internal/src/index.ts`) — Internal barrel. Exports everything (including Zod schemas, Protocol class, stdio utils). Only consumed by sibling packages within the monorepo (`private: true`).",
    "label": "true",
    "evidence": [
     "packages/core-internal/package.json private: true",
@@ -295,7 +329,7 @@
   {
    "id": "53e26e613f8ec96be700c214a05f19ec44a01994",
    "line": 71,
-   "text": "`@modelcontextprotocol/core-internal/public` (`packages/core-internal/src/exports/public/index.ts`) \u2014 Curated public API. Exports TypeScript types, error classes, constants, guards, and the `Protocol` base class (+ `mergeCapabilities`). Re-exported by client and server packages.",
+   "text": "`@modelcontextprotocol/core-internal/public` (`packages/core-internal/src/exports/public/index.ts`) — Curated public API. Exports TypeScript types, error classes, constants, guards, and the `Protocol` base class (+ `mergeCapabilities`). Re-exported by client and server packages.",
    "label": "true",
    "evidence": [
     "packages/core-internal/src/exports/public/index.ts:60 export { DEFAULT_REQUEST_TIMEOUT_MSEC, mergeCapabilities, Protocol }; also error classes, constants, type guards",
@@ -306,7 +340,7 @@
   {
    "id": "c65815840d439239cc38a3af7537337de117934c",
    "line": 72,
-   "text": "`@modelcontextprotocol/client` and `@modelcontextprotocol/server` (`packages/*/src/index.ts`) \u2014 Final public surface. Package-specific exports (named explicitly) plus re-exports from `core-internal/public`.",
+   "text": "`@modelcontextprotocol/client` and `@modelcontextprotocol/server` (`packages/*/src/index.ts`) — Final public surface. Package-specific exports (named explicitly) plus re-exports from `core-internal/public`.",
    "label": "true",
    "evidence": [
     "packages/client/src/index.ts:3-7 'Package-specific exports: listed explicitly below (named imports) ... Protocol-level types: re-exported from @modelcontextprotocol/core-internal/public'",
@@ -317,7 +351,7 @@
   {
    "id": "f3f1a54dd3455ff26f169d554aa77a5a79ac1481",
    "line": 73,
-   "text": "`@modelcontextprotocol/core` (`packages/core/src/index.ts`) \u2014 Public Zod-schema package and the canonical home of the schema source modules (`src/schemas.ts`, `src/auth.ts`, `src/constants.ts`). The root entry re-exports only the `*Schema` Zod constants (MCP spec + OAuth/OpenID) \u2014 the published home for raw runtime validation (`CallToolResultSchema.parse(...)`); runtime-neutral (`zod` is its only dependency). The `./internal` subpath re-exports the schema modules wholesale for the sibling packages: `core-internal` re-exports them at the old module paths, and the `client`/`server`/`server-legacy` bundles resolve `@modelcontextprotocol/core/internal` as a real external dependency instead of carrying their own schema copies (their public surfaces stay Zod-free).",
+   "text": "`@modelcontextprotocol/core` (`packages/core/src/index.ts`) — Public Zod-schema package and the canonical home of the schema source modules (`src/schemas.ts`, `src/auth.ts`, `src/constants.ts`). The root entry re-exports only the `*Schema` Zod constants (MCP spec + OAuth/OpenID) — the published home for raw runtime validation (`CallToolResultSchema.parse(...)`); runtime-neutral (`zod` is its only dependency). The `./internal` subpath re-exports the schema modules wholesale for the sibling packages: `core-internal` re-exports them at the old module paths, and the `client`/`server`/`server-legacy` bundles resolve `@modelcontextprotocol/core/internal` as a real external dependency instead of carrying their own schema copies (their public surfaces stay Zod-free).",
    "label": "true",
    "evidence": [
     "packages/core/src/index.ts:1-20 header: schema source modules live in this package; root entry re-exports ONLY the *Schema Zod values",
@@ -330,13 +364,21 @@
   {
    "id": "073d04a05cfaa946fcce32f6082ad923178b4b90",
    "line": 78,
-   "text": "Adding a symbol to a package `index.ts` makes it public API \u2014 do so intentionally.",
+   "text": "Adding a symbol to a package `index.ts` makes it public API — do so intentionally.",
    "label": "true",
    "evidence": [
     "packages/client/src/index.ts:7 '// Any new export added here becomes public API. Use named exports, not wildcards.'",
     "packages/client/package.json exports '.' -> ./dist/index.mjs"
    ],
-   "note": "The package root entry is index.ts, so anything exported there is public."
+   "note": "The package root entry is index.ts, so anything exported there is public.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "CLAUDE.md:78 — guidance about intent when editing index.ts"
+    ],
+    "note": "Instruction/convention."
+   }
   },
   {
    "id": "5d862ac85f5979fdf1e227efba55d6c57f84b4b4",
@@ -356,7 +398,16 @@
     "packages/client/test/client/barrelClean.test.ts:13 NODE_ONLY = /\\b(child_process|cross-spawn|node:stream|node:child_process)\\b/",
     "packages/server/test/server/barrelClean.test.ts:48 'dist/index.mjs does not export StdioServerTransport'"
    ],
-   "note": "Stdio sits at a ./stdio subpath and barrelClean tests enforce a node-builtin-free root."
+   "note": "Stdio sits at a ./stdio subpath and barrelClean tests enforce a node-builtin-free root.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "packages/client/package.json and packages/server/package.json exports include './stdio' (named subpath)",
+     "packages/client/test/client/barrelClean.test.ts and packages/server/test/server/barrelClean.test.ts exist; NODE_ONLY = /\\b(child_process|cross-spawn|node:stream|node:child_process)\\b/"
+    ],
+    "note": "A 'must' rule; its named examples (./stdio subpath, barrelClean test) exist, but the rule itself is a convention."
+   }
   },
   {
    "id": "bd881540ec9c9fb19d9183837fa85a4a69d6246c",
@@ -461,7 +512,7 @@
   {
    "id": "a626d30b49b9e182a129e06d1e819fe24b75620c",
    "line": 106,
-   "text": "The repo also ships \u201cmiddleware\u201d packages under `packages/middleware/` (e.g.",
+   "text": "The repo also ships “middleware” packages under `packages/middleware/` (e.g.",
    "label": "true",
    "evidence": [
     "ls packages/middleware => express fastify hono node README.md"
@@ -486,7 +537,15 @@
    "evidence": [
     "packages/middleware/README.md:3-5 'thin integration layers ... They intentionally do not add new MCP features'"
    ],
-   "note": "The middleware README states the same principle."
+   "note": "The middleware README states the same principle.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "packages/middleware/*/package.json peerDependencies on @modelcontextprotocol/server (thin adapters), but 'should not add new MCP functionality' is a policy"
+    ],
+    "note": "Design rule/convention."
+   }
   },
   {
    "id": "6e2be1e9d937aeeada227c9c5ce3aec09a291c45",
@@ -564,7 +623,7 @@
   {
    "id": "6e62b59dfd6bbf403a94282f31194e6da9dcadaa",
    "line": 133,
-   "text": "`examples/shared/` \u2014 `@mcp-examples/shared` package. Root export is args-only (`parseExampleArgs`, `check`, `siblingPath`); the demo OAuth provider and `InMemoryEventStore` live at the `@mcp-examples/shared/auth` subpath so non-auth stories don't eagerly evaluate better-auth/express/better-sqlite3. Stories import only this plumbing and inline the SDK transport setup themselves \u2014 see `examples/CONTRIBUTING.md`.",
+   "text": "`examples/shared/` — `@mcp-examples/shared` package. Root export is args-only (`parseExampleArgs`, `check`, `siblingPath`); the demo OAuth provider and `InMemoryEventStore` live at the `@mcp-examples/shared/auth` subpath so non-auth stories don't eagerly evaluate better-auth/express/better-sqlite3. Stories import only this plumbing and inline the SDK transport setup themselves — see `examples/CONTRIBUTING.md`.",
    "label": "true",
    "evidence": [
     "examples/shared/package.json name @mcp-examples/shared; exports '.': ./src/index.ts, './auth': ./src/indexAuth.ts",
@@ -577,7 +636,7 @@
   {
    "id": "4aeb4d5854ccc6c00ce468802181f4fa4155a91c",
    "line": 134,
-   "text": "`scripts/examples/` \u2014 runner (`run-examples.ts`)",
+   "text": "`scripts/examples/` — runner (`run-examples.ts`)",
    "label": "true",
    "evidence": [
     "ls scripts/examples => run-examples.ts",
@@ -588,7 +647,7 @@
   {
    "id": "ba9b75a6c1235859424d9babd8b4ab4dd866a892",
    "line": 135,
-   "text": "`examples/guides/` \u2014 per-page snippet companions for the `docs/` guide pages (one `<section>/<page>.examples.ts` per page); fences sync via `pnpm sync:snippets`, and the runnable ones are executed in CI by `pnpm docs:examples`",
+   "text": "`examples/guides/` — per-page snippet companions for the `docs/` guide pages (one `<section>/<page>.examples.ts` per page); fences sync via `pnpm sync:snippets`, and the runnable ones are executed in CI by `pnpm docs:examples`",
    "label": "true",
    "evidence": [
     "find examples/guides -name '*.examples.ts' => clients/connect.examples.ts, clients/oauth.examples.ts, testing.examples.ts ... (mirrors docs/clients, docs/servers ...)",
@@ -895,7 +954,7 @@
   {
    "id": "09669292163cda7eaef43f59a86a627c7270504e",
    "line": 221,
-   "text": "Client\u2192Server: `Client.assertCapabilityForMethod()` checks `_serverCapabilities`",
+   "text": "Client→Server: `Client.assertCapabilityForMethod()` checks `_serverCapabilities`",
    "label": "true",
    "evidence": [
     "packages/client/src/client/client.ts:1400-1405 assertCapabilityForMethod ... if (!this._serverCapabilities?.logging)"
@@ -905,7 +964,7 @@
   {
    "id": "4f7c184735110e4d11cc33c8949e4f9b6224cd7e",
    "line": 222,
-   "text": "Server\u2192Client: `Server.assertCapabilityForMethod()` checks `_clientCapabilities`",
+   "text": "Server→Client: `Server.assertCapabilityForMethod()` checks `_clientCapabilities`",
    "label": "true",
    "evidence": [
     "packages/server/src/server/server.ts:754-757 assertCapabilityForMethod ... if (!this._clientCapabilities?.sampling)"
@@ -932,7 +991,15 @@
     "packages/core-internal/src/types/types.ts:282 export type ClientCapabilities; :292 export type ServerCapabilities",
     "packages/core/src/schemas.ts:416 ClientCapabilitiesSchema; :491 ServerCapabilitiesSchema"
    ],
-   "note": "Capability types exist where new capabilities would go."
+   "note": "Capability types exist where new capabilities would go.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "Workflow step ('Add capability to ...'); named types exist: packages/core-internal/src/types/types.ts:282 `export type ClientCapabilities = Infer<typeof ClientCapabilitiesSchema>;` :292 `ServerCapabilities`; schemas built in packages/core-internal/src/wire/rev2025-11-25/buildSchemas.ts:355/430 and wire/rev2026-07-28/buildSchemas.ts:261/279"
+    ],
+    "note": "Procedural instruction for a future change; names exist but 'in types' is not a concrete path and the step itself is not a repo fact."
+   }
   },
   {
    "id": "e6cd3cf3707c20e440be1821d36cd56d78fe1c8b",
@@ -943,7 +1010,15 @@
     "packages/client/src/client/client.ts:2327 async callTool(...)",
     "packages/server/src/server/server.ts:1159 async elicitInput(...); :1278 async listRoots(...)"
    ],
-   "note": "Matches the existing pattern of sender methods on Client and Server."
+   "note": "Matches the existing pattern of sender methods on Client and Server.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "Workflow step ('Implement sender method in Client or Server class'); classes exist (packages/client/src/client/client.ts, packages/server/src/server/server.ts)"
+    ],
+    "note": "Procedural instruction, not a checkable description."
+   }
   },
   {
    "id": "005d020eb54a10a94f3000d4f670972fa31f41a7",
@@ -954,7 +1029,15 @@
     "packages/client/src/client/client.ts:1400 assertCapabilityForMethod switch with per-method cases",
     "packages/server/src/server/server.ts:754 same pattern"
    ],
-   "note": "Per-method capability cases live in assertCapabilityForMethod."
+   "note": "Per-method capability cases live in assertCapabilityForMethod.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "Workflow step; the named method exists: packages/client/src/client/client.ts:1400 and packages/server/src/server/server.ts:754 `protected assertCapabilityForMethod(...)`"
+    ],
+    "note": "Procedural instruction; existence of the method does not make the instruction a fact."
+   }
   },
   {
    "id": "a942d15b693b9e76125cd81afbb58d5557e20dc8",
@@ -965,7 +1048,15 @@
     "packages/core-internal/src/shared/protocol.ts:1701 setRequestHandler(...)",
     "packages/client/test/client/inputRequiredEngine.test.ts:88 client.setRequestHandler('elicitation/create', ...)"
    ],
-   "note": "The receiving side registers handlers with setRequestHandler."
+   "note": "The receiving side registers handlers with setRequestHandler.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "Workflow step; the named method exists: packages/core-internal/src/shared/protocol.ts:1701 `setRequestHandler<M extends RequestMethod>(...)`"
+    ],
+    "note": "Procedural instruction; existence of the method does not make the instruction a fact."
+   }
   }
  ]
 }

@@ -1,0 +1,120 @@
+{
+ "repo": "PostHog/posthog-js",
+ "sha": "c7bf8ca76b5aaad2a4badd1d1476dc499ca0009a",
+ "file": "AGENTS.md",
+ "labeler": "blind second labeler (agent), 2026-10-19, under the protocol in eval/LABELING.md; never saw the first labels or a proof report",
+ "labels": [
+  {
+   "id": "70c995636fef46e1e2b81210a6555b7c46d8249a",
+   "line": 3,
+   "label": "true",
+   "evidence": [
+    "ls CONTRIBUTING.md -> exists; wc -l -> 463 lines",
+    "repository structure: CONTRIBUTING.md:26 \"## Folder Structure\" (./packages, ./playground, ./examples, ./target, ./tooling, ./.github); CONTRIBUTING.md:35 \"## SDK Packages\" table",
+    "environment setup: CONTRIBUTING.md:14 \"## Tooling\" -> install corepack + nvm, then `nvm use` / `pnpm install --frozen-lockfile` (lines 21-24)",
+    "development commands: CONTRIBUTING.md:98 \"## Development Commands\", :102 \"### Root-Level Scripts\" (pnpm build/check-types/dev/test/...), :228 \"### Package Scripts\", :244 \"### Using Turbo to Target Specific Packages\"",
+    "testing: CONTRIBUTING.md:116-128 `pnpm test`, `pnpm test:unit`, `pnpm test:built`, `pnpm test:rrweb`; :270 \"## CI-aligned checks\"; :285 \"### Playwright\"; :448 \"### Test Failures\"",
+    "linting: CONTRIBUTING.md:318 \"## Code Style and Linting\", :320 \"### Oxlint\" (`pnpm lint` ...), :326 \"### Automatic Formatting\"",
+    "dependency policies: CONTRIBUTING.md:79 \"## Dependency cooldown\" (minimumReleaseAge: 10080), :91 \"## Dependency Release-Age Exceptions\"",
+    "PR requirements: CONTRIBUTING.md:344 \"## Opening a new PR\" -> Conventional Commits titles validated by lint-pr.yml; :349 \"Follow RELEASING.md for changeset requirements\""
+   ],
+   "note": "\"Read and follow\" is instruction framing, but the second sentence is a checkable description of the linked file; every one of the seven listed topics has a dedicated section in CONTRIBUTING.md at the pinned commit."
+  },
+  {
+   "id": "b4f6453b977269483064fa4489a853af0ab41642",
+   "line": 4,
+   "label": "true",
+   "evidence": [
+    "ls RELEASING.md -> exists; wc -l -> 153 lines",
+    "changesets: RELEASING.md:5 \"### Creating a changeset\" -> `pnpm changeset` (line 12), description guidance (line 17), rrweb rule (line 7)",
+    "publishing: RELEASING.md:19 \"### Publishing\" (Release workflow steps 1-5), :29 \"### Browser S3/CDN gate\"",
+    "release recovery: RELEASING.md:50 \"## Manual S3 recovery\", :56 \"### Starting recovery\", :67 \"### Recovery inputs\", :83 \"### Approval and publication safeguards\", :95 \"### Regional failures\", :101 \"### Verifying recovery\""
+   ],
+   "note": "Pointer statement: the only checkable parts are that ./RELEASING.md exists and covers changesets, publishing and release recovery; all three are covered by named sections. Treated like statement 1 rather than as a bare workflow instruction."
+  },
+  {
+   "id": "dedc8d599b1508b83911e956296c7f17b63a2573",
+   "line": 5,
+   "label": "true",
+   "evidence": [
+    "grep -n \"^#\" CONTRIBUTING.md -> CONTRIBUTING.md:330 \"## Public API changes\" (exact heading named in the statement)",
+    "CONTRIBUTING.md:330-342 section body: agree on API before implementing; external contributors open an issue; sdk-spec counts as agreement; `pnpm generate-references` diff as signal"
+   ],
+   "note": "Checkable fact is that a section titled \"Public API changes\" exists in ./CONTRIBUTING.md; it does, at line 330. \"follow\" / \"As an agent, also:\" are instruction framing with nothing further to check."
+  },
+  {
+   "id": "ca3c368466a5f96768169c5ac40df17e9c32a451",
+   "line": 6,
+   "label": "judgment",
+   "evidence": [
+    "Workflow instruction about PR review etiquette; no file, script or workflow in the checkout encodes it",
+    "git grep -n -i author_association -- . \":!pnpm-lock.yaml\" -> only AGENTS.md:7 (no CI rule about issues for external public-API PRs)"
+   ],
+   "note": "Pure review-process instruction (what to note in a review, whether to open an issue); the repository can neither prove nor contradict it."
+  },
+  {
+   "id": "85145c338415296737ab90ad494b82f97fa4b73e",
+   "line": 7,
+   "label": "judgment",
+   "evidence": [
+    "Claim is about GitHub API semantics (`author_association` values MEMBER/OWNER, orgs/PostHog/members endpoint) and `gh` CLI behaviour, i.e. an external system",
+    "git grep -n -iE \"author_association|orgs/PostHog/members\" -- . \":!pnpm-lock.yaml\" -> only AGENTS.md:7; nothing in .github/ or scripts/ defines maintainer this way",
+    "Consistent context only: CONTRIBUTING.md:334 \"PostHog maintainers (members of the PostHog GitHub org)\"; repo slug PostHog/posthog-js also at RELEASING.md:72,126"
+   ],
+   "note": "Not contradicted by anything in the checkout, but the maintainer definition and the gh commands depend on GitHub, not on repository contents; cannot be proven from the pinned tree."
+  },
+  {
+   "id": "b56fd227c6d56b943ead831c8187722a8272b97a",
+   "line": 8,
+   "label": "judgment",
+   "evidence": [
+    "Policy statement about an external repository (https://github.com/PostHog/sdk-specs) counting as agreement",
+    "Mirrors CONTRIBUTING.md:337 \"**Already specified?** If a published sdk-spec defines the API, that's the agreement, so you don't need an issue.\"",
+    "git grep -n -i sdk-specs -- . \":!pnpm-lock.yaml\" -> links/comments only (AGENTS.md:8,10; CONTRIBUTING.md:337; compliance/node/v2/README.md:61; .github/workflows/sdk-compliance-tests-node-v2.yml:151-154; packages/react-native/src/PostHogProvider.tsx:48); no vendored spec"
+   ],
+   "note": "A contribution-process convention; consistent with CONTRIBUTING.md but a convention is not a repository fact that can be proven."
+  },
+  {
+   "id": "e8a9e455592aa601997fe0a71d46a8e02702055b",
+   "line": 9,
+   "label": "judgment",
+   "evidence": [
+    "Workflow instruction (\"stop before implementing\", \"draft the issue body\", \"Open it only if they ask\"); no repository artifact encodes or enforces it",
+    "Related policy text at CONTRIBUTING.md:336 (external contributors open an issue first) is itself a convention"
+   ],
+   "note": "Agent workflow instruction about when to pause and what to draft; nothing in the checkout can prove or contradict it."
+  },
+  {
+   "id": "b83481735d58e44ab6a21d915c66077422cacbca",
+   "line": 10,
+   "label": "judgment",
+   "evidence": [
+    "Instruction to consult an external repository (https://github.com/PostHog/sdk-specs); the sub-claim \"its README lists every capability\" is about that external README",
+    "git grep -n -i sdk-specs -- . \":!pnpm-lock.yaml\" -> no copy of the sdk-specs README in the checkout; ls compliance/ -> browser/ and node/ with only Dockerfiles, docker-compose.yml, adapter.js, README.md (compliance/node/v2/README.md:61 refers to a pinned PostHog/sdk-specs commit, not its contents)",
+    "Remaining text (use spec as cross-SDK contract, call out divergence in PR description, do not flag untouched discrepancies) is review-process instruction"
+   ],
+   "note": "Cannot verify the external README claim or the workflow from the pinned tree; nothing contradicts it either."
+  },
+  {
+   "id": "50da6df6eea93a8083d4d9f8c027cfc5984b84e7",
+   "line": 11,
+   "label": "judgment",
+   "evidence": [
+    "Workflow instruction (\"Check for ... before working in a package\"); \"check for\" asserts no fact about the tree",
+    "Supporting facts (not contradicted): git ls-files | grep AGENTS.md -> AGENTS.md, packages/browser/AGENTS.md (110 lines), packages/browser-next/AGENTS.md (13 lines)",
+    "Package contributor guides exist: packages/browser/CONTRIBUTING.md (89 lines), packages/convex/CONTRIBUTING.md (28), packages/nuxt/CONTRIBUTING.md (15), packages/react-native/CONTRIBUTING.md (19); also listed at CONTRIBUTING.md:65-72 \"### Package-specific guides\"; packages/browser/CLAUDE.md also present"
+   ],
+   "note": "Package-level AGENTS.md files and contributor guides really exist, so nothing is stale; but the sentence is an instruction to look, not a description of the repository, so labelled judgment."
+  },
+  {
+   "id": "d669eff71dc7b65168ec297c08af0e88e1e787f9",
+   "line": 12,
+   "label": "judgment",
+   "evidence": [
+    "Maintenance convention for this file (\"Keep ... rather than duplicating it here\"); a preference about where guidance lives",
+    "Both named files exist: ls CONTRIBUTING.md RELEASING.md -> 463 and 153 lines; AGENTS.md itself (12 lines) only links to them"
+   ],
+   "note": "Convention about document ownership; the named files exist but that does not make the convention a provable repository fact."
+  }
+ ]
+}

@@ -1,0 +1,245 @@
+{
+ "repo": "spring-projects/spring-ai",
+ "sha": "46d05c2fdbab52f6ef04207abe19b12687a47453",
+ "file": "AGENTS.md",
+ "labeler": "blind second labeler (agent), 2026-10-19, under the protocol in eval/LABELING.md; never saw the first labels or a proof report",
+ "labels": [
+  {
+   "id": "6deacfe2022371c83e3b83dbc9f1d3d8fbdbf76c",
+   "line": 3,
+   "label": "judgment",
+   "evidence": [
+    "ls: CONTRIBUTING.md exists at repo root (278 lines); the markdown link target resolves",
+    "AGENTS.md sections map onto CONTRIBUTING.md sections, e.g. CONTRIBUTING.md:119-126 (format commands), :249-257 (integration tests), :143-152 (import order), :64-95 (commit message)",
+    "'which remains the reference for humans' is a statement of purpose/audience, not a repository fact"
+   ],
+   "note": "Link target exists and the content is indeed derived from CONTRIBUTING.md, but the statement is a description of purpose and audience; nothing in the repo can prove or contradict 'reference for humans'."
+  },
+  {
+   "id": "83d579aecd9358282d3086742ec1aa34b05cd7a5",
+   "line": 7,
+   "label": "true",
+   "evidence": [
+    ".sdkmanrc:3 `java=17.0.19-librca`",
+    "pom.xml:240 `<java.version>17</java.version>`; pom.xml:244 `<compiler.jdk.version>[17.0.19,)</compiler.jdk.version>` used by maven-enforcer requireJavaVersion at pom.xml:385-387",
+    "pom.xml:480 `<arg>-XDaddTypeAnnotationsToSymbol=true</arg>` in the java-compile execution (pom.xml:467) - the build passes this javac flag, so the JDK must support it",
+    ".github/workflows/pr-check.yml:18-19 `java-version: '17'` / `distribution: 'liberica'`; every workflow that sets up Java uses 17 + liberica (grep java-version .github/workflows/*.yml)",
+    "CONTRIBUTING.md:217,223 state the same JDK requirement and the native-architecture advice"
+   ],
+   "note": "JDK 17 floor matches pom java.version, enforcer range [17.0.19,) and all CI jobs; the -XD flag is really passed by the compiler plugin; .sdkmanrc holds exactly 17.0.19-librca. 'native CPU architecture' is environment advice that the repo cannot check; the checkable parts are all proven."
+  },
+  {
+   "id": "1898d3c7506fa86fa27bd48237ef6fe53848d012",
+   "line": 8,
+   "label": "true",
+   "evidence": [
+    "ls: `mvnw` and `mvnw.cmd` present at repo root; .mvn/wrapper/ exists",
+    "pom.xml:499-501 maven-surefire-plugin configured (`<argLine>${surefireArgLine}</argLine>`) - unit tests run in the default lifecycle's test phase, which `package` includes; no skipTests default in pom.xml",
+    ".github/workflows/pr-check.yml:34-36 step 'Run tests' runs `./mvnw -ntp -B -U package`",
+    "CONTRIBUTING.md:58 `Run the build and tests locally with ./mvnw clean package`; `-am -pl <module>` are Maven CLI options with a placeholder"
+   ],
+   "note": "Wrapper exists, clean/package are core lifecycle phases, surefire is configured and CI's PR check uses the same package build to run tests."
+  },
+  {
+   "id": "cd4b38066431bd1c3449b84c15ef1b4185c8c109",
+   "line": 9,
+   "label": "judgment",
+   "evidence": [
+    "pom.xml:626-650 profile `format-apply` (activation pom.xml:630 `<name>!env.CI</name>`) binds spring-javaformat goal `apply` (pom.xml:645) to phase `process-sources` (pom.xml:642) - so `./mvnw process-sources` formats locally",
+    "pom.xml:596-624 profile `format-check` (activation pom.xml:600-601 `env.CI` = `true`) binds goal `validate` (pom.xml:616) to the validate phase - the CI-side check",
+    "src/checkstyle/checkstyle.xml:107-113 `<module name=\"ImportOrder\">` enforces import order through checkstyle (profile checkstyle-check, pom.xml:656-703, active unless env.BOGUS)",
+    "CONTRIBUTING.md:120-122 `./mvnw process-sources` ... `Note that this will not format the import order`"
+   ],
+   "note": "Command and CI enforcement are backed by the pom profiles, but 'does not fix import order' describes the behaviour of the external spring-javaformat formatter, whose code is not in this repo; the repo neither proves nor contradicts it (checkstyle enforcing import order separately is consistent but not proof)."
+  },
+  {
+   "id": "ed7bdf92b95ce6ac45a35b336c244a2a5adddb2d",
+   "line": 10,
+   "label": "true",
+   "evidence": [
+    "pom.xml:627-632 profile `format-apply` activated by `<name>!env.CI</name>` - active for every non-CI (local) build",
+    "pom.xml:641-645 execution `format-apply`, phase `process-sources`, goal `apply` - sources are rewritten during the normal build",
+    "pom.xml:597 profile id `format-check` and pom.xml:627 profile id `format-apply` both exist, so `-P'!format-apply,format-check'` names real profiles",
+    "pom.xml:612-616 format-check runs goal `validate` (check-only goal of io.spring.javaformat:spring-javaformat-maven-plugin:0.0.47, declared pom.xml:607-609, version pom.xml:317)",
+    "CONTRIBUTING.md:124-126 documents the same two switches; `spring-javaformat.skip` is that plugin's skip user property"
+   ],
+   "note": "Automatic reformat on local builds is proven by the !env.CI activation + apply goal; both profile names exist; the validate goal is the plugin's non-modifying check. The skip property is the declared plugin's standard parameter (not referenced in pom/CI, only CONTRIBUTING.md:125)."
+  },
+  {
+   "id": "4daf8019327b511d191e9a48f0d817db825a39f9",
+   "line": 11,
+   "label": "true",
+   "evidence": [
+    "pom.xml:799-820 profile `<id>integration-tests</id>` (pom.xml:800) binds maven-failsafe-plugin goals `integration-test` and `verify` (pom.xml:811-814)",
+    ".github/workflows/mcp-integration-tests.yml:45 `./mvnw --batch-mode -ntp verify -Pintegration-tests -am -pl \"mcp/transport/mcp-spring-webflux,mcp/transport/mcp-spring-webmvc\"` - same command shape used by CI",
+    "CONTRIBUTING.md:250 `./mvnw -am -pl spring-ai-spring-boot-testcontainers -Pintegration-tests verify`"
+   ],
+   "note": "Profile exists in pom.xml, failsafe is bound to verify inside it, and CI invokes exactly this form."
+  },
+  {
+   "id": "b148a15a462f9e8cbd9f8287a26d08da8b5a8c3e",
+   "line": 12,
+   "label": "true",
+   "evidence": [
+    "pom.xml:806-817 maven-failsafe-plugin configured inside profile integration-tests; `it.test` and `failsafe.failIfNoSpecifiedTests` are failsafe's user properties for `test` / `failIfNoSpecifiedTests`; CONTRIBUTING.md:256 uses both (`-Dfailsafe.failIfNoSpecifiedTests=false ... -Dit.test=PgVectorStoreIT verify`)",
+    "git grep -l EnabledIfEnvironmentVariable -- '*IT.java' | wc -l = 181 (of 373 *IT.java files), e.g. auto-configurations/models/spring-ai-autoconfigure-model-anthropic/src/test/java/org/springframework/ai/model/anthropic/autoconfigure/AnthropicChatAutoConfigurationIT.java:44 `@EnabledIfEnvironmentVariable(named = \"ANTHROPIC_API_KEY\", matches = \".+\")`; .../DeepSeekAutoConfigurationIT.java:44 `named = \"DEEPSEEK_API_KEY\"`",
+    "Only 3 *IT.java files mention `_API_KEY` without that guard and all three state they need no key: vector-stores/spring-ai-pgvector-store/src/test/java/org/springframework/ai/vectorstore/pgvector/PgVectorStoreUpsertIT.java:45-48 `this test needs no OPENAI_API_KEY ... FixedDimensionEmbeddingModel is wired` (same in QdrantVectorStoreUpsertIT.java:40-42, ElasticsearchVectorStoreUpsertIT.java:49-51)",
+    "CONTRIBUTING.md:244-245 `If the API key isn't set for a specific model provider, the integration test is skipped.`"
+   ],
+   "note": "Flags are standard failsafe properties for the plugin the profile configures; the skip behaviour is implemented in code via JUnit @EnabledIfEnvironmentVariable on the provider-keyed IT classes, with no unguarded counterexample found."
+  },
+  {
+   "id": "d05521f550a560dae53fabe715048d574ae6b861",
+   "line": 13,
+   "label": "true",
+   "evidence": [
+    "pom.xml:573-589 maven-javadoc-plugin configured in the root build (overview, doclint none, package-javadocs execution) - `javadoc:javadoc` is that plugin's report goal; .github/workflows/deploy-javadoc.yml:34,38 call the same plugin (`./mvnw ... javadoc:aggregate-jar`)",
+    "spring-ai-docs/pom.xml:9 `<artifactId>spring-ai-docs</artifactId>` - the module named by `-pl spring-ai-docs` exists",
+    "spring-ai-docs/pom.xml:21-24 `org.antora:antora-maven-plugin` `${antora-maven-plugin.version}` (pom.xml:306 = 1.0.0-alpha.5) with `<extensions>true</extensions>` - the extension registers the `antora` lifecycle/phase that `./mvnw antora` runs; playbook src/main/antora/antora-playbook.yml (spring-ai-docs/pom.xml:31)",
+    "CONTRIBUTING.md:267 `./mvnw javadoc:javadoc`; CONTRIBUTING.md:275 `./mvnw -pl spring-ai-docs antora`"
+   ],
+   "note": "Both plugins are declared; the docs module exists; the bare `antora` phase is provided by the antora-maven-plugin loaded as a build extension (extensions=true). At this commit no CI workflow runs the antora command (deploy-docs.yml only dispatches to a docs-build branch), so that part rests on the plugin declaration rather than a CI line."
+  },
+  {
+   "id": "a193800ae668e7df4873a9b65aa523b9174d7db4",
+   "line": 14,
+   "label": "true",
+   "evidence": [
+    ".mvn/extensions.xml:25-28 `<groupId>org.apache.maven.extensions</groupId><artifactId>maven-build-cache-extension</artifactId><version>1.2.3</version>` - core extension loaded for every build",
+    ".mvn/maven-build-cache-config.xml present (`<cache xmlns=\"http://maven.apache.org/BUILD-CACHE-CONFIG/1.2.0\" ...>`); `grep -i enabled` on it returns nothing, so the extension's default (enabled) applies",
+    ".github/workflows/pr-check.yml:22-25 step 'Setup Maven Build-Cache (~/.m2/build-cache)' caches the extension's directory",
+    "CONTRIBUTING.md:227-232 `enabled by default` ... `./mvnw -Dmaven.build.cache.enabled=false clean package`; `maven.build.cache.enabled` is the extension's own switch"
+   ],
+   "note": "Extension is declared in .mvn/extensions.xml with a config file that does not disable it, CI persists its cache dir, and the kill-switch is the extension's documented property."
+  },
+  {
+   "id": "8cbaf22bc3997745be8331d1beb4ce92db12f034",
+   "line": 18,
+   "label": "judgment",
+   "evidence": [
+    "pom.xml:655-705 profile checkstyle-check runs src/checkstyle/checkstyle.xml with io.spring.javaformat:spring-javaformat-checkstyle 0.0.47 (pom.xml:675-677) - Spring-style checks exist",
+    "CONTRIBUTING.md:111 `follows the checkstyle guidelines used by the core Spring Framework project with some exceptions`; CONTRIBUTING.md:138 `do not reformat code for its own sake`"
+   ],
+   "note": "A style preference / working convention; the Spring checkstyle tooling exists but 'follow', 'match surrounding code' and 'do not reformat unrelated code' are instructions the repo cannot prove or contradict."
+  },
+  {
+   "id": "b434c7c1d7802de04c833e23c59eb35fbfd5d232",
+   "line": 19,
+   "label": "judgment",
+   "evidence": [
+    ".editorconfig:3-4 `charset = utf-8` (adoc, java, kt, md, xml...); .editorconfig:6-10 `indent_style = tab`, `end_of_line = lf` for java/kt/xml",
+    "src/checkstyle/checkstyle.xml:152-157 RegexpSinglelineJava `^\\t* +\\t*\\S` 'indentation should be performed with tabs only'; src/checkstyle/checkstyle.xml:172-176 RegexpCheck `[ \\t]+$` 'Trailing whitespace'",
+    "No repository config sets the 90 / 120 wrap widths: `git grep -n -i -E 'lineSplit|comment\\.line_length|line_length|LineLength' -- src/checkstyle pom.xml .editorconfig` returns nothing and there is no .springjavaformatconfig",
+    "CONTRIBUTING.md:132-137 lists the same rules (`Wrap Javadoc at 90 characters`, `Aim to wrap code at 120 characters`)"
+   ],
+   "note": "Tabs/LF/UTF-8/no-trailing-whitespace are enforced by .editorconfig and checkstyle, but the 90/120 wrap widths are not defined anywhere in the repo (they are the external formatter's defaults), so the statement is a style convention that is only partly provable."
+  },
+  {
+   "id": "3c1dda3fae1406354cbfba12e606fe41da2e645c",
+   "line": 20,
+   "label": "stale",
+   "evidence": [
+    "src/checkstyle/checkstyle.xml:107-113 `<module name=\"ImportOrder\"> groups=\"java,javax,*,org.springframework\" ordered=true separated=true option=\"bottom\"` - there is no `jakarta` group, so `jakarta.*` imports belong to the `*` (others) group, not to a `javax.* + jakarta.*` group; with separated=true a javax import followed directly by a jakarta import would violate the enforced order",
+    "Enforced on every build incl. tests: pom.xml:656-661 profile checkstyle-check active unless env.BOGUS; pom.xml:693 `<includeTestSourceDirectory>true`; pom.xml:311-312 failsOnError/failOnViolation true",
+    "The only file importing jakarta.*: auto-configurations/vector-stores/spring-ai-autoconfigure-vector-store-bedrock-knowledgebase/src/main/java/org/springframework/ai/vectorstore/bedrockknowledgebase/autoconfigure/BedrockKnowledgeBaseVectorStoreProperties.java:19-23 `import jakarta.validation.constraints.DecimalMax;` ... `import jakarta.validation.constraints.Min;` `import org.jspecify.annotations.Nullable;` `import software.amazon.awssdk...SearchType;` then blank line, then org.springframework - jakarta sits inside the others block",
+    "All 26 files importing javax.* keep javax alone in its block, e.g. auto-configurations/models/chat/memory/repository/spring-ai-autoconfigure-model-chat-memory-repository-jdbc/src/main/java/org/springframework/ai/model/chat/memory/repository/jdbc/autoconfigure/JdbcChatMemoryRepositoryAutoConfiguration.java:19-21 `import javax.sql.DataSource;` blank line `import org.springframework...`",
+    "git blame src/checkstyle/checkstyle.xml:108 -> 8e758dbd00 2024-10-24 (groups line unchanged since); the javax+jakarta wording entered CONTRIBUTING.md in dfa996478 2026-06-09 (git log -S jakarta -- CONTRIBUTING.md); `git log -S jakarta -- src/checkstyle/checkstyle.xml` is empty (jakarta never configured)"
+   ],
+   "note": "java.* first, others, org.springframework.* last, statics at the bottom and blank-line separation all match checkstyle, but the claimed `javax.* + jakarta.*` group is contradicted by the enforced ImportOrder groups (jakarta falls into `*`) and by the only real jakarta import in the tree. Confidence depends on checkstyle ImportOrder semantics: prefix groups match `^<prefix>.` and unmatched imports go to `*`."
+  },
+  {
+   "id": "4acf17c355dbd011c86667fc19885b2dd7ef9062",
+   "line": 21,
+   "label": "judgment",
+   "evidence": [
+    "src/checkstyle/checkstyle.xml:91 `AvoidStarImportCheck` (no wildcard imports), applied to tests too via pom.xml:693 includeTestSourceDirectory=true",
+    "src/checkstyle/checkstyle.xml:92-95 `AvoidStaticImportCheck` with a fixed `excludes` allowlist (e.g. `org.springframework.ai.chat.messages.MessageType.*`, `org.awaitility.Awaitility.*`, `org.assertj.core.api.Assertions.*`, `org.mockito.Mockito.*`) - the 'constants / third-party DSL' categories are not encoded as such, only as named exceptions",
+    "CONTRIBUTING.md:154-161 states the same policy with the same categories"
+   ],
+   "note": "The wildcard ban is enforced, but the static-import rule as stated is a category-based policy that the repo only approximates with an explicit allowlist; it is a convention the repo neither proves nor contradicts."
+  },
+  {
+   "id": "13c57a23124ad3d139ac9a4af6e8902d3a7ad559",
+   "line": 22,
+   "label": "true",
+   "evidence": [
+    "src/checkstyle/checkstyle-header.txt:2 `^\\Q * Copyright 2023-present the original author or authors.\\E$` (lines 1-15 are the Apache 2.0 header) enforced by src/checkstyle/checkstyle.xml:22-25 `RegexpHeaderCheck headerFile=${checkstyle.header.file} fileExtensions=java`, wired at pom.xml:690-691 headerLocation",
+    "Coverage: `git ls-files '*.java' | wc -l` = 2303 and `git grep -l 'Copyright 2023-present the original author or authors' -- '*.java' | wc -l` = 2303 (comm shows no file lacking it); *.kt 12/12",
+    "src/checkstyle/checkstyle.xml:55 `OneTopLevelClassCheck` and :146 `OuterTypeFilenameCheck` - exactly one top-level class",
+    "CONTRIBUTING.md:165-192 lists the same structure (License, Package, Imports, Exactly one top-level class) and the exact header text"
+   ],
+   "note": "Header text matches the enforced checkstyle header verbatim, every tracked Java/Kotlin source carries it, and the one-top-level-class rule is an active checkstyle module; 'copy from an existing file' is a how-to, not a claim."
+  },
+  {
+   "id": "2d9ba2ac4cde201fb987a4d165d34648b847bfdd",
+   "line": 23,
+   "label": "judgment",
+   "evidence": [
+    "`git grep -c '@since 2.0.0' -- '*.java' | wc -l` = 66 files use the example form; pom.xml:8 current version 2.1.0-SNAPSHOT",
+    "src/checkstyle/checkstyle.xml:116-138 all Javadoc tag checks are commented out - nothing enforces @since",
+    "CONTRIBUTING.md:196-204 `Use @since tags for newly-added public API types and methods e.g. @since 2.0.0`"
+   ],
+   "note": "Documentation convention; the example tag exists in code but the rule is not enforced and cannot be proven or contradicted by the repo."
+  },
+  {
+   "id": "5ddbe3e5e97608ffff72b3a571244be66f97b4da",
+   "line": 24,
+   "label": "judgment",
+   "evidence": [
+    "CONTRIBUTING.md:57 `Add new tests that exercise the code you have added or modified`",
+    "No tooling enforces test additions: pom.xml:309 declares an unused `jacoco-maven-plugin.version` property, but no pom declares the jacoco plugin or any coverage rule (`git grep '<artifactId>jacoco-maven-plugin</artifactId>' -- pom.xml '*/pom.xml'` is empty; no <minimum>/COVEREDRATIO anywhere) and .github/workflows/*.yml contain no coverage step"
+   ],
+   "note": "Workflow instruction; not checkable against the repository."
+  },
+  {
+   "id": "40a02ed636673a999492877f2794339201dce476",
+   "line": 25,
+   "label": "judgment",
+   "evidence": [
+    "CONTRIBUTING.md:139 `For plain text documents like .adoc or .md, one sentence per line`",
+    ".editorconfig:3-4 only sets charset for adoc/md; no linter enforces sentence-per-line"
+   ],
+   "note": "Writing convention for docs; the repo cannot prove or contradict it."
+  },
+  {
+   "id": "9495926a05924a063bf45d1e832a4a51c299b013",
+   "line": 29,
+   "label": "judgment",
+   "evidence": [
+    "CONTRIBUTING.md:64-70 same rule with examples (`GH-123: ...`, `docs: ...`, `... (#123)` marked wrong)",
+    "git log -n 12 --format=%s shows titles in that form (`Upgrade Tika to 4.0.0 in spring-ai-tika-document-reader`, `Fix Neo4j chat memory index properties`) but this is practice, not a repo-defined check"
+   ],
+   "note": "Commit-message convention; not provable or contradictable from the repository."
+  },
+  {
+   "id": "0adff4ef1fa0d8c7b73fa42fd49a58a94c3e18d0",
+   "line": 30,
+   "label": "judgment",
+   "evidence": [
+    "CONTRIBUTING.md:72-94 wrap at ~72, `Closes #123`, `See #123`, Signed-off-by trailer / DCO",
+    "git log -n 200 --format=%b | grep -c 'Signed-off-by:' = 188; trailers like `Fixes #7030`, `Closes #6841` present in recent bodies - practice consistent, but no repo-side enforcement (DCO check is a GitHub app, `git commit -s` is a git option)"
+   ],
+   "note": "Commit-format and DCO workflow convention; the repo shows the practice but cannot prove or contradict the instruction."
+  },
+  {
+   "id": "6692c533b3cb0ea91cf781415891ec3867d92fc7",
+   "line": 31,
+   "label": "judgment",
+   "evidence": [
+    "CONTRIBUTING.md:95 `Annotations should be enclosed in backticks to avoid mentioning potential related GitHub users.`",
+    "Claim about GitHub's @-mention behaviour (external system)"
+   ],
+   "note": "Convention motivated by an external system's behaviour; not checkable in the repository."
+  },
+  {
+   "id": "6a641df795223f0715c6ba786204e6d22464e130",
+   "line": 32,
+   "label": "judgment",
+   "evidence": [
+    "CONTRIBUTING.md:52-53 `The pull request title is used to generate the changelog ... mention the related issue with its number in the PR description (not in the title)`",
+    "No changelog generator config in the repo: grep -i changelog .github/workflows/github-release.yml returns nothing"
+   ],
+   "note": "Claim about an external release/changelog process plus a PR-authoring instruction; the repo neither proves nor contradicts it."
+  }
+ ]
+}

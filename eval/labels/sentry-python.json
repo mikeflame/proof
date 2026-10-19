@@ -40,7 +40,15 @@
     "tox.ini:19834 python -m pytest -W error::pytest.PytestUnraisableExceptionWarning {env:TESTPATH:{env:_TESTPATH}} ... {posargs}",
     "tox.ini setenv: django: DJANGO_SETTINGS_MODULE=...; common: PYTEST_ADDOPTS=\"--ignore=tests/test_shadowed_module.py\""
    ],
-   "note": "CI runs every test suite through tox, and tox supplies per-env settings that plain pytest would lack."
+   "note": "CI runs every test suite through tox, and tox supplies per-env settings that plain pytest would lack.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "tox.ini:15-20 envlist exists; pyproject.toml:124-125 `[tool.pytest.ini_options]` also exists"
+    ],
+    "note": "Preference about how to invoke tests; tox is real, but 'use tox, not pytest directly' is a convention the repo cannot prove or contradict."
+   }
   },
   {
    "id": "48e8681902a55d8df85d43e6f0fcbfbc6567461a",
@@ -253,7 +261,15 @@
     "tests/conftest.py:170-185 autouse internal_exceptions fixture re-raises any internal SDK exception in tests",
     ".github/workflows/ci.yml:37-38 Find raise from None (scripts/find_raise_from_none.py blocks exception-chain suppression)"
    ],
-   "note": "Integrations wrap SDK logic in capture_internal_exceptions and re-raise user exceptions, and tests fail on internal SDK errors."
+   "note": "Integrations wrap SDK logic in capture_internal_exceptions and re-raise user exceptions, and tests fail on internal SDK errors.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "AGENTS.md:43-45 'Integration Contract' section"
+    ],
+    "note": "Design principle for integrations; not a checkable repository fact."
+   }
   },
   {
    "id": "b7a22b2f6be8fa36fbe13fb522a0dc1cc2ad44cc",

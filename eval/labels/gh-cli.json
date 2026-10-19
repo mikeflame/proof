@@ -27,7 +27,16 @@
     ".github/CONTRIBUTING.md:19 Open a pull request for issues without the `help wanted` label or explicit Acceptance Criteria (under Please do NOT)",
     ".github/workflows/triage-pull-requests.yml: jobs check-requirements, close-unmet-requirements, close-no-help-wanted (pull_request_target)"
    ],
-   "note": "The policy is stated in CONTRIBUTING and enforced by the PR triage workflow that closes PRs without help wanted."
+   "note": "The policy is stated in CONTRIBUTING and enforced by the PR triage workflow that closes PRs without help wanted.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     ".github/CONTRIBUTING.md:5 \"We accept external pull requests only for issues labelled `help wanted` with explicit Acceptance Criteria\"",
+     ".github/CONTRIBUTING.md:19 \"Open a pull request for issues without the `help wanted` label or explicit Acceptance Criteria\" under Please do NOT"
+    ],
+    "note": "Workflow directive; consistent with CONTRIBUTING but compliance is agent behavior, not a repo fact."
+   }
   },
   {
    "id": "3cd8c9f3691f16b4ed1b4db3cf7777d5a09d9824",
@@ -50,7 +59,16 @@
     ".github/CONTRIBUTING.md:19 do NOT open a pull request for issues without the `help wanted` label or explicit Acceptance Criteria",
     ".github/workflows/triage-pull-requests.yml close-no-help-wanted job"
    ],
-   "note": "help wanted plus explicit acceptance criteria, and good first issue alone being insufficient, match CONTRIBUTING; the self-created/linked-issue clause is consistent and nothing contradicts it."
+   "note": "help wanted plus explicit acceptance criteria, and good first issue alone being insufficient, match CONTRIBUTING; the self-created/linked-issue clause is consistent and nothing contradicts it.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     ".github/CONTRIBUTING.md:15 \"Open a pull request for an issue labelled `help wanted` with explicit Acceptance Criteria. Issues labelled `good first issue` must also meet these requirements\"",
+     ".github/CONTRIBUTING.md:81-82 label links for help wanted / good first issue"
+    ],
+    "note": "Instruction to verify external issue state; label names match CONTRIBUTING but the directive itself is not a repo fact."
+   }
   },
   {
    "id": "7a4ecbc6f3f509db1fe23ee0b69932b9134c943c",
@@ -61,7 +79,16 @@
     ".github/CONTRIBUTING.md:21-22 Open pull requests for any issue marked `core`... any external pull requests will not be accepted (under Please do NOT)",
     ".github/CONTRIBUTING.md:20 Expand pull request scope to include changes that are not described in the issue's Acceptance Criteria (under Please do NOT)"
    ],
-   "note": "Both the core-label exclusion and the scope limit are stated in CONTRIBUTING."
+   "note": "Both the core-label exclusion and the scope limit are stated in CONTRIBUTING.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     ".github/CONTRIBUTING.md:21-22 \"Open pull requests for any issue marked `core` ... any external pull requests will not be accepted\" under Please do NOT",
+     ".github/CONTRIBUTING.md:20 \"Expand pull request scope to include changes that are not described in the issue's Acceptance Criteria\" under Please do NOT"
+    ],
+    "note": "Workflow directive mirroring CONTRIBUTING; `core` label name exists only inside the convention."
+   }
   },
   {
    "id": "dd50ad72c13495499a2818fa554e08ca890b2202",
@@ -83,7 +110,16 @@
     ".github/CONTRIBUTING.md:14 Mention `@cli/code-reviewers` when an issue you want to work on does not have clear Acceptance Criteria",
     ".github/CODEOWNERS:1 * @cli/code-reviewers"
    ],
-   "note": "The issue/discussion route and the @cli/code-reviewers team are both real and documented in CONTRIBUTING."
+   "note": "The issue/discussion route and the @cli/code-reviewers team are both real and documented in CONTRIBUTING.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     ".github/CODEOWNERS:1 `* @cli/code-reviewers`",
+     ".github/CONTRIBUTING.md:14 \"Mention `@cli/code-reviewers` when an issue you want to work on does not have clear Acceptance Criteria\""
+    ],
+    "note": "Directive; the team handle is real (CODEOWNERS) but \"explain and direct\" is agent behavior."
+   }
   },
   {
    "id": "6ef41f9b59364a6ff8bb86074215e4b4b9aef612",
@@ -102,7 +138,16 @@
     ".github/CONTRIBUTING.md:5 For security concerns, follow our [private disclosure policy](SECURITY.md) instead.",
     ".github/SECURITY.md:3,8 HackerOne report / private GitHub Security Advisory (GHSA) reporting flow"
    ],
-   "note": "CONTRIBUTING routes security concerns to the private SECURITY policy."
+   "note": "CONTRIBUTING routes security concerns to the private SECURITY policy.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "AGENTS.md:35-41 \"## Private security disclosure\" section exists below, pointing to .github/SECURITY.md (file exists)",
+     ".github/CONTRIBUTING.md:5 \"For security concerns, follow our private disclosure policy (SECURITY.md) instead\""
+    ],
+    "note": "Directive; the referenced \"route below\" exists in the same file, but the instruction is behavioral."
+   }
   },
   {
    "id": "f297743c3c4fcb4ededec32a4be733d04607c37e",
@@ -165,7 +210,15 @@
     ".github/SECURITY.md:10 **Please do not report security vulnerabilities through public GitHub issues, discussions, or pull requests.**",
     ".github/skills/code-review/SKILL.md:23 The reporting format below does not authorize posting vulnerability details in a review."
    ],
-   "note": "SECURITY.md states the no-public-disclosure policy."
+   "note": "SECURITY.md states the no-public-disclosure policy.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     ".github/SECURITY.md:10 \"Please do not report security vulnerabilities through public GitHub issues, discussions, or pull requests.\""
+    ],
+    "note": "Directive mirroring SECURITY.md; behavioral, not a repository fact."
+   }
   },
   {
    "id": "e000121e9528f7f49a69eef628dfd57c0f88e70b",
@@ -177,7 +230,16 @@
     ".github/SECURITY.md:8 use this repository's private GitHub Security Advisory (GHSA) reporting flow",
     ".github/PULL_REQUEST_TEMPLATE.md:4 If you are proposing a fix for a security issue, STOP and follow .github/SECURITY.md instead."
    ],
-   "note": "SECURITY.md exists and describes private reporting; the PR template likewise says to stop and follow it."
+   "note": "SECURITY.md exists and describes private reporting; the PR template likewise says to stop and follow it.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     ".github/SECURITY.md exists (ls); SECURITY.md:3,8 describe private reporting via HackerOne and the private GHSA flow",
+     "SECURITY.md contains no text about \"authorized private remediation\" (read whole file, 17 lines) - not covered, not contradicted"
+    ],
+    "note": "Directive (\"stop public contribution work\"); the SECURITY.md pointer is valid, remediation guidance is not in that file but nothing contradicts it."
+   }
   },
   {
    "id": "812ba455f745e5bd41f61c95951e0e764ee107da",
@@ -188,7 +250,15 @@
     ".github/SECURITY.md:10 Please do not report security vulnerabilities through public GitHub issues, discussions, or pull requests.",
     ".github/CONTRIBUTING.md:5 For security concerns, follow our private disclosure policy instead."
    ],
-   "note": "Both policy files route security concerns away from the public process."
+   "note": "Both policy files route security concerns away from the public process.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     ".github/CONTRIBUTING.md:5 \"For security concerns, follow our private disclosure policy (SECURITY.md) instead.\""
+    ],
+    "note": "Directive; consistent with CONTRIBUTING, behavioral."
+   }
   },
   {
    "id": "7c138ece94b9ff32e7dbdf4e0b7312b1f0a1fa82",
@@ -200,7 +270,16 @@
     "docs/command-development.md:73 Use [IOStreams](../pkg/iostreams/iostreams.go) for input/output, TTY detection, color, and pager handling",
     "git grep -l 'opts.IO\\b\\|f.IOStreams' -- 'pkg/cmd/*.go' ':!*_test.go' | wc -l => 187 files"
    ],
-   "note": "IOStreams exists and command code uses it overwhelmingly; the contract list matches the command-development guide."
+   "note": "IOStreams exists and command code uses it overwhelmingly; the contract list matches the command-development guide.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "pkg/iostreams/iostreams.go:52 `type IOStreams struct` (the named abstraction exists)",
+     "docs/command-development.md:64 \"## Output and scriptability\" covers the same contract areas"
+    ],
+    "note": "Invariant/convention; IOStreams exists but a name inside a convention does not make the convention a repo fact."
+   }
   },
   {
    "id": "a14e5a57a5508b55d4446375e27cfa1f07c2c5fe",
@@ -326,7 +405,16 @@
     "docs/testing.md:10 Run from the repository root with the toolchain declared in [go.mod](../go.mod).",
     "Makefile:19-21 relative paths script/build.go"
    ],
-   "note": "go.mod declares the toolchain and the build tooling uses root-relative paths."
+   "note": "go.mod declares the toolchain and the build tooling uses root-relative paths.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "go.mod:3,5 `go 1.27.0` / `toolchain go1.27.1` (a toolchain is declared)",
+     "docs/testing.md:10 same sentence \"Run from the repository root with the toolchain declared in go.mod.\""
+    ],
+    "note": "Procedural instruction; go.mod does declare a toolchain, but \"run from the repository root\" is a workflow rule."
+   }
   },
   {
    "id": "9f376eb437740fccdf61fa46fdfeeb4163c483ef",

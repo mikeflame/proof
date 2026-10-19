@@ -12,7 +12,16 @@
    "evidence": [
     "README.md:14 **RuboCop** is a Ruby static code analyzer (a.k.a. `linter`) and code formatter."
    ],
-   "note": "README states the same description."
+   "note": "README states the same description.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "README.md:14 \"**RuboCop** is a Ruby static code analyzer (a.k.a. `linter`) and code formatter.\"",
+     "rubocop.gemspec:23 summary \"Automatic Ruby code style checking tool.\""
+    ],
+    "note": "Statement of purpose; README says the same, but purpose/audience claims are judgment by protocol."
+   }
   },
   {
    "id": "17666073bd48470cecfee76d6cfe0a61db5efde9",
@@ -24,7 +33,16 @@
     "CONTRIBUTING.md:30 read the [Development docs](https://docs.rubocop.org/rubocop/development.html)",
     "docs/modules/ROOT/pages/development.adoc:1 = Development (source of the linked page; nav.adoc:39 xref:development.adoc[Development])"
    ],
-   "note": "Both referenced documents exist and CONTRIBUTING links the same development docs URL."
+   "note": "Both referenced documents exist and CONTRIBUTING links the same development docs URL.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "ls: CONTRIBUTING.md exists at repo root",
+     "docs.rubocop.org URL is external"
+    ],
+    "note": "Workflow instruction (\"read before contributing\"); link target file exists, docs URL external."
+   }
   },
   {
    "id": "2cdac35944cef27ae364d0ce3053188c1ae9cebc",
@@ -132,7 +150,15 @@
     "lib/rubocop/cop/generator.rb:159 1. Modify the description of #{badge} in config/default.yml",
     "lib/rubocop/cop/generator/configuration_injector.rb:11 Description: 'TODO: Write a description of the cop.'"
    ],
-   "note": "Matches the generator's own TODO step 1."
+   "note": "Matches the generator's own TODO step 1.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "lib/rubocop/cop/generator.rb:157 todo \"1. Modify the description of #{badge} in config/default.yml\""
+    ],
+    "note": "Workflow step; generator todo says the same."
+   }
   },
   {
    "id": "0c8c2642c38f8d1d1c95565462cd8077199a2028",
@@ -142,7 +168,15 @@
    "evidence": [
     "lib/rubocop/cop/generator.rb:160 2. Implement your new cop in the generated file!"
    ],
-   "note": "Matches the generator's TODO step 2."
+   "note": "Matches the generator's TODO step 2.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "lib/rubocop/cop/generator.rb:158 todo \"2. Implement your new cop\""
+    ],
+    "note": "Workflow step."
+   }
   },
   {
    "id": "04bde972c199b22e7dfded2538858334c3fac8ec",
@@ -152,7 +186,15 @@
    "evidence": [
     "lib/rubocop/cop/generator.rb:97 # TODO: Write test code (in SPEC_TEMPLATE)"
    ],
-   "note": "Generated spec is a TODO template to be filled in."
+   "note": "Generated spec is a TODO template to be filled in.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "lib/rubocop/cop/generator.rb:97-118 SPEC_TEMPLATE with \"TODO: Write test code\""
+    ],
+    "note": "Workflow step."
+   }
   },
   {
    "id": "5ad99d0dd5473b09e70199e36aca3bd57065e569",
@@ -298,7 +340,15 @@
     "docs/modules/ROOT/pages/versioning.adoc:56-60 'A cop that starts reporting a case it used to miss ... changes results for everybody ... Either way the change waits'",
     "docs/modules/ROOT/pages/versioning.adoc:90-92 A cop can put an unstable change behind `preview?` and ship it in a minor release"
    ],
-   "note": "Matches the documented versioning policy."
+   "note": "Matches the documented versioning policy.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "docs/modules/ROOT/pages/versioning.adoc:56-61 describes the same rationale"
+    ],
+    "note": "Policy/rationale for when to use preview."
+   }
   },
   {
    "id": "f8a22b1712b4e6f4d30d25616eb3e4edd77c5adb",
@@ -309,7 +359,15 @@
     "docs/modules/ROOT/pages/versioning.adoc:56-57 'A cop that starts reporting a case it used to miss, or corrects one differently'",
     "docs/modules/ROOT/pages/development.adoc:634-636 Making an existing cop ... correct one differently ... `preview?` is the way to ship it sooner"
    ],
-   "note": "Matches the documented preview policy."
+   "note": "Matches the documented preview policy.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "docs/modules/ROOT/pages/versioning.adoc:56-61"
+    ],
+    "note": "Policy/rationale."
+   }
   },
   {
    "id": "d7cce390c864a5f1d9d68343cecc42c6c3afcc5e",
@@ -332,7 +390,13 @@
     "docs/modules/ROOT/pages/development.adoc:669-670 A change that is plainly a bug fix should just ship",
     "docs/modules/ROOT/pages/versioning.adoc:32 | Bug fixes to existing cops | Patch"
    ],
-   "note": "Matches documented policy."
+   "note": "Matches documented policy.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [],
+    "note": "Policy statement."
+   }
   },
   {
    "id": "afead4c176ad5eb2b20c87179d53bb0fd49b0b1e",
@@ -344,7 +408,15 @@
     "lib/rubocop/cop/generator/configuration_injector.rb:13 Enabled: pending",
     "docs/modules/ROOT/pages/versioning.adoc:118 If we already know something should become the default, it is `pending`."
    ],
-   "note": "New cops ship as pending per generator and docs."
+   "note": "New cops ship as pending per generator and docs.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "docs/modules/ROOT/pages/versioning.adoc:118-120,124-126 describe pending as the status for cops expected to become default"
+    ],
+    "note": "Policy statement about when to use pending."
+   }
   },
   {
    "id": "08ea23f99419412fc93cf6df00e0f6791533a5cc",
@@ -354,7 +426,15 @@
    "evidence": [
     "docs/modules/ROOT/pages/versioning.adoc:118 * If we already know something should become the default, it is `pending`."
    ],
-   "note": "Restates versioning.adoc rule of thumb."
+   "note": "Restates versioning.adoc rule of thumb.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "docs/modules/ROOT/pages/versioning.adoc:118-119 same rule of thumb"
+    ],
+    "note": "Rule of thumb."
+   }
   },
   {
    "id": "e0c860427a0b4be9688b585d98e87a445a8591a1",
@@ -364,7 +444,15 @@
    "evidence": [
     "docs/modules/ROOT/pages/versioning.adoc:121 * If we are asking users to help us find out, it is `preview`."
    ],
-   "note": "Restates versioning.adoc rule of thumb."
+   "note": "Restates versioning.adoc rule of thumb.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "docs/modules/ROOT/pages/versioning.adoc:121-122 same rule of thumb"
+    ],
+    "note": "Rule of thumb."
+   }
   },
   {
    "id": "343b5062b4b2e48f93d79107b9ca8cb6b50f88dd",
@@ -374,7 +462,15 @@
    "evidence": [
     "docs/modules/ROOT/pages/versioning.adoc:162-164 NOTE: Preview is provisional by definition ... an entry can change or be withdrawn in any minor release"
    ],
-   "note": "Matches the documented contract."
+   "note": "Matches the documented contract.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "docs/modules/ROOT/pages/versioning.adoc:162-166 \"Preview is provisional by definition ... can change or be withdrawn in any minor release\""
+    ],
+    "note": "Policy/contract statement (documented, but a promise about future releases)."
+   }
   },
   {
    "id": "0bd783849774a30d4deebdc4b6de9ff13bda644d",
@@ -613,7 +709,16 @@
     "tasks/changelog.rb:61-63 extract_id: /^\\[Fix(?:es)? #(\\d+)\\] (.*)/",
     "git log --since=2026-08-01 --no-merges => 45 of 302 subjects start with '[Fix #'"
    ],
-   "note": "Documented convention, consumed by the changelog tooling and followed in history."
+   "note": "Documented convention, consumed by the changelog tooling and followed in history.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "CONTRIBUTING.md:40 \"prefix the commit message with `[Fix #github-issue-number]`\"",
+     "tasks/changelog.rb:59-61 extract_id parses `/^\\[Fix(?:es)? #(\\d+)\\] (.*)/`"
+    ],
+    "note": "Commit-message convention (documented and parsed, but a convention)."
+   }
   },
   {
    "id": "29e454ff9595312a3dee6359997f8ee689571fcc",
@@ -764,7 +869,15 @@
     "Rakefile:31 task default: %i[codespell documentation_syntax_check spec internal_investigation]",
     "tasks/spec_runner.rake:297-300 task :spec only runs RSpec"
    ],
-   "note": "Only the default task includes lint and doc-syntax checks."
+   "note": "Only the default task includes lint and doc-syntax checks.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "Rakefile:31 default task includes internal_investigation and documentation_syntax_check"
+    ],
+    "note": "Advice; the underlying fact (default task includes lint/doc checks) is proven but the statement is guidance."
+   }
   },
   {
    "id": "13364ef135ddbaf6c63ac7196b9904eca2ac3c67",
@@ -836,7 +949,12 @@
     "docs/modules/ROOT/pages/compatibility.adoc:41 xref:configuration.adoc#setting-the-target-ruby-version -> configuration.adoc:112 '== Setting the target Ruby version' (no explicit anchor)",
     "grep -rn ':idprefix:\\|:idseparator:' docs => none"
    ],
-   "note": "The manual's own implicit cross-page anchors keep hyphens between words (Antora default), so 'everything but letters removed' only holds for single-word headings like AllowMultilineFinalElement."
+   "note": "The manual's own implicit cross-page anchors keep hyphens between words (Antora default), so 'everything but letters removed' only holds for single-word headings like AllowMultilineFinalElement.",
+   "confirmed": {
+    "label": "stale",
+    "by": "the maintainer, 2026-10-19",
+    "note": "a blind second labeler said judgment (How Antora derives heading IDs is external-tool behavior the repo cannot prove; the cited example is real, but the repo's own xrefs do not consistently follow the stated rule.); kept stale: the contradiction cited above stands"
+   }
   }
  ]
 }

@@ -1,0 +1,760 @@
+{
+ "repo": "rubocop/rubocop",
+ "sha": "8cdbb3bffe672b47aed6b8da7443060373458629",
+ "file": "AGENTS.md",
+ "labeler": "blind second labeler (agent), 2026-10-19, under the protocol in eval/LABELING.md; never saw the first labels or a proof report",
+ "labels": [
+  {
+   "id": "248a81d55190a8e9aa5b1b6b9875e85e05239c5f",
+   "line": 3,
+   "label": "judgment",
+   "evidence": [
+    "README.md:14 \"**RuboCop** is a Ruby static code analyzer (a.k.a. `linter`) and code formatter.\"",
+    "rubocop.gemspec:23 summary \"Automatic Ruby code style checking tool.\""
+   ],
+   "note": "Statement of purpose; README says the same, but purpose/audience claims are judgment by protocol."
+  },
+  {
+   "id": "17666073bd48470cecfee76d6cfe0a61db5efde9",
+   "line": 4,
+   "label": "judgment",
+   "evidence": [
+    "ls: CONTRIBUTING.md exists at repo root",
+    "docs.rubocop.org URL is external"
+   ],
+   "note": "Workflow instruction (\"read before contributing\"); link target file exists, docs URL external."
+  },
+  {
+   "id": "2cdac35944cef27ae364d0ce3053188c1ae9cebc",
+   "line": 10,
+   "label": "true",
+   "evidence": [
+    "Rakefile:31 `task default: %i[codespell documentation_syntax_check spec internal_investigation]`",
+    "tasks/codespell.rake:4 `task :codespell`",
+    "Rakefile:36-37 `task documentation_syntax_check: :yard_for_generate_documentation`",
+    "tasks/spec_runner.rake:329 `task :spec`",
+    "Rakefile:24 `RuboCop::RakeTask.new(:internal_investigation)`"
+   ],
+   "note": "Default rake task is exactly codespell + documentation_syntax_check + spec + internal_investigation. \"Full CI\" is loose shorthand: Rakefile:27-30 says ascii_spec/prism_spec are also checked in CI but not run by default."
+  },
+  {
+   "id": "995a4147893d9034406faa04818acdffc2294bd7",
+   "line": 11,
+   "label": "true",
+   "evidence": [
+    "tasks/spec_runner.rake:328-331 `desc 'Run RSpec code examples'; task :spec`",
+    "lib/rubocop/rspec/cop_helper.rb:21 default engine `ENV.fetch('PARSER_ENGINE', :parser_whitequark)` for target < 3.4",
+    "lib/rubocop/target_ruby.rb:10 `DEFAULT_VERSION = 2.7`"
+   ],
+   "note": "spec task defined; default spec run uses the Parser (whitequark) engine."
+  },
+  {
+   "id": "437a9f8cc07c70a9a38e225d11400d7e70af7df1",
+   "line": 12,
+   "label": "true",
+   "evidence": [
+    "tasks/spec_runner.rake:338-341 `task :prism_spec do sh('PARSER_ENGINE=parser_prism bundle exec rake spec')`"
+   ],
+   "note": "prism_spec task defined and runs specs with the Prism engine."
+  },
+  {
+   "id": "0b459342cc8f476eccaa30eacb1b309a14f85955",
+   "line": 13,
+   "label": "true",
+   "evidence": [
+    "Rakefile:23-24 `desc 'Run RuboCop over itself'; RuboCop::RakeTask.new(:internal_investigation)`"
+   ],
+   "note": "Task defined in Rakefile with that exact purpose."
+  },
+  {
+   "id": "9b413df00d79f09871d1c1e920c13b906632c674",
+   "line": 14,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/options.rb:99 `add_cop_selection_csv_option('only', opts)`",
+    "lib/rubocop/options.rb:594 `only: 'Run only the given cop(s).'`"
+   ],
+   "note": "--only flag defined; Department/CopName is a placeholder."
+  },
+  {
+   "id": "8bdcc7b17fd2861eb92d3bbd8f25ff5bec616c9e",
+   "line": 17,
+   "label": "judgment",
+   "evidence": [
+    "CONTRIBUTING.md:47-48 \"Make sure the test suite is passing ... (usually ... running `bundle exec rake`)\""
+   ],
+   "note": "Workflow instruction."
+  },
+  {
+   "id": "324a9ec2d5f5c432926767da879d5b8ef3bfdd66",
+   "line": 29,
+   "label": "true",
+   "evidence": [
+    "ls lib/rubocop/cop → department dirs bundler gemspec internal_affairs layout lint metrics migration naming security style (others: correctors generator legacy mixin utils variable_force are not departments)",
+    "spec/project_spec.rb:396-406 lists Bundler Gemspec Layout Lint Metrics Migration Naming Security Style; InternalAffairs registered separately (lib/rubocop/cop/internal_affairs.rb)"
+   ],
+   "note": "Exactly those 10 departments exist."
+  },
+  {
+   "id": "7fdefceccf298c3d9f85577a28a195dabb027b4c",
+   "line": 37,
+   "label": "true",
+   "evidence": [
+    "tasks/new_cop.rake:5-6 `desc 'Generate a new cop template'; task :new_cop, [:cop]`",
+    "tasks/new_cop.rake:8 usage string \"bundle exec rake 'new_cop[Department/Name]'\""
+   ],
+   "note": "Task defined with one positional argument."
+  },
+  {
+   "id": "a9cba1fcfb946613088f5109dd4759de6b47a574",
+   "line": 40,
+   "label": "true",
+   "evidence": [
+    "tasks/new_cop.rake:15-23 write_source, write_spec, inject_registration, inject_config",
+    "lib/rubocop/cop/generator.rb:141-150 inject_registration → RegistrationInjector; inject_config → config/default.yml",
+    "lib/rubocop/cop/generator/registration_injector.rb:6-7,27-29 injects `register_cop` into `#{source_path.dirname}.rb`",
+    "lib/rubocop/cop/lazy_loader.rb:30-37 register_cop → `autoload` + `Registry.global.lazy_load`"
+   ],
+   "note": "All four outputs and the lazy-loading registration are in the generator code."
+  },
+  {
+   "id": "d14d9fdb30d6e1f03845629d2e9ad09206e38bea",
+   "line": 44,
+   "label": "judgment",
+   "evidence": [
+    "lib/rubocop/cop/generator.rb:157 todo \"1. Modify the description of #{badge} in config/default.yml\""
+   ],
+   "note": "Workflow step; generator todo says the same."
+  },
+  {
+   "id": "0c8c2642c38f8d1d1c95565462cd8077199a2028",
+   "line": 45,
+   "label": "judgment",
+   "evidence": [
+    "lib/rubocop/cop/generator.rb:158 todo \"2. Implement your new cop\""
+   ],
+   "note": "Workflow step."
+  },
+  {
+   "id": "04bde972c199b22e7dfded2538858334c3fac8ec",
+   "line": 46,
+   "label": "judgment",
+   "evidence": [
+    "lib/rubocop/cop/generator.rb:97-118 SPEC_TEMPLATE with \"TODO: Write test code\""
+   ],
+   "note": "Workflow step."
+  },
+  {
+   "id": "5ad99d0dd5473b09e70199e36aca3bd57065e569",
+   "line": 47,
+   "label": "true",
+   "evidence": [
+    "tasks/changelog.rake:6-14 `%i[new fix change].each { |type| task type, [:id] ... }` → changelog:new",
+    "lib/rubocop/cop/generator.rb:161-162 todo \"Run `bundle exec rake changelog:new`\""
+   ],
+   "note": "changelog:new task exists and creates a changelog entry file."
+  },
+  {
+   "id": "2c041f88b75991209d9daa341e261c544f583ac5",
+   "line": 97,
+   "label": "judgment",
+   "evidence": [
+    "lib/rubocop/cop/commissioner.rb:152-158 restricted_map: cops with non-empty restrict_on_send are dispatched only for those method names",
+    "lib/rubocop/cop/base.rb:52 `RESTRICT_ON_SEND = Set[].freeze` default",
+    "count: 45 of 214 department cops defining on_send have no RESTRICT_ON_SEND; only InternalAffairs/UselessRestrictOnSend exists (no cop requires it)"
+   ],
+   "note": "Dispatch behavior proven, but \"Required when using on_send\" is an unenforced convention (45 in-repo cops omit it)."
+  },
+  {
+   "id": "5eabc710cc0e33cfcae90b0296ed436c905685f4",
+   "line": 99,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/internal_affairs/on_send_without_on_csend.rb:6-17 \"Checks for cops that define `on_send` without define `on_csend`\" + NOTE to disable for inapplicable cops",
+    "config/internal_affairs.yml:21-23 OnSendWithoutOnCSend Include lib/rubocop/cop/**/*.rb",
+    ".rubocop.yml:5-6 plugins rubocop-internal_affairs; :277-290 only Excludes for that cop",
+    "Rakefile:31 internal_investigation in default task; .github/workflows/linting.yml:23 runs it"
+   ],
+   "note": "Convention is mechanically enforced by the enabled InternalAffairs/OnSendWithoutOnCSend cop, whose docs name the same exception."
+  },
+  {
+   "id": "eca9e8e6930d413082318f509c4bf4045f8d0c43",
+   "line": 102,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/internal_affairs/numblock_handler.rb:6-9 \"Checks for missing `numblock` handlers ... numbered arguments introduced in Ruby 2.7\"",
+    "lib/rubocop/cop/internal_affairs/itblock_handler.rb:6-9 \"Checks for missing `itblock` handlers ... `it` parameter introduced in Ruby 3.4\"",
+    ".rubocop.yml:269-275 both cops configured with Exclude only; lib/rubocop/config_loader_resolver.rb:335 `{ 'Enabled' => true }.merge(params)` (enabled when unset)"
+   ],
+   "note": "Both aliases are enforced by enabled InternalAffairs cops."
+  },
+  {
+   "id": "7d0416e55f376ca7da157d3a08a237c01bd013c5",
+   "line": 105,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/mixin/auto_corrector.rb:6-9 `module AutoCorrector; def support_autocorrect?; true`",
+    "lib/rubocop/cop/base.rb:463-469 correct(): `elsif !self.class.support_autocorrect? raise \"The Cop #{name} must `extend AutoCorrector` to be able to autocorrect\"`"
+   ],
+   "note": "Autocorrect without `extend AutoCorrector` raises."
+  },
+  {
+   "id": "2b373cf204051c7e40ec8ebc0ca545c266fef1b4",
+   "line": 106,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/base.rb:36 `extend NodePattern::Macros` (provides def_node_matcher/def_node_search)",
+    "lib/rubocop/cop/internal_affairs/node_matcher_directive.rb:6-8,26 \"Checks that node matcher definitions are tagged with a YARD `@!method` directive\"; MSG \"Precede `%<method>s` with a `@!method` YARD directive.\"",
+    "no .rubocop.yml/internal_affairs.yml entry → enabled via config_loader_resolver.rb:335 default"
+   ],
+   "note": "DSL is wired into Base; @!method tag enforced by InternalAffairs/NodeMatcherDirective."
+  },
+  {
+   "id": "8f2073d41aaf8f75703c7ebf0f7cc8e4bb745fbe",
+   "line": 108,
+   "label": "judgment",
+   "evidence": [
+    "Rakefile:36-78 documentation_syntax_check parses every `example` tag of every cop",
+    "grep -L \"@example\": lib/rubocop/cop/lint/syntax.rb and lib/rubocop/cop/style/copyright.rb have no @example at all; no spec/cop enforces a bad/good pair"
+   ],
+   "note": "Parse claim proven, but \"every cop must have a bad/good pair\" is an unenforced convention (2 cops have no example)."
+  },
+  {
+   "id": "0b43ddb7caf966998e3c2807e40944951ca663f3",
+   "line": 111,
+   "label": "judgment",
+   "evidence": [
+    "lib/rubocop/cop/internal_affairs/cop_description.rb:30-38 only flags \"This cop ...\" prefix and an empty first comment line",
+    "spec/project_spec.rb:72-79 period check is on config/default.yml Description, not the YARD comment"
+   ],
+   "note": "Style convention; not enforced for the YARD first line as stated."
+  },
+  {
+   "id": "79e53dec67c2c2e41092973e7cf29b2ae322fdbf",
+   "line": 113,
+   "label": "judgment",
+   "evidence": [
+    "ls lib/rubocop/cop/internal_affairs/ — no method-order cop; grep \"definition order|DefinitionOrder\" lib/ → none"
+   ],
+   "note": "Pure convention."
+  },
+  {
+   "id": "761ca0528499d6b8d2c68033409f745778a20b0e",
+   "line": 118,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/options.rb:106 `option(opts, '--[no-]preview')`; :720-723 help \"Opt in to unstable behavior ... Overrides `AllCops: Preview`\"",
+    "lib/rubocop/config.rb:229-237 `preview?` reads options[:preview] else `for_all_cops['Preview'] == true`",
+    "config/default.yml:122-129 AllCops Preview comment and section"
+   ],
+   "note": "Both the config key and the flag exist and are the opt-in gate."
+  },
+  {
+   "id": "c4cafce990107d099811972dc2067d9a238f30e8",
+   "line": 119,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/base.rb:301-306 `def preview?; @config.preview?(@options); end` with comment \"Whether the user opted in to unstable behavior\""
+   ],
+   "note": "Cop API defined in Base."
+  },
+  {
+   "id": "c4a3ccac014ec4bd439097a510f8eb00eea69968",
+   "line": 123,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/config_loader_resolver.rb:172-183 apply_preview_defaults: deletes `Preview` section, merges it only when preview is on",
+    "lib/rubocop/config_loader.rb:204 and config_loader_resolver.rb:98 apply it to defaults",
+    "config/default.yml:126-129 AllCops carries a Preview section",
+    "grep -c \"^  Preview:\" config/default.yml → 51; grep preview? in lib/rubocop/cop/ → only registry.rb (0 cops gate on it)"
+   ],
+   "note": "Loader behavior proven; 51 config-only Preview sections vs 0 code-gated changes supports \"most common case\"."
+  },
+  {
+   "id": "b69faa83e3543f11a421de70a7be61bdfe75f1fa",
+   "line": 129,
+   "label": "judgment",
+   "evidence": [
+    "docs/modules/ROOT/pages/versioning.adoc:56-61 describes the same rationale"
+   ],
+   "note": "Policy/rationale for when to use preview."
+  },
+  {
+   "id": "f8a22b1712b4e6f4d30d25616eb3e4edd77c5adb",
+   "line": 132,
+   "label": "judgment",
+   "evidence": [
+    "docs/modules/ROOT/pages/versioning.adoc:56-61"
+   ],
+   "note": "Policy/rationale."
+  },
+  {
+   "id": "d7cce390c864a5f1d9d68343cecc42c6c3afcc5e",
+   "line": 134,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/registry.rb:283-287 \"Preview cops are opt-in and stay silent otherwise, so unlike pending cops they are never reported as needing a decision\"; `enabled_preview_cop?` requires `config.preview?`",
+    "lib/rubocop/config.rb:349-359 pending_cops collects only `Enabled == 'pending'`",
+    "lib/rubocop/config_validator.rb:24 accepts `preview` as an Enabled value",
+    "grep -c \"Enabled: preview\" config/default.yml → 0 (mechanism exists; no cop currently uses it)"
+   ],
+   "note": "Mechanism (opt-in only, not reported) is in code; the \"too speculative\" framing is guidance."
+  },
+  {
+   "id": "7d23b7173e2fb90f4520d54ed516c1814c41b956",
+   "line": 140,
+   "label": "judgment",
+   "evidence": [],
+   "note": "Policy statement."
+  },
+  {
+   "id": "afead4c176ad5eb2b20c87179d53bb0fd49b0b1e",
+   "line": 141,
+   "label": "judgment",
+   "evidence": [
+    "docs/modules/ROOT/pages/versioning.adoc:118-120,124-126 describe pending as the status for cops expected to become default"
+   ],
+   "note": "Policy statement about when to use pending."
+  },
+  {
+   "id": "08ea23f99419412fc93cf6df00e0f6791533a5cc",
+   "line": 144,
+   "label": "judgment",
+   "evidence": [
+    "docs/modules/ROOT/pages/versioning.adoc:118-119 same rule of thumb"
+   ],
+   "note": "Rule of thumb."
+  },
+  {
+   "id": "e0c860427a0b4be9688b585d98e87a445a8591a1",
+   "line": 145,
+   "label": "judgment",
+   "evidence": [
+    "docs/modules/ROOT/pages/versioning.adoc:121-122 same rule of thumb"
+   ],
+   "note": "Rule of thumb."
+  },
+  {
+   "id": "343b5062b4b2e48f93d79107b9ca8cb6b50f88dd",
+   "line": 177,
+   "label": "judgment",
+   "evidence": [
+    "docs/modules/ROOT/pages/versioning.adoc:162-166 \"Preview is provisional by definition ... can change or be withdrawn in any minor release\""
+   ],
+   "note": "Policy/contract statement (documented, but a promise about future releases)."
+  },
+  {
+   "id": "0bd783849774a30d4deebdc4b6de9ff13bda644d",
+   "line": 178,
+   "label": "true",
+   "evidence": [
+    "ls docs/modules/ROOT/pages/versioning.adoc exists",
+    "versioning.adoc:54 `== Preview`; :114 `=== Preview or Pending?`; :124-126 \"The intended lifecycle for a new cop is `preview` ... to `pending` ... to enabled by default\""
+   ],
+   "note": "File exists and documents the lifecycle."
+  },
+  {
+   "id": "78f0980ba246bbc7618a8bfce0d63a66ff4d8304",
+   "line": 182,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/base.rb:57 `DEPARTMENT_SEVERITIES = { Lint: :warning, Security: :warning, Metrics: :refactor }.freeze`",
+    "lib/rubocop/cop/base.rb:590-591 `def default_severity; DEPARTMENT_SEVERITIES.fetch(self.class.department, :convention)`"
+   ],
+   "note": "Exact mapping and fallback match."
+  },
+  {
+   "id": "d35a97b4e8ae26759ab361bc2199b9a8b9557daf",
+   "line": 184,
+   "label": "true",
+   "evidence": [
+    "spec/project_spec.rb:111-121 it 'does not restate the severity its department already implies' — fails if `Severity` equals DEPARTMENT_SEVERITIES.fetch(department, :convention)"
+   ],
+   "note": "Spec rejects restated defaults, as stated."
+  },
+  {
+   "id": "91928fd31a310b972b7c320d2a2cedaff416c970",
+   "line": 186,
+   "label": "stale",
+   "evidence": [
+    "git log --diff-filter=A -- lib/rubocop/cop/layout/begin_end_alignment.rb → 1b21b760e 2020-09-01 \"[Fix #8582] Add new `Layout/BeginEndAlignment` cop\" (file created directly under layout/; git show --stat has no lint/ path)",
+    "git log -S \"Lint/BeginEndAlignment\" → no commits; config/obsoletion.yml:21,23 renames only Lint/DefEndAlignment and Lint/EndAlignment",
+    "config/default.yml Severity entries: Bundler/DuplicatedGem:200, Bundler/DuplicatedGroup:211, Bundler/InsecureProtocolSource:264, 5 Gemspec cops, Layout/BeginEndAlignment:498, Layout/DefEndAlignment:610, Layout/EndAlignment:802 (11 total)"
+   ],
+   "note": "Only two of the three Layout alignment cops with Severity (EndAlignment, DefEndAlignment) ever lived in Lint; BeginEndAlignment was born in Layout."
+  },
+  {
+   "id": "412806631d065beb6d23354b3def4cd655ec264c",
+   "line": 191,
+   "label": "true",
+   "evidence": [
+    "config/default.yml:63-65 \"# The lowest severity that makes a run fail ... Can be overridden by the `--fail-level`\"; `FailLevel: refactor`",
+    "lib/rubocop/cop/severity.rb:24-33 minimum_to_fail: options[:fail_level] else `for_all_cops['FailLevel'] || :refactor`",
+    "lib/rubocop/options.rb:226-229, 670-671 `--fail-level SEVERITY` \"Overrides `AllCops: FailLevel`\""
+   ],
+   "note": "Default, semantics and override all in code/config."
+  },
+  {
+   "id": "304a0b5d7b1aef06bc533c9d29847d0c170974fb",
+   "line": 192,
+   "label": "true",
+   "evidence": [
+    "config/default.yml:126-129 `Preview:` under AllCops with `FailLevel: warning`",
+    "docs/modules/ROOT/pages/versioning.adoc:80 \"under preview, `FailLevel` is `warning`\""
+   ],
+   "note": "AllCops Preview section sets FailLevel: warning."
+  },
+  {
+   "id": "12c51075d555663a34cdda986ea4eef930501d83",
+   "line": 219,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/rspec/expect_offense.rb:232 `ANNOTATION_PATTERN = /\\A\\s*((?<!\\\\)\\^+|\\^{}) ?/`",
+    "expect_offense.rb:328-340 with_offense_annotations builds `' ' * offense.column + '^' * offense.column_length + \" #{message}\"`",
+    "expect_offense.rb:128-130 compares expected vs actual annotations for equality"
+   ],
+   "note": "Carets must match column/length exactly; message follows the carets."
+  },
+  {
+   "id": "6edce0abe70e50e9361fc160bea3854db66ff3b7",
+   "line": 221,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/rspec/expect_offense.rb:143-177 expect_correction compares corrected source",
+    "expect_offense.rb:150 `raise '`expect_correction` must follow `expect_offense`' unless @processed_source`"
+   ],
+   "note": "Both parts in code."
+  },
+  {
+   "id": "497604a3ce0ce407d67118adabd6f3b3181e453a",
+   "line": 223,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/rspec/expect_offense.rb:194-203 `def expect_no_offenses(source, file = nil)` asserts no annotations/offenses"
+   ],
+   "note": "Helper defined."
+  },
+  {
+   "id": "bcbc72bbbf91b71b0a1e205016bc0055aa64d506",
+   "line": 224,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/rspec/expect_offense.rb:79 \"- `%{foo}`: Interpolates `foo`\"; :113 `.gsub(\"%{#{keyword}}\", value)`"
+   ],
+   "note": "Interpolation syntax implemented in format_offense."
+  },
+  {
+   "id": "255c9065993d3dd9d2193b6f38d4a01e052ea2f6",
+   "line": 225,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/rspec/expect_offense.rb:81 \"- `_{foo}`: Inserts `' ' * foo.size` for dynamic offense range indentation\"; :115 `.gsub(\"_{#{keyword}}\", ' ' * value.size)`",
+    "expect_offense.rb:94-95 example uses `_{type}` on the caret line"
+   ],
+   "note": "Spacer placeholder for the offense-range (caret) line, as documented."
+  },
+  {
+   "id": "00d3da17814a69dcc518df237448b19ddb3a39fd",
+   "line": 226,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/rspec/support.rb:27 `config.include_context 'ruby 2.7', :ruby27`; :32 `'ruby 3.4', :ruby34`",
+    "lib/rubocop/rspec/shared_contexts.rb:285-287 and 309-311 set `let(:ruby_version)`",
+    "shared_contexts.rb:153-154 all_cops_config `'TargetRubyVersion' => ruby_version`"
+   ],
+   "note": "Both named tags exist and set the target Ruby version."
+  },
+  {
+   "id": "5391388a5d0f873e4ab7a53f91f3da3738789639",
+   "line": 228,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/rspec/shared_contexts.rb:119,130 `RSpec.shared_context 'config'` with `let(:cop_config) { {} }`; :159-166 merged into cur_cop_config",
+    "lib/rubocop/rspec/support.rb:13 `config.include_context 'config', :config`"
+   ],
+   "note": "Overriding `cop_config` is the configuration hook of the :config context."
+  },
+  {
+   "id": "0dc074672a2908541361329f6c7adec544622f2b",
+   "line": 235,
+   "label": "true",
+   "evidence": [
+    "tasks/changelog.rake:5-14 defines changelog:new/fix/change",
+    "tasks/changelog.rb:10 `TYPE_TO_HEADER = { new: 'New features', fix: 'Bug fixes', change: 'Changes' }`"
+   ],
+   "note": "changelog:fix exists and maps to \"Bug fixes\"."
+  },
+  {
+   "id": "917047a9b7550314d436dd1c59a4ff3f81dbab7e",
+   "line": 236,
+   "label": "true",
+   "evidence": [
+    "tasks/changelog.rake:5-14",
+    "tasks/changelog.rb:10 new: 'New features'"
+   ],
+   "note": "changelog:new exists and maps to \"New features\"."
+  },
+  {
+   "id": "22d4d1c36e4840acb0f54751f698cd658f6000b1",
+   "line": 237,
+   "label": "true",
+   "evidence": [
+    "tasks/changelog.rake:5-14",
+    "tasks/changelog.rb:10 change: 'Changes'"
+   ],
+   "note": "changelog:change exists and maps to \"Changes\"."
+  },
+  {
+   "id": "3b2caaeaa3c32e384b9603d839f5920bf2165788",
+   "line": 240,
+   "label": "true",
+   "evidence": [
+    "tasks/changelog.rb:21 `def initialize(type:, body: last_commit_title, ...)`; :55-57 `last_commit_title` = `git log -1 --pretty=%B`.lines.first.chomp`; :59-61 extract_id parses `[Fix #N]` from it"
+   ],
+   "note": "Entry text defaults to the last commit title."
+  },
+  {
+   "id": "38f1cef54a13a7898b181ef41b91c694267ebc7d",
+   "line": 248,
+   "label": "true",
+   "evidence": [
+    "spec/project_spec.rb (changelog/*.md context) it 'has a link to the contributors at the end' `expect(entries).to all(match(/\\(\\[@\\S+\\]\\[\\](?:, \\[@\\S+\\]\\[\\])*\\)$/))`",
+    "tasks/changelog.rb:42-45 content ends with \"([@#{user}][])\""
+   ],
+   "note": "Format enforced by spec and produced by the task."
+  },
+  {
+   "id": "773ae23f1b952557233a10ef9dcd5e409e54deab",
+   "line": 249,
+   "label": "true",
+   "evidence": [
+    "spec/project_spec.rb:231-335 shared_examples 'has Changelog format' + per-file checks for changelog/*.md (single line, prefix, issue link, contributor link)",
+    ".github/workflows/rubocop.yml:43 `run: bundle exec rake spec`; tasks/spec_runner.rake:28 runs the whole `spec` dir"
+   ],
+   "note": "project_spec validates entries and runs in CI via rake spec."
+  },
+  {
+   "id": "b9d59d13b15709b7f6c0f805484a0dddc4a92ea9",
+   "line": 250,
+   "label": "judgment",
+   "evidence": [
+    ".github/PULL_REQUEST_TEMPLATE.md:15 \"if the new code introduces user-observable changes\""
+   ],
+   "note": "Policy on when a changelog is required."
+  },
+  {
+   "id": "61b6755a02b7a3095ffe2ffe7159faa4ba29dfca",
+   "line": 252,
+   "label": "true",
+   "evidence": [
+    "tasks/changelog.rb:21 body defaults to last_commit_title; :31-36 `path` uses `filename_body`; :41-43 `filename_body` = `str_to_filename(body)`",
+    "tasks/changelog.rb:8 `ENTRIES_PATH_TEMPLATE = \"changelog/%<type>s_%<name>s_%<timestamp>s.md\"`"
+   ],
+   "note": "Filename is derived from the last commit subject, so committing first matters; amend step is workflow."
+  },
+  {
+   "id": "a62ae783e92f0a1068e6969edad4c16d09015212",
+   "line": 258,
+   "label": "judgment",
+   "evidence": [
+    "CONTRIBUTING.md:40 \"prefix the commit message with `[Fix #github-issue-number]`\"",
+    "tasks/changelog.rb:59-61 extract_id parses `/^\\[Fix(?:es)? #(\\d+)\\] (.*)/`"
+   ],
+   "note": "Commit-message convention (documented and parsed, but a convention)."
+  },
+  {
+   "id": "29e454ff9595312a3dee6359997f8ee689571fcc",
+   "line": 259,
+   "label": "judgment",
+   "evidence": [
+    "CONTRIBUTING.md:49-52 \"Put each distinct fix in its own logical commit with its own changelog entry ... Squash only commits that are part of the same fix.\""
+   ],
+   "note": "Workflow convention."
+  },
+  {
+   "id": "c473f375b0024c9bc3d94952f9ff68936d711ec0",
+   "line": 263,
+   "label": "judgment",
+   "evidence": [],
+   "note": "Workflow convention; no tooling enforces it."
+  },
+  {
+   "id": "0884239dbaa6804ea69ea936c4f96e18c7634ca8",
+   "line": 266,
+   "label": "true",
+   "evidence": [
+    "CONTRIBUTING.md:31-34 \"Keep AI attribution out of commit messages and pull request descriptions. That means trailers like `Co-authored-by: Claude` or `Assisted-by: Codex`, and \\\"generated with\\\" footers.\""
+   ],
+   "note": "The checkable claim (CONTRIBUTING.md asks the same) is verbatim true; the rest restates that documented rule."
+  },
+  {
+   "id": "5b51a45b27bbfd34403e5b316d9ea5f17a5a6c13",
+   "line": 269,
+   "label": "judgment",
+   "evidence": [
+    "CONTRIBUTING.md:47-48"
+   ],
+   "note": "Workflow instruction."
+  },
+  {
+   "id": "a347cdb59cbe2d012c5e50302ed525aaccdabe61",
+   "line": 273,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/internal_affairs/on_send_without_on_csend.rb:6-17",
+    "config/internal_affairs.yml:21-23 Include lib/rubocop/cop/**/*.rb; .rubocop.yml:277-290 Exclude list = the \"explicitly inapplicable\" escape hatch"
+   ],
+   "note": "Same enforced convention as line 99."
+  },
+  {
+   "id": "4c068ea1d36b4579a1d9a83187a902f55ec6f6db",
+   "line": 275,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/internal_affairs/numblock_handler.rb:6-9; itblock_handler.rb:6-9",
+    ".rubocop.yml:269-275 both enabled with Exclude only"
+   ],
+   "note": "Same enforced convention as line 102."
+  },
+  {
+   "id": "1f5fc46d2c54d8dc0b99908cca1d9f5359ea80aa",
+   "line": 278,
+   "label": "true",
+   "evidence": [
+    "Rakefile:36-78 `task documentation_syntax_check` iterates `cops.each` → `code_object.tags('example')` → `examples.each` and parses each with all_errors_are_fatal",
+    ".github/workflows/rubocop.yml:118-129 job documentation_check runs `bundle exec rake documentation_syntax_check`"
+   ],
+   "note": "Task name, scope and CI job all match."
+  },
+  {
+   "id": "1755c8bccd8bfdd701a8da73d3928650e1f85553",
+   "line": 280,
+   "label": "judgment",
+   "evidence": [
+    "lib/rubocop/cop/internal_affairs/cop_description.rb:30-38 only rejects \"This cop ...\" / empty first line",
+    "spec/project_spec.rb:72-79 period check targets config Description"
+   ],
+   "note": "Same convention as line 111; not enforced for YARD text."
+  },
+  {
+   "id": "aae5a425ff59127a282b54569357c736e0d2c337",
+   "line": 282,
+   "label": "judgment",
+   "evidence": [
+    "count: 45 of 214 department cops with on_send lack RESTRICT_ON_SEND; no enforcing cop"
+   ],
+   "note": "Same unenforced convention as line 97."
+  },
+  {
+   "id": "55a8dc767c5c69320013c7c9c1694a557a0d8b50",
+   "line": 283,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/internal_affairs/node_matcher_directive.rb:6-8,26 enforces `@!method` before def_node_matcher/def_node_search",
+    "enabled by default (config_loader_resolver.rb:335) under the rubocop-internal_affairs plugin (.rubocop.yml:5-6)"
+   ],
+   "note": "Same enforced convention as line 106."
+  },
+  {
+   "id": "0313bb54075fab6d060f9704bc2eb05645b255d2",
+   "line": 285,
+   "label": "stale",
+   "evidence": [
+    ".github/workflows/: rubocop.yml, linting.yml, spell_checking.yml, github_release.yml — none checks for a changelog entry",
+    "git grep -i changelog outside changelog dirs → only .github/PULL_REQUEST_TEMPLATE.md:15 (manual checkbox), Rakefile:7-8 release: changelog:check_clean (checks for NO pending entries), spec/project_spec.rb (format of existing entries only)",
+    "no danger/mergify/probot config at repo root"
+   ],
+   "note": "Nothing in the repo CI flags a missing changelog entry; project_spec only validates entries that exist."
+  },
+  {
+   "id": "cd1ae5574c977f0159c70843e586db3607695605",
+   "line": 286,
+   "label": "judgment",
+   "evidence": [
+    "spec/project_spec.rb (changelog/*.md) it 'starts with `new_`, `fix_`, or `change_`'",
+    "CONTRIBUTING.md:76-77 \"you can also create the changelog entries files manually as well. Just make sure they are properly named.\""
+   ],
+   "note": "Preference; the repo itself permits manual creation if named correctly."
+  },
+  {
+   "id": "43a18f22ae200bdc675e4d3d49e1826fd51ad5bd",
+   "line": 288,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/base.rb:461-471 correct(): `if block_given? ... elsif !self.class.support_autocorrect? raise \"The Cop #{name} must `extend AutoCorrector` to be able to autocorrect\"`"
+   ],
+   "note": "A non-empty corrector block without AutoCorrector raises."
+  },
+  {
+   "id": "a140903590b01d3255b5341649e24c6cced28f99",
+   "line": 290,
+   "label": "judgment",
+   "evidence": [
+    "Rakefile:31 default task includes internal_investigation and documentation_syntax_check"
+   ],
+   "note": "Advice; the underlying fact (default task includes lint/doc checks) is proven but the statement is guidance."
+  },
+  {
+   "id": "13364ef135ddbaf6c63ac7196b9904eca2ac3c67",
+   "line": 292,
+   "label": "judgment",
+   "evidence": [],
+   "note": "Style preference."
+  },
+  {
+   "id": "87696274b77ab3192b9938f261e581ef822525e1",
+   "line": 294,
+   "label": "judgment",
+   "evidence": [
+    "lib/rubocop/cop/generator.rb:80 template comment \"ensure your tests cover safe navigation as well!\""
+   ],
+   "note": "Testing guidance."
+  },
+  {
+   "id": "9b579abe18fdab7e0059d8d0283756f2d756cf9f",
+   "line": 296,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/cop.rb:25-30 `self.inherited` warns \"Inheriting from `RuboCop::Cop::Cop` is deprecated\"",
+    ".github/workflows/rubocop.yml:40-43 env `STRICT_WARNINGS: 1` for `bundle exec rake spec`; spec/support/strict_warnings.rb:40-42 `return unless ENV['STRICT_WARNINGS'] == '1'; raise WarningError`",
+    "lib/rubocop/rspec/shared_contexts.rb:96 `def stub_cop_class(name, inherit: RuboCop::Cop::Base, &block)`",
+    "lib/rubocop/cop/base.rb:394 `private` ... :443 `def complete_investigation`; spec/rubocop/cop/cop_spec.rb:226 `cop.send(:complete_investigation).offenses`",
+    "lib/rubocop/cop/base.rb:339-341 `def offenses; raise 'The offenses are not directly available; ...'`"
+   ],
+   "note": "Every part (warning, STRICT_WARNINGS in CI, stub_cop_class, private complete_investigation, offenses raising) is in code."
+  },
+  {
+   "id": "15610a9e2b46f14c050582feac865f54fe37a7e9",
+   "line": 302,
+   "label": "true",
+   "evidence": [
+    "lib/rubocop/cop/registry.rb:422-432 enabled_cop_name?: `return true if options[:only]&.include?(cop_name)` before the Enabled/pending/preview checks",
+    "docs/modules/ROOT/pages/versioning.adoc:137 \"`--only` runs it by name, whether or not preview is on.\""
+   ],
+   "note": "--only short-circuits enablement entirely."
+  },
+  {
+   "id": "e46dd47ba047b54947642587f308058571afe8ce",
+   "line": 305,
+   "label": "true",
+   "evidence": [
+    "tasks/cops_documentation.rake:12-16 `task update_cops_documentation` → CopsDocumentationGenerator",
+    "lib/rubocop/cops_documentation_generator.rb:58,335 writes `#{base_dir}/docs/modules/ROOT/pages/#{department_to_basename(department)}.adoc`; lib/rubocop/cop/documentation.rb:10-12 basename `\"cops_#{department...}\"`",
+    "tasks/cut_release.rake:104 `Rake::Task['update_cops_documentation'].invoke` inside the release run"
+   ],
+   "note": "Task, output files and release-time regeneration are all in the rake/generator code."
+  },
+  {
+   "id": "2d9b2a854f6517c92d2414db63214ca6755e9679",
+   "line": 309,
+   "label": "judgment",
+   "evidence": [
+    "docs/modules/ROOT/partials/cops_layout_footer.adoc:1 `==  AllowMultilineFinalElement` (no explicit anchor) and lib/rubocop/cops_documentation_generator.rb:229-234 emits `xref:cops_layout.adoc#allowmultilinefinalelement[...]` — the example exists",
+    "docs/modules/ROOT/pages/configuration.adoc:89 explicit `[#fail-level]`",
+    "counter-example: xref `usage/caching.adoc#cache-path` targets heading `== Cache Path` (caching.adoc:37, no explicit anchor), which implies a `-` separator rather than \"everything but letters removed\"",
+    "docs/antora.yml sets no idprefix/idseparator"
+   ],
+   "note": "How Antora derives heading IDs is external-tool behavior the repo cannot prove; the cited example is real, but the repo's own xrefs do not consistently follow the stated rule."
+  }
+ ]
+}

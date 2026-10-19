@@ -1,0 +1,768 @@
+{
+ "repo": "temporalio/temporal",
+ "sha": "fc4372605ce23f333b7e1a43eef303ff002c2ef1",
+ "file": "AGENTS.md",
+ "labeler": "blind second labeler (agent), 2026-10-19, under the protocol in eval/LABELING.md; never saw the first labels or a proof report",
+ "labels": [
+  {
+   "id": "2a05ef760dc497f875e5747a4498fd50fa17f40b",
+   "line": 1,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md: persona/tone/workflow instruction with no checkable repository fact"
+   ],
+   "note": "Persona statement about who the agent is; not checkable against the repo."
+  },
+  {
+   "id": "4971d7dd3a98f50b23b4bc8427de898ee9f878b7",
+   "line": 1,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md: persona/tone/workflow instruction with no checkable repository fact"
+   ],
+   "note": "Statement of task/purpose; not checkable against the repo."
+  },
+  {
+   "id": "be06755acbeb7865b21a79b680a9388c43f3b2c6",
+   "line": 1,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md: persona/tone/workflow instruction with no checkable repository fact"
+   ],
+   "note": "Claim about the agent's background; not checkable against the repo."
+  },
+  {
+   "id": "6d2bc99937139cdc94715012e46d2c212a372581",
+   "line": 2,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md: persona/tone/workflow instruction with no checkable repository fact"
+   ],
+   "note": "Workflow instruction (\"MUST REVIEW\"); not checkable."
+  },
+  {
+   "id": "8dcf36644c829a990f99797fffc242f70d805620",
+   "line": 5,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md: persona/tone/workflow instruction with no checkable repository fact"
+   ],
+   "note": "Convention about adhering to project conventions; not checkable."
+  },
+  {
+   "id": "60a5bfed89a9f68050793344d81bd80787b7418c",
+   "line": 6,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:6 names go.mod inside a convention; `ls /home/ms/projects/proof-cache/corpus/temporal/go.mod` exists but a name inside a convention does not make the convention true"
+   ],
+   "note": "Workflow convention (verify libraries before use); go.mod exists but the instruction itself is a preference."
+  },
+  {
+   "id": "18bfffcece690c939b3755d32885a718895adb7c",
+   "line": 7,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md: persona/tone/workflow instruction with no checkable repository fact"
+   ],
+   "note": "Style convention; not checkable."
+  },
+  {
+   "id": "253247d585fafbf28671e16ba206fdae09a435c3",
+   "line": 8,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md: persona/tone/workflow instruction with no checkable repository fact"
+   ],
+   "note": "Editing convention; not checkable."
+  },
+  {
+   "id": "94b8f9dd71d12fc55dd1f22b9b9a545362f9d248",
+   "line": 9,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md: persona/tone/workflow instruction with no checkable repository fact"
+   ],
+   "note": "Commenting convention; not checkable."
+  },
+  {
+   "id": "2f2456987a96b9bc1f317783a2fcbb3a7fbd1a0c",
+   "line": 10,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md: persona/tone/workflow instruction with no checkable repository fact"
+   ],
+   "note": "Behavioral instruction; not checkable."
+  },
+  {
+   "id": "baf203360259d1ab25c8922fa544035329807683",
+   "line": 11,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md: persona/tone/workflow instruction with no checkable repository fact"
+   ],
+   "note": "Workflow instruction (confirm before expanding scope); not checkable."
+  },
+  {
+   "id": "5a2d9fc0376709184c347fe2242db6747c613723",
+   "line": 12,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md: persona/tone/workflow instruction with no checkable repository fact"
+   ],
+   "note": "Workflow instruction (provide summaries); not checkable."
+  },
+  {
+   "id": "5ca032546e74e5e08c50f23b48711ba29ba5355b",
+   "line": 13,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md: persona/tone/workflow instruction with no checkable repository fact"
+   ],
+   "note": "Workflow instruction (do not revert); not checkable."
+  },
+  {
+   "id": "91bfb8d601e4cca17db2b9623c116a84115bfbf8",
+   "line": 16,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md: persona/tone/workflow instruction with no checkable repository fact"
+   ],
+   "note": "Tone instruction; not checkable."
+  },
+  {
+   "id": "f1c963d29b40a5192a8650a31a60fcbfa409646b",
+   "line": 17,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md: persona/tone/workflow instruction with no checkable repository fact"
+   ],
+   "note": "Output-length preference; not checkable."
+  },
+  {
+   "id": "51ea98eb6f1be396a211c58b514cf8311664f4d8",
+   "line": 18,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md: persona/tone/workflow instruction with no checkable repository fact"
+   ],
+   "note": "Tone instruction; not checkable."
+  },
+  {
+   "id": "c30961a4280ba71bbba4c3a72c0792c10ac727ce",
+   "line": 19,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md: persona/tone/workflow instruction with no checkable repository fact"
+   ],
+   "note": "Tone instruction; not checkable."
+  },
+  {
+   "id": "733d460292b2bc194b3bb765aa40638785afdf4c",
+   "line": 20,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md: persona/tone/workflow instruction with no checkable repository fact"
+   ],
+   "note": "Formatting preference and claim about the rendering environment (external system); not checkable."
+  },
+  {
+   "id": "d09a996989227d8ef8ad4d2c6c1cbe10ba7dc44f",
+   "line": 21,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md: persona/tone/workflow instruction with no checkable repository fact"
+   ],
+   "note": "Tool-use convention; not checkable."
+  },
+  {
+   "id": "ae52e119ded103e5ceb53aa1098e5633bfc06ad0",
+   "line": 22,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md: persona/tone/workflow instruction with no checkable repository fact"
+   ],
+   "note": "Behavioral instruction; not checkable."
+  },
+  {
+   "id": "a090cff71b9beaa8346b8b50f33188f8f7a6bc12",
+   "line": 27,
+   "label": "stale",
+   "evidence": [
+    "`git ls-tree -r --name-only HEAD -- api | grep -c '\\.proto$'` -> 0 (no proto definitions under /api)",
+    "`find api -name '*.go' | wc -l` -> 120; `find api -name '*.pb.go' | wc -l` -> 112; remaining 8 are api/*servicemock/v1/*.pb.mock.go (all generated)",
+    "api/history/v1/message.pb.go:1-5 \"// Code generated by protoc-gen-go. DO NOT EDIT. ... source: temporal/server/api/history/v1/message.proto\"",
+    "Makefile:103-112 \"PROTO_ROOT := proto / PROTO_FILES = $(shell find ./$(PROTO_ROOT)/internal -name \\\"*.proto\\\") / PROTO_OUT := api\" -> definitions live in /proto/internal, /api is only the output dir",
+    "`git log --diff-filter=D -- 'api/**/*.proto'` -> empty (api/ never held .proto files)",
+    "AGENTS.md:41 itself places \"proto definitions for internal services\" under /proto"
+   ],
+   "note": "Directory exists and holds generated code, but contains zero proto definitions; the .proto sources are under /proto/internal and `make proto` only writes output into api/. \"proto definitions\" part contradicted."
+  },
+  {
+   "id": "4d0b2e102c04a264ac77a33e44010b97d1865397",
+   "line": 28,
+   "label": "true",
+   "evidence": [
+    "`ls chasm` -> library.go, library_core.go, library_mock.go, component.go, engine.go, ... (a Go library package)",
+    "docs/architecture/chasm.md:1 \"# CHASM: Coordinated Heterogeneous Application State Machines\""
+   ],
+   "note": "Directory exists, is a library package, and the acronym expansion matches the repo docs."
+  },
+  {
+   "id": "ceae1e67551b9dd4ca4e6fb5f674e60cde8a7925",
+   "line": 29,
+   "label": "true",
+   "evidence": [
+    "`ls client` -> admin, frontend, history, matching, operator, client_bean.go, clientfactory.go",
+    "client/client_bean.go:13-25 imports go.temporal.io/server/api/historyservice/v1, matchingservice/v1, client/frontend, client/history, client/matching; \"Bean interface {\""
+   ],
+   "note": "Directory exists with per-service client packages for frontend/history/matching (plus admin/operator, covered by \"etc.\")."
+  },
+  {
+   "id": "dd040bb612bcba6f2f02afe3fd30c7420df85b5a",
+   "line": 30,
+   "label": "true",
+   "evidence": [
+    "`ls cmd` -> server, tools; cmd/server/main.go:28 \"func main() {\"; cmd/tools/tdbg/main.go:9 \"func main() {\"",
+    "`ls cmd/tools` -> cassandra, elasticsearch, sql, tdbg, protogen, codegen, test-runner, ... (CLI tools)"
+   ],
+   "note": "cmd/server is the main server application; cmd/tools holds CLI commands."
+  },
+  {
+   "id": "7b313e72f155b89ee1c8d666295ec9b082f076d1",
+   "line": 31,
+   "label": "true",
+   "evidence": [
+    "`ls common` -> dynamicconfig, membership, metrics, namespace, nexus, persistence, log, rpc, ... (~90 shared packages)",
+    "grep -rl '\"go.temporal.io/server/common' per service: service/frontend 38 files, service/history 550, service/matching 83, service/worker 102"
+   ],
+   "note": "Directory exists and is imported by every service under /service."
+  },
+  {
+   "id": "aa868c6a77d57fc920edfd9f49e82b9e575de27f",
+   "line": 32,
+   "label": "true",
+   "evidence": [
+    "`ls common/dynamicconfig` -> client.go, collection.go, file_based_client.go, memory_client.go, setting.go, ...",
+    "common/dynamicconfig/client.go:12 \"Client interface {\"; collection.go:32 \"Collection struct {\""
+   ],
+   "note": "Directory exists and implements the dynamic config client/collection library."
+  },
+  {
+   "id": "43a828d4a8944d59f1eb39b30f9d7bdbdac31b3e",
+   "line": 33,
+   "label": "true",
+   "evidence": [
+    "`ls common/membership` -> interfaces.go, hostinfo.go, grpc_resolver.go, ringpop/, static/",
+    "common/membership/interfaces.go:34-37 \"// Monitor provides membership information for all temporal services. ... Start causes this service to join the membership ring.\""
+   ],
+   "note": "Directory exists and defines cluster membership (Monitor, ringpop)."
+  },
+  {
+   "id": "0298368c3699a72a451a924345e41b9112c60e38",
+   "line": 34,
+   "label": "true",
+   "evidence": [
+    "`ls common/metrics` -> metric_defs.go, defs.go, metrics.go, otel_metrics_handler.go, tally_metrics_handler.go, ...",
+    "common/metrics/metrics.go:20 \"Handler interface {\"; metrics.go:44 \"BatchHandler interface {\""
+   ],
+   "note": "Directory exists with metric definitions (metric_defs.go) and the handler library."
+  },
+  {
+   "id": "1dc61881935ff5c4e42c5310a82d21d6f1216339",
+   "line": 35,
+   "label": "true",
+   "evidence": [
+    "`ls common/namespace` -> registry.go, namespace.go, mutate.go, nsregistry/, nsreplication/, ...",
+    "common/namespace/registry.go:30 \"// in-memory cache. May lag persistence by up to the configured refresh\"; :33 \"GetRegistrySize() (sizeOfCacheByName int64, sizeOfCacheByID int64)\""
+   ],
+   "note": "Directory exists; the Registry is an in-memory namespace cache plus utilities."
+  },
+  {
+   "id": "8d22974a310ad4cd93eb62ffdae3ee0e9a47b815",
+   "line": 36,
+   "label": "true",
+   "evidence": [
+    "`ls common/nexus` -> endpoint_registry.go, links.go, payload_serializer.go, routes.go, nexusrpc/, ...",
+    "common/nexus/nexusrpc/client.go:146 \"type HTTPClient struct {\"; :154 \"func NewHTTPClient(options HTTPClientOptions) (*HTTPClient, error) {\"; nexusrpc/completion.go:35 \"func NewCompletionHTTPClient(\""
+   ],
+   "note": "Directory exists and contains a Nexus HTTP client (nexusrpc) plus utilities."
+  },
+  {
+   "id": "1fa7047c0bfbb8fcf361ad23058154e743f8c50c",
+   "line": 37,
+   "label": "true",
+   "evidence": [
+    "`ls common/persistence` -> data_interfaces.go, execution_manager.go, history_manager.go, cassandra/, nosql/, sql/, visibility/, ...",
+    "common/persistence/data_interfaces.go:1119 \"ShardManager interface {\"; :1129 \"ExecutionManager interface {\"; :1190 \"TaskManager interface {\"; :1230 \"MetadataManager interface {\""
+   ],
+   "note": "Directory exists with persistence interfaces and cassandra/sql/nosql implementations."
+  },
+  {
+   "id": "f4b57a42bef71a230e14999e71c78c4380d96ad8",
+   "line": 38,
+   "label": "stale",
+   "evidence": [
+    "`ls -d */` at HEAD -> api chasm client cmd common config develop docker docs nexusworkflowref proto schema service temporal temporaltest tests tools (no components/)",
+    "`find . -type d -name components -not -path ./.git/*` -> empty",
+    "`git ls-tree -r --name-only HEAD -- components | wc -l` -> 0; at 2a63a6f85^ -> 32",
+    "git 2a63a6f85 2026-09-01 \"Move legacy HSM implementations under history service (#11836)\": \"{components => service/history/hsm}/callbacks/...\"; `git merge-base --is-ancestor 2a63a6f85 HEAD` -> yes",
+    "`ls service/history/hsm` -> callbacks, nexusoperations, ..."
+   ],
+   "note": "Top-level /components no longer exists; its nexus components were moved to service/history/hsm/{callbacks,nexusoperations} before the pinned commit."
+  },
+  {
+   "id": "222c59c313df634913d4db98aa359108e96ed01c",
+   "line": 39,
+   "label": "true",
+   "evidence": [
+    "`ls config` -> development.yaml, development-cass-es.yaml, development-mysql8.yaml, docker.yaml, dynamicconfig/, jwt/ (22 yaml files)",
+    "config/docker.yaml:1 \"# enable-template\"; :5 \"level: {{ default \\\"info\\\" (env \\\"LOG_LEVEL\\\") }}\""
+   ],
+   "note": "Directory exists with config yaml files and a templated docker.yaml."
+  },
+  {
+   "id": "fc4a4bbefc77f8595f373eb77d5d8f5081642603",
+   "line": 40,
+   "label": "true",
+   "evidence": [
+    "`ls docs` -> admin, architecture, _assets, development, Makefile, README.md"
+   ],
+   "note": "Directory exists and holds documentation."
+  },
+  {
+   "id": "b4a6e9834d01365770e15b7e684d46539fc26975",
+   "line": 41,
+   "label": "true",
+   "evidence": [
+    "`ls proto` -> api-linter.yaml, buf.work.yaml, internal; `find proto -name '*.proto' | wc -l` -> 56",
+    "e.g. proto/internal/temporal/server/api/cli/v1/message.proto, proto/internal/temporal/server/api/chasm/v1/message.proto; Makefile:104 PROTO_FILES from ./proto/internal"
+   ],
+   "note": "Directory exists with the internal server proto definitions."
+  },
+  {
+   "id": "69e14eabaa5dc41f1e85135b17dc2f818db09cf8",
+   "line": 42,
+   "label": "true",
+   "evidence": [
+    "`ls schema` -> cassandra, elasticsearch, mysql, postgresql, sqlite, embed.go",
+    "`ls schema/mysql/v8` -> temporal, visibility; schema/postgresql/v12 -> temporal, visibility; schema/sqlite/v3 -> temporal, visibility; schema/cassandra/temporal/schema.cql; schema/elasticsearch/visibility/index_template_v7.json"
+   ],
+   "note": "Directory exists with per-database schemas split into temporal (core) and visibility stores."
+  },
+  {
+   "id": "741ad98352b9f0a55ed48aca8100e79fe5e19e48",
+   "line": 43,
+   "label": "true",
+   "evidence": [
+    "`ls service` -> frontend, history, matching, worker, fx.go"
+   ],
+   "note": "Directory exists with exactly the named services."
+  },
+  {
+   "id": "72f33dd17223ce58a8c8ab85d286c414c70b048c",
+   "line": 44,
+   "label": "true",
+   "evidence": [
+    "`ls service` -> frontend (directory exists); service/frontend has 38 Go files importing go.temporal.io/server/common"
+   ],
+   "note": "Directory exists."
+  },
+  {
+   "id": "f484c43eeb46845d2a227d0f8af257ab4cd69747",
+   "line": 45,
+   "label": "true",
+   "evidence": [
+    "`ls service` -> history (directory exists); service/history has 550 Go files importing go.temporal.io/server/common; service/history/hsm/ present"
+   ],
+   "note": "Directory exists."
+  },
+  {
+   "id": "116e85a8c34100bfb500f711120d4d187e4c658d",
+   "line": 46,
+   "label": "true",
+   "evidence": [
+    "`ls service` -> matching (directory exists); service/matching has 83 Go files importing go.temporal.io/server/common"
+   ],
+   "note": "Directory exists."
+  },
+  {
+   "id": "8fbb9fd7820dc2dcc77cabbc81d67c8dc7674bae",
+   "line": 47,
+   "label": "true",
+   "evidence": [
+    "`ls service/worker` -> fx.go, service.go, worker.go, pernamespaceworker.go, scanner/, scheduler/, batcher/, ...",
+    "service/worker/service.go exists (alongside service/frontend|history|matching/service.go)"
+   ],
+   "note": "Directory exists and holds the worker service implementation (service.go, worker.go, fx.go)."
+  },
+  {
+   "id": "ec5c9fe293db0ee97d17f0c087ad8435c1d0b72b",
+   "line": 50,
+   "label": "true",
+   "evidence": [
+    "Makefile:407 `.PHONY: lint-code lint-code-fast`; Makefile:409 `lint-code-fast:`",
+    "Makefile:414-423: base=$(git merge-base HEAD GOLANGCI_LINT_BASE_REV); targets from `git diff --name-only $base -- *.go` + untracked *.go, then `$(MAKE) ... LINT_CODE_TARGETS=\"$targets\" lint-code`",
+    "Makefile:408 comment: \"this target also reduces package inputs _before_ analysis\""
+   ],
+   "note": "Target exists and lints only packages with changed Go files, as described."
+  },
+  {
+   "id": "dd2e4c09ded3112cf5e021ffa97f947377aab318",
+   "line": 51,
+   "label": "true",
+   "evidence": [
+    "Makefile:426 `lint-code: $(GOLANGCI_LINT) $(ERRORTYPE)`; 428-435 `$(GOLANGCI_LINT) run ... --config=.github/.golangci.yml $(LINT_CODE_TARGETS)`; 436 `go vet ... $(LINT_CODE_TARGETS)`",
+    "Makefile:176 `LINT_CODE_TARGETS ?= ./...` (all packages by default)"
+   ],
+   "note": "Target exists; default targets ./... = all packages (only new issues vs MAIN_BRANCH are reported via --new-from-rev, but all packages are analyzed)."
+  },
+  {
+   "id": "aebcbc24d4ff47a13c3ad75c245f8c8675f3de8f",
+   "line": 52,
+   "label": "true",
+   "evidence": [
+    "Makefile:490 `fmt-imports: $(GCI)`; 491-492 `printf \"Formatting imports...\"; $(GCI) write --skip-generated -s standard -s default ./*`"
+   ],
+   "note": "Target exists and formats imports with gci."
+  },
+  {
+   "id": "7963e4ebdd29c82c0ded177626a750cf0a66d906",
+   "line": 53,
+   "label": "true",
+   "evidence": [
+    "Makefile:27 `proto: lint-protos lint-api protoc proto-codegen`",
+    "Makefile:326-339 protoc runs `go run ./cmd/tools/protogen ... $(PROTO_DIRS)`; Makefile:341-349 proto-codegen runs `go generate` for clients/interceptors/searchattribute helpers"
+   ],
+   "note": "Target exists and performs proto + go:generate code generation."
+  },
+  {
+   "id": "d91bc7571fb51bb599f799fb7d565ec1e0e71b60",
+   "line": 54,
+   "label": "true",
+   "evidence": [
+    "Makefile:351-353 `update-go-api:` -> printf \"Update go.temporal.io/api@master...\"; `go get -u go.temporal.io/api@master`"
+   ],
+   "note": "Target exists; it bumps the go.temporal.io/api (API proto) module to master."
+  },
+  {
+   "id": "3686754b033d080571d6ff2b1547db6649ca5b21",
+   "line": 55,
+   "label": "true",
+   "evidence": [
+    "Makefile:537-540 `unit-test: clean-test-output` -> `go test $(UNIT_TEST_DIRS) $(COMPILED_TEST_ARGS) | tee -a test.log`; `$(MAKE) verify-test-log`",
+    "Makefile:130-134 UNIT_TEST_DIRS = TEST_DIRS minus functional/integration roots"
+   ],
+   "note": "Target exists and runs the unit-test directories."
+  },
+  {
+   "id": "144da5c7bd25c6225281f5f7aa4beb5cbcf9301a",
+   "line": 58,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:58 style/structure convention; nothing in the repo can prove or contradict it"
+   ],
+   "note": "Pure convention."
+  },
+  {
+   "id": "637b80dc42b6b9120e959e9a4d90a81ac17381ed",
+   "line": 59,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:59 comment-style preference"
+   ],
+   "note": "Convention/preference about comments."
+  },
+  {
+   "id": "916872eb6dfb54f5903356c824240caef804fe43",
+   "line": 60,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:60 testing preference"
+   ],
+   "note": "Workflow preference, not checkable."
+  },
+  {
+   "id": "bb9b1fb2ee97df710e47e59247842e28dafc5851",
+   "line": 61,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:61 generic guidance"
+   ],
+   "note": "Generic instruction."
+  },
+  {
+   "id": "e59edc2b1bb1678b40cbc9a08e7f8cfb40e59ad4",
+   "line": 62,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:62; errcheck is enabled at .github/.golangci.yml:11 but the sentence is a rule, not a description of the repo"
+   ],
+   "note": "Rule/preference; linter presence does not make the rule a repo fact."
+  },
+  {
+   "id": "5be05932bfaa1db6be10fff0f4abd88f292373d2",
+   "line": 63,
+   "label": "judgment",
+   "evidence": [
+    "git grep -n \"CONSIDER(\" -> 5 code hits, e.g. chasm/lib/scheduler/completion.go:72 `// CONSIDER(scheduler): ...`, service/matching/scale_manager.go:444 `// CONSIDER(carlydf): ...`"
+   ],
+   "note": "Convention; the comment format exists in code (5 sites) but \"leave such comments\" is a workflow instruction, not a checkable repo fact."
+  },
+  {
+   "id": "4275cc71eea84e8a3090a14c36d0be2d6461a7f3",
+   "line": 64,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:64; go:generate mockgen directives exist (e.g. chasm/component.go:1) but the sentence is a process rule"
+   ],
+   "note": "Workflow rule."
+  },
+  {
+   "id": "a80cae9f22bc8b0b7ea8f0d99786a47f25d80ad2",
+   "line": 65,
+   "label": "true",
+   "evidence": [
+    "Makefile:51 `ALL_TEST_TAGS := $(ALL_BUILD_TAGS),test_dep,$(TEST_TAG)`; Makefile:53 `TEST_TAG_FLAG := -tags $(ALL_TEST_TAGS)`; Makefile:70-75 COMPILED_TEST_ARGS includes $(TEST_TAG_FLAG), used by unit-test/integration-test/functional-test (Makefile:539,544,549-551)",
+    "12 files gated `//go:build test_dep` (e.g. common/testing/faultinjectiontest/hooks_testdep.go)",
+    "docs/development/testing.md:8 \"`test_dep`: ... they will fail if not enabled\"; :261 \"Tests using testhooks must be run with `-tags=test_dep`\""
+   ],
+   "note": "The tag is real and every Makefile test target passes it; docs confirm tests fail without it."
+  },
+  {
+   "id": "22b1bba7500c66198900cec6ba2e311886fa03e4",
+   "line": 66,
+   "label": "stale",
+   "evidence": [
+    "git grep -h \"^//go:build\" | sort | uniq -c -> only test_dep, !test_dep, TEMPORAL_DEBUG, !TEMPORAL_DEBUG; no `integration` build tag anywhere",
+    "Makefile:542-545 `integration-test:` runs `go test $(INTEGRATION_TEST_DIRS) $(COMPILED_TEST_ARGS)` with no integration tag; Makefile:51 TEST_TAG has no default and `git grep TEST_TAG=` finds nothing (CI runs `make integration-test-coverage`, .github/workflows/run-tests.yml:358)",
+    "git show 36f02e458d:Makefile (commit that wrote this line, 2025-10-20) likewise has no integration tag",
+    "docs/development/testing.md:7-10 lists build tags: test_dep, TEMPORAL_DEBUG, disable_grpc_modules only"
+   ],
+   "note": "No `integration` build tag exists; integration tests are selected by directory (INTEGRATION_TEST_DIRS), not by tag, so the named tag is wrong."
+  },
+  {
+   "id": "149b46c53474043d0f3772078f4ea88a7d944cec",
+   "line": 67,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:67 policy on dependencies"
+   ],
+   "note": "Policy/preference."
+  },
+  {
+   "id": "e85cb59854032cae41bd082b3b083ac9af5bfe40",
+   "line": 70,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:70 generic rule"
+   ],
+   "note": "Generic rule."
+  },
+  {
+   "id": "ab1b7d8981162f297aafe56d1ea35757cb908af7",
+   "line": 71,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:71 generic rule"
+   ],
+   "note": "Generic rule."
+  },
+  {
+   "id": "243b0d39da994bfbeb063ba327bc24f75e2d538e",
+   "line": 72,
+   "label": "judgment",
+   "evidence": [
+    "common/log/interface.go:25 `Fatal(msg string, tags ...tag.Tag)` on the Logger interface; impl common/log/zap_logger.go"
+   ],
+   "note": "logger.Fatal exists, but \"for core invariant violations\" is a usage convention."
+  },
+  {
+   "id": "f2b3ea8176e18ed38075a669ad29ee899c692e4d",
+   "line": 73,
+   "label": "judgment",
+   "evidence": [
+    "common/log/interface.go:23 `DPanic(msg string, tags ...tag.Tag)`; common/log/zap_logger.go:195-200 delegates to zap DPanic",
+    "common/log/config.go:16-19 \"Development ... Default is Production. Production-stage disables panics from DPanic logging.\"; zap_logger.go:289 `Development: cfg.Development` (zero value false)"
+   ],
+   "note": "logger.DPanic exists and code/comments confirm it does not panic in production mode; the \"use it for important issues\" part is a convention."
+  },
+  {
+   "id": "da77b5dcd93e7f16392ec060076f4cb38d6cc291",
+   "line": 76,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:76"
+   ],
+   "note": "Workflow rule."
+  },
+  {
+   "id": "dad5e44ce8da7772e664157b44da8273d8e7d7d4",
+   "line": 77,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:77"
+   ],
+   "note": "Workflow rule."
+  },
+  {
+   "id": "ab811243c287597ce774a2a4f03a361206e7ea37",
+   "line": 78,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:78"
+   ],
+   "note": "Workflow preference."
+  },
+  {
+   "id": "8b2dfe07ec02666bd5b0f0103593e8b1e54035ef",
+   "line": 79,
+   "label": "stale",
+   "evidence": [
+    ".github/.golangci.yml:51-52 forbidigo pattern `(^|\\.)(Eventually|Eventuallyf|EventuallyWithT|EventuallyWithTf)(\\(|$)` msg \"Use await.Require / s.Await ... instead of testify Eventually helpers\" (no path-except; only 4 legacy tests/ files excluded at :219-222) -> `require.Eventually` is itself forbidden by the linter",
+    ".github/.golangci.yml:35-36 time.Sleep forbid msg \"Please use await.Require / s.Await unless there is no better option\"; docs/development/testing.md:44-66 prescribe await.Require/await.RequireTrue, \"instead of testify Eventually\"",
+    "docs/development/testing.md:322-338 test cluster via `testcore.NewEnv(t)` (tests/testcore/test_env.go:258 `func NewEnv(t *testing.T, ...)`), \"legacy FunctionalTestBase (using testify suite) has been deprecated\"; .golangci.yml:47-48 forbids FunctionalTestBase -> functional tests do not require suites",
+    "git log: forbid added in 7c022fbdb 2026-05-15 (#9490); line 79 written f3d37d9067 2026-01-03"
+   ],
+   "note": "The recommended replacement `require.Eventually` is forbidden by the current linter config (await.Require/RequireTrue is the sanctioned helper), and the suites-required-for-cluster-setup claim is contradicted by testcore.NewEnv(t)/FunctionalTestBase deprecation. The time.Sleep-forbidden part is true (.golangci.yml:35,175-178)."
+  },
+  {
+   "id": "466a58ce08c5676ca4d96e465e453df1052a9f21",
+   "line": 80,
+   "label": "true",
+   "evidence": [
+    ".github/.golangci.yml:21 `- testifylint` enabled; :78-80 only `suite-method-signature` disabled, so the default float-compare checker is active",
+    "Makefile:179 `GOLANGCI_LINT_VERSION := v2.13.0`; Makefile:433-434 lint-code uses `--config=.github/.golangci.yml`",
+    "git grep InDelta|InEpsilon -> 202 uses"
+   ],
+   "note": "testifylint is enabled with float-compare (default checker, not disabled); the InDelta/InEpsilon rule is that checker's rule. Relies on testifylint default checker set."
+  },
+  {
+   "id": "dfb98a085f810809f233a9b4c787f982c2a15188",
+   "line": 81,
+   "label": "true",
+   "evidence": [
+    ".github/.golangci.yml:21 `- testifylint` enabled; :78-80 only `suite-method-signature` disabled, so the default require-error checker is active",
+    "Makefile:179 golangci-lint v2.13.0; lint-code runs with --new-from-rev so only new `s.NoError(err)` sites are flagged (8227 legacy `s.NoError(` vs 650 `s.Require().NoError(`)"
+   ],
+   "note": "testifylint require-error (default, not disabled) flags suite `s.NoError(err)` and suggests `s.Require().NoError(err)`. Relies on testifylint default checker set."
+  },
+  {
+   "id": "444f3da010db15d0e2eae0b16a8fdace2d921a41",
+   "line": 86,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:86 workflow step"
+   ],
+   "note": "Workflow step."
+  },
+  {
+   "id": "e3a7ea67623c9442f55c93a7453e454a5350b945",
+   "line": 87,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:87 workflow step"
+   ],
+   "note": "Workflow step."
+  },
+  {
+   "id": "0d228e333e14e00dc98240d9810786645d544d52",
+   "line": 88,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:88 workflow step"
+   ],
+   "note": "Workflow step."
+  },
+  {
+   "id": "c04270166002217a7453db181181658fd62db8e0",
+   "line": 89,
+   "label": "judgment",
+   "evidence": [
+    "git grep -l \"//go:generate\" | wc -l -> 151 files; git ls-files \"*.proto\" | wc -l -> 75; Makefile:27 `proto:` regenerates"
+   ],
+   "note": "Workflow step; go:generate annotations and .proto files do exist, but the sentence is a conditional instruction rather than a repo description."
+  },
+  {
+   "id": "de8efb8bce5b32de1e2e221be490d9887cf0d210",
+   "line": 90,
+   "label": "judgment",
+   "evidence": [
+    "README.md, Makefile and many package README.md files exist (git ls-files | grep README)"
+   ],
+   "note": "Workflow instruction; the example file names exist."
+  },
+  {
+   "id": "377cd56ca0b5834e0fe8222f00322c893e25c2dc",
+   "line": 91,
+   "label": "judgment",
+   "evidence": [
+    "Makefile:409 `lint-code-fast:` exists (see line 50)"
+   ],
+   "note": "Workflow instruction; the named command exists."
+  },
+  {
+   "id": "603019b3f5b3b89932f54699fb9c39b15801a1f7",
+   "line": 95,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:95 planning guidance"
+   ],
+   "note": "Planning guidance."
+  },
+  {
+   "id": "7d5d7d9bcefe9820e90ded6b70e117143990f844",
+   "line": 96,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:96 planning guidance"
+   ],
+   "note": "Planning guidance."
+  },
+  {
+   "id": "0a689e879d09d2cbf11adfae29b28454fdb8a37f",
+   "line": 97,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:97 planning guidance"
+   ],
+   "note": "Planning guidance."
+  },
+  {
+   "id": "d38026fb66d4808d7aefaea380fdd24d977f2f72",
+   "line": 98,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:98 planning guidance"
+   ],
+   "note": "Planning guidance."
+  },
+  {
+   "id": "2a82f34dbb7037f56ac48e46cd6b21cf611466bf",
+   "line": 99,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:99 planning guidance"
+   ],
+   "note": "Planning guidance."
+  },
+  {
+   "id": "d2613222c0dca0e0182f7f59a9d87023c14a8d42",
+   "line": 100,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:100-104 planning guidance"
+   ],
+   "note": "Planning guidance."
+  },
+  {
+   "id": "9e7c0b1bcec2a297eb9d46fe3bf88ca0f77560ea",
+   "line": 105,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:105 planning guidance"
+   ],
+   "note": "Planning guidance."
+  }
+ ]
+}

@@ -74,7 +74,7 @@ for (const stageName of ['check', 'run']) for (const split of ['tune', 'heldout'
   if (rows.length) groups[`${stageName}/${split}`] = summary(tally(rows));
 }
 const adjudicated = corpus().reduce((n, r) => n + (load(join(here, 'labels', `${r.name}.json`))?.labels.filter((l) => l.adjudicated).length ?? 0), 0);
-const metrics = { adjudicated, generated: new Date().toISOString().slice(0, 10), labeler: 'independent agent labels with cited evidence; a second, human review is pending', groups, perRepo };
+const metrics = { adjudicated, generated: new Date().toISOString().slice(0, 10), labeler: 'independent agent labels with cited evidence, each relabeled blind by a second agent under `eval/LABELING.md`; the maintainer adjudicated every disagreement', groups, perRepo };
 writeFileSync(join(here, 'metrics.json'), `${JSON.stringify(metrics, null, 1)}\n`);
 for (const [k, v] of Object.entries(groups)) console.log(k.padEnd(14), JSON.stringify(v));
 for (const r of perRepo) if (r.misses.length || r.falseAlarms.length || r.wrongVerified.length) console.log(`\n${r.name} ${r.stage}:`, JSON.stringify({ misses: r.misses, falseAlarms: r.falseAlarms, wrongVerified: r.wrongVerified }, null, 1));

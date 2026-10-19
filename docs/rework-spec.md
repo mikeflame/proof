@@ -417,16 +417,16 @@ All seven phases are built. Each criterion of section 10 is listed with its proo
 
 ### Evaluation
 
-Labels come from agents independent of proof, each with cited evidence; two were changed by a second reviewer. A human review of the labels is still pending. Numbers are from `eval/metrics.json`.
+Labels come from agents independent of proof, each with cited evidence. On 2026-10-19 every statement was relabeled blind by a second agent and the maintainer adjudicated the 128 disagreements with both sides' evidence (`eval/LABELING.md`): 124 instruction lines whose names exist moved from true to judgment under the directive rule, the four disputed stale lines stayed stale, and no missed stale line was found. Numbers are from `eval/metrics.json`.
 
 | Stage, split | STALE precision | STALE recall | VERIFIED precision | Fixes kept | Cost, uncached |
 | --- | --- | --- | --- | --- | --- |
 | `proof check`, tune | 100% (4 flagged) | 25% (16 stale) | 100% (28) | — | $0 |
-| `proof run`, tune | 100% (15) | 93.8% | 97.2% (246) | 14 of 14 | $11.95 |
-| `proof check`, held-out | 0% (6 flagged) | 0% (7 stale) | 100% (17) | — | $0 |
-| `proof run`, held-out | 87.5% (8) | 100% | 93.8% (145) | 10 of 11 | $7.93 |
+| `proof run`, tune | 100% (15) | 93.8% | 78% (246) | 14 of 14 | $11.95 |
+| `proof check`, held-out | 0% (6 flagged) | 0% (7 stale) | 94.1% (17) | — | $0 |
+| `proof run`, held-out | 87.5% (8) | 100% | 75.9% (145) | 10 of 11 | $7.93 |
 
-Tuning froze at `2e38c1b`; the held-out split ran once on that build. Its mechanical stage broke D3 on unseen ground: six stale flags, all false, from four causes (MSBuild file types, example project names read as paths, CI bot commands read as programs, `{name}` templates). The fixes for them came after (`6aab6ef`), and `eval/after-heldout.json` records the result: on the held-out repositories `proof check` flags nothing false and verifies 21 statements, all correct; the tune split is unchanged. Those are no longer held-out numbers, and are not reported as such.
+Tuning froze at `2e38c1b`; the held-out split ran once on that build. Its mechanical stage broke D3 on unseen ground: six stale flags, all false, from four causes (MSBuild file types, example project names read as paths, CI bot commands read as programs, `{name}` templates). The fixes for them came after (`6aab6ef`), and `eval/after-heldout.json` records the result: on the held-out repositories `proof check` flags nothing false and verifies 21 statements, 19 of them labeled true (the other two, a heading fragment and a placeholder command, are judgment since the label review); the tune split is unchanged. Those are no longer held-out numbers, and are not reported as such.
 
 After the freeze the verifier prompt stayed at v4. A v5/v6 rule that kept conventions open was tried on the tuning monorepo and reverted, because it also kept false facts open ("is observability only and never changes gate resolution") and lost two gold stale lines on the tune split. The fixer gained four guards instead: it never rewrites a convention into a description of the code that breaks it, a fix it wraps onto more lines is joined back onto the lines it replaces, an edit stays inside its own statement, and the empty-subject guard reads the statement's whole line. The verifier's answers gained one guard too: a true verdict whose own reason says the claim is not shown stays open (it caught a hook the verifier saw but could not show was loaded; no corpus verdict matches it, so the numbers above are unchanged). The tune rows are measured at `6904b11`, with the verifier's verdicts reused from the cache (same prompt, same code). Fixes kept is one sample: the fixer words its fixes differently on each run, and the sample before the last fixer change kept 14 of 16.
 
@@ -434,7 +434,7 @@ After the freeze the verifier prompt stayed at v4. A v5/v6 rule that kept conven
 
 - Mechanical recall is low by design: `proof check` flags 25% of the tune split's stale statements and the agent stage carries the rest. The check stage's job is to never be wrong (100% precision on the tune split), not to be complete.
 - The verifier is not deterministic: two runs of the same file can disagree on a statement at the margin. Decisions (D5) and the verdict cache are what make a second run stable.
-- The verifier calls some guidance lines VERIFIED that the labels call judgment ("Use `logger.Fatal` for core invariant violations"): nothing in the repository contradicts them, but nothing proves them either. Nine of the 145 held-out VERIFIED lines are of this kind.
+- The verifier calls guidance lines VERIFIED when the names in them exist ("Use `logger.Fatal` for core invariant violations"): nothing in the repository contradicts them, but nothing proves them either, and under the labeling protocol they are judgment. This is the verifier's largest error: 54 of the 246 tune and 35 of the 145 held-out VERIFIED lines are of this kind, which is what moved VERIFIED precision from 97.2% and 93.8% before the label review of 2026-10-19 to 78% and 75.9% after it. The correction belongs in the verifier (a directive stays open for a decision), not in the labels.
 - The fixer checks that a new path exists, not whether the code there is deprecated. The one rejected held-out fix pointed a stale `/components` entry at a package whose own doc comment marks it deprecated.
 - A correct fix to a fact inside a convention the code breaks is rejected: the re-verifier still finds the convention false, and nothing in the edit verifies mechanically. The person sees the proposed text under rejected fixes and can apply it.
 - The fix stage varies between runs in wording and, at the margin, in whether a statement gets a fix at all. A second run picks up what the first left; rejected fixes are never proposed again.

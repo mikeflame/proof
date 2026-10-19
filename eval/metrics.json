@@ -1,7 +1,7 @@
 {
- "adjudicated": 2,
- "generated": "2026-10-01",
- "labeler": "independent agent labels with cited evidence; a second, human review is pending",
+ "adjudicated": 126,
+ "generated": "2026-10-19",
+ "labeler": "independent agent labels with cited evidence, each relabeled blind by a second agent under `eval/LABELING.md`; the maintainer adjudicated every disagreement",
  "groups": {
   "check/tune": {
    "repos": 6,
@@ -27,7 +27,7 @@
    "stalePrecision": 0,
    "staleRecall": 0,
    "verified": 17,
-   "verifiedPrecision": 100,
+   "verifiedPrecision": 94.1,
    "fixes": 0,
    "fixAcceptance": null,
    "costUsd": 0,
@@ -42,7 +42,7 @@
    "stalePrecision": 40,
    "staleRecall": 17.4,
    "verified": 45,
-   "verifiedPrecision": 100,
+   "verifiedPrecision": 97.8,
    "fixes": 0,
    "fixAcceptance": null,
    "costUsd": 0,
@@ -57,7 +57,7 @@
    "stalePrecision": 100,
    "staleRecall": 93.8,
    "verified": 246,
-   "verifiedPrecision": 97.2,
+   "verifiedPrecision": 78,
    "fixes": 14,
    "fixAcceptance": 100,
    "costUsd": 0.58,
@@ -72,7 +72,7 @@
    "stalePrecision": 87.5,
    "staleRecall": 100,
    "verified": 145,
-   "verifiedPrecision": 93.8,
+   "verifiedPrecision": 75.9,
    "fixes": 11,
    "fixAcceptance": 90.9,
    "costUsd": 7.93,
@@ -87,7 +87,7 @@
    "stalePrecision": 95.7,
    "staleRecall": 95.7,
    "verified": 391,
-   "verifiedPrecision": 95.9,
+   "verifiedPrecision": 77.2,
    "fixes": 25,
    "fixAcceptance": 96,
    "costUsd": 8.52,
@@ -131,7 +131,7 @@
    "fp": 0,
    "fn": 1,
    "verified": 56,
-   "verifiedTrue": 54,
+   "verifiedTrue": 53,
    "fixes": 1,
    "fixesKept": 1,
    "cost": 0.16602129999999998,
@@ -143,6 +143,7 @@
    "falseAlarms": [],
    "wrongVerified": [
     "L3 (judgment) This file is for agentic coding tools working in this repo.",
+    "L62 (judgment) The rest is owned by the `testing-conventions` skill.",
     "L66 (stale) The whole feature is OPT-IN and off by default: trusted `review.conversation` (repository-"
    ]
   },
@@ -178,7 +179,7 @@
    "fp": 0,
    "fn": 0,
    "verified": 28,
-   "verifiedTrue": 27,
+   "verifiedTrue": 8,
    "fixes": 0,
    "fixesKept": 0,
    "cost": 0,
@@ -187,6 +188,25 @@
    "misses": [],
    "falseAlarms": [],
    "wrongVerified": [
+    "L5 (judgment) If you are an AI coding agent acting for someone who is not a maintainer of this repositor",
+    "L14 (judgment) v2 is released; its public API is a compatibility contract for the 2.x line. Removals, ren",
+    "L21 (judgment) `v1.x` is the maintenance branch for the previous major. Backport PRs target it and use a ",
+    "L28 (judgment) ONLY use uv, NEVER pip",
+    "L29 (judgment) Installation: `uv add <package>`. Exception: the root project's runtime dependencies are d",
+    "L35 (judgment) Running tools: `uv run --frozen <tool>`. Always pass `--frozen` so uv doesn't rewrite `uv.",
+    "L41 (judgment) Don't raise dependency floors for CVEs alone. The `>=` constraint already lets users upgra",
+    "L54 (judgment) `src/mcp/__init__.py` defines the public API surface via `__all__`. Adding a symbol there ",
+    "L60 (judgment) Always pass `encoding=` to text-mode `open()`, `Path.read_text()`/`write_text()`, `tempfil",
+    "L68 (judgment) When writing or reviewing tests, conform to `.claude/skills/test-quality/SKILL.md` — it de",
+    "L71 (judgment) Async testing: use anyio, not asyncio",
+    "L72 (judgment) Do not use `Test` prefixed classes — write plain top-level `test_*` functions. Legacy file",
+    "L77 (judgment) For end-to-end behavior, an in-memory `Client(server)` is usually the cleanest approach (s",
+    "L81 (judgment) Test files mirror the source tree: `src/mcp/client/stdio.py` → `tests/client/test_stdio.py",
+    "L84 (judgment) Use `anyio.Event` — set it in the callback/handler, `await event.wait()` in the test",
+    "L133 (judgment) `# pragma: no cover` — line is never executed. CI's `strict-no-cover` (skipped on Windows ",
+    "L136 (judgment) `# pragma: lax no cover` — excluded from coverage but not checked by `strict-no-cover`. Us",
+    "L139 (judgment) `# pragma: no branch` — excludes branch arcs only. coverage.py misreports the `->exit` arc",
+    "L161 (judgment) Don't include the exception in the message: `logger.exception(\"Failed\")` not `logger.excep",
     "L164 (judgment) JSON: `except json.JSONDecodeError:`"
    ]
   },
@@ -228,7 +248,7 @@
    "fp": 0,
    "fn": 0,
    "verified": 67,
-   "verifiedTrue": 67,
+   "verifiedTrue": 62,
    "fixes": 10,
    "fixesKept": 10,
    "cost": 0.20367629999999998,
@@ -236,7 +256,13 @@
    "repos": 1,
    "misses": [],
    "falseAlarms": [],
-   "wrongVerified": []
+   "wrongVerified": [
+    "L80 (judgment) The package root entry must stay runtime-neutral so browser and Cloudflare Workers bundler",
+    "L228 (judgment) Add capability to `ClientCapabilities` or `ServerCapabilities` in types",
+    "L229 (judgment) Implement sender method in Client or Server class",
+    "L230 (judgment) Add capability check in the appropriate `assertCapabilityForMethod()`",
+    "L231 (judgment) Register handler on the receiving side with `setRequestHandler()`"
+   ]
   },
   {
    "name": "spring-ai",
@@ -272,7 +298,7 @@
    "fp": 0,
    "fn": 0,
    "verified": 10,
-   "verifiedTrue": 10,
+   "verifiedTrue": 7,
    "fixes": 1,
    "fixesKept": 1,
    "cost": 0.022428,
@@ -280,7 +306,11 @@
    "repos": 1,
    "misses": [],
    "falseAlarms": [],
-   "wrongVerified": []
+   "wrongVerified": [
+    "L3 (judgment) Concise extract of [CONTRIBUTING.md](CONTRIBUTING.md), which remains the reference for hum",
+    "L9 (judgment) Format sources: `./mvnw process-sources` (enforced by CI, does not fix import order).",
+    "L18 (judgment) Follow Spring Framework code style; match surrounding code and do not reformat unrelated c"
+   ]
   },
   {
    "name": "rubocop",
@@ -318,7 +348,7 @@
    "fp": 0,
    "fn": 0,
    "verified": 58,
-   "verifiedTrue": 56,
+   "verifiedTrue": 43,
    "fixes": 2,
    "fixesKept": 2,
    "cost": 0.19041560000000002,
@@ -327,8 +357,21 @@
    "misses": [],
    "falseAlarms": [],
    "wrongVerified": [
+    "L3 (judgment) RuboCop is a Ruby static code analyzer and formatter.",
+    "L4 (judgment) Before contributing, read [CONTRIBUTING.md](CONTRIBUTING.md) and the [development docs](ht",
+    "L44 (judgment) Update the description in `config/default.yml`.",
+    "L45 (judgment) Implement the cop.",
+    "L46 (judgment) Write specs.",
+    "L129 (judgment) An existing cop should start reporting a case it currently misses, and the change is conte",
+    "L132 (judgment) An existing cop should correct something differently, and the new correction needs real-wo",
+    "L140 (judgment) The change is a plain bug fix. Those just ship.",
+    "L141 (judgment) The cop is new and you already expect it to be on by default eventually. That is what `Ena",
+    "L144 (judgment) The rule of thumb: if you already know it should become the default, it is `pending`.",
+    "L145 (judgment) If you are asking users to help you find out, it is `preview`.",
+    "L177 (judgment) Preview behavior is unstable by contract: it can change or be withdrawn in any release.",
     "L269 (judgment) Run `bundle exec rake` and ensure it passes before pushing.",
-    "L286 (judgment) Manually creating changelog files — use the rake tasks instead to get the correct filename"
+    "L286 (judgment) Manually creating changelog files — use the rake tasks instead to get the correct filename",
+    "L290 (judgment) Not running full `bundle exec rake` — partial test runs miss lint and doc-syntax failures."
    ]
   },
   {
@@ -363,7 +406,7 @@
    "fp": 0,
    "fn": 0,
    "verified": 27,
-   "verifiedTrue": 25,
+   "verifiedTrue": 19,
    "fixes": 0,
    "fixesKept": 0,
    "cost": 0,
@@ -372,8 +415,14 @@
    "misses": [],
    "falseAlarms": [],
    "wrongVerified": [
+    "L20 (judgment) For security concerns, use the private route below instead.",
+    "L37 (judgment) Do not publish vulnerability details, exploits, proofs of concept, or attack details in pu",
+    "L38 (judgment) Stop public contribution work and follow [SECURITY](.github/SECURITY.md) for private repor",
+    "L40 (judgment) Do not route security concerns through the public contribution process.",
+    "L45 (judgment) Preserve script-facing contracts unless the agreed task explicitly authorizes a breaking c",
     "L58 (judgment) Read only the guides matching the task, before editing or reviewing that area.",
-    "L60 (judgment) They carry repository conventions, not optional suggestions."
+    "L60 (judgment) They carry repository conventions, not optional suggestions.",
+    "L73 (judgment) Run from the repository root with the toolchain declared in `go.mod`."
    ]
   },
   {
@@ -410,7 +459,7 @@
    "fp": 0,
    "fn": 0,
    "verified": 22,
-   "verifiedTrue": 22,
+   "verifiedTrue": 21,
    "fixes": 0,
    "fixesKept": 0,
    "cost": 0.36471539999999997,
@@ -418,7 +467,9 @@
    "repos": 1,
    "misses": [],
    "falseAlarms": [],
-   "wrongVerified": []
+   "wrongVerified": [
+    "L10 (judgment) Use tox for testing (not pytest directly):"
+   ]
   },
   {
    "name": "aspire",
@@ -462,7 +513,7 @@
    "fp": 1,
    "fn": 0,
    "verified": 41,
-   "verifiedTrue": 36,
+   "verifiedTrue": 30,
    "fixes": 7,
    "fixesKept": 7,
    "cost": 4.646586200000001,
@@ -473,11 +524,17 @@
     "L415 dotnet test --project tests/Project.Tests/Project.Tests.csproj --filter \"FullyQualifiedNam"
    ],
    "wrongVerified": [
+    "L34 (judgment) Don't update files under `*/api/*.cs` (e.g. src/Aspire.Hosting/api/Aspire.Hosting.cs) as t",
+    "L44 (judgment) Adds, removes, or renames a test project.",
     "L52 (judgment) Adds, removes, or conditionally changes `QuarantinedTest`, `ActiveIssue`, or `OuterloopTes",
+    "L59 (judgment) A gated job implemented by a reusable workflow must route changes to that workflow file to",
     "L76 (judgment) For a dedicated package-input directory in `path_rules`, prefer one stable directory glob ",
+    "L99 (judgment) A regular-PR target is justified only by scenarios that run in regular PR CI; quarantined,",
     "L118 (judgment) When reviewing official Azure Pipelines YAML changes, validate them by running the interna",
+    "L123 (judgment) Use the `azdo-internal` skill for validation; explicitly record stages excluded by persona",
     "L349 (judgment) PowerShell (Start-Job)",
-    "L364 (judgment) bash (background process)"
+    "L364 (judgment) bash (background process)",
+    "L422 (judgment) All test filtering must use MTP-native switches placed after `--`."
    ]
   },
   {
@@ -517,7 +574,7 @@
    "fp": 0,
    "fn": 0,
    "verified": 30,
-   "verifiedTrue": 27,
+   "verifiedTrue": 21,
    "fixes": 4,
    "fixesKept": 3,
    "cost": 1.080175,
@@ -527,8 +584,14 @@
    "falseAlarms": [],
    "wrongVerified": [
     "L1 (judgment) You are an experienced developer working on the temporal project.",
+    "L62 (judgment) errors MUST be handled, not ignored",
+    "L63 (judgment) Leave `CONSIDER(name):` comments for future design considerations",
+    "L70 (judgment) Check and handle all errors",
     "L72 (judgment) Use `logger.Fatal` for core invariant violations",
-    "L90 (judgment) Verify (Tests): If applicable and feasible, verify the changes using the project's testing"
+    "L73 (judgment) Use `logger.DPanic` for issues that are important but should not crash production",
+    "L89 (judgment) Regenerate: If necessary, regenerate code based on your changes. If you alter anything ann",
+    "L90 (judgment) Verify (Tests): If applicable and feasible, verify the changes using the project's testing",
+    "L91 (judgment) Verify (Standards): VERY IMPORTANT: After making code changes, execute the project-specifi"
    ]
   },
   {
@@ -563,7 +626,7 @@
    "fp": 0,
    "fn": 0,
    "verified": 14,
-   "verifiedTrue": 14,
+   "verifiedTrue": 12,
    "fixes": 0,
    "fixesKept": 0,
    "cost": 0.1266446,
@@ -571,7 +634,10 @@
    "repos": 1,
    "misses": [],
    "falseAlarms": [],
-   "wrongVerified": []
+   "wrongVerified": [
+    "L14 (judgment) Package Development: Work in `packages/*` for editor features",
+    "L15 (judgment) App Development: Work in `excalidraw-app/` for app-specific features"
+   ]
   },
   {
    "name": "ruff",
@@ -584,7 +650,7 @@
    "fp": 0,
    "fn": 0,
    "verified": 9,
-   "verifiedTrue": 9,
+   "verifiedTrue": 8,
    "fixes": 0,
    "fixesKept": 0,
    "cost": 0,
@@ -592,7 +658,9 @@
    "repos": 1,
    "misses": [],
    "falseAlarms": [],
-   "wrongVerified": []
+   "wrongVerified": [
+    "L137 (judgment) Run Ruff:"
+   ]
   },
   {
    "name": "ruff",
@@ -605,7 +673,7 @@
    "fp": 0,
    "fn": 0,
    "verified": 32,
-   "verifiedTrue": 31,
+   "verifiedTrue": 23,
    "fixes": 0,
    "fixesKept": 0,
    "cost": 1.5803314,
@@ -614,6 +682,14 @@
    "misses": [],
    "falseAlarms": [],
    "wrongVerified": [
+    "L7 (judgment) Before starting work on an issue and again before opening a pull request, follow the [guid",
+    "L20 (judgment) When working on ty, PR titles should start with `[ty]`.",
+    "L20 (judgment) Add the `ty` GitHub label.",
+    "L44 (judgment) For security reviews of repository, CI, and release changes, use the [repository threat mo",
+    "L108 (judgment) When running tests with `INSTA_FORCE_PASS=1`, check for `.pending-snap` files if any affec",
+    "L135 (judgment) Use debug builds (not `--release`) when developing, as release builds lack debug assertion",
+    "L137 (judgment) Run Ruff:",
+    "L198 (judgment) Salsa caching can occur due to a function/method having `#[salsa::tracked]` on it, or due ",
     "L208 (judgment) Get your tests to pass. If you didn't run the tests, your code does not work."
    ]
   },
@@ -649,7 +725,7 @@
    "fp": 0,
    "fn": 0,
    "verified": 6,
-   "verifiedTrue": 6,
+   "verifiedTrue": 3,
    "fixes": 0,
    "fixesKept": 0,
    "cost": 0.1346712,
@@ -657,7 +733,11 @@
    "repos": 1,
    "misses": [],
    "falseAlarms": [],
-   "wrongVerified": []
+   "wrongVerified": [
+    "L8 (judgment) A published [sdk-spec](https://github.com/PostHog/sdk-specs) that defines the API counts a",
+    "L11 (judgment) Check for package-level `AGENTS.md` files and contributor guides before working in a packa",
+    "L12 (judgment) Keep shared development guidance in `CONTRIBUTING.md` and release guidance in `RELEASING.m"
+   ]
   }
  ]
 }

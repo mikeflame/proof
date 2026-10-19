@@ -1,0 +1,913 @@
+{
+ "repo": "modelcontextprotocol/typescript-sdk",
+ "sha": "433eb413dc305ebeb93b8ebcde0095a8fc0d5fa0",
+ "file": "CLAUDE.md",
+ "labeler": "blind second labeler (agent), 2026-10-19, under the protocol in eval/LABELING.md; never saw the first labels or a proof report",
+ "labels": [
+  {
+   "id": "8bc57eb358878f413c425ee21da09b4e7c66c22a",
+   "line": 3,
+   "label": "judgment",
+   "evidence": [
+    "CLAUDE.md:3 — statement of the file's purpose/audience; nothing in the repo can prove or contradict it"
+   ],
+   "note": "Purpose statement, not a checkable fact."
+  },
+  {
+   "id": "107621b8fdc306c04557de4e82c6a5f34824d4d5",
+   "line": 8,
+   "label": "true",
+   "evidence": [
+    "package.json:18 \"packageManager\": \"pnpm@10.26.1\"",
+    "pnpm-workspace.yaml:1-8 packages: packages/**/*, common/**/*, examples, examples/*, test/**/*",
+    "pnpm-lock.yaml present at repo root"
+   ],
+   "note": "pnpm workspace with lockfile; `pnpm install` installs all workspace packages."
+  },
+  {
+   "id": "27632600ad24a6938d8bf60506718e2261077051",
+   "line": 10,
+   "label": "true",
+   "evidence": [
+    "package.json:36 \"build:all\": \"pnpm -r build\"",
+    "packages/client/package.json scripts \"build\": \"tsdown\" (same in server, core, server-legacy, codemod, middleware/*)"
+   ],
+   "note": "Recursive build over workspace; core-internal has no build script (pnpm -r skips it), which does not contradict the comment."
+  },
+  {
+   "id": "be06981b691bea976f6799b8793d6e03467088c0",
+   "line": 11,
+   "label": "true",
+   "evidence": [
+    "package.json:39 \"lint:all\": \"pnpm sync:snippets --check && pnpm -r lint\"",
+    "packages/core-internal/package.json \"lint\": \"eslint src/ && prettier --ignore-path ../../.prettierignore --check .\" (identical shape in every package)"
+   ],
+   "note": "Per-package lint runs ESLint then `prettier --check`; also runs a snippet-sync check first (extra, not a contradiction)."
+  },
+  {
+   "id": "03d65d721bef0a4fc8a4daff632c5816e7190c8f",
+   "line": 12,
+   "label": "true",
+   "evidence": [
+    "package.json:40 \"lint:fix:all\": \"pnpm sync:snippets && pnpm -r lint:fix\"",
+    "packages/core-internal/package.json \"lint:fix\": \"eslint src/ --fix && prettier --ignore-path ../../.prettierignore --write .\""
+   ],
+   "note": "eslint --fix + prettier --write in every package."
+  },
+  {
+   "id": "0cca65bfe1be6e68facd666c8af873217d28f9db",
+   "line": 14,
+   "label": "true",
+   "evidence": [
+    "package.json:42 \"test:all\": \"pnpm -r test\"",
+    "packages/*/package.json \"test\": \"vitest run\" (core-internal, client, server, core, server-legacy, codemod, middleware/*)"
+   ],
+   "note": "Recursive vitest run."
+  },
+  {
+   "id": "aca0469d4d2cd1325501fdbb94562d73ccb47c4b",
+   "line": 15,
+   "label": "true",
+   "evidence": [
+    "package.json:41 \"check:all\": \"pnpm sync:snippets --check && pnpm -r typecheck && pnpm -r lint && pnpm run docs:check\""
+   ],
+   "note": "Does run typecheck + lint across all packages; additionally runs snippet check and docs:check (unmentioned extras, not a contradiction)."
+  },
+  {
+   "id": "9c14efed9457ab74775b3c61dbc840dfa948710b",
+   "line": 19,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/package.json \"name\": \"@modelcontextprotocol/core-internal\"",
+    "packages/core-internal/package.json \"test\": \"vitest run\""
+   ],
+   "note": "Filter name and script both defined; script is exactly `vitest run`."
+  },
+  {
+   "id": "98c11cbf778d603d03287b1d0cd38cef4e2c1845",
+   "line": 20,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/package.json \"test:watch\": \"vitest\""
+   ],
+   "note": "Watch-mode script defined as bare `vitest`."
+  },
+  {
+   "id": "0ccb9ef8964e2b08e64b0d0ecdbdc604c9b8b9bb",
+   "line": 22,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/package.json \"test\": \"vitest run\" — extra args are forwarded to vitest",
+    "`-t` is vitest's alias for --testNamePattern (external tool flag, not provable from the checkout)"
+   ],
+   "note": "Package and script proven; the `-t` flag is a standard vitest CLI flag outside the repo."
+  },
+  {
+   "id": "1c15b921849a0ad52c53b3b74ea97433dd466840",
+   "line": 27,
+   "label": "judgment",
+   "evidence": [
+    "ls docs/migration → index.md support-2026-07-28.md upgrade-to-v2.md (both named files exist)"
+   ],
+   "note": "Workflow instruction ('add to…'); the named paths exist but the instruction itself is a convention."
+  },
+  {
+   "id": "11f779cde751580886312b2eb4b93e09f9ac95a3",
+   "line": 29,
+   "label": "judgment",
+   "evidence": [
+    "ls packages/codemod/src/migrations/v1-to-v2/mappings/ → authSchemaNames.ts contextPropertyMap.ts importMap.ts schemaRouting.ts schemaToMethodMap.ts specSchemaNames.ts symbolMap.ts",
+    "packages/codemod/src/migrations/v1-to-v2/transforms/importPaths.ts:10-13 imports from '../mappings/…' (codemod does consume the mappings)"
+   ],
+   "note": "Instruction about where renames go and not to duplicate tables; the directory exists and transforms import it, but the 'go in / do not reproduce / link instead' parts are conventions."
+  },
+  {
+   "id": "fdc476bc0adc6794b8e164a95052c0d95d8855bf",
+   "line": 33,
+   "label": "judgment",
+   "evidence": [
+    "CLAUDE.md:33 — writing guidance for migration notes"
+   ],
+   "note": "Pure instruction."
+  },
+  {
+   "id": "fbfc972511ddbc4b4c9c5a471bd340e1a4593172",
+   "line": 37,
+   "label": "judgment",
+   "evidence": [
+    "common/tsconfig/tsconfig.json:19 \"strict\": true; :5 \"module\": \"ESNext\"; package.json:10 \"type\": \"module\"",
+    "common/eslint-config/eslint.config.mjs — no @typescript-eslint/explicit-function-return-type or explicit-module-boundary-types rule"
+   ],
+   "note": "Strict + ESM proven; 'explicit return types' is a style preference with no enforcing config, so the statement as a whole is a convention."
+  },
+  {
+   "id": "19efa426dd1f44fd46a65f12e4b712e9153eefda",
+   "line": 38,
+   "label": "judgment",
+   "evidence": [
+    "common/eslint-config/eslint.config.mjs — no @typescript-eslint/naming-convention rule"
+   ],
+   "note": "Naming convention, unenforced."
+  },
+  {
+   "id": "a3343b1bb53e2ee10d8634446951f5bdfd8f07d1",
+   "line": 39,
+   "label": "stale",
+   "evidence": [
+    "common/eslint-config/eslint.config.mjs:86-91 'unicorn/filename-case': ['error', { case: 'camelCase' }]",
+    "git ls-files packages | grep '/src/.*\\.ts$' basenames: total 148, with uppercase (camelCase) 92, with hyphen 2 — the 2 are generated spec.types.2025-11-25.ts / spec.types.2026-07-28.ts",
+    "examples: packages/server/src/server/streamableHttp.ts, packages/client/src/client/authExtensions.ts, packages/core-internal/src/validators/ajvProvider.ts",
+    "`.test.ts` suffix part holds: common/vitest-config/vitest.config.js:13 include: ['test/**/*.test.ts']"
+   ],
+   "note": "Lint config enforces camelCase file names and the tree follows it; 'lowercase with hyphens' is contradicted."
+  },
+  {
+   "id": "b4ee13ea50cff9b9257fa04158311b513cdcf24e",
+   "line": 40,
+   "label": "true",
+   "evidence": [
+    "common/tsconfig/tsconfig.json:6 \"moduleResolution\": \"bundler\"",
+    "git grep -E \"from '\\.\\.?/[^']+\\.js'\" -- 'packages/**/src/**/*.ts' | wc -l → 0; extensionless relative imports → 407",
+    "common/eslint-config/eslint.config.mjs:39 comment 'Resolve extensionless relative imports (moduleResolution: bundler)'; :66-67 simple-import-sort rules"
+   ],
+   "note": "No .js-suffixed relative imports anywhere in package sources; bundler resolution confirmed."
+  },
+  {
+   "id": "692a9d4e1bd31a45d8320ae9617836f77c3676d9",
+   "line": 42,
+   "label": "true",
+   "evidence": [
+    "common/vitest-config/vitest.config.js:13 include: ['test/**/*.test.ts']",
+    "all 10 packages' vitest.config.js import/extend @modelcontextprotocol/vitest-config (client merges setupFiles only)",
+    "git ls-files: test/ dir present in client, codemod, core-internal, core, server, server-legacy, middleware/{express,fastify,hono,node}; no *.test.ts outside those test/ dirs"
+   ],
+   "note": "Include pattern and layout proven; 'descriptive test names' is a soft instruction."
+  },
+  {
+   "id": "629f8c21f567ffc5cbc242e25752d1dff3aa667e",
+   "line": 43,
+   "label": "judgment",
+   "evidence": [
+    "CLAUDE.md:43 — comment-style preference"
+   ],
+   "note": "Convention."
+  },
+  {
+   "id": "7242dde6734c54671cc64a59a54a79126a9f09f6",
+   "line": 47,
+   "label": "true",
+   "evidence": [
+    "ls packages/client/src/client → client.examples.ts next to client.ts (also middleware.examples.ts, auth.examples.ts, streamableHttp.examples.ts)",
+    "packages/client/src/client/client.ts:513 ` ```ts source=\"./client.examples.ts#Client_setRequestHandler_sampling\" `",
+    "scripts/sync-snippets.ts:10,25 region extraction from .examples.ts; package.json:25 \"sync:snippets\": \"tsx scripts/sync-snippets.ts\"",
+    "packages/client/tsconfig.json-style include \"./\" (via common) type-checks *.examples.ts; common/eslint-config/eslint.config.mjs:103 override for '**/*.examples.ts'"
+   ],
+   "note": "The companion-file mechanism exists exactly as described, including the named client.ts → client.examples.ts pair."
+  },
+  {
+   "id": "597157be70296601307fcb6939073ae1237fec6f",
+   "line": 47,
+   "label": "stale",
+   "evidence": [
+    "git grep -n '#region Client_connect_basicUsage' → no match; packages/client/src/client/client.examples.ts regions are ClientOptions_listChanged, Client_connect_stdio, Client_connect_sseFallback, Client_callTool_basic, …",
+    "git log -S'Client_connect_basicUsage' → only 553d6d4a, and there only in CLAUDE.md (never a real region)",
+    "applyMiddlewares_basicUsage does exist: packages/client/src/client/middleware.examples.ts:25 //#region applyMiddlewares_basicUsage",
+    "fence syntax and whole-file inclusion proven: scripts/sync-snippets.ts:25,70-71,86,105 (empty regionName = whole file)"
+   ],
+   "note": "Concrete example region `Client_connect_basicUsage` does not exist (real ones are Client_connect_stdio / Client_connect_sseFallback); the other example and the fence rules are correct."
+  },
+  {
+   "id": "ab53ac6db365f1586d675ec265d83d365660c862",
+   "line": 57,
+   "label": "stale",
+   "evidence": [
+    "packages/core-internal/src/types/types.ts:1-5 'Only add MCP-spec-derived types here' and `import type * as z from 'zod/v4'` — type-only; no Zod schema definitions in the 967-line file",
+    "packages/core-internal/src/types/schemas.ts:1-2 'Moved: the spec Zod schemas now live in @modelcontextprotocol/core (packages/core/src/schemas.ts). This module re-exports them'; :175 from '@modelcontextprotocol/core/internal'",
+    "packages/core-internal/src/types/constants.ts:1-2 'Moved: the protocol constants now live in @modelcontextprotocol/core (packages/core/src/constants.ts)'",
+    "CLAUDE.md:73 itself calls packages/core 'the canonical home of the schema source modules'"
+   ],
+   "note": "Path exists and holds spec-derived TS types, but the Zod schemas and protocol constants are defined in packages/core/src, not in types.ts."
+  },
+  {
+   "id": "d7cdd72e365b957db8d05a225ea067edfeb44142",
+   "line": 59,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:565 export abstract class Protocol<ContextT extends BaseContext>",
+    "protocol.ts:568 _requestHandlers map, :573 _responseHandlers map (request/response correlation), :794 async connect(transport), :812-819 transport.onmessage → _onresponse/_onnotification/_onrequest routing, :938 _onrequest, :1250 protected abstract assertCapabilityForMethod",
+    "packages/client/src/client/client.ts:530 export class Client extends Protocol<ClientContext>",
+    "packages/server/src/server/server.ts:261 export class Server extends Protocol<ServerContext>"
+   ],
+   "note": "Abstract class, routing, correlation, capability checks and transport handling all read in code; both subclasses extend it."
+  },
+  {
+   "id": "334805a2438e060ea33a9c0388acd3124f63dffc",
+   "line": 62,
+   "label": "true",
+   "evidence": [
+    "packages/client/src/client/client.ts:530 export class Client extends Protocol<ClientContext>",
+    "client.ts:2327 async callTool(params, options?): Promise<CallToolResult> (typed MCP operation methods)"
+   ],
+   "note": "Path, inheritance and typed methods confirmed."
+  },
+  {
+   "id": "1dbf9e3ee301f9c606357f1ceb7d91d9fa2c281a",
+   "line": 63,
+   "label": "true",
+   "evidence": [
+    "packages/server/src/server/server.ts:261 export class Server extends Protocol<ServerContext>",
+    "server.ts:337 this.setRequestHandler('initialize', …), :346 setRequestHandler('server/discover', …); protocol.ts:1701 setRequestHandler<M extends RequestMethod>("
+   ],
+   "note": "Path, inheritance and request-handler registration confirmed."
+  },
+  {
+   "id": "6fac6d65887f0a219bd888f491056b0b18a8b924",
+   "line": 70,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/package.json name @modelcontextprotocol/core-internal, \"private\": true, exports '.' → ./dist/index",
+    "packages/core-internal/src/index.ts:15 export * from './shared/protocol' (Protocol), :18 export * from './shared/stdio' (stdio utils), :22 export * from './types/index' → types/index.ts:7 export * from './schemas' (Zod schemas)",
+    "packages/client/package.json and packages/server/package.json depend on it via workspace (tsconfig paths / pnpm workspace)"
+   ],
+   "note": "Barrel re-exports protocol, stdio and schemas; package is private."
+  },
+  {
+   "id": "53e26e613f8ec96be700c214a05f19ec44a01994",
+   "line": 71,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/package.json exports './public' → ./src/exports/public/index.ts",
+    "packages/core-internal/src/exports/public/index.ts:60 export { DEFAULT_REQUEST_TIMEOUT_MSEC, mergeCapabilities, Protocol } from '../../shared/protocol'; :13,17 error classes (OAuthError, SdkError, SdkHttpError); :100 from '../../types/constants'; :132 from '../../types/guards'; many export type blocks",
+    "packages/client/src/index.ts:122 and packages/server/src/index.ts:116 export * from '@modelcontextprotocol/core-internal/public'"
+   ],
+   "note": "Every listed category and the re-export by client/server are in code."
+  },
+  {
+   "id": "c65815840d439239cc38a3af7537337de117934c",
+   "line": 72,
+   "label": "true",
+   "evidence": [
+    "packages/client/src/index.ts and packages/server/src/index.ts exist; package names @modelcontextprotocol/client and @modelcontextprotocol/server",
+    "grep 'export \\*' → only client/src/index.ts:122 and server/src/index.ts:116, both from '@modelcontextprotocol/core-internal/public'; all other exports are named"
+   ],
+   "note": "Named package-specific exports plus a single re-export of core-internal/public."
+  },
+  {
+   "id": "f3f1a54dd3455ff26f169d554aa77a5a79ac1481",
+   "line": 73,
+   "label": "true",
+   "evidence": [
+    "packages/core/src: auth.ts constants.ts index.ts internal.ts schemas.ts types.ts",
+    "packages/core/src/index.ts:7-8 'This root entry re-exports ONLY the *Schema Zod values … CallToolResultSchema.parse(value)'; export list contains only *Schema names",
+    "packages/core/package.json dependencies: { zod } only; exports '.' and './internal'",
+    "packages/core/src/internal.ts:20-26 export * from './auth' | './constants' | './schemas' (+ JSON value types)",
+    "packages/core-internal/src/types/schemas.ts:175 and constants.ts:26 re-export from '@modelcontextprotocol/core/internal' at the old module paths",
+    "packages/client/tsdown.config.ts:40, packages/server/tsdown.config.ts:40, packages/server-legacy/tsdown.config.ts:28 external: [... '@modelcontextprotocol/core/internal']",
+    "public/index.ts has no zod import and no *Schema value export (Zod-free public surface)"
+   ],
+   "note": "Every clause checked in code/config; the Zod-free clause is supported by the export lists rather than a dedicated test."
+  },
+  {
+   "id": "073d04a05cfaa946fcce32f6082ad923178b4b90",
+   "line": 78,
+   "label": "judgment",
+   "evidence": [
+    "CLAUDE.md:78 — guidance about intent when editing index.ts"
+   ],
+   "note": "Instruction/convention."
+  },
+  {
+   "id": "5d862ac85f5979fdf1e227efba55d6c57f84b4b4",
+   "line": 79,
+   "label": "judgment",
+   "evidence": [
+    "CLAUDE.md:79 — rule about where helpers may be exported"
+   ],
+   "note": "Convention."
+  },
+  {
+   "id": "c4f478f246a7a3ff7e1f8a5ca79a093ef75c919f",
+   "line": 80,
+   "label": "judgment",
+   "evidence": [
+    "packages/client/package.json and packages/server/package.json exports include './stdio' (named subpath)",
+    "packages/client/test/client/barrelClean.test.ts and packages/server/test/server/barrelClean.test.ts exist; NODE_ONLY = /\\b(child_process|cross-spawn|node:stream|node:child_process)\\b/"
+   ],
+   "note": "A 'must' rule; its named examples (./stdio subpath, barrelClean test) exist, but the rule itself is a convention."
+  },
+  {
+   "id": "bd881540ec9c9fb19d9183837fa85a4a69d6246c",
+   "line": 84,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/transport.ts exists; :173 export interface Transport; :117 export type TransportSendOptions",
+    "protocol.ts:794 async connect(transport: Transport)"
+   ],
+   "note": "Transport interface defined at the stated path."
+  },
+  {
+   "id": "2c1cf118c5317ecd8129248d294e3154dbf241ee",
+   "line": 87,
+   "label": "stale",
+   "evidence": [
+    "ls packages/server/src/server → no sse.ts (completable.ts, mcp.ts, server.ts, stdio.ts, streamableHttp.ts, …)",
+    "git log -1 --diff-filter=D -- packages/server/src/server/sse.ts → f495077e '[v2] Decouple server from express and hono'",
+    "server SSE now at packages/server-legacy/src/sse/sse.ts (package.json exports './sse')",
+    "packages/client/src/client/sse.ts exists"
+   ],
+   "note": "Server-side SSE path is wrong; it moved to server-legacy."
+  },
+  {
+   "id": "2dbee95f6fb90e49e10b2634e819d900baad8a13",
+   "line": 88,
+   "label": "true",
+   "evidence": [
+    "packages/server/src/server/stdio.ts and packages/client/src/client/stdio.ts exist",
+    "packages/client/src/client/stdio.ts:8 import spawn from 'cross-spawn'; :136 this._process = spawn(this._serverParams.command, …)"
+   ],
+   "note": "Both paths exist; client spawns the server process."
+  },
+  {
+   "id": "d4710bd7781e2a2e9403958bd283dddace068c23",
+   "line": 92,
+   "label": "stale",
+   "evidence": [
+    "packages/server/src/server/mcp.ts methods: registerResource (:633,:639,:645), registerTool (:1025), registerPrompt (:1085,:1124); no tool(/resource(/prompt( method definitions",
+    "docs/migration/upgrade-to-v2.md:627-628 'The deprecated variadic .tool(), .prompt(), .resource() are removed. Use registerTool / registerPrompt / registerResource'"
+   ],
+   "note": "The named methods no longer exist on McpServer."
+  },
+  {
+   "id": "ac4a70986df9dd63d7277e6643114493a19b2f5d",
+   "line": 93,
+   "label": "stale",
+   "evidence": [
+    "find packages/server/src/server/auth → No such file or directory",
+    "git log -1 -- packages/server/src/server/auth → f495077e '[v2] Decouple server from express and hono' (removed)",
+    "OAuth server code lives in packages/server-legacy/src/auth/ (router.ts, provider.ts, handlers/, middleware/, providers/); server-legacy package.json exports './auth'"
+   ],
+   "note": "Path does not exist in packages/server; implementation moved to server-legacy."
+  },
+  {
+   "id": "81ca2fc964c26cf3abccc2eb709658386bad1f71",
+   "line": 98,
+   "label": "stale",
+   "evidence": [
+    "ls packages/client/src/client → auth.ts, authExtensions.ts (no auth-extensions.ts)",
+    "git log -1 -- packages/client/src/client/auth-extensions.ts → 9fc7e28f '`v2` ESlint fixes (#1403)' (renamed to camelCase)"
+   ],
+   "note": "auth.ts exists; auth-extensions.ts is now authExtensions.ts."
+  },
+  {
+   "id": "27e8efddb045cc81a1015e8c263fc17d264639fd",
+   "line": 99,
+   "label": "true",
+   "evidence": [
+    "packages/client/src/client/middleware.ts exists; :14 export type Middleware = (next: FetchLike) => FetchLike",
+    "packages/middleware/ holds the separate framework adapter packages (express, fastify, hono, node)"
+   ],
+   "note": "Fetch-level request middleware, distinct from the adapter packages."
+  },
+  {
+   "id": "33dd30b09dd62bdded15aef13757b96628954f72",
+   "line": 100,
+   "label": "true",
+   "evidence": [
+    "packages/client/src/client/client.ts:813-815 _wrapHandler 'Enforces client-side validation for elicitation/create and sampling/createMessage'; :894 if (method === 'sampling/createMessage')",
+    "client.ts:501-507 JSDoc: handle via setRequestHandler; sampling deprecated as of 2026-07-28 but 'remain functional'"
+   ],
+   "note": "Clients can register and run a sampling/createMessage handler (deprecated in the newest protocol era but still supported)."
+  },
+  {
+   "id": "e4e168276c55275e42fc93e9fe8e45c9fa3c93a8",
+   "line": 101,
+   "label": "true",
+   "evidence": [
+    "packages/client/src/client/client.ts:820 if (method === 'elicitation/create'); :849 getSupportedElicitationModes(...); :851 params.mode === 'form' check; :855 params.mode === 'url' check"
+   ],
+   "note": "Form and URL elicitation modes both handled in the client wrapper."
+  },
+  {
+   "id": "a626d30b49b9e182a129e06d1e819fe24b75620c",
+   "line": 106,
+   "label": "true",
+   "evidence": [
+    "ls packages/middleware → express fastify hono node README.md"
+   ],
+   "note": "Middleware packages directory exists with four adapters."
+  },
+  {
+   "id": "917f2423e55302beb46321547bb42e01b61401d7",
+   "line": 106,
+   "label": "true",
+   "evidence": [
+    "packages/middleware/express/package.json name @modelcontextprotocol/express",
+    "packages/middleware/hono/package.json name @modelcontextprotocol/hono",
+    "packages/middleware/node/package.json name @modelcontextprotocol/node"
+   ],
+   "note": "All three named packages exist (plus @modelcontextprotocol/fastify, consistent with 'e.g.')."
+  },
+  {
+   "id": "5a4fc9b72f2c0f5e4568af09753b5e0100a55d8a",
+   "line": 106,
+   "label": "judgment",
+   "evidence": [
+    "packages/middleware/*/package.json peerDependencies on @modelcontextprotocol/server (thin adapters), but 'should not add new MCP functionality' is a policy"
+   ],
+   "note": "Design rule/convention."
+  },
+  {
+   "id": "6e2be1e9d937aeeada227c9c5ce3aec09a291c45",
+   "line": 110,
+   "label": "stale",
+   "evidence": [
+    "find packages examples test -type d -name experimental → no results",
+    "git log -1 --diff-filter=D -- 'packages/*/src/experimental/*' → c8d7401b '[SEP-2663] refactor!: remove 2025-11 experimental tasks (#2128)'"
+   ],
+   "note": "No packages/*/src/experimental/ directory exists at this commit; the last one was deleted in c8d7401b."
+  },
+  {
+   "id": "bb00aa6a9eefc947267dd9a1156ee1f35b8cde8e",
+   "line": 114,
+   "label": "true",
+   "evidence": [
+    "git grep -c \"from 'zod/v4'\" -- packages => 66 hits; e.g. packages/core-internal/src/util/schema.ts:6 `import * as z from 'zod/v4';`, packages/core-internal/src/types/types.ts:5 `import type * as z from 'zod/v4';`",
+    "git grep -n \"from 'zod'\" -- 'packages/*/src' => no hits (no bare-zod imports)",
+    "pnpm-workspace.yaml:56 `zod: ^4.2.0` (catalog runtimeShared)"
+   ],
+   "note": "Counted zod/v4 imports across packages; no plain 'zod' import in any package src; catalog pins zod 4.x."
+  },
+  {
+   "id": "5ab6f0852d141306587fdbbc96d4c4336e7274fc",
+   "line": 116,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/util/schema.ts:11 `export type AnySchema = z.core.$ZodType;`",
+    "packages/core-internal/src/util/schema.ts:16 `export type AnyObjectSchema = z.core.$ZodObject;`; :27 `export function parseSchema(...)`; :36 `export function shapeKeys(schemas: Array<{ shape: Record<string, unknown> }>)` reads `Object.keys(schema.shape)`",
+    "wc -l => 39 lines; the whole file is the alias + these helpers"
+   ],
+   "note": "File exists; AnySchema alias defined; parseSchema/shapeKeys are the helpers that inspect Zod schemas/shapes."
+  },
+  {
+   "id": "393cff674436fdf3d58ec0e0d31c7d2467d40fd9",
+   "line": 120,
+   "label": "true",
+   "evidence": [
+    "ls packages/core-internal/src/validators/ => ajvProvider.ts cfWorkerProvider.ts dialects.ts fromJsonSchema.ts types.ts (+ .examples.ts, fastUriShim.d.ts)",
+    "packages/core-internal/src/validators/types.ts:51 `export interface jsonSchemaValidator {` :58 `getValidator<T>(schema: JsonSchemaType): JsonSchemaValidator<T>;`",
+    "packages/client/src/client/client.ts:197 `jsonSchemaValidator?: jsonSchemaValidator;` and :638 `this._jsonSchemaValidator = options?.jsonSchemaValidator ?? new DefaultJsonSchemaValidator();`; packages/server/src/server/server.ts:321 same"
+   ],
+   "note": "Directory exists; a validator interface is defined and Client/Server accept a caller-supplied implementation (pluggable)."
+  },
+  {
+   "id": "af713d9d850bbe9293ae47ad28350768d270d514",
+   "line": 122,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/validators/ajvProvider.ts:1-3 `AJV-based JSON Schema validator provider`; :5-7 imports Ajv/Ajv2019/Ajv2020; class `AjvJsonSchemaValidator`",
+    "packages/client/src/shimsNode.ts:6 and packages/server/src/shimsNode.ts:6 `export { AjvJsonSchemaValidator as DefaultJsonSchemaValidator } from '@modelcontextprotocol/core-internal/validators/ajv';`",
+    "packages/client/src/client/client.ts:638 / packages/server/src/server/server.ts:321 `options?.jsonSchemaValidator ?? new DefaultJsonSchemaValidator()`",
+    "packages/client/src/client/client.ts:195 `@default Runtime-selected validator (AJV-backed on Node.js, @cfworker/json-schema-backed on browser/workerd runtimes)`"
+   ],
+   "note": "File exists and is the Ajv validator; it is the default on Node (shimsNode). Caveat: on browser/workerd shims the default is the cfworker provider, so 'default' is runtime-dependent, not contradicted."
+  },
+  {
+   "id": "a6179339498fc9858d67d9056a5a0781cb2bd161",
+   "line": 123,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/validators/cfWorkerProvider.ts:1-8 `Cloudflare Worker-compatible JSON Schema validator provider ... uses @cfworker/json-schema ... compatible with edge runtimes like Cloudflare Workers`; class `CfWorkerJsonSchemaValidator`",
+    "packages/client/src/shimsWorkerd.ts:8 / packages/server/src/shimsWorkerd.ts:8 `export { CfWorkerJsonSchemaValidator as DefaultJsonSchemaValidator } ... validators/cfWorker`"
+   ],
+   "note": "File exists; header and workerd shim confirm it is the Cloudflare-Workers-compatible alternative."
+  },
+  {
+   "id": "d40c6a4fe73fd87ffe9d73bfbc23ff454a55c9b5",
+   "line": 131,
+   "label": "true",
+   "evidence": [
+    "ls -la examples/README.md => 17838 bytes",
+    "examples/README.md:25-77 story tables with columns `Story | What it teaches | Transports | Era` (e.g. :39 `elicitation/ ... stdio + http | dual`)"
+   ],
+   "note": "File exists and contains the per-story transport x era matrix."
+  },
+  {
+   "id": "6e62b59dfd6bbf403a94282f31194e6da9dcadaa",
+   "line": 133,
+   "label": "true",
+   "evidence": [
+    "examples/shared/package.json: `\"name\": \"@mcp-examples/shared\"`, `\"exports\": { \".\": \"./src/index.ts\", \"./auth\": \"./src/indexAuth.ts\" }`",
+    "examples/shared/src/index.ts:7 `export { check, parseExampleArgs, siblingPath } from './args';` (only other export is `export type {...}` from './args'); :2-4 comment: root barrel is args-only so non-auth stories do not eagerly evaluate better-auth/express/cors/better-sqlite3",
+    "examples/shared/src/indexAuth.ts exports `createDemoAuth` (auth.ts:2 `Better Auth configuration for MCP demo servers`, :4 `DEMO ONLY`), `setupAuthServer`, `demoTokenVerifier`, and `InMemoryEventStore` (from './inMemoryEventStore')",
+    "examples/CONTRIBUTING.md exists; :11-12 `Every story shows the SDK transport setup **inline**`, :16-20 only argv parsing shared via parseExampleArgs/check/siblingPath; auth at the `@mcp-examples/shared/auth` subpath"
+   ],
+   "note": "Package name, both export subpaths, the three root exports, the auth-subpath contents and the CONTRIBUTING reference all match."
+  },
+  {
+   "id": "4aeb4d5854ccc6c00ce468802181f4fa4155a91c",
+   "line": 134,
+   "label": "true",
+   "evidence": [
+    "ls scripts/examples/ => run-examples.ts (only file)",
+    "package.json scripts: `\"run:examples\": \"tsx scripts/examples/run-examples.ts\"`"
+   ],
+   "note": "Directory and runner file exist; root script points at it."
+  },
+  {
+   "id": "ba9b75a6c1235859424d9babd8b4ab4dd866a892",
+   "line": 135,
+   "label": "true",
+   "evidence": [
+    "find examples/guides -name '*.examples.ts' | wc -l => 44, laid out as <section>/<page>.examples.ts (e.g. examples/guides/servers/tools.examples.ts for docs/servers/tools.md; examples/guides/README.md:3 `each <dir>/<page>.examples.ts is the type-checked source for the code fences in docs/<dir>/<page>.md`)",
+    "package.json scripts: `\"sync:snippets\": \"tsx scripts/sync-snippets.ts\"`, `\"docs:examples\": \"tsx scripts/run-guide-examples.ts\"`",
+    ".github/workflows/examples.yml:53 `run: pnpm docs:examples`",
+    "scripts/run-guide-examples.ts:12-17: companions whose first line is `// docs: typecheck-only` are SKIPped, so only the runnable ones execute",
+    "Caveat (not strictly one per page): docs/troubleshooting.md fences cite both troubleshooting.examples.ts and troubleshooting.stdio.examples.ts; docs/serving/authorization.md cites authorization.examples.ts and authorization.web.examples.ts; docs/get-started/examples.md and docs/behavior-surface-pins.md have no companion"
+   ],
+   "note": "Directory, naming pattern, both scripts and the CI step all verified. The parenthetical 'one per page' is the repo's own stated convention but has 2 pages with a second variant companion and 2 pages with none; treated as a pattern description, not a contradicted count."
+  },
+  {
+   "id": "5a7dfe5ae15d265c2af3c072a9948a9cf71bcfcb",
+   "line": 139,
+   "label": "judgment",
+   "evidence": [
+    "Opinion about what a reader must understand; nothing in the repo can prove or contradict it"
+   ],
+   "note": "Statement of importance/purpose, not a checkable fact."
+  },
+  {
+   "id": "9f27e213695751c96e28f376ddcf98c43f3c29be",
+   "line": 152,
+   "label": "true",
+   "evidence": [
+    "packages/client/src/client/client.ts:2327 `async callTool(params: CallToolRequest['params'], options?: CallToolRequestOptions): Promise<CallToolResult>`; :2400 `result = await this.request({ method: 'tools/call', params }, await buildSendOptions());`",
+    "packages/server/src/server/server.ts:1042-1072 `async createMessage(...)` overloads; :1134 `const wide = await this.request({ method: 'sampling/createMessage', params }, options);`"
+   ],
+   "note": "Both named methods exist and both enter the outbound flow via this.request()."
+  },
+  {
+   "id": "1fc7858e87f22cad95315d9661e6cd4709f4e27a",
+   "line": 154,
+   "label": "true",
+   "evidence": [
+    "packages/client/src/client/client.ts:2400 `result = await this.request({ method: 'tools/call', params }, await buildSendOptions());` inside callTool (:2327)"
+   ],
+   "note": "Client.callTool calls this.request()."
+  },
+  {
+   "id": "d468377877f424282f9b36179074ecd426b37d86",
+   "line": 155,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:1276-1285 `request<M extends RequestMethod>(...)` / `request<T extends StandardSchemaV1>(...)` / `request(request, schemaOrOptions?, maybeOptions?): Promise<unknown>`; :1292/:1297 delegates to `_requestWithSchemaViaCodec` (:1385) which does the work the sub-bullets describe"
+   ],
+   "note": "Protocol.request() exists; the listed steps live in its synchronous helper _requestWithSchemaViaCodec."
+  },
+  {
+   "id": "867c6ca3c11a19baf519a3a2bab4fa04fa0b4c93",
+   "line": 157,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:1250 `protected abstract assertCapabilityForMethod(method: RequestMethod | string): void;`",
+    "packages/core-internal/src/shared/protocol.ts:1405-1407 `if (this._options?.enforceStrictCapabilities === true) { try { this.assertCapabilityForMethod(request.method); } ...` (inside the request funnel)",
+    "packages/client/src/client/client.ts:1400 `protected assertCapabilityForMethod(method: RequestMethod | string): void {`; packages/server/src/server/server.ts:754 same",
+    "Caveat: packages/core-internal/src/shared/protocol.ts:88 `Currently this defaults to \\`false\\`` and packages/client/src/client/client.ts:639 `options?.enforceStrictCapabilities ?? false` — the check only runs when enforceStrictCapabilities is enabled"
+   ],
+   "note": "Method is abstract in Protocol, implemented by Client and Server, and called from the request path; the call is gated by enforceStrictCapabilities (default false), which the statement omits but does not contradict."
+  },
+  {
+   "id": "37452abe52ae14a81b354cfa6f693deb93fe8f04",
+   "line": 158,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:1395 `return new Promise<StandardSchemaV1.InferOutput<T>>((resolve, reject) => {`",
+    "packages/core-internal/src/shared/protocol.ts:1509 `this._responseHandlers.set(messageId, response => {` ... :1572 `resolve(parseResult.data);`"
+   ],
+   "note": "The request funnel creates a Promise and registers a response handler keyed by message id that settles it."
+  },
+  {
+   "id": "5a9b8a9d8bd34fca9549518a74f74ac228d4ee26",
+   "line": 159,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:1440-1444 `const jsonrpcRequest: JSONRPCRequest = { ...request, jsonrpc: '2.0', id: messageId };`",
+    "packages/core-internal/src/shared/protocol.ts:1587-1588 `this._transport.send(outbound, { relatedRequestId, resumptionToken, onresumptiontoken, headers, requestSignal })` where `outbound = this._envelopeOutbound(jsonrpcRequest)`"
+   ],
+   "note": "The JSON-RPC request object is built and passed to transport.send()."
+  },
+  {
+   "id": "1540c42573365d3fa4f37450de1d190f195359af",
+   "line": 160,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:1395 the returned Promise only settles inside the handler stored at :1509 (`resolve(parseResult.data)` :1572 / reject paths) or via cancel/timeout; request() (:1292/:1297) returns that Promise"
+   ],
+   "note": "The caller awaits the Promise that the response handler resolves."
+  },
+  {
+   "id": "cb8036a1679fc03c44e6a5b1e0df477c23561653",
+   "line": 162,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:1213 `protected _onresponse(response: JSONRPCResponse | JSONRPCErrorResponse): void {`; :1216 `const handler = this._responseHandlers.get(messageId);`; :1226-1230 `handler(response)` or `handler(error)`",
+    "packages/core-internal/src/shared/protocol.ts:1509-1572 that handler is the closure that calls resolve/reject"
+   ],
+   "note": "_onresponse looks up the per-id handler and invokes it, which resolves the request promise."
+  },
+  {
+   "id": "c9ca519e77cf91e1782b67cf2c0e12a2f839b24c",
+   "line": 168,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/transport.ts:173 `export interface Transport {` :228 `onmessage?: (<T extends JSONRPCMessage>(message: T, extra?: MessageExtraInfo) => void) | undefined;`",
+    "packages/client/src/client/stdio.ts:218 `this.onmessage?.(message);`; packages/server/src/server/stdio.ts:147 `this.onmessage?.(message);`"
+   ],
+   "note": "Transport interface declares onmessage and concrete transports invoke it on receipt."
+  },
+  {
+   "id": "744ab909ea9ba5fb0e1186e605b934f546be063b",
+   "line": 169,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:794 `async connect(transport: Transport): Promise<void> {`; :812-822 `this._transport.onmessage = (message, extra) => { ... this._onresponse(message) ... this._onrequest(message, extra) ... this._onnotification(message, extra) ... }`"
+   ],
+   "note": "connect() installs the onmessage dispatcher that routes to the three handlers."
+  },
+  {
+   "id": "492d893ce6e198c27bf56a80dbd3c3481e63463f",
+   "line": 170,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:938 `private _onrequest(rawRequest: JSONRPCRequest, extra?: MessageExtraInfo): void {`"
+   ],
+   "note": "Method exists."
+  },
+  {
+   "id": "00860aae98c4f61e9c260ffe6a75f2aa8820e092",
+   "line": 172,
+   "label": "stale",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:1068-1109 `const baseCtx: BaseContext = { sessionId: ..., mcpReq: { id, method, _meta, ..., signal: abortController.signal, send: (...), notify: sendNotification }, http: ... }` — the fields are `send` and `notify`, there is no `sendNotification`/`sendRequest` member",
+    "packages/core-internal/src/shared/protocol.ts:334-453 BaseContext type: members are sessionId?, mcpReq{id, method, _meta?, envelope?, inputResponses?, droppedInputResponseKeys?, requestState, signal, send, notify}, http?{authInfo?}; grep -n 'sendNotification\\|sendRequest' finds only local closures at :1047 and :1052",
+    "docs/migration/upgrade-to-v2.md:438-439 `extra.sendRequest(...) -> ctx.mcpReq.send(...)`, `extra.sendNotification(...) -> ctx.mcpReq.notify(...)`; packages/codemod/src/migrations/v1-to-v2/mappings/contextPropertyMap.ts:10-11 `{ from: '.sendRequest', to: '.mcpReq.send' }, { from: '.sendNotification', to: '.mcpReq.notify' }`",
+    "CLAUDE.md:205-206 itself names the fields `send(...)` and `notify(...)`"
+   ],
+   "note": "`sendNotification`/`sendRequest` are the v1 `extra` field names; the BaseContext built here exposes them as `mcpReq.send`/`mcpReq.notify` (renamed in v2 per the migration guide and codemod). Wrong member names."
+  },
+  {
+   "id": "f6e1726e504a6e1e1eddd4878df8b5e5da93f4e2",
+   "line": 173,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:640 `protected abstract buildContext(ctx: BaseContext, transportInfo?: MessageExtraInfo): ContextT;`; :1111 `const ctx = this.buildContext(baseCtx, extra);`",
+    "packages/server/src/server/server.ts:374 `protected override buildContext(ctx: BaseContext, transportInfo?: MessageExtraInfo): ServerContext {` :418-424 `http: hasHttpInfo ? { ...ctx.http, req: transportInfo?.request, closeSSE: ..., closeStandaloneSSE: ... } : undefined`",
+    "packages/client/src/client/client.ts:663-665 `protected override buildContext(ctx, _transportInfo?): ClientContext { return ctx; }`"
+   ],
+   "note": "_onrequest calls the abstract buildContext hook; Server's override adds http.req (HTTP request info) and SSE closers."
+  },
+  {
+   "id": "f7d57215414e8916e7e86b6af5041a57c172335c",
+   "line": 174,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:1114-1115 `Promise.resolve().then(() => handler(request, ctx))`; :1140-1145 `const response: JSONRPCResponse = { result: encoded, jsonrpc: '2.0', id: request.id }; await capturedTransport?.send(response);`; error path :1160-1172 sends a JSONRPCErrorResponse via `capturedTransport?.send(errorResponse)`"
+   ],
+   "note": "Handler is invoked and its result/error is sent back as a JSON-RPC response over the captured transport."
+  },
+  {
+   "id": "1fd6744e4be4156ca1eb73c7a1cb60e5b1f10c0e",
+   "line": 175,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:1701-1703 `setRequestHandler<M extends RequestMethod>(method: M, handler: (request, ctx) => ...): void;`; :1777 `this._requestHandlers.set(method, this._wrapHandler(method, stored));`",
+    "packages/core-internal/src/shared/protocol.ts:1022 `const handler = this._requestHandlers.get(request.method) ?? this.fallbackRequestHandler;`"
+   ],
+   "note": "setRequestHandler(method, handler) populates the map that _onrequest reads."
+  },
+  {
+   "id": "b759f6322c84bc379e9baefa1c55017bb8f008cf",
+   "line": 197,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:334 `export type BaseContext = {` with nested groups :343 `mcpReq: {` and :447 `http?: {`",
+    "packages/core-internal/src/shared/protocol.ts:458 `export type ServerContext = BaseContext & {`; :518 `export type ClientContext = BaseContext;`"
+   ],
+   "note": "BaseContext is the shared base of both ServerContext and ClientContext and its fields are grouped under mcpReq/http."
+  },
+  {
+   "id": "ffa29d957f505dd84f2d4e4aa2c360dd58f9cc57",
+   "line": 199,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:335-338 `/** The session ID from the transport, if available. */ sessionId?: string;`"
+   ],
+   "note": "Field, optionality and meaning match."
+  },
+  {
+   "id": "ce73be3e040f8ce5aad82f1e688479f257e6c9b3",
+   "line": 200,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:340-343 `/** Information about the MCP request being handled. */ mcpReq: {`"
+   ],
+   "note": "Field exists and groups request-level members."
+  },
+  {
+   "id": "971d3bc8e1c186b448e52548f79303dd76b1f9a1",
+   "line": 201,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:344-347 `/** The JSON-RPC ID of the request being handled. */ id: RequestId;`"
+   ],
+   "note": "Field and meaning match."
+  },
+  {
+   "id": "9a29f1f0aa4613957cdf4c307b403d688f02d360",
+   "line": 203,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:354-359 `/** Metadata from the original request ... */ _meta?: RequestMeta;`"
+   ],
+   "note": "Field, optionality and meaning match."
+  },
+  {
+   "id": "87f06bbf252c8d697d1b978b68970a7e21787f32",
+   "line": 204,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:411-414 `/** An abort signal used to communicate if the request was cancelled from the sender's side. */ signal: AbortSignal;`"
+   ],
+   "note": "Field and type match."
+  },
+  {
+   "id": "e7db33c4af623927c4f291cf1b2aa62b0dbbaa86",
+   "line": 205,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:416-437 `/** Sends a request that relates to the current request being handled. ... */ send: { <M>(request, options?): Promise<ResultTypeMap[M]>; <T extends StandardSchemaV1>(request: Request, resultSchema: T, options?: RequestOptions): Promise<...>; };`"
+   ],
+   "note": "The (request, schema, options?) overload exists and it sends a related request; a spec-method overload without schema also exists."
+  },
+  {
+   "id": "392e4ee9a3a5a12babfc2608b83b76c3f3df31b2",
+   "line": 206,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:436-441 `/** Sends a notification that relates to the current request being handled. ... */ notify: (notification: Notification) => Promise<void>;`"
+   ],
+   "note": "Field, arity and meaning match."
+  },
+  {
+   "id": "bf5d5268c9d87b702a5607e802066353cd093c37",
+   "line": 208,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:444-452 `http?: { /** Information about a validated access token, provided to request handlers. */ authInfo?: AuthInfo; };`"
+   ],
+   "note": "Field, optionality and meaning match."
+  },
+  {
+   "id": "76b1245518b0de8fdbd8b412f4d1c1e37b2baa02",
+   "line": 210,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:458 `export type ServerContext = BaseContext & {` :459 `mcpReq: {` :495 `http?: {`"
+   ],
+   "note": "ServerContext is an intersection type that adds members under mcpReq and http?."
+  },
+  {
+   "id": "7873a123f516c11892e1a98e51843e1b7231c899",
+   "line": 212,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:468 `log: (level: LoggingLevel, data: unknown, logger?: string) => Promise<void>;`",
+    "packages/core-internal/src/shared/protocol.ts:478 `elicitInput: (params: ElicitRequestFormParams | ElicitRequestURLParams, options?: RequestOptions) => Promise<ElicitResult>;`",
+    "packages/core-internal/src/shared/protocol.ts:489-492 `requestSampling: (params: CreateMessageRequest['params'], options?: RequestOptions) => Promise<...>;`"
+   ],
+   "note": "All three added mcpReq members and their parameter shapes match."
+  },
+  {
+   "id": "d6a4da8826accd2e62bf6df1c3e178f375fe48e8",
+   "line": 213,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:495-512 `http?: { /** The original HTTP request. */ req?: globalThis.Request; closeSSE?: () => void; closeStandaloneSSE?: () => void; };`"
+   ],
+   "note": "All three added http members match."
+  },
+  {
+   "id": "d9033212783448f3ea2f7413639d3d1118faa25c",
+   "line": 219,
+   "label": "true",
+   "evidence": [
+    "packages/client/src/client/client.ts:1048-1056 initialize request sends `capabilities: this._capabilities`; :1068 `this._serverCapabilities = result.capabilities;`",
+    "packages/server/src/server/server.ts:899-901 `_oninitialize ... this._clientCapabilities = request.params.capabilities;`; :921-923 returns `capabilities: this.getCapabilities()`"
+   ],
+   "note": "The initialize handshake exchanges client and server capabilities in both directions. (Modern 2026-07-28 era negotiates via server/discover + per-request _meta instead; the legacy path proves the statement.)"
+  },
+  {
+   "id": "09669292163cda7eaef43f59a86a627c7270504e",
+   "line": 221,
+   "label": "true",
+   "evidence": [
+    "packages/client/src/client/client.ts:1400 `protected assertCapabilityForMethod(method: RequestMethod | string): void {` :1405 `if (!this._serverCapabilities?.logging)`, :1413 prompts, :1424 resources, :1440 tools, :1447 completions"
+   ],
+   "note": "Client's override checks _serverCapabilities for outbound methods."
+  },
+  {
+   "id": "4f7c184735110e4d11cc33c8949e4f9b6224cd7e",
+   "line": 222,
+   "label": "true",
+   "evidence": [
+    "packages/server/src/server/server.ts:754 `protected assertCapabilityForMethod(method: RequestMethod | string): void {` :757 `if (!this._clientCapabilities?.sampling)`, :764 elicitation, :771 roots"
+   ],
+   "note": "Server's override checks _clientCapabilities for outbound methods."
+  },
+  {
+   "id": "f511f15838a317629301288b868748a7940e249d",
+   "line": 223,
+   "label": "true",
+   "evidence": [
+    "packages/core-internal/src/shared/protocol.ts:1264 `protected abstract assertRequestHandlerCapability(method: string): void;`; :1715 `this.assertRequestHandlerCapability(method);` first line of setRequestHandler",
+    "packages/client/src/client/client.ts:1502-1532 checks `this._capabilities.sampling/elicitation/roots`; packages/server/src/server/server.ts:849-888 checks `this._capabilities.completions/logging/prompts/resources/tools`"
+   ],
+   "note": "Called on handler registration; both implementations check the local _capabilities."
+  },
+  {
+   "id": "e91f23fc6a78fe093cc54faa2e1d83700a1e90c8",
+   "line": 228,
+   "label": "judgment",
+   "evidence": [
+    "Workflow step ('Add capability to ...'); named types exist: packages/core-internal/src/types/types.ts:282 `export type ClientCapabilities = Infer<typeof ClientCapabilitiesSchema>;` :292 `ServerCapabilities`; schemas built in packages/core-internal/src/wire/rev2025-11-25/buildSchemas.ts:355/430 and wire/rev2026-07-28/buildSchemas.ts:261/279"
+   ],
+   "note": "Procedural instruction for a future change; names exist but 'in types' is not a concrete path and the step itself is not a repo fact."
+  },
+  {
+   "id": "e6cd3cf3707c20e440be1821d36cd56d78fe1c8b",
+   "line": 229,
+   "label": "judgment",
+   "evidence": [
+    "Workflow step ('Implement sender method in Client or Server class'); classes exist (packages/client/src/client/client.ts, packages/server/src/server/server.ts)"
+   ],
+   "note": "Procedural instruction, not a checkable description."
+  },
+  {
+   "id": "005d020eb54a10a94f3000d4f670972fa31f41a7",
+   "line": 230,
+   "label": "judgment",
+   "evidence": [
+    "Workflow step; the named method exists: packages/client/src/client/client.ts:1400 and packages/server/src/server/server.ts:754 `protected assertCapabilityForMethod(...)`"
+   ],
+   "note": "Procedural instruction; existence of the method does not make the instruction a fact."
+  },
+  {
+   "id": "a942d15b693b9e76125cd81afbb58d5557e20dc8",
+   "line": 231,
+   "label": "judgment",
+   "evidence": [
+    "Workflow step; the named method exists: packages/core-internal/src/shared/protocol.ts:1701 `setRequestHandler<M extends RequestMethod>(...)`"
+   ],
+   "note": "Procedural instruction; existence of the method does not make the instruction a fact."
+  }
+ ]
+}

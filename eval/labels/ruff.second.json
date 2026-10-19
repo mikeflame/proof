@@ -1,0 +1,877 @@
+{
+ "repo": "astral-sh/ruff",
+ "sha": "ccba26cc3af909b7f19060f48f53daeab5070f9d",
+ "file": "AGENTS.md",
+ "labeler": "blind second labeler (agent), 2026-10-19, under the protocol in eval/LABELING.md; never saw the first labels or a proof report",
+ "labels": [
+  {
+   "id": "7ff29e069e102b5a77a04c510958e85d2e4cbf0a",
+   "line": 3,
+   "label": "true",
+   "evidence": [
+    "crates/ruff/Cargo.toml:4 `description = \"An extremely fast Python linter and code formatter\"`",
+    "crates/ty/src/args.rs:23 `#[command(author, name = \"ty\", about = \"An extremely fast Python type checker.\")]`",
+    "crates/ty/docs/cli.md:7 `An extremely fast Python type checker.`",
+    "`ls crates/` lists both `ruff` and `ty` crates"
+   ],
+   "note": "Both products are in the workspace; Ruff's Cargo description and ty's clap `about` string match the parenthetical descriptions."
+  },
+  {
+   "id": "16e8e84266425931c77928bb251bcfd5c3721e5a",
+   "line": 3,
+   "label": "true",
+   "evidence": [
+    "`ls crates/ | grep -c '^ruff_'` = 36; `grep -c '^ty_'` = 14; only other entries are `ruff`, `ty` (binaries) and `mdtest` (shared harness lib, depends only on ruff_* crates, used by both crates/ruff_mdtest and crates/ty_test)",
+    "`grep -l '^ruff_python_parser' crates/ty*/Cargo.toml` → ty_python_core, ty_ide, ty_python_semantic",
+    "`grep -l '^ruff_python_ast' crates/ty*/Cargo.toml` → 10 ty crates incl. crates/ty/Cargo.toml and crates/ty_python_semantic/Cargo.toml",
+    "crates/ruff_python_parser and crates/ruff_python_ast exist (Cargo.toml:41,48 workspace deps)"
+   ],
+   "note": "Naming pattern observed in crates/; ty crates depend on both named ruff crates. Shared `mdtest` crate is neither Ruff- nor ty-specific so it does not contradict the rule."
+  },
+  {
+   "id": "37f62409acc56db6d79b301aa97c655145b179be",
+   "line": 7,
+   "label": "judgment",
+   "evidence": [
+    "CONTRIBUTING.md:40 `### Avoiding duplicate work` (anchor target exists)"
+   ],
+   "note": "Workflow instruction ('follow the guidance before starting/before opening a PR'); the linked anchor exists but the instruction itself is not a repository fact."
+  },
+  {
+   "id": "60321753cc84eadb46ee59d173bcdee99b946a94",
+   "line": 8,
+   "label": "judgment",
+   "evidence": [
+    "CONTRIBUTING.md:40-45 discusses checking linked PRs; `grep -iE 'competing|maintainer agreement' CONTRIBUTING.md` → no hits"
+   ],
+   "note": "Process convention about competing PRs; nothing in the repo can prove or contradict it."
+  },
+  {
+   "id": "33845c765cefa840ed3ee613fafc529fd7937de9",
+   "line": 13,
+   "label": "judgment",
+   "evidence": [
+    "pyproject.toml:301 `[tool.rooster]`; :326 `[tool.rooster.section-labels]`; :305 `ignore_labels = [\"internal\", \"ci\", \"testing\", \"ty\"]`",
+    "`grep -n required pyproject.toml` → no required-labels key in Ruff's pyproject; ty's pyproject.toml is an external URL"
+   ],
+   "note": "Workflow instruction to inspect labels/config; both named sections exist in Ruff's pyproject.toml. 'Required labels' not present in Ruff's file (may be in external ty pyproject), so neither proven nor contradicted."
+  },
+  {
+   "id": "c3c0a68831aa39fb4e9b55e8e0081eee213d4889",
+   "line": 17,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:17-18 (process instruction, no concrete repo claim)"
+   ],
+   "note": "Decision/process instruction about changelog placement; nothing checkable."
+  },
+  {
+   "id": "f5d982d7f0ef881406c5a9f22168e47af905966e",
+   "line": 20,
+   "label": "judgment",
+   "evidence": [
+    "`git log --oneline -300 | grep -c '^\\S* \\[ty\\]'` = 211 (e.g. ccba26cc3 `[ty] Bump docstring-adder pin (#29038)`)"
+   ],
+   "note": "PR-title convention; history shows it is followed, but a convention cannot be proven true by the repo."
+  },
+  {
+   "id": "2385069b3a236a68f312b66c3d66d3c3744e1fab",
+   "line": 20,
+   "label": "judgment",
+   "evidence": [
+    "pyproject.toml:305 `ignore_labels = [..., \"ty\"]` references a `ty` label; GitHub labels themselves are external"
+   ],
+   "note": "Instruction to add a GitHub label; label existence lives on GitHub, not in the checkout."
+  },
+  {
+   "id": "a2d2b3f4480657565caa224aba448a6e32f919bf",
+   "line": 22,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:22-23 (workflow instruction about applying/verifying labels)"
+   ],
+   "note": "Process instruction; no checkable repository fact."
+  },
+  {
+   "id": "e8f69db9d9517b37037f59e8a01545bc47735a06",
+   "line": 23,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:23-24 (reporting instruction)"
+   ],
+   "note": "Process instruction about what to report; not checkable."
+  },
+  {
+   "id": "44f4c0598ef67d1be1c2dabf54b761c5d356dffa",
+   "line": 32,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:32 (review style preference)"
+   ],
+   "note": "Review-style preference; not checkable."
+  },
+  {
+   "id": "b73e24be56ee7736a3e4898045d4fdd8b7fd2016",
+   "line": 32,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:32-35 (review scope instruction)"
+   ],
+   "note": "Review scope instruction; not checkable."
+  },
+  {
+   "id": "5a4c4f3ff46483039c576a8431ef884af3b14a26",
+   "line": 35,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:35-36 (review formatting instruction)"
+   ],
+   "note": "Review formatting instruction; not checkable."
+  },
+  {
+   "id": "f3239d32b2bbcbbd48be3d19b586fe29986500de",
+   "line": 36,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:36-37 (review formatting instruction)"
+   ],
+   "note": "Review formatting instruction; not checkable."
+  },
+  {
+   "id": "b8f37d95d291a37579f3c30d9efe39ac7c7d5c7c",
+   "line": 39,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:39-40 (self-referential review instruction)"
+   ],
+   "note": "Instruction to check PRs against this file's conventions; not a repository fact."
+  },
+  {
+   "id": "e711aaf13939067962d206bdf2cfb4d92e666f4b",
+   "line": 44,
+   "label": "judgment",
+   "evidence": [
+    "`ls agents/references/` → repository-threat-model.md present; agents/references/repository-threat-model.md:1 `# GitHub repository threat model`"
+   ],
+   "note": "Workflow instruction ('use the threat model for security reviews'); the linked file exists, which prevents stale, but the instruction itself is not provable."
+  },
+  {
+   "id": "2aeeb2412184d5142995b0cea682228f63fe9fe3",
+   "line": 50,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:50 (writing-audience guidance)"
+   ],
+   "note": "Statement of audience/purpose for written artifacts; not checkable."
+  },
+  {
+   "id": "08122ed2c5efa3aa9072c229efaf6199818d361b",
+   "line": 50,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:50 (writing guidance)"
+   ],
+   "note": "Writing-process instruction; not checkable."
+  },
+  {
+   "id": "21c083ba4bf0e203dd81462ac798d635d8d4b8e8",
+   "line": 52,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:52 (writing guidance)"
+   ],
+   "note": "Writing-process instruction; not checkable."
+  },
+  {
+   "id": "fbf951775afd2276a354a7a67637d25fc7f65f71",
+   "line": 52,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:52 (writing guidance)"
+   ],
+   "note": "Writing-style preference; not checkable."
+  },
+  {
+   "id": "35048f2bb2cf34295675026ef2c58720b1e32ad3",
+   "line": 54,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:54 (writing guidance)"
+   ],
+   "note": "Writing-content instruction; not checkable."
+  },
+  {
+   "id": "e25b2c239894fc208f184be8b6c18232af9770ca",
+   "line": 54,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:54 (writing guidance)"
+   ],
+   "note": "Writing-content instruction; not checkable."
+  },
+  {
+   "id": "d9741eada7dd058d95eb233c4c5b5e35c752fd4e",
+   "line": 56,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:56 (editing convention)"
+   ],
+   "note": "Editing convention; not checkable."
+  },
+  {
+   "id": "1b047ce4113727a6bd8301108c0a3ea0322512f0",
+   "line": 56,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:56 (self-review instruction)"
+   ],
+   "note": "Self-review workflow instruction; not checkable."
+  },
+  {
+   "id": "9b85c10531fb819ade593d019eb9a2823eb5f313",
+   "line": 60,
+   "label": "true",
+   "evidence": [
+    "crates/mdtest/src/lib.rs:25-26 `/// If set to a value other than \"0\", updates the content of inline snapshots.` `const MDTEST_UPDATE_SNAPSHOTS: &str = \"MDTEST_UPDATE_SNAPSHOTS\";`",
+    "crates/mdtest/src/lib.rs:344-348 `is_update_inline_snapshots_enabled()` reads it; :418-424 and :449-453 push MarkdownEdit inserting/replacing the ```snapshot block when enabled",
+    "Cargo.toml:134 `insta = { version = \"1.35.1\", ... }` (INSTA_* vars belong to insta); crates/ty_python_semantic/mdtest.py:145 sets `INSTA_FORCE_PASS=\"1\"`; .github/workflows/sync_typeshed.yaml:291 `MDTEST_UPDATE_SNAPSHOTS: \"1\"` for the snapshot-update job",
+    ".config/nextest.toml exists; .github/workflows/ci.yaml:525 `uv run --locked --only-dev cargo nextest run --all-features --profile ci`"
+   ],
+   "note": "Command and env vars are all defined/used by the repo; MDTEST_UPDATE_SNAPSHOTS behavior read in code. 'faster execution' is a purpose clause; INSTA_UPDATE=always semantics come from the insta dependency."
+  },
+  {
+   "id": "a49631d1c6de09cf70386ee8ef9184eb36ce4063",
+   "line": 66,
+   "label": "judgment",
+   "evidence": [
+    "crates/ty/tests/file_watching.rs exists; .config/nextest.toml:6-9 `filter = 'binary(file_watching)'` → serial test-group"
+   ],
+   "note": "File-watcher tests exist, but whether they work 'inside the sandbox' is a claim about an external environment the repo cannot prove or contradict."
+  },
+  {
+   "id": "1206ce6d824e0f1c425612d771687a28b00680b4",
+   "line": 66,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:66 (workflow advice)"
+   ],
+   "note": "Advice on when to run tests locally; not checkable."
+  },
+  {
+   "id": "b62aa0c3d6bf7fec51fcba7fade1f9059dc329f7",
+   "line": 71,
+   "label": "true",
+   "evidence": [
+    "Cargo.toml:2 `members = [\"crates/*\"]`; crates/ty_python_semantic/Cargo.toml exists (package in workspace)",
+    "crates/mdtest/src/lib.rs:26 MDTEST_UPDATE_SNAPSHOTS defined and read at :346; Cargo.toml:134 insta dep",
+    ".config/nextest.toml present; ci.yaml:525 uses `cargo nextest run`"
+   ],
+   "note": "Crate name, test runner and env vars all defined in the repo."
+  },
+  {
+   "id": "d31a8b92faf959e226641e49c1afe69f62822b8b",
+   "line": 74,
+   "label": "true",
+   "evidence": [
+    "crates/ty_python_semantic/tests/mdtest.rs:91-94 `datatest_stable::harness! { { test = mdtest, root = \"./resources/mdtest\", pattern = r\"\\.md$\" }, ... }` (one test per .md file)",
+    "crates/ty_python_semantic/mdtest.py:189-192 `test_name = f\"{test_function}::{markdown_file}\"` then runs the test binary with `[\"--exact\", test_name]` for a single file"
+   ],
+   "note": "Caption for the following command; the repo's harness registers each mdtest file as its own test and its own runner script runs one file at a time, so the capability is real. Unsure: could be read as a bare imperative (judgment)."
+  },
+  {
+   "id": "181a087bbb6b99f5f6f233edd30af05162273249",
+   "line": 74,
+   "label": "true",
+   "evidence": [
+    "`ls crates/ty_python_semantic/resources/mdtest` → 94 entries (abstract.md, annotations/, ...)",
+    "crates/ty_python_semantic/tests/mdtest.rs:62-65 `test_name = fixture_path.strip_prefix(resource_root)` with resource_root `./resources/mdtest`; harness root `./resources/mdtest`",
+    "crates/ty_python_semantic/mdtest.py:36 `MDTEST_DIR = CRATE_ROOT / \"resources\" / \"mdtest\"`; :177 `md_file.relative_to(mdtest_dir)`"
+   ],
+   "note": "Folder exists; both the Rust harness and mdtest.py form test names from the path relative to that folder."
+  },
+  {
+   "id": "81cbe32f9fef77c04d98b1f7546e242f401f246d",
+   "line": 77,
+   "label": "true",
+   "evidence": [
+    "crates/ty_python_semantic/Cargo.toml:81-83 `[[test]]` `name = \"mdtest\"` `harness = false`",
+    "crates/ty_python_semantic/mdtest.py:39 `(\"mdtest\", MDTEST_DIR)`; :190 `test_name = f\"{test_function}::{markdown_file}\"` → `mdtest::<relative path>` passed to the binary with `--exact`",
+    "crates/mdtest/src/lib.rs:26 MDTEST_UPDATE_SNAPSHOTS; .config/nextest.toml; ci.yaml:525 nextest"
+   ],
+   "note": "Test target `mdtest` exists and the repo's own runner constructs `mdtest::<path>` test names; env vars and nextest defined."
+  },
+  {
+   "id": "4159aa6946482f749193fe4348eed866d8b87877",
+   "line": 80,
+   "label": "true",
+   "evidence": [
+    "crates/mdtest/src/lib.rs:20-23 `/// Only tests whose names contain this filter string will be executed.` `const MDTEST_TEST_FILTER`",
+    "crates/mdtest/src/lib.rs:65-70 `filter.as_ref().is_some_and(|f| !(test.uncontracted_name().contains(f) || test.name() == *f))`",
+    "crates/mdtest/src/parser.rs:108-141 `joined_name` builds the name from ancestor `section.title` header fragments joined by \" - \"; :139 `uncontracted_name`",
+    "crates/ty_test/README.md:268-272 'match any tests which contain the value as a case-sensitive substring in its name ... parent headers joined together with hyphens'"
+   ],
+   "note": "Env var defined; substring match against header-derived test name read in code."
+  },
+  {
+   "id": "f4898a5c96a2692306ce76c99f805a4059da9fe1",
+   "line": 83,
+   "label": "true",
+   "evidence": [
+    "crates/mdtest/src/lib.rs:23,26 MDTEST_TEST_FILTER / MDTEST_UPDATE_SNAPSHOTS defined; :65 and :346 read them",
+    "crates/ty_python_semantic/Cargo.toml:81-83 `[[test]] name = \"mdtest\"`; mdtest.py:190 `mdtest::<path>` naming; .config/nextest.toml; ci.yaml:525"
+   ],
+   "note": "Same components as the line-77 command plus the filter env var; all defined."
+  },
+  {
+   "id": "42715d5f12ce05a093bc3853b2c9b2af9dd2f689",
+   "line": 88,
+   "label": "true",
+   "evidence": [
+    "crates/mdtest/src/lib.rs:65 `std::env::var(MDTEST_TEST_FILTER)`; :346 `std::env::var_os(MDTEST_UPDATE_SNAPSHOTS)` (read in-process, runner-independent)",
+    "crates/ty_test/README.md:181 `MDTEST_UPDATE_SNAPSHOTS=1 cargo test -p ty_python_semantic --test mdtest -- diagnostics/missing_argument.md`; :187 with MDTEST_TEST_FILTER",
+    "crates/ty_python_semantic/mdtest.py:70-77 drives `cargo test --package ... --test=mdtest`"
+   ],
+   "note": "The env vars are read inside the test process, so `cargo test` honors them identically; the README documents exactly this form. Unsure: phrased as a conditional instruction."
+  },
+  {
+   "id": "e25424678cb74700951769d070a68cac6e0fa2bb",
+   "line": 92,
+   "label": "true",
+   "evidence": [
+    "crates/mdtest/src/lib.rs:26,346 MDTEST_UPDATE_SNAPSHOTS defined/read; Cargo.toml:134 insta dep; crates/ty_test/README.md:181 documents `cargo test` with MDTEST_UPDATE_SNAPSHOTS=1"
+   ],
+   "note": "Plain `cargo test` with the same env vars; all vars defined."
+  },
+  {
+   "id": "11ecab7b08c72e5995247fd1302c482979657529",
+   "line": 98,
+   "label": "true",
+   "evidence": [
+    "crates/ty_python_semantic/Cargo.toml:81-83 `[[test]] name = \"mdtest\"`",
+    "crates/ty_test/README.md:181 `MDTEST_UPDATE_SNAPSHOTS=1 cargo test -p ty_python_semantic --test mdtest -- diagnostics/missing_argument.md` (same shape, bare relative path)",
+    "crates/mdtest/src/lib.rs:141-143 prints rerun hint `cargo test -p {crate_name} --test mdtest -- {test_name}` where test_name is the relative fixture path"
+   ],
+   "note": "Test target and env var defined; the repo documents and prints this exact command shape."
+  },
+  {
+   "id": "3945a672bb59d1cc50ecfc126579402abca2cbc7",
+   "line": 101,
+   "label": "true",
+   "evidence": [
+    "crates/mdtest/src/lib.rs:23,65 MDTEST_TEST_FILTER; :26,346 MDTEST_UPDATE_SNAPSHOTS; :138-143 rerun hint `MDTEST_TEST_FILTER='...' cargo test -p {crate_name} --test mdtest -- {test_name}`",
+    "crates/ty_python_semantic/Cargo.toml:81-83 `[[test]] name = \"mdtest\"`"
+   ],
+   "note": "All env vars and the test target defined; the harness itself prints this command form."
+  },
+  {
+   "id": "7fb801687a3722a5caad619f68bf4a08a81e995b",
+   "line": 106,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:106 (review-process instruction)"
+   ],
+   "note": "Process instruction; not checkable."
+  },
+  {
+   "id": "dc12d4e3182ccc1e0c1ab2c4a3a1b28c9cff9f47",
+   "line": 108,
+   "label": "judgment",
+   "evidence": [
+    ".gitignore:33 `*.rs.pending-snap`; Cargo.toml:134 insta dep; `git grep pending-snap` → only .gitignore and AGENTS.md"
+   ],
+   "note": "Workflow instruction; the .pending-snap behavior under INSTA_FORCE_PASS belongs to the external insta crate. .gitignore shows the repo expects such files, so not contradicted."
+  },
+  {
+   "id": "326807b21bb20c653a22ca384465b03b371d05b1",
+   "line": 110,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:110 (convention)"
+   ],
+   "note": "Convention about not hand-editing snapshots; not checkable."
+  },
+  {
+   "id": "3c6e35b1956b4b62438190206ea1cc52648e36a3",
+   "line": 114,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:114 (mdtest authoring style conventions)"
+   ],
+   "note": "Authoring-style conventions (readability, heading structure); not checkable."
+  },
+  {
+   "id": "2f58e5d9764daccb2f3a8589eb9b6e32aab290ca",
+   "line": 115,
+   "label": "judgment",
+   "evidence": [
+    "Concatenation: crates/mdtest/src/parser.rs:901-940 `Entry::Occupied` for an existing implicit-path file appends the block; :398-412 `existing_code.push('\\n'); existing_code.push_str(new_code); self.code_blocks.push(...)`; crates/ty_test/README.md:120-121 'multiple code blocks (without an explicit path...) ... merged into a single file'",
+    "Explicit duplicates instead error: parser.rs:924-928 `bail!(\"Test `{test_name}` has duplicate files named `{}`.\")`",
+    "`# snapshot` assertion and ```snapshot block: crates/mdtest/src/lib.rs:418-460; crates/ty_test/README.md:147-160"
+   ],
+   "note": "Behavior parts (merge of same-file blocks within a section, `# snapshot` blocks) verified for implicit-path blocks; remaining sentences are authoring preferences ('Ideally', 'is fine', 'when clearer'), so not fully provable. Unsure: explicit-path duplicates error rather than concatenate, but that is not what the sentence targets."
+  },
+  {
+   "id": "b6284e3f1170d5e8b1ae56705b7cd4aae4c7e37f",
+   "line": 116,
+   "label": "judgment",
+   "evidence": [
+    "`git grep -c '# no diagnostic' crates/ty_python_semantic/resources/mdtest` → 24 occurrences in 5 files; no parser directive for it (not in crates/mdtest/src/assertion.rs/parser.rs)"
+   ],
+   "note": "Commenting convention used in some mdtests; nothing enforces it, so judgment."
+  },
+  {
+   "id": "e98c38f3ae24a6e08062e6e027a8eb1be37808d4",
+   "line": 117,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:117 (mdtest organization convention)"
+   ],
+   "note": "Authoring convention; not checkable."
+  },
+  {
+   "id": "9530362b34a7998f958f474c9bc9f1b85539ca53",
+   "line": 118,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:118 (mdtest ordering convention)"
+   ],
+   "note": "Authoring/ordering convention; not checkable."
+  },
+  {
+   "id": "950128b9cdb60068708337e5068265d2fe16790d",
+   "line": 120,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:120 is a bullet in the 'Writing mdtests' list; a style preference about issue links in mdtest prose"
+   ],
+   "note": "Convention for mdtest prose; nothing in the repo can prove or contradict a preference."
+  },
+  {
+   "id": "eac0cb18473cb25bf900e8bba866bb81741da353",
+   "line": 121,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:121 wording preference (present tense vs 'must')"
+   ],
+   "note": "Writing-style convention; not checkable."
+  },
+  {
+   "id": "68feba5e95c1de781478dcda9380e4df4db7018c",
+   "line": 122,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:122 guidance on simplifying examples"
+   ],
+   "note": "Convention about test simplification; not checkable."
+  },
+  {
+   "id": "5a3318094926830f8a9db7862610335b89146bd7",
+   "line": 123,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:123 preference for custom types over stdlib types; mentions typeshed (external vendored data)"
+   ],
+   "note": "Convention plus a claim about external typeshed changes; not checkable."
+  },
+  {
+   "id": "a781b6b6ab79bda9fc888a86a8a67359ae31ee3e",
+   "line": 124,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:124 file-placement guidance for mdtests"
+   ],
+   "note": "Convention about where to put mdtests; not checkable."
+  },
+  {
+   "id": "deca35739b00fd5542c357ae36ce0182ff993bee",
+   "line": 130,
+   "label": "true",
+   "evidence": [
+    "Cargo.toml:1-3 `[workspace]` / `members = [\"crates/*\"]` (so --workspace applies)",
+    ".github/workflows/ci.yaml:338 `run: cargo clippy --workspace --all-targets --all-features --locked -- -D warnings` (same command, CI adds --locked)"
+   ],
+   "note": "Command's parts are standard cargo/clippy flags; workspace exists and CI runs the identical invocation."
+  },
+  {
+   "id": "6dce0bc632e7d5577b890602285d015fe425e906",
+   "line": 135,
+   "label": "judgment",
+   "evidence": [
+    "Cargo.toml:319-321 `[profile.release]` `lto = \"fat\"` `codegen-units = 16` (heavier release compile); `grep -n debug-assertions Cargo.toml` -> no override, so release keeps Cargo's default debug-assertions=false",
+    "Cargo.toml:339-343 `[profile.dev]` opt-level = 1, lto = \"off\""
+   ],
+   "note": "A development preference; its rationale rests on Cargo defaults plus the release profile and is consistent with the repo, but the statement is advice, not a repo description."
+  },
+  {
+   "id": "d55c03f810c262c33ed491e9559da842afe0920d",
+   "line": 137,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:137 is only the label introducing the code block at line 140"
+   ],
+   "note": "Heading fragment with no checkable claim of its own; the command it introduces is labeled separately."
+  },
+  {
+   "id": "78f05c743ee166a6d176fa7fc004622c02c654ef",
+   "line": 140,
+   "label": "true",
+   "evidence": [
+    "crates/ruff/Cargo.toml:2 `name = \"ruff\"`; crates/ruff/src/main.rs exists (no [[bin]] table, so the auto bin is `ruff`)",
+    "crates/ruff/src/args.rs:135 `Check(CheckCommand),` (clap subcommand `check`)",
+    "crates/ruff/src/lib.rs:207 `Command::Check(args) => check(args, global_options),`"
+   ],
+   "note": "Binary `ruff` and subcommand `check` both defined; `path/to/file.py` is a placeholder."
+  },
+  {
+   "id": "1987916696f9486fed2502ed9c6de9cd8c2468da",
+   "line": 146,
+   "label": "true",
+   "evidence": [
+    "crates/ty/Cargo.toml:2 `name = \"ty\"`; crates/ty/src/main.rs exists (auto bin `ty`)",
+    "crates/ty/src/args.rs:35 `Check(CheckCommand),`",
+    "crates/ty/src/lib.rs:55 `Command::Check(check_args) => run_check(check_args),`"
+   ],
+   "note": "Binary `ty` and subcommand `check` both defined; file path is a placeholder."
+  },
+  {
+   "id": "a6055fdfa0cc6f8702e917aa3d1abf1be52802c3",
+   "line": 157,
+   "label": "true",
+   "evidence": [
+    "`ls .agents/skills/` -> adding-ty-diagnostics/ present; `.agents/skills/adding-ty-diagnostics/SKILL.md` exists",
+    ".agents/skills/adding-ty-diagnostics/SKILL.md:2-3 `name: adding-ty-diagnostics` / description: 'add a ty rule', 'change a ty error message', 'review ty diagnostics'"
+   ],
+   "note": "Path exists and the skill's own description matches the triggers listed (new rules, diagnostic messages, reviewing diagnostics)."
+  },
+  {
+   "id": "f187e31b1c2790f1e3f0ef804c87b86dfdc19145",
+   "line": 158,
+   "label": "true",
+   "evidence": [
+    "`.agents/skills/summarise-ecosystem-results/SKILL.md` exists",
+    ".agents/skills/summarise-ecosystem-results/SKILL.md:2-3 `name: summarise-ecosystem-results` / description: 'summarise ecosystem results', 'summarize this ty ecosystem report'"
+   ],
+   "note": "Path exists; skill description matches 'ecosystem report summaries'."
+  },
+  {
+   "id": "082ddcc38b498765ed2f0017a10f3a88ad6fafb4",
+   "line": 159,
+   "label": "true",
+   "evidence": [
+    "`.agents/skills/minimizing-ty-ecosystem-changes/SKILL.md` exists",
+    ".agents/skills/minimizing-ty-ecosystem-changes/SKILL.md:2-3 `name: minimizing-ty-ecosystem-changes` / description: 'reproduce this ecosystem result', 'investigate a primer difference', 'minimize ...'"
+   ],
+   "note": "Path exists; skill description matches reproducing/investigating/minimizing ecosystem or primer differences."
+  },
+  {
+   "id": "c58eaa592d2da8fa79dfb65946c9f1349b9ab8f0",
+   "line": 163,
+   "label": "true",
+   "evidence": [
+    "`ls crates/ty_completion_eval/truth/` -> 29 fixture dirs (auto-import-includes-modules, class-arg-completion, ..., typing-only-auto-import-ranking) + README.md",
+    "crates/ty_completion_eval/src/main.rs:140-141 `// Where we store our truth data.` `let truth = cwd.join(\"crates\").join(\"ty_completion_eval\").join(\"truth\");`; :166 `TaskSource::all(&truth)?`",
+    "crates/ty_completion_eval/src/main.rs:84-85 doc: task name 'corresponds to the name of a directory in `./crates/ty_completion_eval/truth/`'"
+   ],
+   "note": "The path exists and is exactly where the evaluation binary reads its fixtures from; the 'when changing ranking' trigger is the only non-checkable part."
+  },
+  {
+   "id": "1814e5868846b94bd3fa822b031c7d2cf0d204ae",
+   "line": 163,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:163 guidance on extending vs adding fixture projects"
+   ],
+   "note": "Preference about fixture organisation; not checkable."
+  },
+  {
+   "id": "a928e8e808d4f62506fbc4feef9c38267bcf8631",
+   "line": 163,
+   "label": "judgment",
+   "evidence": [
+    "`find crates -name completion.rs` -> crates/ty_ide/src/completion.rs (and crates/ty_server/src/server/api/requests/completion.rs)",
+    "crates/ty_ide/src/completion.rs:3437 `#[cfg(test)]`; `grep -c '#\\[test\\]'` -> 428 unit tests"
+   ],
+   "note": "The named file exists and holds unit tests, so nothing is contradicted, but 'only when fixtures cannot cover' is a convention, not a repo fact."
+  },
+  {
+   "id": "001fc5d51887bcacae4003deb42a515066ba3618",
+   "line": 168,
+   "label": "true",
+   "evidence": [
+    "crates/ty_completion_eval/Cargo.toml:2 `name = \"ty_completion_eval\"`; Cargo.toml:2 `members = [\"crates/*\"]`",
+    "crates/ty_completion_eval/src/main.rs:34-36 `enum Command { All(AllCommand), ...}`; :52-69 `AllCommand` with `#[arg(long, ...)] threshold: f64` and `#[arg(long, ...)] tasks: Option<String>`",
+    "`ls crates/ty_completion_eval/completion-evaluation-tasks.csv` exists; header `name,file,index,rank`",
+    ".github/workflows/ci.yaml:948 `cargo run --profile profiling --package ty_completion_eval -- all --threshold 0.4 --tasks /tmp/completion-evaluation-tasks.csv`; :950 diffs against crates/ty_completion_eval/completion-evaluation-tasks.csv",
+    "CARGO_PROFILE_DEV_* are standard Cargo profile env overrides; Cargo.toml:339-343 profile.dev already sets opt-level = 1, debug = \"line-tables-only\", lto = \"off\""
+   ],
+   "note": "Package, `all` subcommand, `--threshold`, `--tasks` and the CSV path all defined; CI runs the same evaluation with threshold 0.4."
+  },
+  {
+   "id": "492f2bbe44cf68d882d829e40a151af653b2cac1",
+   "line": 171,
+   "label": "true",
+   "evidence": [
+    "crates/ty_completion_eval/src/main.rs:48 `ShowOne(ShowOneCommand),` (clap kebab-case -> `show-one`)",
+    "crates/ty_completion_eval/src/main.rs:81-100 `ShowOneCommand`: positional `task_name: String` (value_name TASK_NAME), `#[arg(long, ...)] file_name: Option<String>` (`--file-name`), `#[arg(long, ...)] index: Option<usize>` (`--index`)",
+    "crates/ty_completion_eval/src/main.rs:168-181 `Command::ShowOne(ref cmd)` filters tasks via `cmd.matches_task`"
+   ],
+   "note": "Subcommand and both long flags are defined; angle-bracket names are placeholders."
+  },
+  {
+   "id": "67833b1ccb3d25a0c5a95e13067aed9cbeae31d2",
+   "line": 175,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:175 workflow instruction (where to create scratch files); rationale is the separate statement 7ea283f8"
+   ],
+   "note": "A 'do this' workflow instruction; the checkable rationale is labeled separately."
+  },
+  {
+   "id": "7ea283f835929b4c59941d7a7c84f5c15887a3e3",
+   "line": 175,
+   "label": "true",
+   "evidence": [
+    "pyproject.toml:11 `requires-python = \">=3.7\"`; `grep -n '^\\[tool' pyproject.toml` -> no `[tool.ty]`; `ls ty.toml .ty.toml` -> none at root",
+    "crates/ty_project/src/metadata.rs:188-196 discover() doc: 'traverses upwards in the path's ancestor chain' ... '3. The closest `pyproject.toml`'; :260 `for project_root in path.ancestors()`; :326-329 `discover_in` reads `project_root.join(\"pyproject.toml\")`",
+    "crates/ty_project/src/metadata.rs:165-171 from_options: 'If the options don't specify a python version but the project.requires-python field is set, use that as a lower bound' -> `options.apply_requires_python(project.requires_python.as_ref())`",
+    "crates/ty_project/src/metadata/options.rs:123-141 apply_requires_python sets `environment.python_version` from `resolve_requires_python_lower_bound` when none configured",
+    "crates/ty_project/src/metadata/pyproject.rs:75-130 resolve_requires_python_lower_bound: takes the lower bound, 'Take the major and minor version', finds first SupportedPythonVersion >= 3.7",
+    "crates/ruff_python_ast/src/python_version.rs:59-60 `pub const fn lowest() -> Self { Self::PY37 }`; crates/ty_project/src/metadata.rs:1765-1793 test `requires_python_old_version_uses_lowest_supported_version` expects `PythonVersion::PY37`"
+   ],
+   "note": "Root pyproject has requires-python >=3.7 and no ty section; ty walks up to the closest pyproject.toml and derives python_version from the requires-python lower bound, which resolves to 3.7 (a supported version)."
+  },
+  {
+   "id": "44c4a0db8bae6d4a9cd4b3decb10167270e5fcb0",
+   "line": 179,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:179 parameter-ordering convention for `db`"
+   ],
+   "note": "Code-style convention; not provable from the repo."
+  },
+  {
+   "id": "0d13cfa7aa6011528f6e04faae63e452d5dbc3b8",
+   "line": 185,
+   "label": "judgment",
+   "evidence": [
+    "Claim about the external Salsa framework's `#[salsa::tracked]` semantics (salsa is a dependency, Cargo.toml:330 `[profile.release.package.salsa]`)"
+   ],
+   "note": "Describes an external library's behavior, not this repository's code."
+  },
+  {
+   "id": "0c3727b03f3542022b51526271d5d482dbfa4098",
+   "line": 186,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:186 statement of motivation for using Salsa tracking"
+   ],
+   "note": "Statement of purpose/rationale; not checkable."
+  },
+  {
+   "id": "43dd4c9f2c1f91cee9acc567bfd5bcfb7d604db3",
+   "line": 189,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:189-191 convention ('should usually be') plus an incrementality rationale about Salsa dependencies"
+   ],
+   "note": "A 'should' convention with a rationale about external Salsa semantics; not provable from the repo."
+  },
+  {
+   "id": "c495890604d8d70368555b535b91233ebd6ffe6a",
+   "line": 191,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:191-192 'Prefer ... ask for guidance'"
+   ],
+   "note": "Preference plus an ask-the-user workflow instruction."
+  },
+  {
+   "id": "d351ad869319675c864d3876eaff2838b2a539cd",
+   "line": 196,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:196 'Prefer boxed slices; otherwise shrink'"
+   ],
+   "note": "Coding preference; not checkable."
+  },
+  {
+   "id": "8d0176f1cd8cb841bc40bf48d9a86c91f3d93220",
+   "line": 196,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:196 claim about Rust std `HashMap`/`HashSet` capacity behavior after extend/collect/reserve/remove"
+   ],
+   "note": "Describes external Rust standard-library behavior, not repository code."
+  },
+  {
+   "id": "99532a4d34dc916298827cabcebf7a224d38fe18",
+   "line": 198,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:198 claim about when Salsa caches (`#[salsa::tracked]`, `#[salsa::interned]`)"
+   ],
+   "note": "External Salsa semantics; the attributes are used in the repo but the caching behavior lives in the dependency."
+  },
+  {
+   "id": "b75955cd028ecab486ba044074496c61c0695568",
+   "line": 202,
+   "label": "true",
+   "evidence": [
+    ".github/workflows/release.yml:1 `# This file was autogenerated by dist: https://axodotdev.github.io/cargo-dist`",
+    "dist-workspace.toml:1-14 `[workspace]` `members = [\"cargo:.\"]` ... `[dist]` `cargo-dist-version = \"0.31.0\"` `ci = \"github\"`",
+    ".github/workflows/release.yml:94 downloads cargo-dist v${CARGO_DIST_VERSION} (release.yml:5-6 header also notes custom sections, hence 'parts of')"
+   ],
+   "note": "release.yml carries the cargo-dist autogeneration header and dist-workspace.toml holds the [dist] config it is generated from."
+  },
+  {
+   "id": "37435bbeaea2b8e2c6a8eb46c6a002b976089c94",
+   "line": 202,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:202 'Before editing ... check whether'"
+   ],
+   "note": "Workflow instruction; not checkable."
+  },
+  {
+   "id": "d216edddfc4d59ba202d470bfc38d5dd9a4022ce",
+   "line": 202,
+   "label": "judgment",
+   "evidence": [
+    "dist-workspace.toml:10 `cargo-dist-version = \"0.31.0\"` (the pin the statement refers to exists)",
+    "AGENTS.md:202 'regenerate ... and inspect the resulting diff to ensure the change will survive future regenerations' is a procedure"
+   ],
+   "note": "Workflow instruction (regenerate, inspect diff); the one embedded fact, a pinned cargo-dist version in dist-workspace.toml, is correct, but a correct name inside a procedure does not make the procedure provable."
+  },
+  {
+   "id": "f588e1fefd4a6b8661e894635871656d488dd14a",
+   "line": 206,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:206 testing policy"
+   ],
+   "note": "Policy statement; not checkable."
+  },
+  {
+   "id": "1aed7d7c1b077ba5fae17840af429dcb7587dafe",
+   "line": 207,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:207 test-placement preference"
+   ],
+   "note": "Preference; not checkable."
+  },
+  {
+   "id": "593db5b1b6f390e25372a373a754c4eadadc2e18",
+   "line": 208,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:208 exhortation to run tests"
+   ],
+   "note": "Workflow exhortation; not checkable."
+  },
+  {
+   "id": "eda23e74effb50614eb2319e237fefebd1a553c9",
+   "line": 209,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:209 'Follow existing code style'"
+   ],
+   "note": "Convention; not checkable."
+  },
+  {
+   "id": "1fe41a460449cf555e4941d8ccf0f7a099eeafdf",
+   "line": 211,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:211 import-placement convention"
+   ],
+   "note": "Code-style convention; not checkable."
+  },
+  {
+   "id": "5cb544e9a524a1c9bfddc230afb308445b800736",
+   "line": 212,
+   "label": "true",
+   "evidence": [
+    "pyproject.toml:59-68 `[dependency-groups]` `dev = [` ... `\"prek==0.5.0\",` `]` (so `uv run --only-dev` resolves prek); `ls uv.lock .pre-commit-config.yaml` both exist (--locked, hook config)",
+    ".github/workflows/ci.yaml:1032 `SKIP=rustfmt uv run --only-dev --locked prek run --all-files --show-diff-on-failure ...` (the --all-files form)",
+    ".github/workflows/release-prepare.yml:78 `uv run --only-dev --locked prek run --files \"${files[@]}\"` (the --files form)",
+    "CONTRIBUTING.md:89 `uv run --only-dev --locked prek install`; :110 `uv run --only-dev --locked prek run --all-files`"
+   ],
+   "note": "All three command forms are defined by the repo (prek pinned in the uv dev group, lockfile and pre-commit config present) and used verbatim in CI/release automation; the 'at the end of a task' trigger is the only workflow-only part."
+  },
+  {
+   "id": "0e49443b479167616f2f961400a41ee5fcbf9211",
+   "line": 213,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:213 scoping guidance; ends with 'Ask the user for guidance'"
+   ],
+   "note": "Workflow/judgment guidance; not checkable."
+  },
+  {
+   "id": "5055d7148c9b1a507d74410fe3e31658bc7e4d45",
+   "line": 214,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:214 preference against panic!/unwrap/expect"
+   ],
+   "note": "Coding preference; not checkable."
+  },
+  {
+   "id": "3b3596ada89f423883fda7371a555d0918e3d9ab",
+   "line": 215,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:215 let-chain/let-guard preference (Cargo.toml:7 edition = \"2024\" makes let chains available, but the statement is a preference)"
+   ],
+   "note": "Style preference plus an end-of-task self-check instruction; not checkable."
+  },
+  {
+   "id": "09a9b0bbf16027031fa59db683ced8ffd4c01126",
+   "line": 217,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:217 commenting guidance"
+   ],
+   "note": "Writing convention; not checkable."
+  },
+  {
+   "id": "aaaea840bd0841e6a66616b6892363d6e0e7aee4",
+   "line": 218,
+   "label": "true",
+   "evidence": [
+    ".cargo/config.toml:1-2 `[alias]` `dev = \"run --package ruff_dev --bin ruff_dev\"`",
+    "crates/ruff_dev/src/main.rs:47 `GenerateAll(generate_all::Args),`; :100 `Command::GenerateAll(args) => generate_all::main(&args)?,`",
+    "crates/ruff_dev/src/generate_all.rs:14 `REGENERATE_ALL_COMMAND: &str = \"cargo dev generate-all\"`; :41-55 main() runs generate_json_schema, generate_ty_schema, generate_cli_help, generate_docs, generate_ty_options, generate_ty_rules, generate_ty_cli_reference, generate_ty_env_vars_reference"
+   ],
+   "note": "Alias and subcommand exist, and generate-all regenerates exactly schemas, docs, CLI help/reference, ty options/rules and env-var references, matching the listed triggers."
+  },
+  {
+   "id": "a1e0eb596cfb41fd28e641befb368c3fb46add5e",
+   "line": 219,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:219 test-naming convention"
+   ],
+   "note": "Naming convention; not checkable."
+  },
+  {
+   "id": "b7795f8ac9ec7f1a85daf990cd6d5e217d4c5406",
+   "line": 220,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:220 struct/impl placement convention"
+   ],
+   "note": "Code-organisation convention; not checkable."
+  },
+  {
+   "id": "caa9daeac9be358acaf3549fb539bac3c5b90a1f",
+   "line": 221,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:221 PEP 723 script convention"
+   ],
+   "note": "Convention for Python scripts; not checkable."
+  }
+ ]
+}

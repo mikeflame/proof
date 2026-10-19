@@ -1,0 +1,870 @@
+{
+ "repo": "dotnet/aspire",
+ "sha": "d70876569e27b318bb2d7035dc1f63d439b13166",
+ "file": "AGENTS.md",
+ "labeler": "blind second labeler (agent), 2026-10-19, under the protocol in eval/LABELING.md; never saw the first labels or a proof report",
+ "labels": [
+  {
+   "id": "2c7752228c242378db469cecf5b6c00242a51dc4",
+   "line": 3,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:3 is a statement of purpose/audience for the file"
+   ],
+   "note": "Purpose/audience statement; nothing in the repo can prove or contradict who the instructions are for."
+  },
+  {
+   "id": "30f5fe41267f3db51325f118f10c057bd388fc52",
+   "line": 10,
+   "label": "true",
+   "evidence": [
+    "ls src/Aspire.Hosting -> DistributedApplication.cs, DistributedApplicationBuilder.cs, ApplicationModel/, Dcp/, Eventing/, Container*Resource*Extensions.cs",
+    "ls src/Aspire.Hosting/Orchestrator -> ApplicationOrchestrator.cs, OrchestratorHostService.cs"
+   ],
+   "note": "Package dir exists and holds the app-host orchestrator (Orchestrator/ApplicationOrchestrator.cs) and the resource model (ApplicationModel/, *Resource*.cs)."
+  },
+  {
+   "id": "adb44c0dc1d641210d6008bfea0199f4c67568b7",
+   "line": 13,
+   "label": "true",
+   "evidence": [
+    "ls src/Components/*/*.csproj | wc -l -> 37; ls src/Aspire.Hosting.*/*.csproj | wc -l -> 96 (integration packages total >> 40)",
+    "src/Components: Aspire.Microsoft.EntityFrameworkCore.SqlServer, Aspire.Npgsql, Aspire.StackExchange.Redis, Aspire.MongoDB.Driver, Aspire.RabbitMQ.Client, Aspire.Confluent.Kafka, 13x Aspire.Azure.*",
+    "src/: Aspire.Hosting.SqlServer, Aspire.Hosting.PostgreSQL, Aspire.Hosting.Redis, Aspire.Hosting.MongoDB, Aspire.Hosting.RabbitMQ, Aspire.Hosting.Kafka, 52x Aspire.Hosting.Azure*"
+   ],
+   "note": "Every named integration exists as both a client and a hosting package; counted client+hosting integrations are far over 40 (client packages alone are 37)."
+  },
+  {
+   "id": "1b44e7ee78d8b24af46a114de41b6677fa855db2",
+   "line": 18,
+   "label": "stale",
+   "evidence": [
+    "global.json: \"sdk\": { \"version\": \"11.0.100-rc.1.26425.128\" } (commit 482742fb9 2026-09-10 \"Update to .NET 11 RC1 SDK (#19999)\")",
+    "src/Aspire.Cli/Aspire.Cli.csproj:7 <TargetFramework>net11.0</TargetFramework>; src/Aspire.Dashboard/Aspire.Dashboard.csproj:5 <TargetFramework>net11.0</TargetFramework>",
+    "eng/Versions.props:11-12 DefaultTargetFramework=net8.0; AllTargetFrameworks=net8.0;net9.0;net10.0"
+   ],
+   "note": "Strictest sources pin the .NET 11 SDK and net11.0 for CLI/Dashboard, with net8.0 the default TFM; \".NET 10.0\" does not describe the stack."
+  },
+  {
+   "id": "cb4795b4e777bce27d290107db7f594c8363c3c1",
+   "line": 21,
+   "label": "true",
+   "evidence": [
+    "global.json \"msbuild-sdks\": { \"Microsoft.DotNet.Arcade.Sdk\": \"10.0.0-beta.26472.2\" }",
+    "Directory.Build.props:2 <Import Project=\"Sdk.props\" Sdk=\"Microsoft.DotNet.Arcade.Sdk\" />; Directory.Build.targets:17 <Import Project=\"Sdk.targets\" Sdk=\"Microsoft.DotNet.Arcade.Sdk\" />"
+   ],
+   "note": "Arcade SDK is pinned in global.json and imported by the root Directory.Build.props/targets."
+  },
+  {
+   "id": "b99458c0fbed29aa7f42a2d649647add9b4494b9",
+   "line": 28,
+   "label": "stale",
+   "evidence": [
+    "Directory.Build.props:6 <LangVersion>preview</LangVersion> on SDK 11.0.100-rc.1 (global.json)",
+    "C# 14 `field` keyword in production code: src/Aspire.Cli/Certificates/CertificateGeneration/CertificateManager.cs:78 \"field = value;\" (property setter); src/Aspire.Cli/CliExecutionContext.cs:79 \"public string IdentitySdkVersion => field ??= StripBuildMetadata(IdentityVersion);\"",
+    "AGENTS.md:241 own sample uses `field = value;`"
+   ],
+   "note": "\"currently C# 13\" is contradicted: LangVersion is preview on a .NET 11 SDK and the code already uses the C# 14 `field` keyword."
+  },
+  {
+   "id": "7cd28e28376c006239c75857749f8ad1dd01ce20",
+   "line": 31,
+   "label": "judgment",
+   "evidence": [
+    "NuGet.config exists at repo root (cat NuGet.config)"
+   ],
+   "note": "Workflow instruction (\"never change ... unless asked\"); the file exists but the rule itself is not checkable."
+  },
+  {
+   "id": "9fdba8e91625ca2775e0ddc29ab1b9d081234b4e",
+   "line": 34,
+   "label": "judgment",
+   "evidence": [
+    "ls src/Aspire.Hosting/api/Aspire.Hosting.cs -> exists",
+    "src/Directory.Build.targets:5 <GenAPITargetPath Condition=\"'$(IsPackable)' == 'true'\">$(MSBuildProjectDirectory)/api/$(AssemblyName).cs</GenAPITargetPath>; :13 Target CreateGenAPITargetPathFolder BeforeTargets=\"GenAPIGenerateReferenceAssemblySource\"",
+    "src/Directory.Build.props:11 <PackageReference Include=\"Microsoft.DotNet.GenAPI.Task\" PrivateAssets=\"All\" />"
+   ],
+   "note": "Prohibition is a workflow instruction; its factual basis checks out (example path exists, api/*.cs is the GenAPI output path)."
+  },
+  {
+   "id": "df443aae92a61595fe6daac4341453c1243db65c",
+   "line": 44,
+   "label": "judgment",
+   "evidence": [
+    "eng/github-ci/test-trigger-map.yml exists (referenced by AGENTS.md:41)"
+   ],
+   "note": "Fragment of a review checklist (when to re-check the trigger map); not a repo fact."
+  },
+  {
+   "id": "1349741a643d6aeb8ad0946f15f68888b1284555",
+   "line": 52,
+   "label": "judgment",
+   "evidence": [
+    "tests/Aspire.TestUtilities/QuarantinedTestAttribute.cs:36 public sealed class QuarantinedTestAttribute; tests/Aspire.TestUtilities/OuterloopTestAttribute.cs:36 public sealed class OuterloopTestAttribute",
+    "tests/Aspire.Cli.EndToEnd.Tests/ConfigMigrationTests.cs:505 [ActiveIssue(\"https://github.com/microsoft/aspire/issues/15937\")] (attribute from Microsoft.DotNet.XUnitExtensions, see tests/Aspire.Acquisition.Tests/Scripts/CompletionScriptTests.cs:6)"
+   ],
+   "note": "Review-checklist fragment; the three attribute names exist/are used in the repo, but the rule is a convention."
+  },
+  {
+   "id": "1b641af185622a9ac725ef02011cc5df92b07d86",
+   "line": 59,
+   "label": "judgment",
+   "evidence": [
+    ".github/actions/select-tests/action.yml outputs.selection: JSON keyed run_<job> (e.g. run_polyglot, run_extension_e2e); git grep run_ in .github/workflows -> run_extension_e2e, run_native_dashboard_validation"
+   ],
+   "note": "Convention for trigger-map routing; run_* gates exist but \"must route ... keep wiring consistent\" is a rule, not a checkable fact."
+  },
+  {
+   "id": "64c58ea5157ae6e69b983009b3bdb14a6f906306",
+   "line": 70,
+   "label": "true",
+   "evidence": [
+    "tools/SelectTests/TriggerMap.cs:127-132 comment \"project_rules pattern, supporting simple '*'/'?' wildcards\" and public static bool ProjectNameMatches(string pattern, string name) => System.IO.Enumeration.FileSystemName.MatchesSimpleExpression(pattern, name, ignoreCase: false);",
+    "tools/SelectTests/TestSelector.cs:287 rule.Projects.Any(p => TriggerMap.ProjectNameMatches(p, name)) for affected_project_rules",
+    "docs/ci/test-trigger-map.md:66 affected_project_rules \"matched by project-name glob\""
+   ],
+   "note": "Project-name matching is simple-expression wildcard (glob) matching via FileSystemName.MatchesSimpleExpression, not Regex."
+  },
+  {
+   "id": "dee0b77410869a3afd0152c0171cec348312d1bc",
+   "line": 76,
+   "label": "judgment",
+   "evidence": [
+    "eng/github-ci/test-trigger-map.yml:129 path_rules: section exists; docs/ci/test-trigger-map.md:65 path_rules = \"a path glob set -> a target set\""
+   ],
+   "note": "Preference about how to shape a path_rules glob; the key exists but the preference is not checkable."
+  },
+  {
+   "id": "71641015e7f7529843bc9b8a91cdcf151564b1c2",
+   "line": 84,
+   "label": "judgment",
+   "evidence": [
+    "eng/github-ci/test-trigger-map.yml: 69 `reason:` fields (grep -c)"
+   ],
+   "note": "Style guidance for the reason field; not checkable."
+  },
+  {
+   "id": "d0b17d9473d1e4de3a28c1b72dbef8dcfb2013f4",
+   "line": 87,
+   "label": "judgment",
+   "evidence": [
+    "eng/github-ci/test-trigger-map.yml:132 targets: [ALL] (targets field exists alongside reason)"
+   ],
+   "note": "Style guidance for the reason field; not checkable."
+  },
+  {
+   "id": "a964d779af14bb8bd465d92f528fb7a1b3fa2251",
+   "line": 93,
+   "label": "judgment",
+   "evidence": [
+    "eng/github-ci/test-trigger-map.yml:28-30 target vocabulary incl. ALL and DOTNET_TESTS"
+   ],
+   "note": "Routing preference for small jobs; not checkable."
+  },
+  {
+   "id": "1582f42ecd724fc331d2f18007d35427116a7707",
+   "line": 99,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:99-103 context; QuarantinedTest/OuterloopTest attributes exist in tests/Aspire.TestUtilities/"
+   ],
+   "note": "Convention about which consumers justify a regular-PR target; not checkable."
+  },
+  {
+   "id": "eeae20738d3ae8721d0556778ef3f42b531d9edc",
+   "line": 106,
+   "label": "judgment",
+   "evidence": [
+    "ls tests/Infrastructure.Tests/TestTriggerMap -> SelectTestsAcceptanceTests.cs, TestTriggerMapTests.cs, TestTriggerMapModel.cs ..."
+   ],
+   "note": "Process instruction (audit the lists); the test folder exists but the instruction is not checkable."
+  },
+  {
+   "id": "e2d7690b931a3ba832612893f4cd92380672dfcf",
+   "line": 118,
+   "label": "judgment",
+   "evidence": [
+    ".agents/skills/azdo-internal/SKILL.md:20-22 AzDO Org/Project dnceng/internal; Pipeline Definition ID 1602; Pipeline Name microsoft-aspire (consistent with the statement)"
+   ],
+   "note": "Workflow instruction about an external Azure DevOps pipeline; the repo documents the same ids but cannot prove pipeline behavior."
+  },
+  {
+   "id": "4e485da26fcb4f4cc839351a17ff976491642c94",
+   "line": 123,
+   "label": "judgment",
+   "evidence": [
+    "ls .agents/skills/azdo-internal/SKILL.md -> exists",
+    "eng/pipelines/azure-pipelines.yml:231-243 source indexing stage (- stage: source_index) with gating comments"
+   ],
+   "note": "Workflow instruction; the named skill and the source-indexing stage exist, but \"record as unvalidated\" is a process rule."
+  },
+  {
+   "id": "0e0311ba9a344b158c1f06f5d7fa3933b16a37f5",
+   "line": 129,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:129 review guidance"
+   ],
+   "note": "Review convention about when tests are warranted; not checkable."
+  },
+  {
+   "id": "36b83101a711f324d9f8741b4f8f9d6a8c50f308",
+   "line": 137,
+   "label": "judgment",
+   "evidence": [
+    "src/Directory.Build.targets:5 api/$(AssemblyName).cs is the GenAPI output (files are generated)"
+   ],
+   "note": "Review instruction plus a claim about release process timing; not provable from the repo."
+  },
+  {
+   "id": "1bd7f5785b47b3cb0bead60083e36fc86390d430",
+   "line": 142,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:140-143 bullet under \"Only flag API file concerns if\""
+   ],
+   "note": "Fragment of a review condition; not a repo fact."
+  },
+  {
+   "id": "fc662602fc23c6bda68c32831f64d519b7b821f0",
+   "line": 147,
+   "label": "judgment",
+   "evidence": [
+    "NuGet.config: <packageSources><clear /> then only pkgs.dev.azure.com/dnceng and dnceng.pkgs.visualstudio.com sources"
+   ],
+   "note": "Claim about an external (internal build) pipeline; not checkable in the repo."
+  },
+  {
+   "id": "323519fdb225a9353b19fa5121b6c072b59c61bd",
+   "line": 155,
+   "label": "judgment",
+   "evidence": [
+    "NuGet.config packageSources contain no api.nuget.org entry (auditSources uses https://data.nuget.org/v3/index.json)"
+   ],
+   "note": "Example of an external feed to flag; identifies a well-known external URL, nothing repo-checkable beyond its absence from NuGet.config."
+  },
+  {
+   "id": "d32af7c20a77c214fad330313c165f2a32391c47",
+   "line": 159,
+   "label": "judgment",
+   "evidence": [
+    "NuGet.config:17 <add key=\"dotnet-public\" value=\"https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-public/nuget/v3/index.json\" />; :18 <add key=\"dotnet-eng\" .../dotnet-eng/nuget/v3/index.json />; both have <package pattern=\"*\" /> mappings"
+   ],
+   "note": "Review instruction; the two named feeds are defined in NuGet.config but \"use existing feeds\" is guidance."
+  },
+  {
+   "id": "01f902a8610d63c8c6e82de0660e4fc1e526cd1f",
+   "line": 167,
+   "label": "judgment",
+   "evidence": [
+    "git log -1 --format=%B 7b7cf37fe (#20282): \"allowed-actions policy was not updated for the new SHA, so the labeler workflow failed with an \\\"actions not allowed\\\" error\""
+   ],
+   "note": "Claim about GitHub Actions platform behavior; corroborated by a commit message but not provable from code."
+  },
+  {
+   "id": "686d2ad022c475c773e86fefdbc3b317ecbc09ce",
+   "line": 176,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:176-178 process bullet"
+   ],
+   "note": "Process instruction about repo/org settings outside git; not checkable."
+  },
+  {
+   "id": "3c5109c94970a43fc79b7ad9f4127b87057b6e1c",
+   "line": 184,
+   "label": "true",
+   "evidence": [
+    "git show c1d450cda (2026-09-18 \"Modernize agentic workflows with gh-aw v0.88.7 (#20209)\") -- .github/workflows: \"- dotnet/issue-labeler/{download,predict,promote,restore,test,train}@46125e85e6a568dc712f358c39f35317366f5eed # v2.0.0\" -> \"+ ...@160b6b1e1e8d36da09beb34ef1e4806d2c0520a3 # v2.2.0\"",
+    "git log -1 --format=%B 7b7cf37fe (#20282, 2026-09-22): \"The issue showed up after microsoft/aspire#20209 updated the `dotnet/issue-labeler/*` action pins ... allowed-actions policy was not updated for the new SHA, so the labeler workflow failed with an \\\"actions not allowed\\\" error. That break was tracked in microsoft/aspire#20277\""
+   ],
+   "note": "History claim verified in git: #20209 bumped exactly those SHAs/tags, and the follow-up commit records the labeler break tracked in #20277."
+  },
+  {
+   "id": "62d0c82407c424bb41388ae4c7d27673d321bfb3",
+   "line": 192,
+   "label": "true",
+   "evidence": [
+    ".editorconfig:46 csharp_new_line_before_open_brace = all"
+   ],
+   "note": "The repo .editorconfig encodes exactly this rule (newline before every open brace)."
+  },
+  {
+   "id": "f8dc8a0d48aaa3a546efbcde6f66a5a2944904d8",
+   "line": 196,
+   "label": "judgment",
+   "evidence": [
+    "grep -n -E \"private.*class|class.*private\" .editorconfig -> no match"
+   ],
+   "note": "Ordering convention not encoded anywhere checkable."
+  },
+  {
+   "id": "4b90ea8bc6c9b3aeca7094a3e8659cd04bbdac9c",
+   "line": 202,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:202 commenting guidance"
+   ],
+   "note": "Commenting convention; not checkable."
+  },
+  {
+   "id": "465bb527149abc605fc3157d42af5211c3572e50",
+   "line": 205,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:205 commenting guidance"
+   ],
+   "note": "Commenting convention; not checkable."
+  },
+  {
+   "id": "2699ac10d08d800d4ac22e1fc96c6cb471709297",
+   "line": 315,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:315 nullable guidance"
+   ],
+   "note": "Coding convention; not checkable."
+  },
+  {
+   "id": "267fe5f75a183dca66ab4f3c2d3a05487ec36984",
+   "line": 319,
+   "label": "true",
+   "evidence": [
+    "global.json \"sdk\": { ... \"paths\": [ \".dotnet\", \"$host$\" ], \"errorMessage\": \"The .NET SDK could not be found. Run ./restore.sh (Linux/macOS) or ./restore.cmd (Windows) to install the local SDK.\" }",
+    "ls restore.sh restore.cmd -> both exist"
+   ],
+   "note": "global.json sdk.paths lists .dotnet before $host$, so plain dotnet resolves the local SDK after restore; restore scripts exist."
+  },
+  {
+   "id": "87651959b84a65acfb4763280dfc2f9efaa0a595",
+   "line": 327,
+   "label": "true",
+   "evidence": [
+    "eng/Build.props:5 \"SkipNativeBuild - if 'true', skips building all native projects, defaults to 'false'\"; :84-86 <ItemGroup Condition=\"'$(SkipNativeBuild)' == 'true'\"><ProjectToBuild Remove=\"$(RepoRoot)src\\Aspire.Cli\\Aspire.Cli.Tool.csproj\" />; :95 native-build ItemGroup Condition=\"'$(SkipNativeBuild)' != 'true' ...\"",
+    "eng/Bundle.proj:89 <Target Name=\"_PublishNativeCli\" Condition=\"'$(SkipNativeBuild)' != 'true'\">; eng/AfterSigning.targets:12 same condition",
+    "src/Aspire.Cli/Aspire.Cli.csproj:20 <PublishAot>true</PublishAot>; .github/workflows/ci.yml:138 -p:SkipNativeBuild=true"
+   ],
+   "note": "Property is defined in the MSBuild files and gates the native (AOT) CLI build; the \"~1-2 minutes\" figure is an estimate and not checkable."
+  },
+  {
+   "id": "994cbc4a3f07103348d257668fd0682f168b4bcf",
+   "line": 330,
+   "label": "judgment",
+   "evidence": [
+    ".github/workflows/run-tests.yml:51-53 \"# Disable MSBuild terminal logger via env var instead of -tl:false on the command line. # In MTP native runner mode, -tl:false is forwarded to the test host which doesn't recognize it. MSBUILDTERMINALLOGGER: \\\"false\\\"\"",
+    ".agents/skills/cli-channel-debugging/emulate-aspire-cli.sh:95 MSBUILDTERMINALLOGGER=false dotnet build ..."
+   ],
+   "note": "Preference plus a claim about MSBuild/MTP tool behavior; the repo follows the same practice with the same rationale but cannot prove the external behavior."
+  },
+  {
+   "id": "41d3581bf0e854a38bb9e8e3ab23422f6511fe55",
+   "line": 335,
+   "label": "judgment",
+   "evidence": [
+    "find src/Aspire.ProjectTemplates -name template.json | wc -l -> 9; grep -l generatorVersions ... | wc -l -> 9 (all templates declare generatorVersions)"
+   ],
+   "note": "Claim about template-engine warning output; not provable from the repo (note: all 9 repo templates already declare generatorVersions)."
+  },
+  {
+   "id": "42d07349f6be7e2f133a7e04a8c9912579e65dd9",
+   "line": 340,
+   "label": "true",
+   "evidence": [
+    "ls build.sh start-code.sh -> both exist at repo root",
+    "start-code.sh: export DOTNET_ROOT=$DIR/.dotnet; export DOTNET_MULTILEVEL_LOOKUP=0; export PATH=$DOTNET_ROOT:$PATH; errors \"[ERROR] .NET SDK has not yet been installed. Run ./restore.sh\" if missing; launches \"$VSCODE_CMD\" \"$@\""
+   ],
+   "note": "Both scripts exist and start-code.sh launches VS Code with the local-SDK environment variables."
+  },
+  {
+   "id": "94d2dea3a9774bd567e8b124374001371f429e15",
+   "line": 349,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:349 heading of a PowerShell example"
+   ],
+   "note": "Section heading; no repo claim."
+  },
+  {
+   "id": "130a6692b39cd98dac7938951c9304e1931531b7",
+   "line": 357,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:357 line inside the PowerShell example block"
+   ],
+   "note": "Generic PowerShell command example; nothing repo-checkable."
+  },
+  {
+   "id": "27be0faf3e2aec3c2b912e70417c3d09008a3481",
+   "line": 364,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:364 heading of a bash example"
+   ],
+   "note": "Section heading; no repo claim."
+  },
+  {
+   "id": "44239ee8b6295a979460dc463afe9301a130c196",
+   "line": 372,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:372 placeholder command in the bash example"
+   ],
+   "note": "Placeholder shell command; nothing repo-checkable."
+  },
+  {
+   "id": "baa452e4cb145cba52953827cd095941f3dc9fea",
+   "line": 380,
+   "label": "judgment",
+   "evidence": [
+    "AGENTS.md:380 testing convention"
+   ],
+   "note": "Naming convention; not checkable."
+  },
+  {
+   "id": "0aa9a0e424010b0374256764939041f44c0f0931",
+   "line": 383,
+   "label": "judgment",
+   "evidence": [
+    "ls tests/Shared -> exists",
+    "find tests -type d -name TestServices -o -name Helpers -> tests/Aspire.Cli.Tests/TestServices, tests/Aspire.Hosting.EntityFrameworkCore.Tests/TestServices, tests/Aspire.Cli.EndToEnd.Tests/Helpers, tests/Aspire.Hosting.Foundry.Tests/Helpers, tests/Aspire.Hosting.TestUtilities/Helpers"
+   ],
+   "note": "Preference (\"prefer shared ... rather than private\"); the example directories exist but the rule is a convention."
+  },
+  {
+   "id": "47b74a1c7b6bf1689c271435c422b91abec2bb7b",
+   "line": 386,
+   "label": "judgment",
+   "evidence": [
+    "Preference about assertion style; not provable from the repo.",
+    "`git grep -l \"Assert.DoesNotContain\" -- \"tests/*.cs\" | wc -l` -> 309 files still use it (advice, not an enforced rule)."
+   ],
+   "note": "Style preference (avoid X, prefer Y); repo neither proves nor contradicts it."
+  },
+  {
+   "id": "46e089931de85f9ed234f35d48e06c32627f6328",
+   "line": 391,
+   "label": "judgment",
+   "evidence": [
+    "Workflow instruction (\"fix and build again until successful\"); nothing checkable in the repo."
+   ],
+   "note": "Pure workflow loop instruction."
+  },
+  {
+   "id": "312be77705907124580f9a0c4fd7226852c3551c",
+   "line": 396,
+   "label": "true",
+   "evidence": [
+    "global.json: \"test\": { \"runner\": \"Microsoft.Testing.Platform\" } -> dotnet test runs in MTP mode where filters go after `--`.",
+    "Example that follows (line 398): tests/Aspire.Hosting.Testing.Tests/Aspire.Hosting.Testing.Tests.csproj exists; tests/Aspire.Hosting.Testing.Tests/TestingBuilderTests.cs:29 `public void TestingBuilderHasAllPropertiesFromRealBuilder()`.",
+    "eng/Testing.targets:15 and .github/workflows/run-tests.yml:426 use MTP-native `--filter-not-trait` switches."
+   ],
+   "note": "MTP runner is configured in global.json and the concrete example project/method exist; the filter-after-`--` mechanism is how the repo itself invokes MTP."
+  },
+  {
+   "id": "01b66dbf28fc7844c00d8179bb6985fac5e2ec65",
+   "line": 405,
+   "label": "judgment",
+   "evidence": [
+    "Claim about Microsoft.Testing.Platform hang-dump extension behavior (external tool).",
+    "eng/Testing.targets:7-8 always pairs `--hangdump` with `--hangdump-timeout $(TestHangTimeout)`; docs/ci/mtp-args-pipeline.md:58-60 describes each flag but never states the dependency."
+   ],
+   "note": "External MTP behavior; the repo is consistent with it but cannot prove it."
+  },
+  {
+   "id": "8a0ec6f296b1527f6171ce4b4af9a4cb613d2a35",
+   "line": 407,
+   "label": "judgment",
+   "evidence": [
+    "Workflow instruction about when to omit the external `dotnet test --no-build` flag."
+   ],
+   "note": "Instruction; no repository fact to check."
+  },
+  {
+   "id": "beecf84ef8d9f3c5b17d2df902f716403c66f6a7",
+   "line": 415,
+   "label": "judgment",
+   "evidence": [
+    "Negative example (\"WRONG\") using placeholder tests/Project.Tests/Project.Tests.csproj; the surrounding claim (VSTest `--filter` hangs under MTP) is external tool behavior.",
+    "global.json \"test\": { \"runner\": \"Microsoft.Testing.Platform\" } confirms MTP mode is what the repo uses."
+   ],
+   "note": "Placeholder-based anti-example; nothing concrete to prove or contradict."
+  },
+  {
+   "id": "f21917e48f7c2b578eadf5d637f6ef9bf66dbce5",
+   "line": 422,
+   "label": "judgment",
+   "evidence": [
+    "Normative rule (\"must\"); grounded by global.json \"test\": { \"runner\": \"Microsoft.Testing.Platform\" } but the rule itself is a convention."
+   ],
+   "note": "Instruction; MTP mode is proven but \"must\" is a convention."
+  },
+  {
+   "id": "c0ac5e4c384afed033411b3a3839241b1545d51b",
+   "line": 436,
+   "label": "judgment",
+   "evidence": [
+    "Normative rule (\"Never run ... without\"). Traits exist: tests/Aspire.TestUtilities/QuarantinedTestAttribute.cs:30 `quarantined = true`; tests/Aspire.TestUtilities/OuterloopTestAttribute.cs:30 `outerloop = true`."
+   ],
+   "note": "Workflow rule; the named traits exist but the rule is a convention."
+  },
+  {
+   "id": "7d3d6643f5b82e30f47d4c9a854ed67b757591cb",
+   "line": 443,
+   "label": "judgment",
+   "evidence": [
+    "Runtime estimate (~10-60 seconds); not verifiable from the checkout without running tests."
+   ],
+   "note": "Timing claim; cannot be proven or contradicted read-only."
+  },
+  {
+   "id": "109826242fe0d8e484944fd50e89e5653c0f5d34",
+   "line": 450,
+   "label": "true",
+   "evidence": [
+    "`ls src/Aspire.Hosting` -> Aspire.Hosting.csproj, DistributedApplication.cs, DistributedApplicationBuilder.cs, Dcp/, ApplicationModel/, Orchestrator/",
+    "`ls src/Aspire.Hosting/Orchestrator` -> ApplicationOrchestrator.cs, OrchestratorHostService.cs, ..."
+   ],
+   "note": "Directory exists and contains the core hosting/orchestration code."
+  },
+  {
+   "id": "f4e6c2e54d5508b5171bb4667a69ec66c3842907",
+   "line": 453,
+   "label": "true",
+   "evidence": [
+    "`ls src/Aspire.Cli` -> Aspire.Cli.csproj, Aspire.Cli.Tool.csproj, Commands/, Backchannel/, Acquisition/, ..."
+   ],
+   "note": "Directory exists and is the CLI project."
+  },
+  {
+   "id": "4a364a2cc8f544f705f312a268b166d1f87377dd",
+   "line": 457,
+   "label": "true",
+   "evidence": [
+    "`ls eng` -> build.sh, build.ps1, scripts/, pipelines/, common/, Testing.props, Testing.targets, Versions.props, Version.Details.xml, QuarantinedTestRunsheetBuilder/, ..."
+   ],
+   "note": "eng/ exists and holds build scripts, tools and engineering infrastructure."
+  },
+  {
+   "id": "bb1baa04327e8b2385f864095ad0a406b22ff9f1",
+   "line": 462,
+   "label": "true",
+   "evidence": [
+    "global.json: \"sdk\": { \"version\": \"11.0.100-rc.1.26425.128\", ... } pins the SDK version.",
+    "\"never modify without explicit request\" is an instruction (not checkable); the description part is proven."
+   ],
+   "note": "File exists and pins the SDK version; trailing clause is an instruction."
+  },
+  {
+   "id": "826fc936cc0618e2f949f7d832a3eb04a8a89fc2",
+   "line": 465,
+   "label": "true",
+   "evidence": [
+    "Directory.Packages.props:7 `<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>`",
+    "`grep -c \"<PackageVersion \" Directory.Packages.props` -> 268"
+   ],
+   "note": "Central Package Management file exists and is enabled."
+  },
+  {
+   "id": "76d5add5ff6bfec73fa3d3fcbeed9c35a50d8dca",
+   "line": 472,
+   "label": "stale",
+   "evidence": [
+    ".github/workflows/tests-quarantine.yml:18-19 `# Run every 2 hours. ...` / `- cron: '0 */2 * * *'`",
+    "`git log --oneline -S\"0 */2 * * *\" -- .github/workflows/tests-quarantine.yml` -> 699cc2333 \"Increase quarantine tests frequency from 6 to 12 runs per day (#13861)\"",
+    "Workflow does run quarantined tests separately: tests-quarantine.yml:45 `extraTestArgs: \"--filter-trait quarantined=true\"`."
+   ],
+   "note": "Schedule is every 2 hours, not every 6 hours."
+  },
+  {
+   "id": "d43be102151e7d1df361a6d47f689e7c37b50f7b",
+   "line": 476,
+   "label": "judgment",
+   "evidence": [
+    "Maintenance convention (\"update ... together\", \"keep ... aligned\").",
+    "Named files all exist: .github/workflows/auto-rerun-transient-ci-failures.js, tests/Infrastructure.Tests/WorkflowScripts/AutoRerunTransientCiFailuresTests.cs, docs/ci/auto-rerun-transient-ci-failures.md, and the live YAML .github/workflows/auto-rerun-transient-ci-failures.yml (`ls -la` all present)."
+   ],
+   "note": "Convention with existing named files; names existing does not make the convention true."
+  },
+  {
+   "id": "c94a99ac652590c2f317842123974b1caddb6932",
+   "line": 481,
+   "label": "true",
+   "evidence": [
+    "eng/pipelines/templates/public-pipeline-template.yml:50-52 `${{ if notin(variables['Build.Reason'], 'PullRequest') }}:` ... `value: '_pipeline_tests,_helix_tests'` -> test variants only when not a PR.",
+    "eng/pipelines/azure-pipelines-public.yml:2 `- cron: \"0 0 * * 1\" # Run at midnight (UTC) on Monday each week`",
+    "docs/ci/azdo-public-pipeline.md:12 `Manual trigger pipeline | eng/pipelines/azdo-tests.yml (invoked with /azp run aspire-tests)`; `ls eng/pipelines/azdo-tests.yml` exists; docs/ci/azdo-public-pipeline.md:18 `| **PR** | ... | Build + pack only, **no tests** |`."
+   ],
+   "note": "Not-on-PR, weekly, and manual-trigger command all proven; \"easily broken\" is a characterization the repo docs themselves make."
+  },
+  {
+   "id": "08cc7d82f001efb8be924d8323b802e5d8204de4",
+   "line": 486,
+   "label": "true",
+   "evidence": [
+    "global.json: \"sdk\": { ..., \"paths\": [ \".dotnet\", \"$host$\" ], \"errorMessage\": \"... Run ./restore.sh ...\" }",
+    "restore.sh (tail) -> `\"$scriptroot/eng/build.sh\" --restore \"$@\"`; eng/common/tools.sh:150-154 installs the SDK to repo-local `dotnet_root=\"${repo_root}.dotnet\"`."
+   ],
+   "note": "The sdk.paths entry in global.json and the repo-local .dotnet install are both present."
+  },
+  {
+   "id": "09fb22a0321f093ec0c726a70e4d0f0b19d3d02b",
+   "line": 491,
+   "label": "judgment",
+   "evidence": [
+    "Expectation/validation step; `ls build.sh` exists at repo root but whether it completes without errors cannot be checked read-only."
+   ],
+   "note": "Validation expectation, not a repository fact."
+  },
+  {
+   "id": "0fb71a13c216a0f5e5521e8667a0d384c857e440",
+   "line": 497,
+   "label": "true",
+   "evidence": [
+    "tests/Aspire.TestUtilities/QuarantinedTestAttribute.cs:36 `public sealed class QuarantinedTestAttribute : Attribute, ITraitAttribute`",
+    "Same file lines 6-8 summary: \"Marks a test as \\\"quarantined\\\" so that the build will sequester it and ignore failures.\"; doc example `public void FlakyTest()`.",
+    ".github/workflows/tests-quarantine.yml:43 `attributeName: \"QuarantinedTest\"`."
+   ],
+   "note": "Attribute is defined in the repo and is the flaky-test marker used by CI."
+  },
+  {
+   "id": "e50568679d35b10ab483acd47b3817f26d25e141",
+   "line": 501,
+   "label": "true",
+   "evidence": [
+    "`sed -n 1,4p .agents/skills/fix-flaky-test/SKILL.md` -> name: fix-flaky-test; description: \"Reproduces and fixes flaky or quarantined tests. ...\""
+   ],
+   "note": "Skill file exists at the stated path with the stated purpose; the \"use it\" part is a pointer."
+  },
+  {
+   "id": "ed18115326aa92eef69b97f61b7d27a28f717c06",
+   "line": 508,
+   "label": "true",
+   "evidence": [
+    ".github/workflows/apply-test-attributes.yml:4-5 `on: issue_comment: types: [created]` (fires for issue and PR comments).",
+    "Same file lines 15-22: job `if:` matches comment bodies starting with `/quarantine-test `, `/unquarantine-test `, `/disable-test `, `/enable-test `; lines 9-10 concurrency group distinguishes `pr` vs `issue` comments."
+   ],
+   "note": "The command workflow listens to issue_comment, which covers both issue and PR comments."
+  },
+  {
+   "id": "5766769c868f1ec5598725d87318b69e66c63faa",
+   "line": 515,
+   "label": "true",
+   "evidence": [
+    ".github/workflows/apply-test-attributes.yml:124 `const urlPattern = /^https?:\\/\\/.+/i;` and :146 `testNames = parts.slice(0, -1);` -> last token is the issue URL, all preceding tokens are test names (multiple supported).",
+    "Same file line 16 `github.repository == 'microsoft/aspire'` -> the microsoft/aspire issue URL form matches the live repository."
+   ],
+   "note": "Multi-test quarantine with trailing issue URL is parsed exactly this way."
+  },
+  {
+   "id": "ca39ee57073be762bf69d982dc2d11b3e33b6f36",
+   "line": 524,
+   "label": "true",
+   "evidence": [
+    ".github/workflows/apply-test-attributes.yml:91-103 extracts `--target-pr <url>` for every command; :62 `'unquarantine-test': { action: 'unquarantine', mode: 'quarantine', requiresUrl: false }`.",
+    "Same file :126-129 validate the PR URL against `/^https:\\/\\/github\\.com\\/([^\\/]+)\\/([^\\/]+)\\/pull\\/(\\d+)/`; :170-171 require same owner/repo (\"Target PR must be from the same repository\"); :16 gates on `github.repository == 'microsoft/aspire'`."
+   ],
+   "note": "Unquarantine with --target-pr is implemented as documented."
+  },
+  {
+   "id": "593396916fe4025341dc0845d9615a600c3c85a6",
+   "line": 543,
+   "label": "true",
+   "evidence": [
+    "tests/Aspire.TestUtilities/Aspire.TestUtilities.csproj:9 `<PackageReference Include=\"Microsoft.DotNet.XUnitV3Extensions\" />` (tests/Directory.Packages.props:12 pins it) provides Xunit.ActiveIssueAttribute.",
+    "tools/QuarantineTools/Quarantine.cs:43 `DefaultActiveIssueAttributeFullName = \"Xunit.ActiveIssueAttribute\"`; `git grep -n \"\\[ActiveIssue(\" -- \"tests/*.cs\" | wc -l` -> 69 usages."
+   ],
+   "note": "ActiveIssue is the referenced-package attribute the repo uses for disabled tests; the \"consistently fail\" criterion is the documented usage."
+  },
+  {
+   "id": "8ee8b8e80a05569b1e1c86e7e4a970acf07632af",
+   "line": 547,
+   "label": "true",
+   "evidence": [
+    "tests/Aspire.Cli.EndToEnd.Tests/KubernetesPublishTests.cs:29 `[ActiveIssue(\"https://github.com/microsoft/aspire/issues/15930\")]` (same form; 1234 is a placeholder issue number)."
+   ],
+   "note": "Attribute accepts a URL string exactly as in the example."
+  },
+  {
+   "id": "c5cb5d23cdd1fc30a6eb1186a9757f1203a5fbbf",
+   "line": 559,
+   "label": "true",
+   "evidence": [
+    ".github/workflows/apply-test-attributes.yml:21 `startsWith(github.event.comment.body, '/enable-test ')`; :64 `'enable-test': { action: 'unquarantine', mode: 'activeissue', requiresUrl: false }`."
+   ],
+   "note": "/enable-test command is handled (removes ActiveIssue)."
+  },
+  {
+   "id": "a2b55d6c36e62381fdcd9ee4636d8cd046f16ca4",
+   "line": 572,
+   "label": "true",
+   "evidence": [
+    "`ls tools/QuarantineTools` -> Quarantine.cs, QuarantineTools.csproj, README.md",
+    "tools/QuarantineTools/Quarantine.cs:50 `new Option<bool>(\"--unquarantine\", \"-u\")`; :54 `new Option<string>(\"--mode\", \"-m\") { Description = \"Mode: 'quarantine' ... or 'activeissue' ...\" }`; :57 `new Argument<string[]>(\"tests\") ... \"Fully-qualified test method name(s) like Namespace.Type.Method\"`."
+   ],
+   "note": "Project path, -u, -m activeissue and positional test names are all defined."
+  },
+  {
+   "id": "c2683b26d53ae3a7c09a9965a83b1530b30deda9",
+   "line": 580,
+   "label": "true",
+   "evidence": [
+    ".github/workflows/tests-outerloop.yml:12 `name: Outerloop Tests`; :42 `attributeName: \"OuterloopTest\"`; :44 `extraTestArgs: \"--filter-trait outerloop=true\"`.",
+    "`git show 353aab478:.github/workflows/tests-outerloop.yml | grep ^name:` -> `name: Outerloop Tests` (never named just \"Outerloop\")."
+   ],
+   "note": "File exists and runs outerloop tests; \"Outerloop\" is shorthand for the workflow named \"Outerloop Tests\"."
+  },
+  {
+   "id": "2aafe246e430968f1386017bcb66e2744e754bd9",
+   "line": 587,
+   "label": "true",
+   "evidence": [
+    "tests/Directory.Packages.props:27 `<PackageVersion Include=\"Verify.XunitV3\" Version=\"32.0.0\" />`",
+    "`git grep -l 'PackageReference Include=\"Verify.XunitV3\"' -- \"tests/*.csproj\" | wc -l` -> 22 (e.g. tests/Aspire.Cli.Tests, tests/Aspire.Hosting.Azure.Tests)."
+   ],
+   "note": "Verify.XunitV3 is referenced by 22 test projects."
+  },
+  {
+   "id": "a89091573568710464768d5b2c8184b1742410d5",
+   "line": 590,
+   "label": "judgment",
+   "evidence": [
+    "Instruction using the external Verify.Tool CLI (`accept -y` semantics not defined in repo).",
+    ".github/workflows/copilot-setup-steps.yml:40 `./dotnet.sh tool install --global Verify.Tool --version 0.6.0 || true`; .github/instructions/test-review-guidelines.instructions.md:17 repeats `dotnet verify accept -y`."
+   ],
+   "note": "Tool is installed by the copilot setup, but the command/flag behavior is external."
+  },
+  {
+   "id": "0e0d075b5e8995bfca1b7d7253e881c891131682",
+   "line": 595,
+   "label": "judgment",
+   "evidence": [
+    "Workflow instruction (\"make the matching changes\").",
+    "`git ls-files \"*.Designer.cs\" | wc -l` -> 72; `git ls-files \"*.resx\" | wc -l` -> 68 (designer files are checked in next to resx, consistent with the instruction)."
+   ],
+   "note": "Instruction; the premise (checked-in Designer.cs) holds."
+  },
+  {
+   "id": "e8fdc3ee68fe68f635ab346bab1791fb0e3fb1da",
+   "line": 597,
+   "label": "judgment",
+   "evidence": [
+    "Workflow instruction (lead-in to `dotnet build /t:UpdateXlf`).",
+    "`git ls-files \"*.xlf\" | wc -l` -> 963 in 9 `xlf` directories; `git grep -n -i \"UsingToolXliff\\|UpdateXlf\" -- \"*.props\" \"*.targets\"` -> no hits (target comes from the Arcade SDK, not the repo); docs/contributing.md:166 repeats the same command."
+   ],
+   "note": "Instruction; xlf files exist but the UpdateXlf target is external (Arcade XliffTasks)."
+  },
+  {
+   "id": "8936d7ce9924c13276a98f414d30e983541ab32b",
+   "line": 607,
+   "label": "judgment",
+   "evidence": [
+    "Style convention (\"should not\").",
+    ".markdownlint.json `\"default\": true` without disabling no-multiple-blanks; .github/workflows/markdownlint.yml runs the linter; .github/workflows/extension-changelog.md:410 mentions \"MD012/no-multiple-blanks\"."
+   ],
+   "note": "Convention; lint config is consistent with it but it remains a style rule."
+  },
+  {
+   "id": "f07d2ff1469a15273cf3c5aaac53b7fd4c7d561f",
+   "line": 612,
+   "label": "true",
+   "evidence": [
+    "`git ls-files | grep -E \"/localize/templatestrings\\..*\\.json$\" | wc -l` -> 139 (e.g. src/Aspire.ProjectTemplates/templates/aspire-apphost-singlefile/.template.config/localize/templatestrings.de.json).",
+    "eng/pipelines/azure-pipelines.yml:375-381 `- template: /eng/common/templates-official/job/onelocbuild.yml@self` with `LclPackageId: 'LCL-JUNO-PROD-ASPIRE'` -> dedicated localization job."
+   ],
+   "note": "Pattern matches real localization files and a dedicated OneLocBuild job exists; \"do not translate\" is the instruction part."
+  },
+  {
+   "id": "f5b1ce1bb19b22337189e96f9b110218e0976aa2",
+   "line": 617,
+   "label": "judgment",
+   "evidence": [
+    "List item under \"Only search for additional information if\"; a conditional workflow instruction."
+   ],
+   "note": "Instruction about when to look further."
+  },
+  {
+   "id": "f2c19082fcc12d36b4976332364ffeca8e5f6848",
+   "line": 624,
+   "label": "judgment",
+   "evidence": [
+    "Preference (\"When possible, you should create TypeScript ...\")."
+   ],
+   "note": "Language preference."
+  },
+  {
+   "id": "371e9349ed1ff26bef6df1d0976241bd7ab67a99",
+   "line": 635,
+   "label": "true",
+   "evidence": [
+    ".agents/skills/cli-e2e-testing/SKILL.md:2-3 `name: cli-e2e-testing` / description \"... Aspire CLI end-to-end tests that use Hex1b terminal automation under tests/Aspire.Cli.EndToEnd.Tests/.\"; heading \"# Aspire CLI End-to-End Testing with Hex1b\".",
+    "Directory.Packages.props:121 `<PackageVersion Include=\"Hex1b\" Version=\"0.171.0\" />`."
+   ],
+   "note": "Skill exists and matches the description."
+  },
+  {
+   "id": "1a5c8165e2c5042f70569cf8f76da202291848f7",
+   "line": 638,
+   "label": "true",
+   "evidence": [
+    ".agents/skills/fix-flaky-test/SKILL.md:3 description \"Reproduces and fixes flaky or quarantined tests. Tries local reproduction first (fast), then falls back to CI reproduce workflow (reproduce-flaky-tests.yml). Use this when asked to investigate, reproduce, debug, or fix a flaky test, a quarantined test ...\"",
+    "`ls .github/workflows/reproduce-flaky-tests.yml` exists."
+   ],
+   "note": "Skill and workflow exist; the summary omits the local-first step but does not contradict it."
+  },
+  {
+   "id": "7da0791ce507999496b8ae04ddb92d661bf19125",
+   "line": 641,
+   "label": "true",
+   "evidence": [
+    ".agents/skills/test-management/SKILL.md:3 `description: Quarantines or disables flaky/problematic tests using the QuarantineTools utility` (verbatim); :6 \"using the `tools/QuarantineTools` project\".",
+    "`ls tools/QuarantineTools` -> Quarantine.cs, QuarantineTools.csproj, README.md"
+   ],
+   "note": "Skill exists with identical description."
+  },
+  {
+   "id": "e89138183905e8906c3b754f2780264a8f119465",
+   "line": 644,
+   "label": "true",
+   "evidence": [
+    ".agents/skills/api-review/SKILL.md:3 description \"Reviews .NET API surface area PRs for design guideline violations. Analyzes api/*.cs file diffs, applies review rules from .NET Framework Design Guidelines and Aspire conventions, and attributes findings to the developer who introduced each API (via git blame). ...\""
+   ],
+   "note": "Skill exists; description matches including author attribution."
+  },
+  {
+   "id": "8d6538c6948775cc832167e3392942c8d1d1d0e6",
+   "line": 648,
+   "label": "true",
+   "evidence": [
+    ".agents/skills/reviewing-aspire-architecture/SKILL.md:3 description \"Use only when the user explicitly requests a deep Aspire architectural or pattern review of an existing PR or diff, or when a generic reviewer escalates a named Aspire-domain question it cannot resolve. Do not use for ordinary review, implementation, debugging, explanation, or design discussion ... never select it from changed file paths alone.\""
+   ],
+   "note": "Skill exists and its stated usage rule matches the entry; the content is a usage rule restated from the skill."
+  },
+  {
+   "id": "ec132e9d44f45da634d561dc2570930e26c3e9b4",
+   "line": 658,
+   "label": "true",
+   "evidence": [
+    ".github/instructions/xmldoc.instructions.md:1-3 frontmatter `applyTo: \"src/**/*.cs\"`; heading \"# XML Documentation Standards for Aspire\"."
+   ],
+   "note": "File exists and applyTo pattern matches the table."
+  },
+  {
+   "id": "8975acd1d0f2721e33273096ae636a02ef889cb0",
+   "line": 661,
+   "label": "true",
+   "evidence": [
+    ".github/instructions/dashboard.instructions.md:1-3 frontmatter `applyTo: \"src/Aspire.Dashboard/**/*.{cs,razor,js}\"`; heading \"# Dashboard agent instructions\"."
+   ],
+   "note": "File exists and applyTo pattern matches the table."
+  },
+  {
+   "id": "d28d381b1c9282f954d3cefea2b69458fc414813",
+   "line": 664,
+   "label": "true",
+   "evidence": [
+    ".github/instructions/client-readme.instructions.md:1-3 frontmatter `applyTo: \"src/Components/**/README.md\"`; heading \"# README.md Instructions for Client Integration Packages\"."
+   ],
+   "note": "File exists and applyTo pattern matches the table."
+  }
+ ]
+}

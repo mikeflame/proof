@@ -498,7 +498,15 @@
     "Makefile:436 go vet -vettool=$(ERRORTYPE) in lint-code",
     ".github/workflows/linters.yml:175 'make GOLANGCI_LINT_FIX=false GOLANGCI_LINT_BASE_REV=HEAD~ lint-code'"
    ],
-   "note": "Ignored errors are flagged by errcheck and revive unhandled-error, run in CI."
+   "note": "Ignored errors are flagged by errcheck and revive unhandled-error, run in CI.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "AGENTS.md:62; errcheck is enabled at .github/.golangci.yml:11 but the sentence is a rule, not a description of the repo"
+    ],
+    "note": "Rule/preference; linter presence does not make the rule a repo fact."
+   }
   },
   {
    "id": "5be05932bfaa1db6be10fff0f4abd88f292373d2",
@@ -511,7 +519,15 @@
     "service/matching/task_validation.go:94 '// CONSIDER(fretz12): ...'",
     "grep -rn 'CONSIDER(' --include='*.go' . | wc -l => 5"
    ],
-   "note": "The CONSIDER(name): convention is used by several authors in the codebase."
+   "note": "The CONSIDER(name): convention is used by several authors in the codebase.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "git grep -n \"CONSIDER(\" -> 5 code hits, e.g. chasm/lib/scheduler/completion.go:72 `// CONSIDER(scheduler): ...`, service/matching/scale_manager.go:444 `// CONSIDER(carlydf): ...`"
+    ],
+    "note": "Convention; the comment format exists in code (5 sites) but \"leave such comments\" is a workflow instruction, not a checkable repo fact."
+   }
   },
   {
    "id": "4275cc71eea84e8a3090a14c36d0be2d6461a7f3",
@@ -524,7 +540,15 @@
     "Makefile:813 '... \"Above files are not regenerated properly. Regenerate them and try again.\"'",
     ".github/workflows/run-tests.yml:263 'make clean-bins ci-build-misc'"
    ],
-   "note": "CI regenerates protos/mocks and fails if generated files differ, enforcing regeneration."
+   "note": "CI regenerates protos/mocks and fails if generated files differ, enforcing regeneration.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "AGENTS.md:64; go:generate mockgen directives exist (e.g. chasm/component.go:1) but the sentence is a process rule"
+    ],
+    "note": "Workflow rule."
+   }
   },
   {
    "id": "a80cae9f22bc8b0b7ea8f0d99786a47f25d80ad2",
@@ -569,7 +593,15 @@
     ".github/.golangci.yml:164 revive 'unhandled-error' rule enabled",
     ".github/workflows/linters.yml:175 'make GOLANGCI_LINT_FIX=false GOLANGCI_LINT_BASE_REV=HEAD~ lint-code' in CI"
    ],
-   "note": "Unchecked errors are flagged by errcheck/revive in CI."
+   "note": "Unchecked errors are flagged by errcheck/revive in CI.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "AGENTS.md:70 generic rule"
+    ],
+    "note": "Generic rule."
+   }
   },
   {
    "id": "ab1b7d8981162f297aafe56d1ea35757cb908af7",
@@ -602,7 +634,16 @@
     "common/log/config.go:16-18 '// Development determines whether the logger is run in Development (== Test) or in Production mode. Default is Production. Production-stage disables panics from DPanic logging.'",
     "common/serviceerror/service_error_with_dpanic.go:8 '// NewInternalErrorWithDPanic is a wrapper for service error that will panic if it's in dev environment'"
    ],
-   "note": "DPanic exists and is used exactly as described: panics in dev/test, only logs in production."
+   "note": "DPanic exists and is used exactly as described: panics in dev/test, only logs in production.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "common/log/interface.go:23 `DPanic(msg string, tags ...tag.Tag)`; common/log/zap_logger.go:195-200 delegates to zap DPanic",
+     "common/log/config.go:16-19 \"Development ... Default is Production. Production-stage disables panics from DPanic logging.\"; zap_logger.go:289 `Development: cfg.Development` (zero value false)"
+    ],
+    "note": "logger.DPanic exists and code/comments confirm it does not panic in production mode; the \"use it for important issues\" part is a convention."
+   }
   },
   {
    "id": "da77b5dcd93e7f16392ec060076f4cb38d6cc291",
@@ -699,7 +740,15 @@
     "Makefile:805-807 'go-generate: ... go generate ./...'",
     "Makefile:12-21 ci-build-misc runs proto, go-generate, ensure-no-changes; .github/workflows/run-tests.yml:263 'make clean-bins ci-build-misc'"
    ],
-   "note": "CI regenerates from //go:generate and .proto sources and fails on diffs, so regeneration is required."
+   "note": "CI regenerates from //go:generate and .proto sources and fails on diffs, so regeneration is required.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "git grep -l \"//go:generate\" | wc -l -> 151 files; git ls-files \"*.proto\" | wc -l -> 75; Makefile:27 `proto:` regenerates"
+    ],
+    "note": "Workflow step; go:generate annotations and .proto files do exist, but the sentence is a conditional instruction rather than a repo description."
+   }
   },
   {
    "id": "de8efb8bce5b32de1e2e221be490d9887cf0d210",
@@ -720,7 +769,15 @@
     "Makefile:409 'lint-code-fast:' exists",
     ".github/workflows/linters.yml:175 'make GOLANGCI_LINT_FIX=false GOLANGCI_LINT_BASE_REV=HEAD~ lint-code' (CI enforces lint on changes)"
    ],
-   "note": "The named command exists and linting is enforced in CI."
+   "note": "The named command exists and linting is enforced in CI.",
+   "adjudicated": {
+    "label": "judgment",
+    "by": "the maintainer, 2026-10-19, adjudicating a blind second labeling (eval/LABELING.md)",
+    "evidence": [
+     "Makefile:409 `lint-code-fast:` exists (see line 50)"
+    ],
+    "note": "Workflow instruction; the named command exists."
+   }
   },
   {
    "id": "603019b3f5b3b89932f54699fb9c39b15801a1f7",

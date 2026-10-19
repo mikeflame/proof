@@ -98,28 +98,33 @@ your repository. It needs Node 22+ and git; the parsers and grammars ship next t
 ## How well it works
 
 <!-- generated:metrics -->
-Corpus: 12 public repositories pinned to commits (6 tune, 6 held-out, never run while tuning), one instruction file each. Labels: independent agent labels with cited evidence; a second, human review is pending; 2 labels changed by a second reviewer, with the evidence in the label file.
+Corpus: 12 public repositories pinned to commits (6 tune, 6 held-out, never run while tuning), one instruction file each. Labels: independent agent labels with cited evidence, each relabeled blind by a second agent under `eval/LABELING.md`; the maintainer adjudicated every disagreement; 126 labels changed in that review, with the evidence in the label file.
 
 | Stage, split | Repos | Labeled statements | STALE precision | STALE recall | VERIFIED precision | Fixes kept |
 | --- | --- | --- | --- | --- | --- | --- |
 | `proof check`, tune | 6 | 364 | 100% (4 flagged) | 25% (16 stale) | 100% (28) | — |
-| `proof run`, tune | 6 | 364 | 100% (15 flagged) | 93.8% (16 stale) | 97.2% (246) | 100% (14) |
-| `proof check`, held-out | 6 | 316 | 0% (6 flagged) | 0% (7 stale) | 100% (17) | — |
-| `proof run`, held-out | 6 | 316 | 87.5% (8 flagged) | 100% (7 stale) | 93.8% (145) | 90.9% (11) |
+| `proof run`, tune | 6 | 364 | 100% (15 flagged) | 93.8% (16 stale) | 78% (246) | 100% (14) |
+| `proof check`, held-out | 6 | 316 | 0% (6 flagged) | 0% (7 stale) | 94.1% (17) | — |
+| `proof run`, held-out | 6 | 316 | 87.5% (8 flagged) | 100% (7 stale) | 75.9% (145) | 90.9% (11) |
 
 Run time on denoland/deno (14,927 files, 137 open statements in CLAUDE.md): a full `proof run` took 10 minutes and $2.37 (9 statements fixed, 1 fix rejected); the re-run after the fixes took 55 seconds and $0.15. An independent review of that diff kept 9 of 9 fixes.
 <!-- /generated:metrics -->
 
 Scored by `node eval/score.mjs` against `eval/labels/`; `eval/` holds the corpus, the reports and
 the labels, so every number can be re-derived. "Fixes kept" is one sample: the fixer words its fixes
-differently on each run, and an independent reviewer judges the fixes of that run.
+differently on each run, and an independent reviewer judges the fixes of that run. VERIFIED
+precision is held down by one error class: the verifier marks a guidance line VERIFIED when the
+names in it exist ("use anyio, not asyncio"), and the labels call such lines judgment. 54 of the
+246 tune and 35 of the 145 held-out VERIFIED lines are of this kind; the labeling protocol and the
+review that settled it are in `eval/LABELING.md`.
 
 The held-out rows are the frozen build's one run on repositories it had never seen. Its mechanical
 stage failed there: all six of its stale flags were false, from MSBuild file types it did not know,
 example project names read as real paths, CI bot commands (`/azp run`) read as programs, and `{name}`
 templates. Those causes are fixed since, and `proof check` on the same repositories now flags nothing
-false and verifies 21 statements, all correct (`eval/after-heldout.json`). The split has been seen
-now, so that is no longer a held-out number.
+false and verifies 21 statements, 19 of them labeled true; the other two, a heading fragment and a
+placeholder command, are judgment (`eval/after-heldout.json`). The split has been seen now, so that
+is no longer a held-out number.
 
 ## Where it works
 
