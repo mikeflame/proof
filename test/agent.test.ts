@@ -147,6 +147,13 @@ describe('coverage and failures', () => {
     }
   });
 
+  it('treats an empty PROOF_CLAUDE as unset', () => {
+    f = makeRepo({ 'CLAUDE.md': '# App\n\n- Keep it simple.\n' });
+    const res = spawnSync(process.execPath, [BUNDLE, 'run', 'CLAUDE.md', '--no-fix'], { cwd: f.repo, encoding: 'utf8', env: { ...process.env, PROOF_CLAUDE: '', PATH: '/usr/bin:/bin', XDG_CACHE_HOME: join(work, 'cache') } });
+    expect(res.stderr).not.toContain('ERR_INVALID_ARG_VALUE');
+    expect(res.stdout).toContain('the claude CLI does not run');
+  });
+
   it('stops calling once the run budget is spent', () => {
     const doc = Array.from({ length: 20 }, (_, i) => `- Statement number ${i} is about handlers here.`).join('\n');
     writeFileSync(join(f.repo, 'CLAUDE.md'), `# Many\n\n${doc}\n`);

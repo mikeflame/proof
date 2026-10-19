@@ -7690,7 +7690,7 @@ var LEVEL_RANK = { definition: 5, declaration: 4, reference: 3, comment: 2, subs
 // src/agent/claude.ts
 import { spawn, spawnSync as spawnSync2 } from "node:child_process";
 function claudeBinary() {
-  return process.env.PROOF_CLAUDE ?? "claude";
+  return process.env.PROOF_CLAUDE || "claude";
 }
 function claudeVersion(bin = claudeBinary()) {
   const res = spawnSync2(bin, ["--version"], { encoding: "utf8", timeout: 2e4 });

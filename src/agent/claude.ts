@@ -22,9 +22,9 @@ export interface ClaudeResult {
   error: string | null;
 }
 
-/** The headless Claude Code binary: `PROOF_CLAUDE`, or `claude` on PATH. */
+/** The headless Claude Code binary: `PROOF_CLAUDE`, or `claude` on PATH when it is unset or empty. */
 export function claudeBinary(): string {
-  return process.env.PROOF_CLAUDE ?? 'claude';
+  return process.env.PROOF_CLAUDE || 'claude';
 }
 
 /** Version string of the binary, or null when it does not run. */
