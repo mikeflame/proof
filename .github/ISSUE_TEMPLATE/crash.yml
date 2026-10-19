@@ -1,0 +1,30 @@
+name: Crash or error
+description: proof crashed, hung, or printed an error that does not say what to do.
+body:
+  - type: input
+    id: command
+    attributes:
+      label: Command
+      placeholder: proof run CLAUDE.md
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: What it printed
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: proof, Node and claude versions, and the operating system
+      description: "`proof.mjs --version`, `node --version`, `claude --version`"
+      placeholder: proof 0.3.0, Node 24.14.0, claude 2.1.301, Ubuntu 24.04
+    validations:
+      required: true
+  - type: textarea
+    id: repo
+    attributes:
+      label: How to reproduce
+      description: A public repository and commit, or the smallest instruction file that shows it.

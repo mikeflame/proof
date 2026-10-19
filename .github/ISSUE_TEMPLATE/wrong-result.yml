@@ -1,0 +1,53 @@
+name: Wrong result
+description: proof reported a statement wrongly, missed a stale one, or proposed a wrong fix.
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What went wrong
+      options:
+        - A true statement was reported stale
+        - A stale statement was not reported
+        - A statement was VERIFIED that the repository does not prove
+        - A fix was wrong
+        - Something else
+    validations:
+      required: true
+  - type: input
+    id: repo
+    attributes:
+      label: Public repository and commit
+      description: Where the statement is, so the result can be reproduced.
+      placeholder: owner/repo@abc1234
+    validations:
+      required: true
+  - type: input
+    id: file
+    attributes:
+      label: Instruction file and line
+      placeholder: AGENTS.md L42
+    validations:
+      required: true
+  - type: textarea
+    id: report
+    attributes:
+      label: What proof printed
+      description: The report block for that statement. `--json` on `proof check` or `proof run` gives all of it.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: truth
+    attributes:
+      label: What is true, with evidence
+      description: A file and line, or a command and its output.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: proof version
+      description: The output of `proof.mjs --version`.
+      placeholder: 0.3.0
+    validations:
+      required: true
